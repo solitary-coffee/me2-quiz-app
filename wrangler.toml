@@ -1,44 +1,23 @@
 # ============================================================
-# ME2 Quiz App - Wrangler設定
+# ME2 Quiz App - Cloudflare Pages 専用 wrangler.toml
 # ============================================================
-# 重要：Cloudflare Pages の GitHub連携で使う場合、
-# Cloudflare Dashboard 側の Build command は「npm run build」または空欄にしてください。
-# 「npx wrangler deploy」や「npm run deploy:worker」は入れないでください。
-#
-# このファイルは、誤って `wrangler deploy` が実行されても
-# Missing entry-point エラーにならないように Workers + Static Assets の
-# 設定も含めています。
-#
-# 推奨デプロイ：Cloudflare Pages
-#   npm run deploy:pages
-#
-# Workersとしてデプロイしたい場合：
-#   npm run deploy:worker
+# このファイルは Cloudflare Pages 用です。
+# Workers Static Assets 用の [assets] は Pages では使いません。
+# Pages では functions/api/*.js が自動的に /api/* として動きます。
 # ============================================================
 
-name = 'me2-quiz-app'
+name = "me2-quiz-app"
 compatibility_date = "2026-05-31"
-
-# Pages 用。Pages の Wrangler 設定として必要。
 pages_build_output_dir = "."
-
-# Workers 用。`wrangler deploy` が実行された場合の entry point。
-main = "./src/worker.js"
-
-# Workers Static Assets 用。`wrangler deploy` が実行された場合の静的ファイル配置。
-[assets]
-directory = "."
-binding = "ASSETS"
-not_found_handling = "single-page-application"
-run_worker_first = ["/api/*"]
 
 [vars]
 GITHUB_OWNER = "YOUR_GITHUB_USER"
-GITHUB_REPO = "ME2_JSON_App"
+GITHUB_REPO = "ME2_Quiz_App"
 GITHUB_BRANCH = "main"
 GITHUB_ROOT = ""
 
-# WorkersでKV保存を使う場合は、CloudflareでKV namespaceを作成し、idを入れて有効化してください。
+# KVをwrangler.tomlで管理する場合だけ、idを入れてコメント解除してください。
+# Dashboardの Pages > Settings > Bindings で設定する場合は、このままでOKです。
 # [[kv_namespaces]]
 # binding = "ME2_PROGRESS"
 # id = "YOUR_KV_NAMESPACE_ID"
