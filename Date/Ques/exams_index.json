@@ -55,15 +55,6 @@
         "am": "Date/Ques/41_am.json",
         "pm": "Date/Ques/41_pm.json"
       }
-    },
-    {
-      "id": "40",
-      "title": "第40回",
-      "subtitle": "第2種ME技術実力検定試験",
-      "parts": {
-        "am": "Date/Ques/40_am.json",
-        "pm": "Date/Ques/40_pm.json"
-      }
     }
   ]
 }
