@@ -14,7 +14,7 @@
 <body>
 <header><div class="header-inner"><h1>ME2種 過去問ボタン式演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
-<section id="menuCard" class="card"><h2>試験回を選択</h2><p class="small">問題JSONと図表画像は <span class="code">Date/Ques</span> / <span class="code">Date/img</span> から取得します。GitHub設定が未完了でも、同梱ファイルから自動で読み込むようにしました。</p><div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末保存 + Cloudflare保存確認中</span></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン情報</button><button class="ghost" onclick="exportAllProgress()">全履歴をJSON保存</button><label class="ghost" style="padding:14px 16px;border-radius:16px;display:inline-block;cursor:pointer">進行JSONを読み込み<input type="file" accept="application/json,.json" onchange="importProgress(this)" style="display:none"></label><span class="pill" id="roundCount"></span></div><div class="grid" id="examGrid"></div></section>
+<section id="menuCard" class="card"><h2>試験回を選択</h2><p class="small">問題JSONと図表画像は <span class="code">Date/Ques</span> / <span class="code">Date/img</span> から取得します。通常はDate/Quesの同梱JSONから直接読み込みます。GitHubにpushされたファイルはCloudflare Pagesの再デプロイ後に反映されます。</p><div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末保存 + Cloudflare保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン情報</button><button class="ghost" onclick="exportAllProgress()">全履歴をJSON保存</button><label class="ghost" style="padding:14px 16px;border-radius:16px;display:inline-block;cursor:pointer">進行JSONを読み込み<input type="file" accept="application/json,.json" onchange="importProgress(this)" style="display:none"></label><span class="pill" id="roundCount"></span></div><div class="grid" id="examGrid"></div></section>
 <section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessからログアウト</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← 回数選択へ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
 <section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="exportCurrentJSON()">現在の進行をJSON保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
@@ -24,7 +24,7 @@
 const APP_CONFIG = {
   // auto: /api/github → 同梱ファイル → GitHub Raw の順に自動で試します。
   // Cloudflare側のGitHub環境変数が未設定でも、Date/Ques の同梱JSONから読み込めます。
-  sourceMode: 'auto',
+  sourceMode: 'local',
   github: { owner: '', repo: '', branch: 'main', rootPath: '' },
   cloudProgress: true
 };
@@ -42,6 +42,16 @@ const GUEST_KEY = 'me2_guest_login';
 function safeAssetPath(path){return String(path||'').replace(/^\.\//,'').replace(/^\//,'')}
 function githubConfigured(){const g=APP_CONFIG.github||{};return Boolean(g.owner&&g.repo&&g.owner!=='YOUR_GITHUB_USER'&&g.repo!=='ME2_JSON_App')}
 function sourceLabel(mode){return {auto:'自動',cloudflare_proxy:'Cloudflare Proxy',github_raw:'GitHub Raw',local:'同梱ファイル'}[mode]||mode}
+
+function fetchWithTimeout(url, options={}, ms=2500){
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), ms);
+  return fetch(url, {...options, signal: ctrl.signal}).finally(()=>clearTimeout(timer));
+}
+function friendlyFetchError(e){
+  if(e && (e.name === 'AbortError' || String(e.message||'').includes('aborted'))) return 'タイムアウト';
+  return e?.message || String(e);
+}
 function assetUrlForMode(path, mode){
   const safe=safeAssetPath(path);
   if(mode==='github_raw'){
@@ -54,7 +64,8 @@ function assetUrlForMode(path, mode){
 function assetUrl(path){return assetUrlForMode(path, activeSourceMode || 'local')}
 function candidateSourceModes(){
   if(APP_CONFIG.sourceMode && APP_CONFIG.sourceMode !== 'auto') return [APP_CONFIG.sourceMode];
-  const modes=['cloudflare_proxy','local'];
+  // 固まる原因になりやすい /api/github より、まず同梱ファイルを読む。
+  const modes=['local','cloudflare_proxy'];
   if(githubConfigured()) modes.push('github_raw');
   return modes;
 }
@@ -62,13 +73,13 @@ async function fetchJSON(path){
   const errors=[];
   for(const mode of candidateSourceModes()){
     try{
-      const r=await fetch(assetUrlForMode(path, mode),{cache:'no-store'});
+      const r=await fetchWithTimeout(assetUrlForMode(path, mode),{cache:'no-store'},2500);
       if(!r.ok) throw new Error(`${r.status}`);
       const data=await r.json();
       activeSourceMode=mode;
       $('sourceBadge').textContent=sourceLabel(mode);
       return data;
-    }catch(e){errors.push(`${mode}:${e.message||e}`)}
+    }catch(e){errors.push(`${mode}:${friendlyFetchError(e)}`)}
   }
   throw new Error(`${path}: ${errors.join(' / ')}`);
 }
@@ -95,14 +106,14 @@ async function apiProgress(method, payload=null){
   try{
     const opt={method,headers:{'content-type':'application/json',...guestHeaders()}};
     if(payload) opt.body=JSON.stringify(payload);
-    const r=await fetch('/api/progress',opt);
+    const r=await fetchWithTimeout('/api/progress',opt,2500);
     if(!r.ok) throw new Error(String(r.status));
     $('progressMode').textContent='端末保存 + Cloudflare KV保存';
     return await r.json();
   }catch(e){$('progressMode').textContent='端末保存のみ（Cloudflare KV未設定または未ログイン）';return null;}
 }
 async function loadMe(){
-  try{const r=await fetch('/api/me',{cache:'no-store',headers:guestHeaders()});if(!r.ok)throw new Error(String(r.status));me=await r.json();}
+  try{const r=await fetchWithTimeout('/api/me',{cache:'no-store',headers:guestHeaders()},2000);if(!r.ok)throw new Error(String(r.status));me=await r.json();}
   catch(e){me={authenticated:false,email:null,name:null,local:true};}
   $('userBadge').textContent=me.email?`ログイン: ${me.email}`:'未ログイン/ローカル';
   return me;
@@ -144,8 +155,8 @@ function restoreGuestLogin(){
   loadMe().then(showLoginInfo);
 }
 function logoutGuest(){
-  if(confirm('この端末のゲストログイン情報を削除しますか？
-※Cloudflare側に保存済みの履歴は、同じゲストID・復元コードで再ログインすれば復元できます。')){
+  if(confirm(`この端末のゲストログイン情報を削除しますか？
+※Cloudflare側に保存済みの履歴は、同じゲストID・復元コードで再ログインすれば復元できます。`)){
     clearGuest();
     loadMe().then(showLoginInfo);
   }
@@ -190,7 +201,14 @@ function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part
 function exportAllProgress(){const data={exportedAt:new Date().toISOString(),localStorage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('me2_'))data.localStorage[k]=localStorage.getItem(k)}downloadText('me2_all_progress_backup.json',JSON.stringify(data,null,2))}
 function exportCurrentCSV(){const rows=[['回','部門','問題','範囲','あなたの回答','正答','正誤','経過時間']];const pack=currentPack();state.answers.forEach((a,i)=>{const q=pack.questions[state.order[i]];rows.push([getExamRecord(state.examId).title,partName(state.part),q.number,q.range||'',a.choice,a.correctAnswer.join('/'),a.correct?'正解':'不正解',fmtTime(a.time)])});const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(`result_${state.examId}_${state.part}.csv`,csv,'text/csv;charset=utf-8')}
 function importProgress(input){const f=input.files?.[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{try{const obj=JSON.parse(reader.result);if(obj.localStorage){Object.entries(obj.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));alert('進行データを読み込みました。')}else if(obj.examId&&obj.part){saveLocal(stateKey(obj.examId,obj.part),obj);alert('進行データを読み込みました。')}}catch(e){alert('JSONを読み込めませんでした。')}};reader.readAsText(f)}
-async function init(){await loadMe();await loadIndex();await apiProgress('GET');showMenu()}
+async function init(){
+  $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
+  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/ローカル'; }
+  try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }
+  showMenu();
+  // 進行状況のクラウド確認は画面表示後に実行。ここで止まってもメニュー表示を妨げない。
+  apiProgress('GET').catch(()=>null);
+}
 init();
 </script>
 </body>
