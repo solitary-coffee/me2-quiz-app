@@ -23,17 +23,34 @@ function rawUrl(env, path) {
   const full = `${root ? root + '/' : ''}${path}`;
   return `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${full.split('/').map(encodeURIComponent).join('/')}`;
 }
+
+async function fetchLocalAsset(request, path) {
+  // GitHub環境変数が未設定でも、Pagesに同梱された Date/Ques / Date/img を返します。
+  // これにより、/api/github?path=... を使ったままでもローカル同梱ファイルへ自動フォールバックできます。
+  const localUrl = new URL('/' + path, request.url);
+  const res = await fetch(localUrl.toString(), { cf: { cacheTtl: path.endsWith('.json') ? 60 : 86400, cacheEverything: true } });
+  if (!res.ok) return null;
+  return new Response(res.body, {
+    status: 200,
+    headers: {
+      'content-type': CONTENT_TYPES[ext(path)] || res.headers.get('content-type') || 'application/octet-stream',
+      'cache-control': path.endsWith('.json') ? 'no-store' : 'public, max-age=86400',
+      'x-me2-source': 'local-fallback',
+    },
+  });
+}
+
 export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const path = sanitizePath(url.searchParams.get('path'));
   if (!path) return Response.json({ error: 'invalid path' }, { status: 400 });
   const target = rawUrl(env, path);
-  if (!target) return Response.json({ error: 'GITHUB_OWNER / GITHUB_REPO is not configured' }, { status: 500 });
+  if (!target) { const local = await fetchLocalAsset(request, path); if (local) return local; return Response.json({ error: 'GITHUB_OWNER / GITHUB_REPO is not configured and local asset was not found', path }, { status: 500 }); }
   const headers = { 'user-agent': 'me2-quiz-cloudflare-pages' };
   if (env.GITHUB_TOKEN) headers.authorization = `Bearer ${env.GITHUB_TOKEN}`;
   const upstream = await fetch(target, { headers, cf: { cacheTtl: path.endsWith('.json') ? 60 : 86400, cacheEverything: true } });
-  if (!upstream.ok) return Response.json({ error: 'github fetch failed', status: upstream.status, path }, { status: upstream.status });
+  if (!upstream.ok) { const local = await fetchLocalAsset(request, path); if (local) return local; return Response.json({ error: 'github fetch failed and local fallback failed', status: upstream.status, path }, { status: upstream.status }); }
   return new Response(upstream.body, {
     status: 200,
     headers: {

@@ -12,7 +12,7 @@ pages_build_output_dir = "."
 
 [vars]
 GITHUB_OWNER = "solitary-coffee"
-GITHUB_REPO = ""
+GITHUB_REPO = "me2-quiz-app"
 GITHUB_BRANCH = "main"
 GITHUB_ROOT = ""
 
