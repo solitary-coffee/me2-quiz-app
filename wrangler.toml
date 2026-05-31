@@ -11,8 +11,8 @@ compatibility_date = "2026-05-31"
 pages_build_output_dir = "."
 
 [vars]
-GITHUB_OWNER = "YOUR_GITHUB_USER"
-GITHUB_REPO = "ME2_Quiz_App"
+GITHUB_OWNER = "solitary-coffee"
+GITHUB_REPO = ""
 GITHUB_BRANCH = "main"
 GITHUB_ROOT = ""
 
