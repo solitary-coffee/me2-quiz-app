@@ -1,0 +1,6 @@
+# Cloudflare Pages専用設定。
+# 手動Pagesデプロイ時に使いたい場合：
+# npx wrangler pages deploy . --project-name me2-json-quiz --config wrangler.pages.toml
+name = "me2-json-quiz"
+compatibility_date = "2026-05-31"
+pages_build_output_dir = "."

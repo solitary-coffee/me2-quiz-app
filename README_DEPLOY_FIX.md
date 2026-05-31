@@ -1,65 +1,46 @@
 # デプロイエラー修正版
 
-## エラー原因
-
-`wrangler deploy` は Cloudflare Workers 用のコマンドです。
-静的ファイルを一緒にアップロードする場合は `[assets] directory = "..."` が必要です。
-今回のアプリは Cloudflare Pages + Pages Functions 向けなので、Pages では `wrangler deploy` ではなく `wrangler pages deploy`、またはCloudflare PagesのGitHub連携を使います。
-
-## 推奨：Cloudflare Pagesでデプロイ
-
-Cloudflare Pages の設定：
+## 今回のエラー
 
 ```text
-Build command: npm run build  または空欄
+[WARNING] It seems that you have run `wrangler deploy` on a Pages project
+[ERROR] Missing entry-point to Worker script or to assets directory
+```
+
+## 原因
+
+Cloudflare Pages用のプロジェクトで、Workers用の `wrangler deploy` が実行されています。
+Pagesでは `wrangler pages deploy` を使います。
+GitHub連携のCloudflare Pagesでは、Build commandには `wrangler deploy` を入れません。
+
+## Cloudflare Pages の正しい設定
+
+```text
+Build command: npm run build  または 空欄
 Build output directory: .
 Root directory: /
 ```
 
-
-
-`npm run deploy` や `npx wrangler deploy` を Build command に入れないでください。
-
-必要な設定：
+入れてはいけない例：
 
 ```text
-Environment variables:
-GITHUB_OWNER
-GITHUB_REPO
-GITHUB_BRANCH = main
-GITHUB_ROOT = 空欄またはサブフォルダ
-GITHUB_TOKEN = private repoの場合のみSecretで設定
-
-Bindings:
-KV namespace binding name = ME2_PROGRESS
+npx wrangler deploy
+wrangler deploy
+npm run deploy:worker
 ```
 
-## CLIでPagesへ手動デプロイする場合
+## CLIでPagesへ手動デプロイ
 
 ```bash
 npm install
-npm run deploy
+npm run deploy:pages
 ```
 
-これは内部で以下を実行します。
-
-```bash
-wrangler pages deploy . --project-name me2-json-quiz
-```
-
-## Workersで `wrangler deploy` したい場合
-
-Workers Static Assets用の設定ファイルも同梱しています。
+## Workersでデプロイしたい場合
 
 ```bash
 npm run deploy:worker
 ```
 
-これは以下を実行します。
-
-```bash
-wrangler deploy --config wrangler.worker.toml
-```
-
-ただし、Pages Functionsではなく `src/worker.js` がAPIを担当します。
-KV保存を使う場合は `wrangler.worker.toml` の `[[kv_namespaces]]` を設定してください。
+今回の修正版では、誤って `wrangler deploy` が実行されても止まりにくいよう、ルートの `wrangler.toml` に `main` と `[assets]` を追加済みです。
+ただし、基本はPagesデプロイを推奨します。
