@@ -32,9 +32,30 @@ const $=id=>document.getElementById(id);
 let me={authenticated:false,email:null,name:null};
 let examsIndex={exams:[]};
 let currentExamId=null, partsCache={}, tickHandle=null;
-let state={examId:null,part:null,mode:'all',order:[],index:0,correct:0,answers:[],startedAt:null,finished:false};
+let state={examId:null,part:null,mode:'all',order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 function fmtTime(ms){if(!ms||ms<0)return'00:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60,h=Math.floor(m/60),mm=m%60;return h>0?`${h}:${String(mm).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
+function ensureTimingFields(s){
+  if(!s) return s;
+  if(typeof s.elapsedMs!=='number'){
+    const last=s.answers&&s.answers.length?s.answers[s.answers.length-1].time:0;
+    s.elapsedMs=Number(last||0);
+  }
+  if(!('sessionStartedAt' in s)) s.sessionStartedAt=null;
+  if(!('timerRunning' in s)) s.timerRunning=false;
+  return s;
+}
+function currentElapsedMs(){
+  if(!state||!state.examId||!state.part) return 0;
+  const base=Number(state.elapsedMs||0);
+  if(state.timerRunning&&state.sessionStartedAt) return base+Math.max(0,Date.now()-state.sessionStartedAt);
+  if(typeof state.elapsedMs==='number') return base;
+  return state.startedAt?Math.max(0,Date.now()-state.startedAt):0;
+}
+function snapshotState(){
+  ensureTimingFields(state);
+  return {...state,elapsedMs:currentElapsedMs(),sessionStartedAt:null,timerRunning:false};
+}
 function partName(p){return p==='am'?'午前':'午後'}
 function correctLabel(q){return q.correct.length>1?q.correct.join(' または '):String(q.correct[0])}
 let activeSourceMode = 'local';
@@ -257,14 +278,14 @@ async function loadIndex(){
 async function getPart(examId,part){const key=`${examId}_${part}`;if(partsCache[key])return partsCache[key];const rec=getExamRecord(examId);const path=rec?.parts?.[part];if(!path)throw new Error('part path missing');partsCache[key]=await fetchJSON(path);return partsCache[key]}
 function getExamRecord(id){return examsIndex.exams.find(x=>String(x.id)===String(id))}
 function hideAll(){['menuCard','loginCard','partCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
-function showMenu(){hideAll();$('menuCard').classList.remove('hidden');renderMenu();updateHeader()}
+function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();$('menuCard').classList.remove('hidden');renderMenu();updateHeader()}
 function renderMenu(){const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
-async function selectExam(examId){currentExamId=examId;hideAll();$('partCard').classList.remove('hidden');const rec=getExamRecord(examId);$('selectedExamTitle').textContent=rec?rec.title:'試験回';await renderPartMenu()}
+async function selectExam(examId){if(state&&state.timerRunning){pauseTimer();saveState()}currentExamId=examId;hideAll();$('partCard').classList.remove('hidden');const rec=getExamRecord(examId);$('selectedExamTitle').textContent=rec?rec.title:'試験回';await renderPartMenu()}
 async function loadCloudState(examId,part){
   if(!hasCloudLogin()) return null;
   const res=await apiProgress('GET',{type:'state',examId,part});
   const cloudState=res?.data?.data;
-  if(cloudState&&cloudState.examId&&cloudState.part){saveLocal(stateKey(examId,part),cloudState);return cloudState;}
+  if(cloudState&&cloudState.examId&&cloudState.part){ensureTimingFields(cloudState);saveLocal(stateKey(examId,part),cloudState);return cloudState;}
   return null;
 }
 async function renderPartMenu(){
@@ -273,29 +294,33 @@ async function renderPartMenu(){
     let saved=loadLocal(stateKey(currentExamId,part));
     if(!saved && hasCloudLogin()) saved=await loadCloudState(currentExamId,part);
     const hist=loadLocal(historyKey(currentExamId,part),[]);
-    box.innerHTML=`<h3>${partName(part)}</h3><p class="small">${saved&&!saved.finished?'途中保存あり：'+(saved.index+1)+'問目 / ':''}履歴 ${hist.length}件</p><div class="row"><button onclick="startAttempt('${part}','all')">最初から</button>${saved&&!saved.finished?`<button class="secondary" onclick="resumeAttempt('${part}')">途中から</button>`:''}<button class="ghost" onclick="showHistory('${part}')">履歴</button></div>`;
+    if(saved) ensureTimingFields(saved);
+    const savedText=saved&&!saved.finished?`途中保存あり：${saved.index+1}問目 / 経過 ${fmtTime(saved.elapsedMs||0)} / `:'';
+    const lastText=hist.length&&hist[0].elapsedMs!==undefined?` / 直近 ${fmtTime(hist[0].elapsedMs||0)}`:'';
+    box.innerHTML=`<h3>${partName(part)}</h3><p class="small">${savedText}履歴 ${hist.length}件${lastText}</p><div class="row"><button onclick="startAttempt('${part}','all')">最初から</button>${saved&&!saved.finished?`<button class="secondary" onclick="resumeAttempt('${part}')">途中から</button>`:''}<button class="ghost" onclick="showHistory('${part}')">履歴</button></div>`;
   }
 }
-async function startAttempt(part,mode='all'){const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,order:[...Array(total).keys()],index:0,correct:0,answers:[],startedAt:Date.now(),finished:false};saveState();startTimer();showQuiz();renderQuestion()}
-async function resumeAttempt(part){let s=loadLocal(stateKey(currentExamId,part));if(!s&&hasCloudLogin())s=await loadCloudState(currentExamId,part);if(!s)return;state=s;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
+async function startAttempt(part,mode='all'){const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,order:[...Array(total).keys()],index:0,correct:0,answers:[],startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
+async function resumeAttempt(part){let s=loadLocal(stateKey(currentExamId,part));if(!s&&hasCloudLogin())s=await loadCloudState(currentExamId,part);if(!s)return;state=ensureTimingFields(s);state.timerRunning=false;state.sessionStartedAt=null;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
 function showQuiz(){hideAll();$('quizCard').classList.remove('hidden')}
 function currentPack(){return partsCache[`${state.examId}_${state.part}`]}function getCurrentQuestion(){return currentPack()?.questions?.[state.order[state.index]]}
 function renderQuestion(){const q=getCurrentQuestion();if(!q){showFinish();return}$('qMeta').textContent=`${getExamRecord(state.examId).title} ${partName(state.part)} 第${q.number}問 / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}`;$('bar').style.width=`${state.index/state.order.length*100}%`;$('stem').textContent=q.stem;const qImg=$('questionImage');qImg.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を表示（解答前に確認）</summary><p class="image-hint">この問題は図・表を使います。画像を確認して解答してください。</p><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';const choices=$('choices');choices.innerHTML='';q.choices.forEach((c,i)=>{const btn=document.createElement('button');btn.className='choice';btn.onclick=()=>answer(i+1);btn.innerHTML=`<span class="num">${i+1}</span><span>${escapeHtml(c)}</span>`;choices.appendChild(btn)});$('result').style.display='none';$('result').className='result';$('result').innerHTML='';$('nextBtn').classList.add('hidden');updateHeader();saveState()}
 function answeredCount(){return state.answers.length}
-function answer(choice){const q=getCurrentQuestion();if(state.answers[state.index])return;const correct=q.correct.includes(choice);state.answers[state.index]={q:q.number,choice,correct,correctAnswer:q.correct.slice(),time:Date.now()-state.startedAt,range:q.range||''};if(correct)state.correct++;Array.from(document.querySelectorAll('.choice')).forEach((btn,i)=>{btn.disabled=true;const n=i+1;if(q.correct.includes(n))btn.classList.add('correct');if(n===choice&&!correct)btn.classList.add('wrong')});showExplanation(q,choice,correct);$('nextBtn').classList.remove('hidden');$('bar').style.width=`${(state.index+1)/state.order.length*100}%`;saveState();updateHeader();setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80)}
+function answer(choice){const q=getCurrentQuestion();if(state.answers[state.index])return;const correct=q.correct.includes(choice);state.answers[state.index]={q:q.number,choice,correct,correctAnswer:q.correct.slice(),time:currentElapsedMs(),range:q.range||''};if(correct)state.correct++;Array.from(document.querySelectorAll('.choice')).forEach((btn,i)=>{btn.disabled=true;const n=i+1;if(q.correct.includes(n))btn.classList.add('correct');if(n===choice&&!correct)btn.classList.add('wrong')});showExplanation(q,choice,correct);$('nextBtn').classList.remove('hidden');$('bar').style.width=`${(state.index+1)/state.order.length*100}%`;saveState();updateHeader();setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80)}
 function showExplanation(q,choice,correct){const rate=answeredCount()?Math.round(state.correct/answeredCount()*1000)/10:0,res=$('result');res.style.display='block';res.className='result '+(correct?'good':'bad');const rows=q.choices.map((c,i)=>{const n=i+1,isC=q.correct.includes(n),note=(q.choiceNotes&&q.choiceNotes[i])?q.choiceNotes[i]:(isC?'この選択肢が正答です。':'誤りポイント：正答は '+correctLabel(q)+' です。');return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml(note)}</td></tr>`}).join('');const img=(q.hasFigure&&q.image)?`<details><summary>図・表を再表示</summary><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" /></details>`:'';res.innerHTML=`<h3>${correct?'正解！':'不正解'}</h3><p><b>あなたの回答：</b>${choice}　<b>正答：</b>${correctLabel(q)}　<b>現在の正答率：</b>${rate}%</p><p><b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>要点解説：</b>${escapeHtml(q.tip||'正答表に基づいて判定します。')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>どこが違う？ / 解説ポイント</th></tr></thead><tbody>${rows}</tbody></table>${img}`}
-function nextQuestion(){if(state.index>=state.order.length-1){state.finished=true;saveState();saveHistory();showFinish();return}state.index++;saveState();renderQuestion()}
-function startTimer(){clearInterval(tickHandle);tickHandle=setInterval(updateHeader,1000);updateHeader()}
-function updateHeader(){$('partBadge').textContent=state.part?`${getExamRecord(state.examId)?.title||''} ${partName(state.part)} ${Math.min(state.index+1,state.order.length)}/${state.order.length}`:'未開始';$('scoreBadge').textContent=`${state.correct}/${answeredCount()} 正解`;$('timerBadge').textContent=fmtTime(state.startedAt?Date.now()-state.startedAt:0)}
-function saveState(){if(!state.examId||!state.part)return;saveLocal(stateKey(state.examId,state.part),state);apiProgress('POST',{type:'state',examId:state.examId,part:state.part,data:state});$('saveStateText').textContent='保存済み'}
-function saveHistory(){const k=historyKey(state.examId,state.part),hist=loadLocal(k,[]);hist.unshift({...state,completedAt:new Date().toISOString()});saveLocal(k,hist);apiProgress('POST',{type:'history',examId:state.examId,part:state.part,data:hist})}
+function nextQuestion(){if(state.index>=state.order.length-1){pauseTimer();state.finished=true;saveState();saveHistory();showFinish();return}state.index++;saveState();renderQuestion()}
+function startTimer(){clearInterval(tickHandle);ensureTimingFields(state);state.timerRunning=true;state.sessionStartedAt=Date.now();tickHandle=setInterval(updateHeader,1000);updateHeader()}
+function pauseTimer(){clearInterval(tickHandle);if(state&&state.examId&&state.part){state.elapsedMs=currentElapsedMs();state.sessionStartedAt=null;state.timerRunning=false;}updateHeader()}
+function updateHeader(){$('partBadge').textContent=state.part?`${getExamRecord(state.examId)?.title||''} ${partName(state.part)} ${Math.min(state.index+1,state.order.length)}/${state.order.length}`:'未開始';$('scoreBadge').textContent=`${state.correct}/${answeredCount()} 正解`;$('timerBadge').textContent=fmtTime(currentElapsedMs())}
+function saveState(){if(!state.examId||!state.part)return;const snap=snapshotState();saveLocal(stateKey(state.examId,state.part),snap);apiProgress('POST',{type:'state',examId:state.examId,part:state.part,data:snap});$('saveStateText').textContent='保存済み'}
+function saveHistory(){const k=historyKey(state.examId,state.part),hist=loadLocal(k,[]);const snap={...snapshotState(),finished:true,completedAt:new Date().toISOString()};hist.unshift(snap);saveLocal(k,hist);apiProgress('POST',{type:'history',examId:state.examId,part:state.part,data:hist})}
 async function resetPart(part){if(confirm(`${getExamRecord(currentExamId).title} ${partName(part)} の途中保存を削除しますか？`)){localStorage.removeItem(stateKey(currentExamId,part));await apiProgress('DELETE',{type:'state',examId:currentExamId,part});renderPartMenu()}}
-function showFinish(){clearInterval(tickHandle);hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.answers.length?state.answers[state.answers.length-1].time:(Date.now()-state.startedAt);$('finalPart').textContent=`${getExamRecord(state.examId).title} ${partName(state.part)}`;$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
+function showFinish(){pauseTimer();hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=`${getExamRecord(state.examId).title} ${partName(state.part)}`;$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
 function renderWrongList(){const pack=currentPack(), wrong=state.answers.map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>第${q.number}問 / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
-function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',order:wrongIndexes,index:0,correct:0,answers:[],startedAt:Date.now(),finished:false};saveState();startTimer();showQuiz();renderQuestion()}
-function showHistory(part){const hist=loadLocal(historyKey(currentExamId,part),[]);hideAll();$('finishCard').classList.remove('hidden');$('wrongList').innerHTML=`<h3>${partName(part)} 履歴</h3>`+(hist.length?hist.map(h=>`<div class="history-row"><b>${new Date(h.completedAt).toLocaleString()}</b><br>${h.correct}/${h.order.length} 正解（${Math.round(h.correct/h.order.length*1000)/10}%）</div>`).join(''):'<p class="small">履歴はまだありません。</p>')}
+function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',order:wrongIndexes,index:0,correct:0,answers:[],startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
+function showHistory(part){const hist=loadLocal(historyKey(currentExamId,part),[]);hideAll();$('finishCard').classList.remove('hidden');$('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴</h3>`+(hist.length?hist.map(h=>`<div class="history-row"><b>${new Date(h.completedAt).toLocaleString()}</b><br>${h.correct}/${h.order.length} 正解（${Math.round(h.correct/h.order.length*1000)/10}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}</div>`).join(''):'<p class="small">履歴はまだありません。</p>')}
 function downloadText(filename,text,type='application/json'){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
-function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part}.json`,JSON.stringify(state,null,2))}
+function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part}.json`,JSON.stringify(snapshotState(),null,2))}
 function exportAllProgress(){const data={exportedAt:new Date().toISOString(),localStorage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('me2_'))data.localStorage[k]=localStorage.getItem(k)}downloadText('me2_all_progress_backup.json',JSON.stringify(data,null,2))}
 function exportCurrentCSV(){const rows=[['回','部門','問題','範囲','あなたの回答','正答','正誤','経過時間']];const pack=currentPack();state.answers.forEach((a,i)=>{const q=pack.questions[state.order[i]];rows.push([getExamRecord(state.examId).title,partName(state.part),q.number,q.range||'',a.choice,a.correctAnswer.join('/'),a.correct?'正解':'不正解',fmtTime(a.time)])});const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(`result_${state.examId}_${state.part}.csv`,csv,'text/csv;charset=utf-8')}
 function importProgress(input){const f=input.files?.[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{try{const obj=JSON.parse(reader.result);if(obj.localStorage){Object.entries(obj.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));alert('進行データを読み込みました。')}else if(obj.examId&&obj.part){saveLocal(stateKey(obj.examId,obj.part),obj);alert('進行データを読み込みました。')}}catch(e){alert('JSONを読み込めませんでした。')}};reader.readAsText(f)}
