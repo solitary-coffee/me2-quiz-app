@@ -37,7 +37,6 @@ async function getSiteAccount(request, kv) {
 async function getAccount(request, kv) {
   const site = await getSiteAccount(request, kv);
   if (site) return site;
-
   const guestId = request.headers.get('X-ME2-Guest-Id') || request.headers.get('x-me2-guest-id') || '';
   const guestToken = request.headers.get('X-ME2-Guest-Token') || request.headers.get('x-me2-guest-token') || '';
   const guestName = request.headers.get('X-ME2-Guest-Name') || request.headers.get('x-me2-guest-name') || '';
@@ -45,13 +44,21 @@ async function getAccount(request, kv) {
     const hash = await sha256Hex(`${guestId}:${guestToken}`);
     return { type: 'guest', id: `guest:${safeId(guestId)}:${hash.slice(0, 40)}`, label: guestName || guestId, publicId: guestId };
   }
-
   const email = getAccessEmail(request);
   if (email) return { type: 'access', id: `access:${safeId(email)}`, email, label: email };
   return null;
 }
 function key(account, type, examId, part) {
   return `${account.id}:${safeId(type)}:${safeId(examId)}:${safeId(part)}`;
+}
+function attemptPrefix(account, examId, part) {
+  return `${account.id}:attempt:${safeId(examId)}:${safeId(part)}:`;
+}
+function attemptKey(account, examId, part, attemptId) {
+  return `${attemptPrefix(account, examId, part)}${safeId(attemptId)}`;
+}
+function newAttemptId() {
+  return `att_${Date.now().toString(36)}_${crypto.randomUUID().replace(/-/g, '').slice(0, 10)}`;
 }
 async function bodyJson(request) { try { return await request.json(); } catch (_) { return {}; } }
 async function requireAccountAndKv(context) {
@@ -64,6 +71,40 @@ async function requireAccountAndKv(context) {
 function publicAccount(account) {
   return { type: account.type, label: account.label, loginId: account.loginId || null, displayName: account.displayName || null, publicId: account.publicId || null, email: account.email || null };
 }
+function normalizeAttempt(data, examId, part) {
+  const d = data && typeof data === 'object' ? { ...data } : {};
+  d.examId = d.examId || examId;
+  d.part = d.part || part;
+  d.attemptId = d.attemptId || newAttemptId();
+  d.completedAt = d.completedAt || new Date().toISOString();
+  d.finished = true;
+  return d;
+}
+async function readHistory(kv, account, examId, part) {
+  const prefix = attemptPrefix(account, examId, part);
+  const listed = await kv.list({ prefix, limit: 300 });
+  const rows = [];
+  for (const item of listed.keys || []) {
+    const val = await kv.get(item.name, 'json');
+    if (!val) continue;
+    rows.push(val.data && val.data.examId ? val.data : val);
+  }
+  // 旧形式の履歴も拾って、新形式への移行後も消えたように見せない。
+  const legacy = await kv.get(key(account, 'history', examId, part), 'json');
+  const legacyData = legacy?.data || legacy;
+  if (Array.isArray(legacyData)) rows.push(...legacyData);
+  const seen = new Set();
+  return rows
+    .filter(x => x && typeof x === 'object')
+    .map(x => normalizeAttempt(x, examId, part))
+    .filter(x => { const id = x.attemptId || `${x.startedAt}|${x.completedAt}|${x.correct}`; if (seen.has(id)) return false; seen.add(id); return true; })
+    .sort((a, b) => new Date(b.completedAt || b.startedAt || 0) - new Date(a.completedAt || a.startedAt || 0));
+}
+async function saveAttempt(kv, account, examId, part, data) {
+  const attempt = normalizeAttempt(data, examId, part);
+  await kv.put(attemptKey(account, examId, part, attempt.attemptId), JSON.stringify({ savedAt: new Date().toISOString(), accountType: account.type, data: attempt }));
+  return attempt;
+}
 export async function onRequestGet(context) {
   const checked = await requireAccountAndKv(context); if (checked.error) return checked.error;
   const { account, kv } = checked;
@@ -72,6 +113,10 @@ export async function onRequestGet(context) {
   const examId = url.searchParams.get('examId') || '';
   const part = url.searchParams.get('part') || '';
   if (!examId || !part) return Response.json({ ok: true, authenticated: true, cloudSave: true, account: publicAccount(account) });
+  if (type === 'history' || type === 'attempt') {
+    const data = await readHistory(kv, account, examId, part);
+    return Response.json({ ok: true, data, account: publicAccount(account) });
+  }
   const data = await kv.get(key(account, type, examId, part), 'json');
   return Response.json({ ok: true, data, account: publicAccount(account) });
 }
@@ -80,6 +125,16 @@ export async function onRequestPost(context) {
   const { account, kv } = checked;
   const body = await bodyJson(context.request);
   if (!body.type || !body.examId || !body.part) return Response.json({ error: 'type, examId, part are required' }, { status: 400 });
+  if (body.type === 'attempt') {
+    const attempt = await saveAttempt(kv, account, body.examId, body.part, body.data);
+    return Response.json({ ok: true, attemptId: attempt.attemptId, account: publicAccount(account) });
+  }
+  if (body.type === 'history') {
+    const list = Array.isArray(body.data) ? body.data : [body.data];
+    const saved = [];
+    for (const item of list.filter(Boolean)) saved.push(await saveAttempt(kv, account, body.examId, body.part, item));
+    return Response.json({ ok: true, saved: saved.length, account: publicAccount(account) });
+  }
   const value = { savedAt: new Date().toISOString(), accountType: account.type, data: body.data ?? null };
   await kv.put(key(account, body.type, body.examId, body.part), JSON.stringify(value));
   return Response.json({ ok: true, account: publicAccount(account) });
@@ -89,6 +144,12 @@ export async function onRequestDelete(context) {
   const { account, kv } = checked;
   const body = await bodyJson(context.request);
   if (!body.type || !body.examId || !body.part) return Response.json({ error: 'type, examId, part are required' }, { status: 400 });
+  if (body.type === 'history' || body.type === 'attempt') {
+    const listed = await kv.list({ prefix: attemptPrefix(account, body.examId, body.part), limit: 300 });
+    await Promise.all((listed.keys || []).map(k => kv.delete(k.name)));
+    await kv.delete(key(account, 'history', body.examId, body.part));
+    return Response.json({ ok: true, deleted: listed.keys?.length || 0 });
+  }
   await kv.delete(key(account, body.type, body.examId, body.part));
   return Response.json({ ok: true });
 }
