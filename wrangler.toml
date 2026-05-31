@@ -16,7 +16,7 @@
 #   npm run deploy:worker
 # ============================================================
 
-name = "me2-json-quiz"
+name = 'me2-quiz-app'
 compatibility_date = "2026-05-31"
 
 # Pages 用。Pages の Wrangler 設定として必要。
