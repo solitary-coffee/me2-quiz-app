@@ -8,13 +8,13 @@
 <title>ME2種 過去問演習 Cloudflare/GitHub版</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--accent2:#eef2ff;--good:#16a34a;--bad:#dc2626;--warn:#f59e0b;--shadow:0 8px 24px rgba(0,0,0,.045)}
-*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Noto Sans JP",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:max(18px,env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}.header-inner{max-width:1080px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}h1{font-size:18px;margin:0;line-height:1.35}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.badge,.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:13px;color:var(--muted)}main{max-width:1080px;margin:0 auto;padding:16px max(14px,env(safe-area-inset-right)) 76px max(14px,env(safe-area-inset-left))}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}.card h2{margin:0 0 10px;font-size:21px}.card h3{margin:0 0 8px;font-size:17px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.round-card,.part-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px;box-shadow:0 3px 12px rgba(0,0,0,.025)}.round-card{cursor:pointer}.round-card:hover{border-color:#93c5fd;background:#eff6ff}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button{border:0;border-radius:16px;padding:13px 16px;min-height:52px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff;font-size:16px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button.secondary{background:var(--accent2);color:#1d4ed8}button.ghost{background:#f3f4f6;color:#374151}button.danger{background:#fee2e2;color:#991b1b}button.warn{background:#fef3c7;color:#92400e}button:disabled{opacity:.7;cursor:not-allowed}.small{font-size:13px;color:var(--muted);line-height:1.65}.mobile-note,.filebox{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin:12px 0}.choice{width:100%;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);margin:10px 0;display:flex;align-items:flex-start;gap:12px;font-weight:750;line-height:1.55}.choice:hover{border-color:#93c5fd;background:#eff6ff}.choice.correct{border-color:#86efac;background:#f0fdf4;color:#166534}.choice.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}.choice .num{min-width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;color:#111827;font-size:18px}.choice.correct .num{background:#dcfce7;color:#166534}.choice.wrong .num{background:#fee2e2;color:#991b1b}.progressbar{width:100%;height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:10px}.progressbar>div{height:100%;width:0;background:var(--accent);transition:.25s}.question-title{font-size:14px;color:var(--muted);margin-bottom:8px;line-height:1.55}.stem{font-size:20px;line-height:1.75;white-space:pre-wrap;margin:10px 0 18px;word-break:break-word}.result{border-radius:16px;padding:14px;margin-top:14px;border:1px solid var(--line);background:#fafafa;display:none}.result.good{border-color:#86efac;background:#f0fdf4}.result.bad{border-color:#fecaca;background:#fef2f2}.explain-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}.explain-table th,.explain-table td{border-top:1px solid var(--line);padding:9px 6px;vertical-align:top;text-align:left}.source-img{width:100%;max-height:900px;object-fit:contain;border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:10px}.image-hint{font-size:13px;color:var(--muted);line-height:1.6;margin:6px 0 0}details{margin-top:12px}summary{cursor:pointer;color:#1d4ed8;font-weight:800;padding:8px 0}.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}.kpi div{background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:12px}.kpi b{display:block;font-size:20px;margin-top:2px}.wrong-item,.history-row{border-top:1px solid var(--line);padding:12px 0}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}@media(max-width:760px){.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Noto Sans JP",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:max(18px,env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}.header-inner{max-width:1080px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}h1{font-size:18px;margin:0;line-height:1.35}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.badge,.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:13px;color:var(--muted)}main{max-width:1080px;margin:0 auto;padding:16px max(14px,env(safe-area-inset-right)) 76px max(14px,env(safe-area-inset-left))}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}.card h2{margin:0 0 10px;font-size:21px}.card h3{margin:0 0 8px;font-size:17px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.round-card,.part-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px;box-shadow:0 3px 12px rgba(0,0,0,.025)}.round-card{cursor:pointer}.round-card:hover{border-color:#93c5fd;background:#eff6ff}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button{border:0;border-radius:16px;padding:13px 16px;min-height:52px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff;font-size:16px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button.secondary{background:var(--accent2);color:#1d4ed8}button.ghost{background:#f3f4f6;color:#374151}button.danger{background:#fee2e2;color:#991b1b}button.warn{background:#fef3c7;color:#92400e}button:disabled{opacity:.7;cursor:not-allowed}.small{font-size:13px;color:var(--muted);line-height:1.65}.mobile-note,.filebox{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin:12px 0}.choice{width:100%;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);margin:10px 0;display:flex;align-items:flex-start;gap:12px;font-weight:750;line-height:1.55}.choice:hover{border-color:#93c5fd;background:#eff6ff}.choice.correct{border-color:#86efac;background:#f0fdf4;color:#166534}.choice.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}.choice .num{min-width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;color:#111827;font-size:18px}.choice.correct .num{background:#dcfce7;color:#166534}.choice.wrong .num{background:#fee2e2;color:#991b1b}.progressbar{width:100%;height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:10px}.progressbar>div{height:100%;width:0;background:var(--accent);transition:.25s}.question-title{font-size:14px;color:var(--muted);margin-bottom:8px;line-height:1.55}.stem{font-size:20px;line-height:1.75;white-space:pre-wrap;margin:10px 0 18px;word-break:break-word}.result{border-radius:16px;padding:14px;margin-top:14px;border:1px solid var(--line);background:#fafafa;display:none}.result.good{border-color:#86efac;background:#f0fdf4}.result.bad{border-color:#fecaca;background:#fef2f2}.explain-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}.explain-table th,.explain-table td{border-top:1px solid var(--line);padding:9px 6px;vertical-align:top;text-align:left}.source-img{width:100%;max-height:900px;object-fit:contain;border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:10px}.image-hint{font-size:13px;color:var(--muted);line-height:1.6;margin:6px 0 0}details{margin-top:12px}summary{cursor:pointer;color:#1d4ed8;font-weight:800;padding:8px 0}.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}.kpi div{background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:12px}.kpi b{display:block;font-size:20px;margin-top:2px}.wrong-item,.history-row{border-top:1px solid var(--line);padding:12px 0}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}.form-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:800;color:#374151}.field input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #dbeafe;border-color:#60a5fa}.login-status{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;line-height:1.6}.account-card{background:#f0fdf4;border:1px solid #86efac;border-radius:16px;padding:12px;margin:10px 0}.danger-zone{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-top:12px}.status-ok{color:#166534}.status-warn{color:#92400e}@media(max-width:760px){.form-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
 </style>
 </head>
 <body>
 <header><div class="header-inner"><h1>ME2種 過去問ボタン式演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
-<section id="menuCard" class="card"><h2>試験回を選択</h2><p class="small">問題JSONと図表画像は <span class="code">Date/Ques</span> / <span class="code">Date/img</span> から取得します。通常はDate/Quesの同梱JSONから直接読み込みます。GitHubにpushされたファイルはCloudflare Pagesの再デプロイ後に反映されます。</p><div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末保存 + Cloudflare保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン情報</button><button class="ghost" onclick="exportAllProgress()">全履歴をJSON保存</button><label class="ghost" style="padding:14px 16px;border-radius:16px;display:inline-block;cursor:pointer">進行JSONを読み込み<input type="file" accept="application/json,.json" onchange="importProgress(this)" style="display:none"></label><span class="pill" id="roundCount"></span></div><div class="grid" id="examGrid"></div></section>
+<section id="menuCard" class="card"><h2>試験回を選択</h2><p class="small">問題JSONと図表画像は <span class="code">Date/Ques</span> / <span class="code">Date/img</span> から取得します。通常はDate/Quesの同梱JSONから直接読み込みます。GitHubにpushされたファイルはCloudflare Pagesの再デプロイ後に反映されます。</p><div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末保存 + Cloudflare保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="exportAllProgress()">全履歴をJSON保存</button><label class="ghost" style="padding:14px 16px;border-radius:16px;display:inline-block;cursor:pointer">進行JSONを読み込み<input type="file" accept="application/json,.json" onchange="importProgress(this)" style="display:none"></label><span class="pill" id="roundCount"></span></div><div class="grid" id="examGrid"></div></section>
 <section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessからログアウト</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← 回数選択へ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
 <section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="exportCurrentJSON()">現在の進行をJSON保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
@@ -39,6 +39,7 @@ function partName(p){return p==='am'?'午前':'午後'}
 function correctLabel(q){return q.correct.length>1?q.correct.join(' または '):String(q.correct[0])}
 let activeSourceMode = 'local';
 const GUEST_KEY = 'me2_guest_login';
+const SITE_AUTH_KEY = 'me2_site_auth';
 function safeAssetPath(path){return String(path||'').replace(/^\.\//,'').replace(/^\//,'')}
 function githubConfigured(){const g=APP_CONFIG.github||{};return Boolean(g.owner&&g.repo&&g.owner!=='YOUR_GITHUB_USER'&&g.repo!=='ME2_JSON_App')}
 function sourceLabel(mode){return {auto:'自動',cloudflare_proxy:'Cloudflare Proxy',github_raw:'GitHub Raw',local:'同梱ファイル'}[mode]||mode}
@@ -94,7 +95,13 @@ function randomToken(){
 function getGuest(){return loadLocal(GUEST_KEY,null)}
 function setGuest(g){saveLocal(GUEST_KEY,g)}
 function clearGuest(){localStorage.removeItem(GUEST_KEY)}
+function getSiteAuth(){return loadLocal(SITE_AUTH_KEY,null)}
+function setSiteAuth(a){saveLocal(SITE_AUTH_KEY,a)}
+function clearSiteAuth(){localStorage.removeItem(SITE_AUTH_KEY)}
+function hasCloudLogin(){const a=getSiteAuth(), g=getGuest();return Boolean((a&&a.loginId&&a.sessionToken)||(g&&g.id&&g.token))}
 function guestHeaders(){
+  const a=getSiteAuth();
+  if(a&&a.loginId&&a.sessionToken) return {'X-ME2-Login-Id':a.loginId,'X-ME2-Session-Token':a.sessionToken};
   const g=getGuest();
   if(!g||!g.id||!g.token) return {};
   return {'X-ME2-Guest-Id':g.id,'X-ME2-Guest-Token':g.token,'X-ME2-Guest-Name':g.name||'ゲスト'};
@@ -104,62 +111,138 @@ const stateKey=(examId,part)=>`me2_state_${examId}_${part}`; const historyKey=(e
 async function apiProgress(method, payload=null){
   if(!APP_CONFIG.cloudProgress) return null;
   try{
+    let url='/api/progress';
     const opt={method,headers:{'content-type':'application/json',...guestHeaders()}};
-    if(payload) opt.body=JSON.stringify(payload);
-    const r=await fetchWithTimeout('/api/progress',opt,2500);
+    if(method==='GET' && payload){
+      const params=new URLSearchParams();
+      Object.entries(payload).forEach(([k,v])=>{if(v!==undefined&&v!==null)params.set(k,String(v))});
+      url += '?' + params.toString();
+    } else if(payload) opt.body=JSON.stringify(payload);
+    const r=await fetchWithTimeout(url,opt,3000);
     if(!r.ok) throw new Error(String(r.status));
     $('progressMode').textContent='端末保存 + Cloudflare KV保存';
     return await r.json();
-  }catch(e){$('progressMode').textContent='端末保存のみ（Cloudflare KV未設定または未ログイン）';return null;}
+  }catch(e){$('progressMode').textContent='端末保存のみ（KV未設定・未ログイン・通信失敗）';return null;}
 }
 async function loadMe(){
   try{const r=await fetchWithTimeout('/api/me',{cache:'no-store',headers:guestHeaders()},2000);if(!r.ok)throw new Error(String(r.status));me=await r.json();}
   catch(e){me={authenticated:false,email:null,name:null,local:true};}
-  $('userBadge').textContent=me.email?`ログイン: ${me.email}`:'未ログイン/ローカル';
+  $('userBadge').textContent=me.accountLabel?`ログイン: ${me.accountLabel}`:'未ログイン/ローカル';
   return me;
 }
 function showLoginInfo(){
   hideAll();
   $('loginCard').classList.remove('hidden');
+  const site=getSiteAuth();
   const g=getGuest();
-  const account = g ? `ゲストログイン中：${escapeHtml(g.name||'ゲスト')}<br>ゲストID：<span class="code">${escapeHtml(g.id)}</span><br>復元コード：<span class="code">${escapeHtml(g.token)}</span>` : 'ゲスト未ログイン';
-  $('loginInfo').innerHTML=`
-    <p><b>状態：</b>${me.accountLabel?escapeHtml(me.accountLabel):escapeHtml(g?`${g.name||'ゲスト'}（ゲスト）`:'未ログイン')}</p>
-    <p><b>サイト内ゲスト：</b><br>${account}</p>
+  const siteBox = site ? `
+    <div class="account-card small">
+      <b>サイトログイン中</b><br>
+      ログインID：<span class="code">${escapeHtml(site.loginId)}</span><br>
+      表示名：${escapeHtml(site.displayName||site.loginId)}<br>
+      保存先：Cloudflare KV
+    </div>` : `<p class="small">サイトログインは未ログインです。好きなログインIDを登録すると、別端末でも同じIDで進行状況を復元できます。</p>`;
+  const guestBox = g ? `
     <div class="mobile-note small">
-      ゲストIDと復元コードを控えておくと、別端末でも同じ進行状況を復元できます。Cloudflare Accessは使わなくてもOKです。
+      <b>旧ゲストログイン中</b><br>
+      ゲストID：<span class="code">${escapeHtml(g.id)}</span><br>
+      復元コード：<span class="code">${escapeHtml(g.token)}</span>
+    </div>` : '';
+  $('loginInfo').innerHTML=`
+    ${siteBox}
+    <div class="form-grid">
+      <div class="form-card">
+        <h3>新規登録</h3>
+        <p class="small">ログインIDは自分で決められます。英数字・_・- の3〜32文字がおすすめです。</p>
+        <div class="field"><label for="regLoginId">ログインID</label><input id="regLoginId" autocomplete="username" placeholder="例：me2_user01"></div>
+        <div class="field"><label for="regName">表示名</label><input id="regName" autocomplete="nickname" placeholder="例：太郎 / ゲスト など"></div>
+        <div class="field"><label for="regPassword">保存用パスワード</label><input id="regPassword" type="password" autocomplete="new-password" placeholder="4文字以上"></div>
+        <div class="field"><label for="regPassword2">保存用パスワード確認</label><input id="regPassword2" type="password" autocomplete="new-password" placeholder="もう一度入力"></div>
+        <button onclick="registerSiteAccount()">このIDで登録</button>
+      </div>
+      <div class="form-card">
+        <h3>ログイン</h3>
+        <p class="small">登録済みのログインIDと保存用パスワードでログインします。</p>
+        <div class="field"><label for="loginId">ログインID</label><input id="loginId" autocomplete="username" placeholder="登録したID"></div>
+        <div class="field"><label for="loginPassword">保存用パスワード</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="保存用パスワード"></div>
+        <button class="secondary" onclick="loginSiteAccount()">ログイン</button>
+      </div>
     </div>
-    <div class="row">
-      <button onclick="createGuestLogin()">ゲストで開始</button>
-      <button class="secondary" onclick="restoreGuestLogin()">既存ゲストでログイン</button>
-      <button class="danger" onclick="logoutGuest()">ゲストログアウト</button>
+    <div id="siteLoginStatus" class="login-status">入力内容はこの画面内で送信します。ポップアップは使いません。</div>
+    <div class="danger-zone small">
+      <b>補助機能</b><br>
+      Cloudflare KVが未設定の場合は、端末内保存だけで動きます。<br>
+      ${guestBox}
+      <div class="row" style="margin-top:10px">
+        <button class="ghost" onclick="createGuestLogin()">登録せず簡単ゲストで使う</button>
+        <button class="danger" onclick="logoutSiteAccount()">サイトログアウト</button>
+        <button class="danger" onclick="logoutGuest()">旧ゲスト情報を削除</button>
+        <button class="secondary" onclick="loadMe().then(showLoginInfo)">ログイン状態を再確認</button>
+      </div>
     </div>
-    <p><b>Cloudflare Access：</b>${escapeHtml(me.access?.email||me.email||'-')}</p>
+    <p class="small"><b>Cloudflare Access：</b>${escapeHtml(me.access?.email||me.email||'-')}</p>
   `;
 }
+function loginStatus(msg, ok=false){const el=$('siteLoginStatus');if(el){el.innerHTML=msg;el.className='login-status '+(ok?'status-ok':'status-warn')}}
+function normalizeLoginId(v){return String(v||'').trim().toLowerCase()}
+async function registerSiteAccount(){
+  const loginId=normalizeLoginId($('regLoginId').value), displayName=String($('regName').value||'').trim()||loginId;
+  const password=$('regPassword').value, password2=$('regPassword2').value;
+  if(!/^[a-z0-9_-]{3,32}$/.test(loginId)) return loginStatus('ログインIDは英数字・_・- の3〜32文字で入力してください。');
+  if(password.length<4) return loginStatus('保存用パスワードは4文字以上にしてください。');
+  if(password!==password2) return loginStatus('確認用パスワードが一致していません。');
+  loginStatus('登録中…');
+  try{
+    const r=await fetchWithTimeout('/api/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'register',loginId,displayName,password})},5000);
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(data.error||String(r.status));
+    setSiteAuth({loginId:data.account.loginId,displayName:data.account.displayName,sessionToken:data.sessionToken,sessionExpiresAt:data.sessionExpiresAt});
+    clearGuest();
+    await loadMe();
+    loginStatus(`登録しました。現在のログインID：<span class="code">${escapeHtml(data.account.loginId)}</span>`,true);
+    setTimeout(showLoginInfo,600);
+  }catch(e){loginStatus('登録できません：'+escapeHtml(e.message||e));}
+}
+async function loginSiteAccount(){
+  const loginId=normalizeLoginId($('loginId').value), password=$('loginPassword').value;
+  if(!loginId||!password) return loginStatus('ログインIDと保存用パスワードを入力してください。');
+  loginStatus('ログイン中…');
+  try{
+    const r=await fetchWithTimeout('/api/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'login',loginId,password})},5000);
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(data.error||String(r.status));
+    setSiteAuth({loginId:data.account.loginId,displayName:data.account.displayName,sessionToken:data.sessionToken,sessionExpiresAt:data.sessionExpiresAt});
+    clearGuest();
+    await loadMe();
+    loginStatus(`ログインしました。ようこそ、${escapeHtml(data.account.displayName||data.account.loginId)} さん。`,true);
+    if(currentExamId) renderPartMenu();
+    setTimeout(showLoginInfo,600);
+  }catch(e){loginStatus('ログインできません：'+escapeHtml(e.message||e));}
+}
+async function logoutSiteAccount(){
+  const a=getSiteAuth();
+  if(a&&a.sessionToken){
+    try{await fetchWithTimeout('/api/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'logout',sessionToken:a.sessionToken})},2500)}catch(e){}
+  }
+  clearSiteAuth();
+  await loadMe();
+  showLoginInfo();
+}
 function createGuestLogin(){
-  const name=prompt('表示名を入力してください（空欄ならゲスト）','ゲスト')||'ゲスト';
-  const g={id:randomId('guest'),token:randomToken(),name,createdAt:new Date().toISOString()};
-  setGuest(g);
-  alert(`ゲストIDと復元コードを控えてください。
-
-ゲストID: ${g.id}
-復元コード: ${g.token}`);
+  const g={id:randomId('guest'),token:randomToken(),name:'ゲスト',createdAt:new Date().toISOString()};
+  setGuest(g);clearSiteAuth();
   loadMe().then(showLoginInfo);
 }
 function restoreGuestLogin(){
-  const id=prompt('ゲストIDを入力してください'); if(!id)return;
-  const token=prompt('復元コードを入力してください'); if(!token)return;
-  const name=prompt('表示名を入力してください（空欄ならゲスト）','ゲスト')||'ゲスト';
-  setGuest({id:id.trim(),token:token.trim(),name,restoredAt:new Date().toISOString()});
+  const id=String($('oldGuestId')?.value||'').trim();
+  const token=String($('oldGuestToken')?.value||'').trim();
+  if(!id||!token) return loginStatus('ゲストIDと復元コードを入力してください。');
+  setGuest({id,token,name:'ゲスト',restoredAt:new Date().toISOString()});clearSiteAuth();
   loadMe().then(showLoginInfo);
 }
 function logoutGuest(){
-  if(confirm(`この端末のゲストログイン情報を削除しますか？
-※Cloudflare側に保存済みの履歴は、同じゲストID・復元コードで再ログインすれば復元できます。`)){
-    clearGuest();
-    loadMe().then(showLoginInfo);
-  }
+  clearGuest();
+  loadMe().then(showLoginInfo);
 }
 async function loadIndex(){
   $('sourceBadge').textContent='自動確認中';
@@ -177,9 +260,24 @@ function hideAll(){['menuCard','loginCard','partCard','quizCard','finishCard'].f
 function showMenu(){hideAll();$('menuCard').classList.remove('hidden');renderMenu();updateHeader()}
 function renderMenu(){const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
 async function selectExam(examId){currentExamId=examId;hideAll();$('partCard').classList.remove('hidden');const rec=getExamRecord(examId);$('selectedExamTitle').textContent=rec?rec.title:'試験回';await renderPartMenu()}
-async function renderPartMenu(){for(const part of ['am','pm']){const box=$(part+'Box'), saved=loadLocal(stateKey(currentExamId,part));const hist=loadLocal(historyKey(currentExamId,part),[]);box.innerHTML=`<h3>${partName(part)}</h3><p class="small">${saved&&!saved.finished?'途中保存あり：'+(saved.index+1)+'問目 / ':''}履歴 ${hist.length}件</p><div class="row"><button onclick="startAttempt('${part}','all')">最初から</button>${saved&&!saved.finished?`<button class="secondary" onclick="resumeAttempt('${part}')">途中から</button>`:''}<button class="ghost" onclick="showHistory('${part}')">履歴</button></div>`}}
+async function loadCloudState(examId,part){
+  if(!hasCloudLogin()) return null;
+  const res=await apiProgress('GET',{type:'state',examId,part});
+  const cloudState=res?.data?.data;
+  if(cloudState&&cloudState.examId&&cloudState.part){saveLocal(stateKey(examId,part),cloudState);return cloudState;}
+  return null;
+}
+async function renderPartMenu(){
+  for(const part of ['am','pm']){
+    const box=$(part+'Box');
+    let saved=loadLocal(stateKey(currentExamId,part));
+    if(!saved && hasCloudLogin()) saved=await loadCloudState(currentExamId,part);
+    const hist=loadLocal(historyKey(currentExamId,part),[]);
+    box.innerHTML=`<h3>${partName(part)}</h3><p class="small">${saved&&!saved.finished?'途中保存あり：'+(saved.index+1)+'問目 / ':''}履歴 ${hist.length}件</p><div class="row"><button onclick="startAttempt('${part}','all')">最初から</button>${saved&&!saved.finished?`<button class="secondary" onclick="resumeAttempt('${part}')">途中から</button>`:''}<button class="ghost" onclick="showHistory('${part}')">履歴</button></div>`;
+  }
+}
 async function startAttempt(part,mode='all'){const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,order:[...Array(total).keys()],index:0,correct:0,answers:[],startedAt:Date.now(),finished:false};saveState();startTimer();showQuiz();renderQuestion()}
-async function resumeAttempt(part){const s=loadLocal(stateKey(currentExamId,part));if(!s)return;state=s;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
+async function resumeAttempt(part){let s=loadLocal(stateKey(currentExamId,part));if(!s&&hasCloudLogin())s=await loadCloudState(currentExamId,part);if(!s)return;state=s;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
 function showQuiz(){hideAll();$('quizCard').classList.remove('hidden')}
 function currentPack(){return partsCache[`${state.examId}_${state.part}`]}function getCurrentQuestion(){return currentPack()?.questions?.[state.order[state.index]]}
 function renderQuestion(){const q=getCurrentQuestion();if(!q){showFinish();return}$('qMeta').textContent=`${getExamRecord(state.examId).title} ${partName(state.part)} 第${q.number}問 / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}`;$('bar').style.width=`${state.index/state.order.length*100}%`;$('stem').textContent=q.stem;const qImg=$('questionImage');qImg.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を表示（解答前に確認）</summary><p class="image-hint">この問題は図・表を使います。画像を確認して解答してください。</p><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';const choices=$('choices');choices.innerHTML='';q.choices.forEach((c,i)=>{const btn=document.createElement('button');btn.className='choice';btn.onclick=()=>answer(i+1);btn.innerHTML=`<span class="num">${i+1}</span><span>${escapeHtml(c)}</span>`;choices.appendChild(btn)});$('result').style.display='none';$('result').className='result';$('result').innerHTML='';$('nextBtn').classList.add('hidden');updateHeader();saveState()}
