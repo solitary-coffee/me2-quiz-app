@@ -16,6 +16,8 @@ Build output directory: .
 Root directory: /
 ```
 
+
+
 `npm run deploy` や `npx wrangler deploy` を Build command に入れないでください。
 
 必要な設定：
