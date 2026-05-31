@@ -21,6 +21,19 @@ function safeLoginId(v) {
   const id = String(v || '').trim().toLowerCase();
   return /^[a-z0-9_-]{3,32}$/.test(id) ? id : null;
 }
+function simpleHashText(str) {
+  let h = 2166136261;
+  const t = String(str || '');
+  for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(36);
+}
+function attemptSignature(data, examId, part) {
+  const d = data && typeof data === 'object' ? data : {};
+  const answers = Array.isArray(d.answers) ? d.answers.map(a => `${a?.q || ''}:${a?.choice || ''}:${(a?.correctAnswer || []).join('/')}:${a?.correct ? '1' : '0'}`).join(',') : '';
+  const order = Array.isArray(d.order) ? d.order.join(',') : '';
+  return simpleHashText([d.examId || examId || '', d.part || part || '', d.mode || 'all', d.startedAt || '', d.completedAt || '', d.correct ?? '', d.elapsedMs ?? '', order, answers].join('|'));
+}
+function stableLegacyAttemptId(data, examId, part) { return `legacy_${attemptSignature(data, examId, part)}`; }
 async function sha256Hex(text) {
   const bytes = new TextEncoder().encode(String(text || ''));
   const digest = await crypto.subtle.digest('SHA-256', bytes);
@@ -71,14 +84,26 @@ async function requireAccountAndKv(context) {
 function publicAccount(account) {
   return { type: account.type, label: account.label, loginId: account.loginId || null, displayName: account.displayName || null, publicId: account.publicId || null, email: account.email || null };
 }
-function normalizeAttempt(data, examId, part) {
+function normalizeAttempt(data, examId, part, createNew = false) {
   const d = data && typeof data === 'object' ? { ...data } : {};
   d.examId = d.examId || examId;
   d.part = d.part || part;
-  d.attemptId = d.attemptId || newAttemptId();
+  d.attemptId = d.attemptId || (createNew ? newAttemptId() : stableLegacyAttemptId(d, examId, part));
   d.completedAt = d.completedAt || new Date().toISOString();
   d.finished = true;
   return d;
+}
+function dedupeAttempts(rows, examId, part) {
+  const seen = new Set();
+  const out = [];
+  rows.filter(x => x && typeof x === 'object').forEach(raw => {
+    const x = normalizeAttempt(raw, examId, part, false);
+    const keys = [x.attemptId, attemptSignature(x, examId, part)].filter(Boolean);
+    if (keys.some(k => seen.has(k))) return;
+    keys.forEach(k => seen.add(k));
+    out.push(x);
+  });
+  return out.sort((a, b) => new Date(b.completedAt || b.startedAt || 0) - new Date(a.completedAt || a.startedAt || 0));
 }
 async function readHistory(kv, account, examId, part) {
   const prefix = attemptPrefix(account, examId, part);
@@ -93,15 +118,10 @@ async function readHistory(kv, account, examId, part) {
   const legacy = await kv.get(key(account, 'history', examId, part), 'json');
   const legacyData = legacy?.data || legacy;
   if (Array.isArray(legacyData)) rows.push(...legacyData);
-  const seen = new Set();
-  return rows
-    .filter(x => x && typeof x === 'object')
-    .map(x => normalizeAttempt(x, examId, part))
-    .filter(x => { const id = x.attemptId || `${x.startedAt}|${x.completedAt}|${x.correct}`; if (seen.has(id)) return false; seen.add(id); return true; })
-    .sort((a, b) => new Date(b.completedAt || b.startedAt || 0) - new Date(a.completedAt || a.startedAt || 0));
+  return dedupeAttempts(rows, examId, part);
 }
 async function saveAttempt(kv, account, examId, part, data) {
-  const attempt = normalizeAttempt(data, examId, part);
+  const attempt = normalizeAttempt(data, examId, part, true);
   await kv.put(attemptKey(account, examId, part, attempt.attemptId), JSON.stringify({ savedAt: new Date().toISOString(), accountType: account.type, data: attempt }));
   return attempt;
 }

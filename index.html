@@ -117,8 +117,25 @@ let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,corr
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 function fmtTime(ms){if(!ms||ms<0)return'00:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60,h=Math.floor(m/60),mm=m%60;return h>0?`${h}:${String(mm).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
 function makeAttemptId(){return 'att_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,10)}
-function historyIdentity(h){return h?.attemptId || [h?.examId,h?.part,h?.startedAt,h?.completedAt,h?.correct,h?.order?.length].join('|')}
-function mergeHistory(...lists){const map=new Map();lists.flat().filter(Boolean).forEach(h=>{const x=ensureTimingFields({...h});const id=historyIdentity(x);if(!map.has(id))map.set(id,x);});return [...map.values()].sort((a,b)=>new Date(b.completedAt||b.startedAt||0)-new Date(a.completedAt||a.startedAt||0));}
+function simpleHashText(str){let h=2166136261;for(let i=0;i<String(str).length;i++){h^=String(str).charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36)}
+function historySignature(h){
+  const answers=(h?.answers||[]).map(a=>`${a.q||''}:${a.choice||''}:${(a.correctAnswer||[]).join('/')}:${a.correct?'1':'0'}`).join(',');
+  const order=(h?.order||[]).join(',');
+  return simpleHashText([h?.examId||'',h?.part||'',h?.mode||'all',h?.startedAt||'',h?.completedAt||'',h?.correct??'',h?.elapsedMs??'',order,answers].join('|'));
+}
+function stableLegacyAttemptId(h){return 'legacy_'+historySignature(h)}
+function historyIdentity(h){return h?.attemptId || stableLegacyAttemptId(h)}
+function mergeHistory(...lists){
+  const map=new Map(), seen=new Set();
+  lists.flat().filter(Boolean).forEach(h=>{
+    const x=ensureTimingFields({...h});
+    const keys=[historyIdentity(x), historySignature(x)].filter(Boolean);
+    if(keys.some(k=>seen.has(k))) return;
+    keys.forEach(k=>seen.add(k));
+    map.set(keys[0],x);
+  });
+  return [...map.values()].sort((a,b)=>new Date(b.completedAt||b.startedAt||0)-new Date(a.completedAt||a.startedAt||0));
+}
 function ensureTimingFields(s){
   if(!s) return s;
   if(typeof s.elapsedMs!=='number'){
@@ -127,7 +144,7 @@ function ensureTimingFields(s){
   }
   if(!('sessionStartedAt' in s)) s.sessionStartedAt=null;
   if(!('timerRunning' in s)) s.timerRunning=false;
-  if(!s.attemptId) s.attemptId='legacy_'+String(s.startedAt||Date.now())+'_'+Math.random().toString(36).slice(2,8);
+  if(!s.attemptId) s.attemptId=stableLegacyAttemptId(s);
   return s;
 }
 function currentElapsedMs(){
@@ -420,20 +437,60 @@ async function resetPart(part){if(confirm(`${getExamRecord(currentExamId).title}
 function showFinish(){pauseTimer();hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=`${getExamRecord(state.examId).title} ${partName(state.part)}`;$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
 function renderWrongList(){const pack=currentPack(), wrong=state.answers.map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>第${q.number}問 / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
 function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
+function historyStatsHtml(hist, pack){
+  const base=hist.filter(h=>h && (h.mode||'all')==='all');
+  const target=base.length?base:hist;
+  const rates=target.map(h=>{const total=h.order?.length||h.answers?.length||0;return total?((h.correct||0)/total*100):0});
+  const attempts=target.length;
+  const avgRate=attempts?rates.reduce((a,b)=>a+b,0)/attempts:0;
+  const bestRate=attempts?Math.max(...rates):0;
+  const latest=target[0];
+  const latestTotal=latest?.order?.length||latest?.answers?.length||0;
+  const latestRate=latestTotal?((latest.correct||0)/latestTotal*100):0;
+  const totalTime=target.reduce((a,h)=>a+Number(h.elapsedMs||0),0);
+  const avgTime=attempts?totalTime/attempts:0;
+  const missMap=new Map();
+  target.forEach(h=>{
+    (h.answers||[]).forEach((a,i)=>{
+      if(a && !a.correct){
+        const qNo=a.q || pack?.questions?.[h.order?.[i]]?.number || '?';
+        missMap.set(qNo,(missMap.get(qNo)||0)+1);
+      }
+    });
+  });
+  const misses=[...missMap.entries()].sort((a,b)=>b[1]-a[1]||Number(a[0])-Number(b[0])).slice(0,5);
+  const missText=misses.length?misses.map(([q,c])=>`第${q}問 ${c}回`).join(' / '):'なし';
+  return `<div class="card" style="box-shadow:none;background:#f8fafc;margin:10px 0 14px">
+    <h3>全体統計</h3>
+    <div class="kpi">
+      <div><b>${attempts}</b><span>通常演習回数</span></div>
+      <div><b>${Math.round(avgRate*10)/10}%</b><span>平均正答率</span></div>
+      <div><b>${Math.round(bestRate*10)/10}%</b><span>最高正答率</span></div>
+      <div><b>${Math.round(latestRate*10)/10}%</b><span>最新正答率</span></div>
+      <div><b>${fmtTime(totalTime)}</b><span>累計時間</span></div>
+      <div><b>${fmtTime(avgTime)}</b><span>平均時間</span></div>
+    </div>
+    <p class="small"><b>よく間違える問題：</b>${escapeHtml(missText)}</p>
+    ${hist.length!==attempts?`<p class="small">※統計は通常演習を優先して集計しています。間違い復習を含む総履歴は ${hist.length} 件です。</p>`:''}
+  </div>`;
+}
 async function showHistory(part){
   hideAll();$('finishCard').classList.remove('hidden');
   $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴</h3><p class="small">履歴を読み込み中…</p>`;
   await getPart(currentExamId,part);
   let hist=loadLocal(historyKey(currentExamId,part),[]);
-  if(hasCloudLogin()){const cloudHist=await loadCloudHistory(currentExamId,part);hist=mergeHistory(hist,cloudHist);saveMergedHistoryLocal(currentExamId,part,hist);}
+  if(hasCloudLogin()){const cloudHist=await loadCloudHistory(currentExamId,part);hist=mergeHistory(hist,cloudHist);}
+  hist=mergeHistory(hist);
+  saveMergedHistoryLocal(currentExamId,part,hist);
   const pack=partsCache[`${currentExamId}_${part}`];
+  const stats=historyStatsHtml(hist, pack);
   const rows=hist.map((h,idx)=>{
-    const total=h.order?.length||0, rate=total?Math.round((h.correct||0)/total*1000)/10:0;
+    const total=h.order?.length||h.answers?.length||0, rate=total?Math.round((h.correct||0)/total*1000)/10:0;
     const wrong=(h.answers||[]).map((a,i)=>({a,q:pack?.questions?.[h.order?.[i]]})).filter(x=>x.a&&!x.a.correct&&x.q);
     const wrongHtml=wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>第${q.number}問 / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解、または間違いデータなし。</p>';
     return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${h.mode==='wrong'?'間違い復習 / ':''}${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<br><span class="small">履歴ID：${escapeHtml(h.attemptId||'legacy')}</span><details><summary>この回の間違いを見る</summary>${wrongHtml}</details></div>`;
   }).join('');
-  $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3>`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
+  $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3>${stats}`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
 }
 function downloadText(filename,text,type='application/json'){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
 function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part}.json`,JSON.stringify(snapshotState(),null,2))}
