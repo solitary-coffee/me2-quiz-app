@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "me2-quiz-part-v1",
+  "examId": "47",
+  "title": "第47回",
+  "subtitle": "第2種ME技術実力検定試験",
+  "part": "am",
+  "partLabel": "午前",
+  "questionCount": 60,
+  "questions": [
+    {
+      "id": "am01",
+      "part": "am",
+      "number": 1,
+      "page": 3,
+      "stem": "問題文を入れる",
+      "choices": [
+        "選択肢1",
+        "選択肢2",
+        "選択肢3",
+        "選択肢4",
+        "選択肢5"
+      ],
+      "correct": [
+        1
+      ],
+      "negative": false,
+      "range": "範囲名（例：基礎医学：呼吸生理）",
+      "tip": "要点解説を入れる",
+      "choiceNotes": [
+        "選択肢1の正しい理由/違う箇所",
+        "選択肢2の正しい理由/違う箇所",
+        "選択肢3の正しい理由/違う箇所",
+        "選択肢4の正しい理由/違う箇所",
+        "選択肢5の正しい理由/違う箇所"
+      ],
+      "hasFigure": true,
+      "image": "Date/img/47/am_p3.jpg"
+    }
+  ]
+}

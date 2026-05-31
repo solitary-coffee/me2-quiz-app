@@ -1,0 +1,23 @@
+# Cloudflare Workers + Static Assets で `wrangler deploy` したい場合だけ使う設定です。
+# 通常は Cloudflare Pages を推奨します。
+name = "me2-json-quiz"
+main = "./src/worker.js"
+compatibility_date = "2026-05-31"
+
+[assets]
+directory = "."
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+[vars]
+GITHUB_OWNER = "YOUR_GITHUB_USER"
+GITHUB_REPO = "ME2_JSON_App"
+GITHUB_BRANCH = "main"
+GITHUB_ROOT = ""
+
+# KV保存をWorkersで使う場合は、先にKV namespaceを作成して下を有効化してください。
+# npx wrangler kv namespace create ME2_PROGRESS
+# [[kv_namespaces]]
+# binding = "ME2_PROGRESS"
+# id = "作成されたKV namespace id"

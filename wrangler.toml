@@ -1,0 +1,11 @@
+# Cloudflare Pages 用の設定です。
+# Pages の GitHub 連携で使う場合は、Build command を空欄または `npm run build`、Build output directory を `.` にしてください。
+name = "me2-json-quiz"
+compatibility_date = "2026-05-31"
+pages_build_output_dir = "."
+
+# GitHub や KV の値は Cloudflare Pages の Dashboard 側で設定してください。
+# Settings -> Environment variables:
+# GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, GITHUB_ROOT, GITHUB_TOKEN(optional)
+# Settings -> Bindings:
+# KV namespace binding name = ME2_PROGRESS
