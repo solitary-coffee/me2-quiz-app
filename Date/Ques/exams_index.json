@@ -10,6 +10,15 @@
         "am": "Date/Ques/46_am.json",
         "pm": "Date/Ques/46_pm.json"
       }
+    },
+    {
+      "id": "45",
+      "title": "第45回",
+      "subtitle": "第2種ME技術実力検定試験",
+      "parts": {
+        "am": "Date/Ques/45_am.json",
+        "pm": "Date/Ques/45_pm.json"
+      }
     }
   ]
 }
