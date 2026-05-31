@@ -61,13 +61,55 @@
 }
 </script>
 <title>ME2種 過去問演習｜第2種ME技術実力検定試験の学習支援サイト</title>
+<script>
+(function(){
+  try{
+    var saved=localStorage.getItem('me2_theme');
+    var prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme=saved || (prefersDark?'dark':'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  }catch(e){
+    document.documentElement.setAttribute('data-theme','light');
+  }
+})();
+</script>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--accent2:#eef2ff;--good:#16a34a;--bad:#dc2626;--warn:#f59e0b;--shadow:0 8px 24px rgba(0,0,0,.045)}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Noto Sans JP",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:max(18px,env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}.header-inner{max-width:1080px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}h1{font-size:18px;margin:0;line-height:1.35}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.badge,.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:13px;color:var(--muted)}main{max-width:1080px;margin:0 auto;padding:16px max(14px,env(safe-area-inset-right)) 76px max(14px,env(safe-area-inset-left))}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}.card h2{margin:0 0 10px;font-size:21px}.card h3{margin:0 0 8px;font-size:17px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.round-card,.part-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px;box-shadow:0 3px 12px rgba(0,0,0,.025)}.round-card{cursor:pointer}.round-card:hover{border-color:#93c5fd;background:#eff6ff}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button{border:0;border-radius:16px;padding:13px 16px;min-height:52px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff;font-size:16px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button.secondary{background:var(--accent2);color:#1d4ed8}button.ghost{background:#f3f4f6;color:#374151}button.danger{background:#fee2e2;color:#991b1b}button.warn{background:#fef3c7;color:#92400e}button:disabled{opacity:.7;cursor:not-allowed}.small{font-size:13px;color:var(--muted);line-height:1.65}.mobile-note,.filebox{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin:12px 0}.choice{width:100%;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);margin:10px 0;display:flex;align-items:flex-start;gap:12px;font-weight:750;line-height:1.55}.choice:hover{border-color:#93c5fd;background:#eff6ff}.choice.correct{border-color:#86efac;background:#f0fdf4;color:#166534}.choice.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}.choice .num{min-width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;color:#111827;font-size:18px}.choice.correct .num{background:#dcfce7;color:#166534}.choice.wrong .num{background:#fee2e2;color:#991b1b}.progressbar{width:100%;height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:10px}.progressbar>div{height:100%;width:0;background:var(--accent);transition:.25s}.question-title{font-size:14px;color:var(--muted);margin-bottom:8px;line-height:1.55}.stem{font-size:20px;line-height:1.75;white-space:pre-wrap;margin:10px 0 18px;word-break:break-word}.result{border-radius:16px;padding:14px;margin-top:14px;border:1px solid var(--line);background:#fafafa;display:none}.result.good{border-color:#86efac;background:#f0fdf4}.result.bad{border-color:#fecaca;background:#fef2f2}.explain-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}.explain-table th,.explain-table td{border-top:1px solid var(--line);padding:9px 6px;vertical-align:top;text-align:left}.source-img{width:100%;max-height:900px;object-fit:contain;border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:10px}.image-hint{font-size:13px;color:var(--muted);line-height:1.6;margin:6px 0 0}details{margin-top:12px}summary{cursor:pointer;color:#1d4ed8;font-weight:800;padding:8px 0}.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}.kpi div{background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:12px}.kpi b{display:block;font-size:20px;margin-top:2px}.wrong-item,.history-row{border-top:1px solid var(--line);padding:12px 0}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}.form-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:800;color:#374151}.field input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #dbeafe;border-color:#60a5fa}.login-status{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;line-height:1.6}.account-card{background:#f0fdf4;border:1px solid #86efac;border-radius:16px;padding:12px;margin:10px 0}.danger-zone{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-top:12px}.status-ok{color:#166534}.status-warn{color:#92400e}.public-intro{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;border-radius:18px;padding:14px;margin:12px 0}.public-intro h3{margin:0 0 8px;font-size:17px}.public-intro ul{margin:8px 0 0;padding-left:1.2em}.public-intro li{margin:4px 0}.contact-card{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:14px;margin:12px 0}.contact-card a{color:#166534;font-weight:800;text-decoration:none}.disclaimer{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin:12px 0}.site-footer{max-width:1080px;margin:18px auto 0;padding:16px 0;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--line)}.site-footer a{color:#1d4ed8;font-weight:800;text-decoration:none}@media(max-width:760px){.form-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
+
+/* ホワイト / ナイトモード */
+:root{color-scheme:light}
+html[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--card:#111827;--ink:#e5e7eb;--muted:#94a3b8;--line:#334155;--accent:#60a5fa;--accent2:#172554;--good:#22c55e;--bad:#f87171;--warn:#fbbf24;--shadow:0 10px 28px rgba(0,0,0,.45)}
+body,.card,.round-card,.part-card,.choice,.badge,.pill,.mobile-note,.filebox,.result,.form-card,.field input,.login-status,.account-card,.danger-zone,.public-intro,.contact-card,.disclaimer,.site-footer,button{transition:background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease}
+.theme-toggle{min-height:38px;padding:8px 10px;font-size:13px;white-space:nowrap}
+html[data-theme="dark"] header{background:rgba(15,23,42,.94);border-bottom-color:var(--line)}
+html[data-theme="dark"] .badge,html[data-theme="dark"] .pill,html[data-theme="dark"] .round-card,html[data-theme="dark"] .part-card,html[data-theme="dark"] .choice,html[data-theme="dark"] .form-card,html[data-theme="dark"] .field input{background:#111827;color:var(--ink);border-color:var(--line)}
+html[data-theme="dark"] .round-card:hover,html[data-theme="dark"] .choice:hover{background:#1e293b;border-color:#60a5fa}
+html[data-theme="dark"] button.secondary{background:#1d4ed8;color:#eff6ff}
+html[data-theme="dark"] button.ghost{background:#1f2937;color:#e5e7eb;border:1px solid var(--line)}
+html[data-theme="dark"] button.danger{background:#451a1a;color:#fecaca}
+html[data-theme="dark"] button.warn{background:#451a03;color:#fde68a}
+html[data-theme="dark"] .mobile-note,html[data-theme="dark"] .filebox,html[data-theme="dark"] .login-status{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .public-intro{background:linear-gradient(135deg,#172554,#0f172a);border-color:#1d4ed8}
+html[data-theme="dark"] .contact-card,html[data-theme="dark"] .account-card{background:#052e16;border-color:#166534}
+html[data-theme="dark"] .contact-card a,html[data-theme="dark"] .site-footer a,html[data-theme="dark"] summary{color:#93c5fd}
+html[data-theme="dark"] .disclaimer,html[data-theme="dark"] .danger-zone{background:#431407;border-color:#92400e}
+html[data-theme="dark"] .kpi div{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .result{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .result.good,html[data-theme="dark"] .choice.correct{background:#052e16;border-color:#16a34a;color:#bbf7d0}
+html[data-theme="dark"] .result.bad,html[data-theme="dark"] .choice.wrong{background:#450a0a;border-color:#dc2626;color:#fecaca}
+html[data-theme="dark"] .choice .num,html[data-theme="dark"] .code{background:#1f2937;color:#e5e7eb}
+html[data-theme="dark"] .choice.correct .num{background:#14532d;color:#bbf7d0}
+html[data-theme="dark"] .choice.wrong .num{background:#7f1d1d;color:#fecaca}
+html[data-theme="dark"] .progressbar{background:#1f2937}
+html[data-theme="dark"] .source-img{background:#fff;border-color:#334155}
+html[data-theme="dark"] .site-footer{border-top-color:#334155}
+html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status-warn{color:#fcd34d}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ナイト</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -110,6 +152,33 @@ const APP_CONFIG = {
   cloudProgress: true
 };
 const $=id=>document.getElementById(id);
+
+const THEME_KEY='me2_theme';
+function getStoredTheme(){
+  try{
+    const saved=localStorage.getItem(THEME_KEY);
+    if(saved==='dark'||saved==='light') return saved;
+    return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }catch(e){return 'light'}
+}
+function applyTheme(theme){
+  const t=theme==='dark'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',t);
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content',t==='dark'?'#0b1220':'#2563eb');
+  const btn=$('themeToggle');
+  if(btn){
+    btn.textContent=t==='dark'?'☀️ ホワイト':'🌙 ナイト';
+    btn.title=t==='dark'?'ホワイトモードに切り替え':'ナイトモードに切り替え';
+    btn.setAttribute('aria-label',btn.title);
+  }
+}
+function toggleTheme(){
+  const current=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';
+  const next=current==='dark'?'light':'dark';
+  try{localStorage.setItem(THEME_KEY,next)}catch(e){}
+  applyTheme(next);
+}
 let me={authenticated:false,email:null,name:null};
 let examsIndex={exams:[]};
 let currentExamId=null, partsCache={}, tickHandle=null;
@@ -519,6 +588,7 @@ function exportAllProgress(){const data={exportedAt:new Date().toISOString(),loc
 function exportCurrentCSV(){const rows=[['回','部門','問題','範囲','あなたの回答','正答','正誤','経過時間']];const pack=currentPack();state.answers.forEach((a,i)=>{const q=pack.questions[state.order[i]];rows.push([getExamRecord(state.examId).title,partName(state.part),q.number,q.range||'',a.choice,a.correctAnswer.join('/'),a.correct?'正解':'不正解',fmtTime(a.time)])});const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(`result_${state.examId}_${state.part}.csv`,csv,'text/csv;charset=utf-8')}
 function importProgress(input){const f=input.files?.[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{try{const obj=JSON.parse(reader.result);if(obj.localStorage){Object.entries(obj.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));alert('進行データを読み込みました。')}else if(obj.examId&&obj.part){saveLocal(stateKey(obj.examId,obj.part),obj);alert('進行データを読み込みました。')}}catch(e){alert('JSONを読み込めませんでした。')}};reader.readAsText(f)}
 async function init(){
+  applyTheme(getStoredTheme());
   $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
   try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/ローカル'; }
   try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }
