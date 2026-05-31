@@ -125,6 +125,105 @@ async function saveAttempt(kv, account, examId, part, data) {
   await kv.put(attemptKey(account, examId, part, attempt.attemptId), JSON.stringify({ savedAt: new Date().toISOString(), accountType: account.type, data: attempt }));
   return attempt;
 }
+
+function attemptCompletenessScore(row) {
+  const h = row?.data || row || {};
+  let score = 0;
+  if (row?.source === 'attempt') score += 1000;
+  if (h.completedAt) score += 100;
+  if (h.finished) score += 80;
+  score += Array.isArray(h.answers) ? h.answers.length : 0;
+  score += Array.isArray(h.order) ? Math.min(h.order.length, 100) / 10 : 0;
+  score += Number(h.correct || 0) / 100;
+  score += Number(h.elapsedMs || 0) / 100000000;
+  return score;
+}
+function compactDuplicateAttempts(rows, examId, part) {
+  const groups = new Map();
+  const addToGroup = (groupKey, row) => {
+    if (!groupKey) return;
+    const arr = groups.get(groupKey) || [];
+    arr.push(row);
+    groups.set(groupKey, arr);
+  };
+  rows.filter(x => x && typeof x === 'object').forEach(row => {
+    const data = normalizeAttempt(row.data || row, examId, part, false);
+    const normalized = { ...row, data };
+    addToGroup(`id:${data.attemptId}`, normalized);
+    addToGroup(`sig:${attemptSignature(data, examId, part)}`, normalized);
+  });
+
+  // Union groups that share either attemptId or content signature.
+  const parent = new Map();
+  const find = x => {
+    if (!parent.has(x)) parent.set(x, x);
+    const p = parent.get(x);
+    if (p === x) return x;
+    const r = find(p);
+    parent.set(x, r);
+    return r;
+  };
+  const union = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent.set(rb, ra); };
+  rows.filter(x => x && typeof x === 'object').forEach(row => {
+    const data = normalizeAttempt(row.data || row, examId, part, false);
+    const idKey = `id:${data.attemptId}`;
+    const sigKey = `sig:${attemptSignature(data, examId, part)}`;
+    union(idKey, sigKey);
+  });
+
+  const buckets = new Map();
+  rows.filter(x => x && typeof x === 'object').forEach(row => {
+    const data = normalizeAttempt(row.data || row, examId, part, false);
+    const root = find(`id:${data.attemptId}`);
+    const arr = buckets.get(root) || [];
+    arr.push({ ...row, data });
+    buckets.set(root, arr);
+  });
+
+  const kept = [];
+  const duplicates = [];
+  for (const arr of buckets.values()) {
+    arr.sort((a, b) => {
+      const byScore = attemptCompletenessScore(b) - attemptCompletenessScore(a);
+      if (byScore) return byScore;
+      return new Date(b.data.completedAt || b.data.startedAt || 0) - new Date(a.data.completedAt || a.data.startedAt || 0);
+    });
+    kept.push(arr[0].data);
+    duplicates.push(...arr.slice(1));
+  }
+  kept.sort((a, b) => new Date(b.completedAt || b.startedAt || 0) - new Date(a.completedAt || a.startedAt || 0));
+  return { kept, duplicates };
+}
+async function cleanupDuplicateHistory(kv, account, examId, part) {
+  const prefix = attemptPrefix(account, examId, part);
+  const listed = await kv.list({ prefix, limit: 1000 });
+  const rows = [];
+  for (const item of listed.keys || []) {
+    const val = await kv.get(item.name, 'json');
+    if (!val) continue;
+    rows.push({ source: 'attempt', key: item.name, data: val.data && val.data.examId ? val.data : val, savedAt: val.savedAt || null });
+  }
+  const legacyKey = key(account, 'history', examId, part);
+  const legacy = await kv.get(legacyKey, 'json');
+  const legacyData = legacy?.data || legacy;
+  if (Array.isArray(legacyData)) {
+    legacyData.forEach((item, index) => rows.push({ source: 'legacy', key: legacyKey, index, data: item }));
+  }
+
+  const before = rows.length;
+  const { kept, duplicates } = compactDuplicateAttempts(rows, examId, part);
+
+  // DB内を正規化するため、旧attemptキーと旧historyキーをいったん消して、重複除去後の履歴だけを書き戻す。
+  // これにより、表示上だけでなくKV上の重複も減る。
+  await Promise.all((listed.keys || []).map(k => kv.delete(k.name)));
+  await kv.delete(legacyKey);
+  for (const attempt of kept) {
+    const normalized = normalizeAttempt(attempt, examId, part, false);
+    await kv.put(attemptKey(account, examId, part, normalized.attemptId), JSON.stringify({ savedAt: new Date().toISOString(), accountType: account.type, data: normalized }));
+  }
+  return { before, after: kept.length, deleted: Math.max(0, before - kept.length), rewritten: kept.length, duplicateRows: duplicates.length };
+}
+
 export async function onRequestGet(context) {
   const checked = await requireAccountAndKv(context); if (checked.error) return checked.error;
   const { account, kv } = checked;
@@ -154,6 +253,10 @@ export async function onRequestPost(context) {
     const saved = [];
     for (const item of list.filter(Boolean)) saved.push(await saveAttempt(kv, account, body.examId, body.part, item));
     return Response.json({ ok: true, saved: saved.length, account: publicAccount(account) });
+  }
+  if (body.type === 'historyDedupe' || body.type === 'history_duplicates') {
+    const result = await cleanupDuplicateHistory(kv, account, body.examId, body.part);
+    return Response.json({ ok: true, ...result, account: publicAccount(account) });
   }
   const value = { savedAt: new Date().toISOString(), accountType: account.type, data: body.data ?? null };
   await kv.put(key(account, body.type, body.examId, body.part), JSON.stringify(value));
