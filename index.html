@@ -474,6 +474,27 @@ function historyStatsHtml(hist, pack){
     ${hist.length!==attempts?`<p class="small">※統計は通常演習を優先して集計しています。間違い復習を含む総履歴は ${hist.length} 件です。</p>`:''}
   </div>`;
 }
+async function cleanupDuplicateHistoryDb(part){
+  if(!hasCloudLogin()){
+    alert('DBの重複削除には、サイトログインまたはゲストログインが必要です。未ログインの場合は端末内の履歴だけが使われます。');
+    return;
+  }
+  const title=`${getExamRecord(currentExamId)?.title||''} ${partName(part)}`;
+  if(!confirm(`${title} のDB上の重複履歴を削除しますか？\n\n同じ履歴が複数保存されている場合、1件だけ残してCloudflare KV側から整理します。`)) return;
+  $('wrongList').innerHTML=`<h3>${escapeHtml(title)} 履歴</h3><p class="small">DB上の重複履歴を整理中…</p>`;
+  const res=await apiProgress('POST',{type:'historyDedupe',examId:currentExamId,part});
+  if(!res||!res.ok){
+    alert('DBの重複削除に失敗しました。ログイン状態、KV設定、通信状態を確認してください。');
+    await showHistory(part);
+    return;
+  }
+  const cloudHist=await loadCloudHistory(currentExamId,part);
+  const localHist=loadLocal(historyKey(currentExamId,part),[]);
+  const merged=mergeHistory(localHist,cloudHist).slice(0,300);
+  saveMergedHistoryLocal(currentExamId,part,merged);
+  alert(`DB重複削除が完了しました。\n整理前：${res.before ?? '?'}件\n整理後：${res.after ?? '?'}件\n削除：${res.deleted ?? 0}件`);
+  await showHistory(part);
+}
 async function showHistory(part){
   hideAll();$('finishCard').classList.remove('hidden');
   $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴</h3><p class="small">履歴を読み込み中…</p>`;
@@ -490,7 +511,7 @@ async function showHistory(part){
     const wrongHtml=wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>第${q.number}問 / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解、または間違いデータなし。</p>';
     return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${h.mode==='wrong'?'間違い復習 / ':''}${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<br><span class="small">履歴ID：${escapeHtml(h.attemptId||'legacy')}</span><details><summary>この回の間違いを見る</summary>${wrongHtml}</details></div>`;
   }).join('');
-  $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3>${stats}`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
+  $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3>${stats}<div class="row" style="margin:10px 0 14px"><button class="warn" onclick="cleanupDuplicateHistoryDb('${part}')">DBの重複履歴を削除</button><span class="small">表示上の重複除去だけでなく、Cloudflare KV内の重複データも1件に整理します。</span></div>`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
 }
 function downloadText(filename,text,type='application/json'){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
 function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part}.json`,JSON.stringify(snapshotState(),null,2))}
