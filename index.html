@@ -188,7 +188,7 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
 <section class="random-card">
   <div class="random-head">
     <div>
-  <h3>ランダム出題</h3>
+      <h3>ランダム出題</h3>
       <p class="small">回数・午前/午後・範囲・問題数を指定してミックス出題できます。</p>
     </div>
     <span class="random-mini-badge" id="randomPoolInfo">条件を選択中</span>
@@ -200,16 +200,16 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
       <div class="range-line">
         <select id="randomFrom" onchange="renderRandomMenu()"></select>
         <span class="range-sep">〜</span>
-      <select id="randomTo" onchange="renderRandomMenu()"></select>
-    </div>
+        <select id="randomTo" onchange="renderRandomMenu()"></select>
       </div>
+    </div>
 
     <div class="random-panel">
       <div class="field-label">午前 / 午後</div>
       <div class="segmented">
         <label><input type="checkbox" id="randomAm" checked onchange="renderRandomMenu()"><span>午前</span></label>
         <label><input type="checkbox" id="randomPm" checked onchange="renderRandomMenu()"><span>午後</span></label>
-    </div>
+      </div>
     </div>
 
     <div class="random-panel">
@@ -220,8 +220,8 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
         <button class="ghost count-chip" type="button" onclick="setRandomCount(40)">40</button>
         <button class="ghost count-chip" type="button" onclick="setRandomCount(60)">60</button>
         <input id="randomCount" type="number" min="1" max="300" value="20" onchange="renderRandomMenu()" oninput="updateRandomPresetButtons()">
-  </div>
-  </div>
+      </div>
+    </div>
   </div>
 
   <details class="range-details">
