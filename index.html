@@ -124,7 +124,7 @@ button.mini{min-height:34px;padding:7px 10px;font-size:12px;border-radius:999px}
   .range-toolbar button{width:auto;min-height:34px}
 }
 
-/* ホワイト / ナイトモード */
+/* ホワイト / ダークモード */
 :root{color-scheme:light}
 html[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--card:#111827;--ink:#e5e7eb;--muted:#94a3b8;--line:#334155;--accent:#60a5fa;--accent2:#172554;--good:#22c55e;--bad:#f87171;--warn:#fbbf24;--shadow:0 10px 28px rgba(0,0,0,.45)}
 body,.card,.round-card,.part-card,.choice,.badge,.pill,.mobile-note,.filebox,.result,.form-card,.field input,.login-status,.account-card,.danger-zone,.public-intro,.contact-card,.disclaimer,.site-footer,.answer-card,.answer-chip,.explain-table th,.explain-table td,.random-card,.random-panel,.random-mini-badge,.range-details,.check-grid label,.segmented span,.range-line select,.count-line input,button{transition:background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease}
@@ -175,7 +175,7 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ナイト</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -329,8 +329,8 @@ function applyTheme(theme){
   if(meta) meta.setAttribute('content',t==='dark'?'#0b1220':'#2563eb');
   const btn=$('themeToggle');
   if(btn){
-    btn.textContent=t==='dark'?'☀️ ホワイト':'🌙 ナイト';
-    btn.title=t==='dark'?'ホワイトモードに切り替え':'ナイトモードに切り替え';
+    btn.textContent=t==='dark'?'☀️ ホワイト':'🌙 ダーク';
+    btn.title=t==='dark'?'ホワイトモードに切り替え':'ダークモードに切り替え';
     btn.setAttribute('aria-label',btn.title);
   }
 }
