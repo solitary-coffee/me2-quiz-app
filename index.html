@@ -81,7 +81,16 @@
 .answer-card .answer-meta{font-size:13px;color:var(--muted);line-height:1.55}
 .answer-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;background:#f8fafc;color:var(--muted);font-size:12px;margin:3px 4px 3px 0}
 .answer-chip.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
-.answer-controls button.active{background:var(--accent);color:#fff}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}.form-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:800;color:#374151}.field input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #dbeafe;border-color:#60a5fa}.login-status{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;line-height:1.6}.account-card{background:#f0fdf4;border:1px solid #86efac;border-radius:16px;padding:12px;margin:10px 0}.danger-zone{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-top:12px}.status-ok{color:#166534}.status-warn{color:#92400e}.public-intro{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;border-radius:18px;padding:14px;margin:12px 0}.public-intro h3{margin:0 0 8px;font-size:17px}.public-intro ul{margin:8px 0 0;padding-left:1.2em}.public-intro li{margin:4px 0}.contact-card{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:14px;margin:12px 0}.contact-card a{color:#166534;font-weight:800;text-decoration:none}.disclaimer{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin:12px 0}.site-footer{max-width:1080px;margin:18px auto 0;padding:16px 0;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--line)}.site-footer a{color:#1d4ed8;font-weight:800;text-decoration:none}@media(max-width:760px){.form-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
+.answer-controls button.active{background:var(--accent);color:#fff}
+.random-card{border:1px solid var(--line);border-radius:18px;background:#fff;margin:16px 0;padding:16px}
+.random-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.field label{font-weight:700;font-size:13px;display:block;margin:0 0 6px;color:var(--muted)}
+.field select,.field input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;color:var(--text)}
+.check-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;min-height:42px}
+.check-row label,.check-grid label{font-weight:600;color:var(--text);margin:0}
+.check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.check-grid label{border:1px solid var(--line);border-radius:12px;padding:9px 10px;background:#f8fafc}
+.random-source{font-size:13px;color:var(--muted);margin:4px 0 8px}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}.form-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:800;color:#374151}.field input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #dbeafe;border-color:#60a5fa}.login-status{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;line-height:1.6}.account-card{background:#f0fdf4;border:1px solid #86efac;border-radius:16px;padding:12px;margin:10px 0}.danger-zone{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-top:12px}.status-ok{color:#166534}.status-warn{color:#92400e}.public-intro{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;border-radius:18px;padding:14px;margin:12px 0}.public-intro h3{margin:0 0 8px;font-size:17px}.public-intro ul{margin:8px 0 0;padding-left:1.2em}.public-intro li{margin:4px 0}.contact-card{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:14px;margin:12px 0}.contact-card a{color:#166534;font-weight:800;text-decoration:none}.disclaimer{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin:12px 0}.site-footer{max-width:1080px;margin:18px auto 0;padding:16px 0;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--line)}.site-footer a{color:#1d4ed8;font-weight:800;text-decoration:none}@media(max-width:760px){.form-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
 
 /* ホワイト / ナイトモード */
 :root{color-scheme:light}
@@ -136,7 +145,50 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
   までお願いします。
 </div>
 <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
-<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DBアップロード / 共有</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><span class="pill" id="roundCount"></span></div><div class="grid" id="examGrid"></div></section>
+<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DBアップロード / 共有</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><span class="pill" id="roundCount"></span></div>
+<section class="random-card">
+  <h3>ランダム出題</h3>
+  <p class="small">
+    試験回・午前/午後・出題範囲・問題数を指定して、ランダムに出題できます。
+    例：第42回〜第44回、午前＋午後、基礎医学だけ、20問。
+  </p>
+  <div class="random-grid">
+    <div class="field">
+      <label for="randomFrom">何回から</label>
+      <select id="randomFrom" onchange="renderRandomMenu()"></select>
+    </div>
+    <div class="field">
+      <label for="randomTo">何回まで</label>
+      <select id="randomTo" onchange="renderRandomMenu()"></select>
+    </div>
+    <div class="field">
+      <label>午前 / 午後</label>
+      <div class="check-row">
+        <label><input type="checkbox" id="randomAm" checked onchange="renderRandomMenu()"> 午前</label>
+        <label><input type="checkbox" id="randomPm" checked onchange="renderRandomMenu()"> 午後</label>
+      </div>
+    </div>
+    <div class="field">
+      <label for="randomCount">出題数</label>
+      <input id="randomCount" type="number" min="1" max="300" value="20">
+    </div>
+  </div>
+  <div class="field">
+    <label>出題範囲</label>
+    <div id="randomRangeChecks" class="check-grid"></div>
+    <p class="small">何も選ばない場合は全範囲から出題します。</p>
+  </div>
+  <div class="row">
+    <button class="ghost" onclick="setRandomCount(10)">10問</button>
+    <button class="ghost" onclick="setRandomCount(20)">20問</button>
+    <button class="ghost" onclick="setRandomCount(40)">40問</button>
+    <button class="ghost" onclick="setRandomCount(60)">60問</button>
+    <button onclick="startRandomQuiz()">ランダム演習開始</button>
+    <button class="secondary hidden" id="resumeRandomBtn" onclick="resumeRandomQuiz()">ランダム途中から</button>
+  </div>
+  <div id="randomPoolInfo" class="small">条件を選んで「ランダム演習開始」を押してください。</div>
+</section>
+<div class="grid" id="examGrid"></div></section>
 <section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
@@ -228,6 +280,20 @@ function toggleTheme(){
 let me={authenticated:false,email:null,name:null};
 let examsIndex={exams:[]};
 let currentExamId=null, partsCache={}, tickHandle=null, currentAnswerPart=null;
+
+const RANDOM_PART='mix';
+const RANDOM_EXAM_ID='random';
+const RANDOM_RANGES=[
+  {id:'basic',label:'基礎医学'},
+  {id:'engineering',label:'電気・電子・物理'},
+  {id:'measure',label:'生体計測・画像診断'},
+  {id:'therapy',label:'医用治療機器'},
+  {id:'safety',label:'医療安全・規格・保守管理'},
+  {id:'materials',label:'医用材料・生体物性'},
+  {id:'info',label:'情報工学'},
+  {id:'general',label:'総合問題'}
+];
+
 let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 function fmtTime(ms){if(!ms||ms<0)return'00:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60,h=Math.floor(m/60),mm=m%60;return h>0?`${h}:${String(mm).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
@@ -273,7 +339,7 @@ function snapshotState(){
   ensureTimingFields(state);
   return {...state,elapsedMs:currentElapsedMs(),sessionStartedAt:null,timerRunning:false};
 }
-function partName(p){return p==='am'?'午前':'午後'}
+function partName(p){return p==='am'?'午前':p==='pm'?'午後':p==='mix'?'ランダム':'午後'}
 function correctLabel(q){return q.correct.length>1?q.correct.join(' または '):String(q.correct[0])}
 let activeSourceMode = 'local';
 const GUEST_KEY = 'me2_guest_login';
@@ -497,7 +563,187 @@ async function getPart(examId,part){const key=`${examId}_${part}`;if(partsCache[
 function getExamRecord(id){return examsIndex.exams.find(x=>String(x.id)===String(id))}
 function hideAll(){['menuCard','loginCard','syncCard','partCard','answerViewCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
 function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();$('menuCard').classList.remove('hidden');renderMenu();updateHeader()}
-function renderMenu(){const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
+function renderMenu(){renderRandomMenu();const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
+
+function examNumber(id){
+  const m=String(id||'').match(/\d+/);
+  return m?Number(m[0]):0;
+}
+function sortedExamRecordsAsc(){
+  return (examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
+}
+function getSelectedExamIdsForRandom(){
+  const from=Number($('randomFrom')?.value||0), to=Number($('randomTo')?.value||0);
+  const lo=Math.min(from,to), hi=Math.max(from,to);
+  return sortedExamRecordsAsc().filter(ex=>examNumber(ex.id)>=lo&&examNumber(ex.id)<=hi).map(ex=>String(ex.id));
+}
+function getSelectedRandomParts(){
+  const parts=[];
+  if($('randomAm')?.checked) parts.push('am');
+  if($('randomPm')?.checked) parts.push('pm');
+  return parts.length?parts:['am','pm'];
+}
+function rangeCategory(range){
+  const r=String(range||'');
+  if(/基礎医学|人体|公衆衛生|感染|免疫|生理|解剖|神経|筋|腎|呼吸|循環|消化|内分泌|体温|血液/.test(r))return 'basic';
+  if(/電気|電子|物理|数学|医用工学|力学|波|光|音|半導体|回路|交流|直流|情報工学|2進|AD変換/.test(r)){
+    if(/情報工学|2進|AD変換|コンピュータ|セキュリティ/.test(r))return 'info';
+    return 'engineering';
+  }
+  if(/生体計測|画像診断|計測|心電|脳波|筋電|血圧|パルスオキシ|超音波|MRI|X線|CT|内視鏡|センサ|トランスデューサ/.test(r))return 'measure';
+  if(/治療機器|医用治療|人工呼吸|透析|人工心肺|除細動|ペースメーカ|IABP|ECMO|電気メス|輸液|麻酔|レーザ|吸引|酸素/.test(r))return 'therapy';
+  if(/医療安全|規格|保守|JIS|安全|漏れ電流|接地|医療ガス|アラーム|電源|管理/.test(r))return 'safety';
+  if(/材料|生体物性|粘性|音響インピーダンス|消毒|滅菌|消毒薬|医用材料/.test(r))return 'materials';
+  if(/総合/.test(r))return 'general';
+  return 'general';
+}
+function rangeCategoryLabel(id){
+  return RANDOM_RANGES.find(x=>x.id===id)?.label||id||'その他';
+}
+function getSelectedRandomRanges(){
+  return Array.from(document.querySelectorAll('.random-range-check:checked')).map(x=>x.value);
+}
+function renderRandomMenu(){
+  if(!$('randomFrom')||!examsIndex?.exams)return;
+  const exams=sortedExamRecordsAsc();
+  if(!exams.length)return;
+  const currentFrom=$('randomFrom').value, currentTo=$('randomTo').value;
+  const opts=exams.map(ex=>`<option value="${examNumber(ex.id)}">第${examNumber(ex.id)}回</option>`).join('');
+  $('randomFrom').innerHTML=opts;
+  $('randomTo').innerHTML=opts;
+  $('randomFrom').value=currentFrom||String(examNumber(exams[0].id));
+  $('randomTo').value=currentTo||String(examNumber(exams[exams.length-1].id));
+  if(!$('randomRangeChecks').innerHTML){
+    $('randomRangeChecks').innerHTML=RANDOM_RANGES.map(r=>`<label><input type="checkbox" class="random-range-check" value="${r.id}"> ${r.label}</label>`).join('');
+  }
+  const saved=loadLocal(stateKey(RANDOM_EXAM_ID,RANDOM_PART));
+  const btn=$('resumeRandomBtn');
+  if(btn){
+    if(saved&&!saved.finished&&saved.quizType==='random'){
+      btn.classList.remove('hidden');
+      btn.textContent=`ランダム途中から（${(saved.index||0)+1}/${saved.order?.length||saved.randomQuestions?.length||0}問）`;
+    }else{
+      btn.classList.add('hidden');
+    }
+  }
+  const ids=getSelectedExamIdsForRandom();
+  const parts=getSelectedRandomParts();
+  const ranges=getSelectedRandomRanges();
+  const nums=ids.map(examNumber);
+  const txt=ids.length?`選択中：第${Math.min(...nums)}回〜第${Math.max(...nums)}回 / ${parts.map(partName).join('・')} / 範囲：${ranges.length?ranges.map(rangeCategoryLabel).join('、'):'全範囲'}`:'試験回が選択されていません。';
+  if($('randomPoolInfo')) $('randomPoolInfo').textContent=txt;
+}
+function setRandomCount(n){$('randomCount').value=n;}
+function shuffleArray(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+async function buildRandomPool(){
+  const ids=getSelectedExamIdsForRandom();
+  const parts=getSelectedRandomParts();
+  const ranges=getSelectedRandomRanges();
+  const pool=[];
+  for(const examId of ids){
+    const rec=getExamRecord(examId);
+    if(!rec)continue;
+    for(const part of parts){
+      if(!rec.parts?.[part])continue;
+      const pack=await getPart(examId,part);
+      (pack.questions||[]).forEach((q,idx)=>{
+        const cat=rangeCategory(q.range||'');
+        if(ranges.length&&!ranges.includes(cat))return;
+        pool.push({
+          ...q,
+          sourceExamId:String(examId),
+          sourceTitle:rec.title||`第${examNumber(examId)}回`,
+          sourcePart:part,
+          sourcePartLabel:partName(part),
+          sourceIndex:idx,
+          sourceRangeCategory:cat,
+          sourceRangeCategoryLabel:rangeCategoryLabel(cat)
+        });
+      });
+    }
+  }
+  return pool;
+}
+async function startRandomQuiz(){
+  try{
+    if(state&&state.timerRunning){pauseTimer();saveState()}
+    const count=Math.max(1,Number($('randomCount')?.value||20));
+    $('randomPoolInfo').textContent='ランダム問題を準備中…';
+    const pool=await buildRandomPool();
+    if(!pool.length){
+      $('randomPoolInfo').innerHTML='<span class="status-warn">条件に合う問題がありません。回数・午前/午後・範囲を変更してください。</span>';
+      return;
+    }
+    const selected=shuffleArray(pool).slice(0,Math.min(count,pool.length));
+    const ids=getSelectedExamIdsForRandom(), parts=getSelectedRandomParts(), ranges=getSelectedRandomRanges();
+    state={
+      quizType:'random',
+      examId:RANDOM_EXAM_ID,
+      part:RANDOM_PART,
+      mode:'random',
+      attemptId:makeAttemptId(),
+      order:[...Array(selected.length).keys()],
+      index:0,
+      correct:0,
+      answers:[],
+      startedAt:Date.now(),
+      elapsedMs:0,
+      sessionStartedAt:null,
+      timerRunning:false,
+      finished:false,
+      randomQuestions:selected,
+      randomSettings:{
+        examIds:ids,
+        fromExam:Math.min(...ids.map(examNumber)),
+        toExam:Math.max(...ids.map(examNumber)),
+        parts,
+        ranges,
+        questionCount:selected.length,
+        poolCount:pool.length
+      }
+    };
+    startTimer();
+    saveState();
+    showQuiz();
+    renderQuestion();
+  }catch(e){
+    $('randomPoolInfo').innerHTML=`<span class="status-warn">ランダム出題の作成に失敗しました：${escapeHtml(e.message||e)}</span>`;
+  }
+}
+async function resumeRandomQuiz(){
+  let s=loadLocal(stateKey(RANDOM_EXAM_ID,RANDOM_PART));
+  if(!s&&hasCloudLogin())s=await loadCloudState(RANDOM_EXAM_ID,RANDOM_PART);
+  if(!s||s.quizType!=='random'||!Array.isArray(s.randomQuestions)){alert('再開できるランダム演習がありません。');return;}
+  state=ensureTimingFields(s);
+  state.timerRunning=false;
+  state.sessionStartedAt=null;
+  startTimer();
+  showQuiz();
+  renderQuestion();
+}
+function sessionTitle(){
+  if(state?.quizType==='random'){
+    const st=state.randomSettings||{};
+    const range=(st.fromExam&&st.toExam)?`第${st.fromExam}回〜第${st.toExam}回`:'指定範囲';
+    const partText=Array.isArray(st.parts)?st.parts.map(partName).join('・'):'午前・午後';
+    return `ランダム演習（${range} ${partText}）`;
+  }
+  return `${getExamRecord(state.examId)?.title||'試験回'} ${partName(state.part)}`;
+}
+function questionSourceLabel(q){
+  if(state?.quizType==='random'){
+    return `${q.sourceTitle||'試験回'} ${partName(q.sourcePart)} 第${q.number}問`;
+  }
+  return `${getExamRecord(state.examId)?.title||'試験回'} ${partName(state.part)} 第${q.number}問`;
+}
+
 async function selectExam(examId){if(state&&state.timerRunning){pauseTimer();saveState()}currentExamId=examId;hideAll();$('partCard').classList.remove('hidden');const rec=getExamRecord(examId);$('selectedExamTitle').textContent=rec?rec.title:'試験回';await renderPartMenu()}
 async function loadCloudState(examId,part){
   if(!hasCloudLogin()) return null;
@@ -597,15 +843,15 @@ function answerQuestionHtml(q){
 }
 
 function showQuiz(){hideAll();$('quizCard').classList.remove('hidden')}
-function currentPack(){return partsCache[`${state.examId}_${state.part}`]}function getCurrentQuestion(){return currentPack()?.questions?.[state.order[state.index]]}
-function renderQuestion(){const q=getCurrentQuestion();if(!q){showFinish();return}$('qMeta').textContent=`${getExamRecord(state.examId).title} ${partName(state.part)} 第${q.number}問 / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}`;$('bar').style.width=`${state.index/state.order.length*100}%`;$('stem').textContent=q.stem;const qImg=$('questionImage');qImg.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を表示（解答前に確認）</summary><p class="image-hint">この問題は図・表を使います。画像を確認して解答してください。</p><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';const choices=$('choices');choices.innerHTML='';q.choices.forEach((c,i)=>{const btn=document.createElement('button');btn.className='choice';btn.onclick=()=>answer(i+1);btn.innerHTML=`<span class="num">${i+1}</span><span>${escapeHtml(c)}</span>`;choices.appendChild(btn)});$('result').style.display='none';$('result').className='result';$('result').innerHTML='';$('nextBtn').classList.add('hidden');updateHeader();saveState()}
+function currentPack(){return state?.quizType==='random'?{questions:state.randomQuestions||[]}:partsCache[`${state.examId}_${state.part}`]}function getCurrentQuestion(){return currentPack()?.questions?.[state.order[state.index]]}
+function renderQuestion(){const q=getCurrentQuestion();if(!q){showFinish();return}$('qMeta').textContent=`${questionSourceLabel(q)} / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}${state.quizType==='random'?' / カテゴリ：'+(q.sourceRangeCategoryLabel||rangeCategoryLabel(rangeCategory(q.range||''))):''}`;$('bar').style.width=`${state.index/state.order.length*100}%`;$('stem').textContent=q.stem;const qImg=$('questionImage');qImg.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を表示（解答前に確認）</summary><p class="image-hint">この問題は図・表を使います。画像を確認して解答してください。</p><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';const choices=$('choices');choices.innerHTML='';q.choices.forEach((c,i)=>{const btn=document.createElement('button');btn.className='choice';btn.onclick=()=>answer(i+1);btn.innerHTML=`<span class="num">${i+1}</span><span>${escapeHtml(c)}</span>`;choices.appendChild(btn)});$('result').style.display='none';$('result').className='result';$('result').innerHTML='';$('nextBtn').classList.add('hidden');updateHeader();saveState()}
 function answeredCount(){return state.answers.length}
-function answer(choice){const q=getCurrentQuestion();if(state.answers[state.index])return;const correct=q.correct.includes(choice);state.answers[state.index]={q:q.number,choice,correct,correctAnswer:q.correct.slice(),time:currentElapsedMs(),range:q.range||''};if(correct)state.correct++;Array.from(document.querySelectorAll('.choice')).forEach((btn,i)=>{btn.disabled=true;const n=i+1;if(q.correct.includes(n))btn.classList.add('correct');if(n===choice&&!correct)btn.classList.add('wrong')});showExplanation(q,choice,correct);$('nextBtn').classList.remove('hidden');$('bar').style.width=`${(state.index+1)/state.order.length*100}%`;saveState();updateHeader();setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80)}
+function answer(choice){const q=getCurrentQuestion();if(state.answers[state.index])return;const correct=q.correct.includes(choice);state.answers[state.index]={q:q.number,sourceExamId:q.sourceExamId||state.examId,sourcePart:q.sourcePart||state.part,sourceTitle:q.sourceTitle||getExamRecord(state.examId)?.title,choice,correct,correctAnswer:q.correct.slice(),time:currentElapsedMs(),range:q.range||''};if(correct)state.correct++;Array.from(document.querySelectorAll('.choice')).forEach((btn,i)=>{btn.disabled=true;const n=i+1;if(q.correct.includes(n))btn.classList.add('correct');if(n===choice&&!correct)btn.classList.add('wrong')});showExplanation(q,choice,correct);$('nextBtn').classList.remove('hidden');$('bar').style.width=`${(state.index+1)/state.order.length*100}%`;saveState();updateHeader();setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80)}
 function showExplanation(q,choice,correct){const rate=answeredCount()?Math.round(state.correct/answeredCount()*1000)/10:0,res=$('result');res.style.display='block';res.className='result '+(correct?'good':'bad');const rows=q.choices.map((c,i)=>{const n=i+1,isC=q.correct.includes(n),note=(q.choiceNotes&&q.choiceNotes[i])?q.choiceNotes[i]:(isC?'この選択肢が正答です。':'誤りポイント：正答は '+correctLabel(q)+' です。');return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml(note)}</td></tr>`}).join('');const img=(q.hasFigure&&q.image)?`<details><summary>図・表を再表示</summary><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" /></details>`:'';res.innerHTML=`<h3>${correct?'正解！':'不正解'}</h3><p><b>あなたの回答：</b>${choice}　<b>正答：</b>${correctLabel(q)}　<b>現在の正答率：</b>${rate}%</p><p><b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>要点解説：</b>${escapeHtml(q.tip||'正答表に基づいて判定します。')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>どこが違う？ / 解説ポイント</th></tr></thead><tbody>${rows}</tbody></table>${img}`}
 function nextQuestion(){if(state.index>=state.order.length-1){pauseTimer();state.finished=true;saveState();saveHistory();showFinish();return}state.index++;saveState();renderQuestion()}
 function startTimer(){clearInterval(tickHandle);ensureTimingFields(state);state.timerRunning=true;state.sessionStartedAt=Date.now();tickHandle=setInterval(updateHeader,1000);updateHeader()}
 function pauseTimer(){clearInterval(tickHandle);if(state&&state.examId&&state.part){state.elapsedMs=currentElapsedMs();state.sessionStartedAt=null;state.timerRunning=false;}updateHeader()}
-function updateHeader(){$('partBadge').textContent=state.part?`${getExamRecord(state.examId)?.title||''} ${partName(state.part)} ${Math.min(state.index+1,state.order.length)}/${state.order.length}`:'未開始';$('scoreBadge').textContent=`${state.correct}/${answeredCount()} 正解`;$('timerBadge').textContent=fmtTime(currentElapsedMs())}
+function updateHeader(){const total=state.order?.length||0;$('partBadge').textContent=state.part?`${sessionTitle()} ${total?Math.min(state.index+1,total):0}/${total}`:'未開始';$('scoreBadge').textContent=`${state.correct}/${answeredCount()} 正解`;$('timerBadge').textContent=fmtTime(currentElapsedMs())}
 function scheduleCloudStateSave(snap,force=false){
   if(!APP_CONFIG.cloudProgress||!hasCloudLogin())return;
   const k=`${snap.examId}_${snap.part}`;
@@ -617,8 +863,8 @@ function scheduleCloudStateSave(snap,force=false){
 function saveState(){if(!state.examId||!state.part)return;ensureTimingFields(state);const snap=snapshotState();saveLocal(stateKey(state.examId,state.part),snap);scheduleCloudStateSave(snap);$('saveStateText').textContent='保存済み'}
 function saveHistory(){const k=historyKey(state.examId,state.part);const snap={...snapshotState(),attemptId:state.attemptId||makeAttemptId(),finished:true,completedAt:new Date().toISOString()};const hist=mergeHistory([snap],loadLocal(k,[])).slice(0,300);saveLocal(k,hist);scheduleCloudStateSave(snap,true);apiProgress('POST',{type:'attempt',examId:state.examId,part:state.part,data:snap})}
 async function resetPart(part){if(confirm(`${getExamRecord(currentExamId).title} ${partName(part)} の途中保存を削除しますか？`)){localStorage.removeItem(stateKey(currentExamId,part));await apiProgress('DELETE',{type:'state',examId:currentExamId,part});renderPartMenu()}}
-function showFinish(){pauseTimer();hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=`${getExamRecord(state.examId).title} ${partName(state.part)}`;$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
-function renderWrongList(){const pack=currentPack(), wrong=state.answers.map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>第${q.number}問 / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
+function showFinish(){pauseTimer();hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=sessionTitle();$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
+function renderWrongList(){const pack=currentPack(), wrong=state.answers.map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabel(q))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
 function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
 function historyStatsHtml(hist, pack){
   const base=hist.filter(h=>h && (h.mode||'all')==='all');
@@ -698,7 +944,7 @@ async function showHistory(part){
 }
 
 function parseProgressStorageKey(k){
-  let m=String(k||'').match(/^me2_(state|history)_([^_]+)_(am|pm)$/);
+  let m=String(k||'').match(/^me2_(state|history)_([^_]+)_(am|pm|mix)$/);
   if(!m)return null;
   return {kind:m[1],examId:m[2],part:m[3]};
 }
