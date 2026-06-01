@@ -228,8 +228,8 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
     <summary>出題範囲を選択 <span class="small">未選択なら全範囲</span></summary>
     <div class="range-toolbar">
       <button class="ghost mini" type="button" onclick="clearRandomRanges()">全範囲にする</button>
-      <button class="ghost mini" type="button" onclick="selectCoreRandomRanges()">基礎＋工学</button>
-      <button class="ghost mini" type="button" onclick="selectClinicalRandomRanges()">計測＋治療＋安全</button>
+      <button class="ghost mini" type="button" onclick="selectCoreRandomRanges()">基礎系</button>
+      <button class="ghost mini" type="button" onclick="selectClinicalRandomRanges()">機器系</button>
     </div>
     <div id="randomRangeChecks" class="check-grid"></div>
   </details>
@@ -335,14 +335,12 @@ let currentExamId=null, partsCache={}, tickHandle=null, currentAnswerPart=null;
 const RANDOM_PART='mix';
 const RANDOM_EXAM_ID='random';
 const RANDOM_RANGES=[
-  {id:'basic',label:'基礎医学'},
-  {id:'engineering',label:'電気・電子・物理'},
-  {id:'measure',label:'生体計測・画像診断'},
-  {id:'therapy',label:'医用治療機器'},
-  {id:'safety',label:'医療安全・規格・保守管理'},
-  {id:'materials',label:'医用材料・生体物性'},
-  {id:'info',label:'情報工学'},
-  {id:'general',label:'総合問題'}
+  {id:'basic_med',label:'基礎医学'},
+  {id:'basic_eng',label:'基礎工学'},
+  {id:'basic_me',label:'基礎ME'},
+  {id:'principle',label:'原理構造'},
+  {id:'operation',label:'操作運用'},
+  {id:'maintenance',label:'保守安全'}
 ];
 
 let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
@@ -636,17 +634,26 @@ function getSelectedRandomParts(){
 }
 function rangeCategory(range){
   const r=String(range||'');
-  if(/基礎医学|人体|公衆衛生|感染|免疫|生理|解剖|神経|筋|腎|呼吸|循環|消化|内分泌|体温|血液/.test(r))return 'basic';
-  if(/電気|電子|物理|数学|医用工学|力学|波|光|音|半導体|回路|交流|直流|情報工学|2進|AD変換/.test(r)){
-    if(/情報工学|2進|AD変換|コンピュータ|セキュリティ/.test(r))return 'info';
-    return 'engineering';
-  }
-  if(/生体計測|画像診断|計測|心電|脳波|筋電|血圧|パルスオキシ|超音波|MRI|X線|CT|内視鏡|センサ|トランスデューサ/.test(r))return 'measure';
-  if(/治療機器|医用治療|人工呼吸|透析|人工心肺|除細動|ペースメーカ|IABP|ECMO|電気メス|輸液|麻酔|レーザ|吸引|酸素/.test(r))return 'therapy';
-  if(/医療安全|規格|保守|JIS|安全|漏れ電流|接地|医療ガス|アラーム|電源|管理/.test(r))return 'safety';
-  if(/材料|生体物性|粘性|音響インピーダンス|消毒|滅菌|消毒薬|医用材料/.test(r))return 'materials';
-  if(/総合/.test(r))return 'general';
-  return 'general';
+
+  // 1. 基礎医学：人体・疾病・生理学・公衆衛生など
+  if(/基礎医学|人体|公衆衛生|感染|免疫|生理|解剖|神経|筋|腎|呼吸|循環|消化|内分泌|体温|血液|視覚|聴覚|肝臓|尿|代謝|ワクチン|熱中症/.test(r))return 'basic_med';
+
+  // 2. 保守安全：安全管理・規格・電源・接地・漏れ電流・医療ガスなど
+  if(/保守安全|医療安全|保守|安全|規格|JIS|漏れ電流|接地|等電位|非接地|電源|非常電源|アラーム|医療ガス|管理|点検|精度管理|単一故障/.test(r))return 'maintenance';
+
+  // 3. 操作運用：使用方法・取扱い・点検結果・臨床運用・アラーム原因など
+  if(/操作運用|操作|取扱|使用|点検結果|日常点検|患者|警報|アラーム原因|装着|測定エラー|接続|投与|人工呼吸中|血液透析中|手術中|在宅|トラブル/.test(r))return 'operation';
+
+  // 4. 原理構造：ME機器・装置・構成要素・作動原理・方式など
+  if(/原理構造|原理|構造|構成|装置|機器|心電計|脳波計|筋電計|血圧計|パルスオキシ|スパイロ|サーモグラ|MRI|X線|CT|内視鏡|超音波|人工呼吸器|麻酔器|電気メス|除細動器|ペースメーカ|透析|人工心肺|IABP|ECMO|輸液ポンプ|レーザ|酸素濃縮器|吸引器|ナビゲーション|プローブ|センサ|トランスデューサ/.test(r))return 'principle';
+
+  // 5. 基礎ME：生体物性・医用材料・消毒滅菌・生体との相互作用など
+  if(/基礎ME|医用材料|生体材料|材料|生体物性|粘性|音響インピーダンス|導電率|熱的特性|ヘパリン|コーティング|消毒|滅菌|消毒薬|生体組織|相互作用/.test(r))return 'basic_me';
+
+  // 6. 基礎工学：電気電子・物理・数学・情報・回路・単位など
+  if(/基礎工学|電気|電子|物理|数学|力学|波|光|音|音波|超音波|半導体|回路|交流|直流|抵抗|コンデンサ|コイル|オペアンプ|トランジスタ|2進|16進|AD変換|ASCII|情報工学|コンピュータ|セキュリティ|単位|pH|圧力|流体|熱|磁場/.test(r))return 'basic_eng';
+
+  return 'basic_me';
 }
 function rangeCategoryLabel(id){
   return RANDOM_RANGES.find(x=>x.id===id)?.label||id||'その他';
@@ -702,10 +709,10 @@ function selectRandomRanges(ids){
   renderRandomMenu();
 }
 function selectCoreRandomRanges(){
-  selectRandomRanges(['basic','engineering','materials','info']);
+  selectRandomRanges(['basic_med','basic_eng','basic_me']);
 }
 function selectClinicalRandomRanges(){
-  selectRandomRanges(['measure','therapy','safety']);
+  selectRandomRanges(['principle','operation','maintenance']);
 }
 function setRandomCount(n){$('randomCount').value=n;updateRandomPresetButtons();renderRandomMenu();}
 function shuffleArray(arr){
