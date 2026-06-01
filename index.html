@@ -255,7 +255,7 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
   </div>
 </section>
 <div class="grid" id="examGrid"></div></section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.8.0</span> / 更新日：2026-06-02</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.8.1</span> / 更新日：2026-06-02</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DBアップロード / 共有</h2>
@@ -308,12 +308,12 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.8.0';
+const APP_VERSION='v1.8.1';
 const APP_UPDATED_AT='2026-06-02';
 const APP_UPDATE_NOTES=[
-  '新規ログインの登録処理を修正',
+  '新規ログイン登録時の500エラーを修正',
   '保存用パスワードを8文字以上に変更',
-  'パスワード保存方式をPBKDF2方式へ強化',
+  'パスワード保存方式をソルト付きハッシュ方式へ強化',
   'アップデート情報とバージョン表示を追加'
 ];
 
@@ -602,7 +602,7 @@ async function registerSiteAccount(){
   if(passErr) return loginStatus(passErr);
   loginStatus('登録中…');
   try{
-    const r=await fetchWithTimeout('/api/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'register',loginId,displayName,password})},5000);
+    const r=await fetchWithTimeout('/api/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'register',loginId,displayName,password})},10000);
     const data=await r.json().catch(()=>({}));
     if(!r.ok) throw new Error(data.error||String(r.status));
     setSiteAuth({loginId:data.account.loginId,displayName:data.account.displayName,sessionToken:data.sessionToken,sessionExpiresAt:data.sessionExpiresAt});
@@ -618,7 +618,7 @@ async function loginSiteAccount(){
   if(password.length<MIN_PASSWORD_LENGTH) return loginStatus(`保存用パスワードは${MIN_PASSWORD_LENGTH}文字以上です。`);
   loginStatus('ログイン中…');
   try{
-    const r=await fetchWithTimeout('/api/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'login',loginId,password})},5000);
+    const r=await fetchWithTimeout('/api/auth',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'login',loginId,password})},10000);
     const data=await r.json().catch(()=>({}));
     if(!r.ok) throw new Error(data.error||String(r.status));
     setSiteAuth({loginId:data.account.loginId,displayName:data.account.displayName,sessionToken:data.sessionToken,sessionExpiresAt:data.sessionExpiresAt});
