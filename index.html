@@ -130,11 +130,41 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
   までお願いします。
 </div>
 <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
-<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末保存 + Cloudflare保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="exportAllProgress()">全履歴をJSON保存</button><label class="ghost" style="padding:14px 16px;border-radius:16px;display:inline-block;cursor:pointer">進行JSONを読み込み<input type="file" accept="application/json,.json" onchange="importProgress(this)" style="display:none"></label><span class="pill" id="roundCount"></span></div><div class="grid" id="examGrid"></div></section>
+<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DBアップロード / 共有</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><span class="pill" id="roundCount"></span></div><div class="grid" id="examGrid"></div></section>
 <section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="syncCard" class="card hidden">
+  <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
+  <h2>DBアップロード / 共有</h2>
+  <p class="small">
+    JSONファイルとして端末へ保存する代わりに、端末内に残っている進行データ・履歴をCloudflare KVへアップロードします。
+    別端末で同じログインIDを使うとDBから復元できます。
+  </p>
+  <div class="mobile-note small">
+    <b>使い方：</b><br>
+    1. 先に「ログイン / 登録」でサイトログインする<br>
+    2. 「端末データをDBへアップロード」を押す<br>
+    3. 必要なら「共有リンクを作成」を押して、共有コードまたはURLを渡す
+  </div>
+  <div class="row" style="margin-top:14px">
+    <button onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button>
+    <button class="secondary" onclick="createShareLinkFromDb()">共有リンクを作成</button>
+    <button class="ghost" onclick="checkCloudSyncStatus()">DB保存状態を確認</button>
+  </div>
+  <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+  <h3>共有データを取り込む</h3>
+  <p class="small">共有コードまたは共有URLを入力すると、共有された進行データを現在のログインIDのDBへ取り込めます。</p>
+  <div class="field">
+    <label for="shareCodeInput">共有コード / 共有URL</label>
+    <input id="shareCodeInput" placeholder="例：ABCD1234 または https://.../?share=ABCD1234">
+  </div>
+  <div class="row">
+    <button class="secondary" onclick="importSharedProgressToDb()">共有データを取り込む</button>
+  </div>
+  <div id="dbSyncStatus" class="login-status">まだ操作していません。</div>
+</section>
 <section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← 回数選択へ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="exportCurrentJSON()">現在の進行をJSON保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
-<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="startAttempt(state.part,'all')">もう一度全問</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="exportCurrentJSON()">今回の進行JSON保存</button></div><div id="wrongList"></div></section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="startAttempt(state.part,'all')">もう一度全問</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button></div><div id="wrongList"></div></section>
 
 <footer class="site-footer">
   <b>ME2種 過去問演習</b> — 第2種ME技術実力検定試験の学習支援サイト。<br>
@@ -313,14 +343,14 @@ async function apiProgress(method, payload=null){
     } else if(payload) opt.body=JSON.stringify(payload);
     const r=await fetchWithTimeout(url,opt,3000);
     if(!r.ok) throw new Error(String(r.status));
-    $('progressMode').textContent='端末保存 + Cloudflare KV保存';
+    $('progressMode').textContent='端末キャッシュ + Cloudflare KV保存';
     return await r.json();
-  }catch(e){$('progressMode').textContent='端末保存のみ（KV未設定・未ログイン・通信失敗）';return null;}
+  }catch(e){$('progressMode').textContent='端末キャッシュのみ（KV未設定・未ログイン・通信失敗）';return null;}
 }
 async function loadMe(){
   try{const r=await fetchWithTimeout('/api/me',{cache:'no-store',headers:guestHeaders()},2000);if(!r.ok)throw new Error(String(r.status));me=await r.json();}
   catch(e){me={authenticated:false,email:null,name:null,local:true};}
-  $('userBadge').textContent=me.accountLabel?`ログイン: ${me.accountLabel}`:'未ログイン/ローカル';
+  $('userBadge').textContent=me.accountLabel?`ログイン: ${me.accountLabel}`:'未ログイン/端末キャッシュ';
   return me;
 }
 function showLoginInfo(){
@@ -449,7 +479,7 @@ async function loadIndex(){
 }
 async function getPart(examId,part){const key=`${examId}_${part}`;if(partsCache[key])return partsCache[key];const rec=getExamRecord(examId);const path=rec?.parts?.[part];if(!path)throw new Error('part path missing');partsCache[key]=await fetchJSON(path);return partsCache[key]}
 function getExamRecord(id){return examsIndex.exams.find(x=>String(x.id)===String(id))}
-function hideAll(){['menuCard','loginCard','partCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
+function hideAll(){['menuCard','loginCard','syncCard','partCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
 function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();$('menuCard').classList.remove('hidden');renderMenu();updateHeader()}
 function renderMenu(){const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
 async function selectExam(examId){if(state&&state.timerRunning){pauseTimer();saveState()}currentExamId=examId;hideAll();$('partCard').classList.remove('hidden');const rec=getExamRecord(examId);$('selectedExamTitle').textContent=rec?rec.title:'試験回';await renderPartMenu()}
@@ -582,6 +612,192 @@ async function showHistory(part){
   }).join('');
   $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3>${stats}<div class="row" style="margin:10px 0 14px"><button class="warn" onclick="cleanupDuplicateHistoryDb('${part}')">DBの重複履歴を削除</button><span class="small">表示上の重複除去だけでなく、Cloudflare KV内の重複データも1件に整理します。</span></div>`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
 }
+
+function parseProgressStorageKey(k){
+  let m=String(k||'').match(/^me2_(state|history)_([^_]+)_(am|pm)$/);
+  if(!m)return null;
+  return {kind:m[1],examId:m[2],part:m[3]};
+}
+function collectLocalProgressObject(){
+  const payload={schemaVersion:2,createdAt:new Date().toISOString(),states:[],histories:[]};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    const meta=parseProgressStorageKey(k);
+    if(!meta)continue;
+    const val=loadLocal(k,null);
+    if(meta.kind==='state'&&val&&val.examId&&val.part){
+      payload.states.push({examId:val.examId,part:val.part,data:val,key:k});
+    }else if(meta.kind==='history'&&Array.isArray(val)){
+      payload.histories.push({examId:meta.examId,part:meta.part,data:val,key:k});
+    }
+  }
+  return payload;
+}
+function applyProgressPayloadToLocal(payload){
+  const p=payload?.data?.states||payload?.states?payload?.data||payload:payload;
+  let states=0,histories=0;
+  (p.states||[]).forEach(item=>{
+    const d=item?.data||item;
+    if(d&&d.examId&&d.part){saveLocal(stateKey(d.examId,d.part),d);states++;}
+  });
+  (p.histories||[]).forEach(item=>{
+    const examId=item.examId, part=item.part;
+    const arr=Array.isArray(item.data)?item.data:[];
+    if(examId&&part&&arr.length){
+      const merged=mergeHistory(arr,loadLocal(historyKey(examId,part),[])).slice(0,300);
+      saveLocal(historyKey(examId,part),merged);
+      histories+=arr.length;
+    }
+  });
+  return {states,histories};
+}
+function dbStatus(msg,type='info'){
+  const el=$('dbSyncStatus');
+  if(el) el.innerHTML=msg;
+}
+function showDbSyncPanel(){
+  hideAll();
+  $('syncCard').classList.remove('hidden');
+  updateHeader();
+  const p=collectLocalProgressObject();
+  dbStatus(`端末内に途中保存 ${p.states.length}件、履歴 ${p.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件があります。<br>DBへアップロードするには、先にサイトログインまたはゲストログインしてください。`);
+}
+async function uploadLocalProgressToDb(opts={}){
+  const silent=!!opts.silent;
+  const payload=collectLocalProgressObject();
+  const totalHist=payload.histories.reduce((a,h)=>a+(Array.isArray(h.data)?h.data.length:0),0);
+  if(!hasCloudLogin()){
+    if(!silent){
+      showDbSyncPanel();
+      dbStatus('<b>アップロードできません。</b><br>先に「ログイン / 登録」からサイトログインしてください。ログイン後にDBへ保存できます。','warn');
+    }
+    return {ok:false,reason:'not_logged_in',states:0,histories:0};
+  }
+  if(!silent) dbStatus(`DBへアップロード中…<br>途中保存 ${payload.states.length}件、履歴 ${totalHist}件`);
+  let states=0,histories=0,errors=0;
+  for(const item of payload.states){
+    const r=await apiProgress('POST',{type:'state',examId:item.examId,part:item.part,data:item.data});
+    if(r&&r.ok)states++;else errors++;
+  }
+  for(const item of payload.histories){
+    if(!Array.isArray(item.data)||!item.data.length)continue;
+    const r=await apiProgress('POST',{type:'history',examId:item.examId,part:item.part,data:item.data});
+    if(r&&r.ok)histories+=item.data.length;else errors++;
+  }
+  if(!silent){
+    const msg=errors
+      ? `<b>一部アップロードできませんでした。</b><br>途中保存 ${states}/${payload.states.length}件、履歴 ${histories}/${totalHist}件をDBへ送信しました。<br>通信状態、ログイン状態、KV設定を確認してください。`
+      : `<b>DBアップロード完了。</b><br>途中保存 ${states}件、履歴 ${histories}件をCloudflare KVへ保存しました。`;
+    dbStatus(msg);
+    await loadMe();
+    if(currentExamId) renderPartMenu();
+  }
+  return {ok:errors===0,states,histories,errors,payload};
+}
+async function uploadCurrentProgressToDb(){
+  if(!state||!state.examId||!state.part){alert('保存できる進行データがありません。');return;}
+  if(!hasCloudLogin()){showDbSyncPanel();dbStatus('<b>DB保存にはログインが必要です。</b><br>先に「ログイン / 登録」からログインしてください。');return;}
+  ensureTimingFields(state);
+  const snap=snapshotState();
+  const type=snap.finished?'attempt':'state';
+  const res=await apiProgress('POST',{type,examId:snap.examId,part:snap.part,data:snap});
+  if(res&&res.ok) alert('現在の進行をDBへ保存しました。');
+  else alert('DB保存に失敗しました。ログイン状態やKV設定を確認してください。');
+}
+async function apiShare(method,payload=null){
+  try{
+    let url='/api/share';
+    const opt={method,headers:{'content-type':'application/json',...guestHeaders()}};
+    if(method==='GET'&&payload){
+      const params=new URLSearchParams();
+      Object.entries(payload).forEach(([k,v])=>{if(v!==undefined&&v!==null)params.set(k,String(v))});
+      url+='?'+params.toString();
+    }else if(payload){opt.body=JSON.stringify(payload);}
+    const r=await fetchWithTimeout(url,opt,5000);
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(data.error||String(r.status));
+    return data;
+  }catch(e){
+    return {ok:false,error:e.message||String(e)};
+  }
+}
+async function createShareLinkFromDb(){
+  showDbSyncPanel();
+  if(!hasCloudLogin()){
+    dbStatus('<b>共有リンクを作成できません。</b><br>先にサイトログインまたはゲストログインしてください。');
+    return;
+  }
+  dbStatus('共有用データを準備中… 端末データをDBへアップロードしています。');
+  const uploaded=await uploadLocalProgressToDb({silent:true});
+  const payload=collectLocalProgressObject();
+  const totalHist=payload.histories.reduce((a,h)=>a+(h.data?.length||0),0);
+  if(!payload.states.length&&!totalHist){
+    dbStatus('共有できる進行データがありません。演習後にもう一度試してください。');
+    return;
+  }
+  const res=await apiShare('POST',{title:'ME2種 進行データ共有',data:payload});
+  if(!res||!res.ok){
+    dbStatus(`<b>共有リンク作成に失敗しました。</b><br>${escapeHtml(res?.error||'Cloudflare Functions / KV設定を確認してください。')}`);
+    return;
+  }
+  dbStatus(`<b>共有リンクを作成しました。</b><br>
+    共有コード：<span class="code">${escapeHtml(res.code)}</span><br>
+    共有URL：<span class="code">${escapeHtml(res.url)}</span><br>
+    <button class="secondary" style="margin-top:10px" onclick="copyText('${escapeHtml(res.url)}')">共有URLをコピー</button>
+    <p class="small">共有相手はこのURLまたはコードを「共有データを取り込む」に入力すると、進行データをDBへ取り込めます。</p>`);
+}
+function extractShareCode(v){
+  const s=String(v||'').trim();
+  if(!s)return '';
+  try{
+    const u=new URL(s,location.href);
+    return (u.searchParams.get('share')||u.searchParams.get('code')||'').trim();
+  }catch(e){}
+  return s.replace(/[^a-zA-Z0-9_-]/g,'').slice(0,32);
+}
+async function importSharedProgressToDb(){
+  const code=extractShareCode($('shareCodeInput')?.value||new URLSearchParams(location.search).get('share')||'');
+  showDbSyncPanel();
+  if(!code){dbStatus('共有コードまたは共有URLを入力してください。');return;}
+  dbStatus(`共有コード <span class="code">${escapeHtml(code)}</span> を読み込み中…`);
+  const res=await apiShare('GET',{code});
+  if(!res||!res.ok){
+    dbStatus(`<b>共有データを読み込めませんでした。</b><br>${escapeHtml(res?.error||'共有コードを確認してください。')}`);
+    return;
+  }
+  const applied=applyProgressPayloadToLocal(res.data);
+  let uploadMsg='';
+  if(hasCloudLogin()){
+    const up=await uploadLocalProgressToDb({silent:true});
+    uploadMsg=`<br>現在のログインIDのDBへアップロード：途中保存 ${up.states||0}件、履歴 ${up.histories||0}件`;
+  }else{
+    uploadMsg='<br><b>注意：</b>未ログインのため、まず端末キャッシュに取り込みました。ログイン後に「端末データをDBへアップロード」を押してください。';
+  }
+  dbStatus(`<b>共有データを取り込みました。</b><br>途中保存 ${applied.states}件、履歴 ${applied.histories}件${uploadMsg}`);
+  if(currentExamId) renderPartMenu();
+}
+function copyText(text){
+  const raw=String(text||'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+  navigator.clipboard?.writeText(raw).then(()=>alert('コピーしました。')).catch(()=>prompt('コピーしてください',raw));
+}
+async function checkCloudSyncStatus(){
+  showDbSyncPanel();
+  if(!hasCloudLogin()){dbStatus('未ログインです。DB保存状態の確認にはログインが必要です。');return;}
+  const local=collectLocalProgressObject();
+  dbStatus(`ログイン確認中…<br>端末内：途中保存 ${local.states.length}件、履歴 ${local.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件`);
+  const r=await apiProgress('GET');
+  if(r&&r.ok) dbStatus(`DB接続OK。保存先：${escapeHtml(r.account?.label||'現在のアカウント')}<br>端末内：途中保存 ${local.states.length}件、履歴 ${local.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件`);
+  else dbStatus('DB接続を確認できませんでした。KV Binding、ログイン状態、Functionsの設定を確認してください。');
+}
+async function maybeOpenSharedLink(){
+  const code=new URLSearchParams(location.search).get('share');
+  if(code){
+    showDbSyncPanel();
+    if($('shareCodeInput')) $('shareCodeInput').value=code;
+    dbStatus(`共有リンクを検出しました。<br>共有コード：<span class="code">${escapeHtml(code)}</span><br>「共有データを取り込む」を押してください。`);
+  }
+}
+
 function downloadText(filename,text,type='application/json'){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
 function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part}.json`,JSON.stringify(snapshotState(),null,2))}
 function exportAllProgress(){const data={exportedAt:new Date().toISOString(),localStorage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('me2_'))data.localStorage[k]=localStorage.getItem(k)}downloadText('me2_all_progress_backup.json',JSON.stringify(data,null,2))}
@@ -590,9 +806,10 @@ function importProgress(input){const f=input.files?.[0];if(!f)return;const reade
 async function init(){
   applyTheme(getStoredTheme());
   $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
-  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/ローカル'; }
+  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/端末キャッシュ'; }
   try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }
   showMenu();
+  await maybeOpenSharedLink();
   // 進行状況のクラウド確認は画面表示後に実行。ここで止まってもメニュー表示を妨げない。
   apiProgress('GET').catch(()=>null);
 }
