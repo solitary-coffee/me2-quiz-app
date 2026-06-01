@@ -82,20 +82,51 @@
 .answer-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;background:#f8fafc;color:var(--muted);font-size:12px;margin:3px 4px 3px 0}
 .answer-chip.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
 .answer-controls button.active{background:var(--accent);color:#fff}
-.random-card{border:1px solid var(--line);border-radius:18px;background:#fff;margin:16px 0;padding:16px}
-.random-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-.field label{font-weight:700;font-size:13px;display:block;margin:0 0 6px;color:var(--muted)}
-.field select,.field input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;color:var(--text)}
-.check-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;min-height:42px}
-.check-row label,.check-grid label{font-weight:600;color:var(--text);margin:0}
-.check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
-.check-grid label{border:1px solid var(--line);border-radius:12px;padding:9px 10px;background:#f8fafc}
+.random-card{border:1px solid var(--line);border-radius:22px;background:var(--card);margin:16px 0;padding:16px;box-shadow:var(--shadow)}
+.random-head{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.random-head h3{margin:0 0 4px;font-size:18px}
+.random-head p{margin:0}
+.random-mini-badge{display:inline-flex;align-items:center;max-width:420px;border:1px solid var(--line);border-radius:999px;background:var(--accent2);color:var(--ink);padding:7px 10px;font-size:12px;line-height:1.35}
+.random-smart-grid{display:grid;grid-template-columns:1.1fr .9fr 1.2fr;gap:12px}
+.random-panel{border:1px solid var(--line);border-radius:16px;background:var(--bg);padding:12px}
+.field-label{font-weight:800;font-size:13px;color:var(--muted);margin-bottom:8px}
+.range-line{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.range-sep{color:var(--muted);font-weight:800}
+.range-line select,.count-line input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--card);color:var(--ink)}
+.segmented{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.segmented label{margin:0}
+.segmented input{position:absolute;opacity:0;pointer-events:none}
+.segmented span{display:flex;align-items:center;justify-content:center;min-height:42px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--muted);font-weight:800}
+.segmented input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff}
+.count-line{display:grid;grid-template-columns:repeat(4,minmax(42px,1fr)) minmax(72px,.9fr);gap:8px;align-items:center}
+.count-chip{min-height:42px;padding:8px 10px;border-radius:999px}
+.count-chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.range-details{margin-top:12px;border:1px solid var(--line);border-radius:16px;background:var(--bg);padding:0;overflow:hidden}
+.range-details summary{cursor:pointer;padding:12px 14px;font-weight:900;list-style:none;display:flex;justify-content:space-between;gap:10px;color:var(--ink)}
+.range-details summary::-webkit-details-marker{display:none}
+.range-toolbar{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding:10px 12px 0}
+button.mini{min-height:34px;padding:7px 10px;font-size:12px;border-radius:999px}
+.check-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;padding:12px}
+.check-grid label{font-weight:700;color:var(--ink);margin:0;border:1px solid var(--line);border-radius:14px;padding:10px 11px;background:var(--card);display:flex;gap:8px;align-items:center}
+.check-grid label:has(input:checked){border-color:var(--accent);background:var(--accent2);color:var(--ink)}
+.random-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.random-actions button{min-height:48px}
 .random-source{font-size:13px;color:var(--muted);margin:4px 0 8px}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}.form-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:800;color:#374151}.field input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #dbeafe;border-color:#60a5fa}.login-status{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;line-height:1.6}.account-card{background:#f0fdf4;border:1px solid #86efac;border-radius:16px;padding:12px;margin:10px 0}.danger-zone{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-top:12px}.status-ok{color:#166534}.status-warn{color:#92400e}.public-intro{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;border-radius:18px;padding:14px;margin:12px 0}.public-intro h3{margin:0 0 8px;font-size:17px}.public-intro ul{margin:8px 0 0;padding-left:1.2em}.public-intro li{margin:4px 0}.contact-card{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:14px;margin:12px 0}.contact-card a{color:#166534;font-weight:800;text-decoration:none}.disclaimer{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin:12px 0}.site-footer{max-width:1080px;margin:18px auto 0;padding:16px 0;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--line)}.site-footer a{color:#1d4ed8;font-weight:800;text-decoration:none}@media(max-width:760px){.form-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
+
+@media(max-width:760px){
+  .random-head{flex-direction:column}
+  .random-mini-badge{max-width:100%;width:100%;border-radius:14px}
+  .random-smart-grid{grid-template-columns:1fr}
+  .count-line{grid-template-columns:repeat(4,1fr);gap:8px}
+  .count-line input{grid-column:1/-1}
+  .random-actions button{width:100%}
+  .range-toolbar button{width:auto;min-height:34px}
+}
 
 /* ホワイト / ナイトモード */
 :root{color-scheme:light}
 html[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--card:#111827;--ink:#e5e7eb;--muted:#94a3b8;--line:#334155;--accent:#60a5fa;--accent2:#172554;--good:#22c55e;--bad:#f87171;--warn:#fbbf24;--shadow:0 10px 28px rgba(0,0,0,.45)}
-body,.card,.round-card,.part-card,.choice,.badge,.pill,.mobile-note,.filebox,.result,.form-card,.field input,.login-status,.account-card,.danger-zone,.public-intro,.contact-card,.disclaimer,.site-footer,button{transition:background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease}
+body,.card,.round-card,.part-card,.choice,.badge,.pill,.mobile-note,.filebox,.result,.form-card,.field input,.login-status,.account-card,.danger-zone,.public-intro,.contact-card,.disclaimer,.site-footer,.random-card,.random-panel,.random-mini-badge,.range-details,.check-grid label,.segmented span,.range-line select,.count-line input,button{transition:background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease}
 .theme-toggle{min-height:38px;padding:8px 10px;font-size:13px;white-space:nowrap}
 html[data-theme="dark"] header{background:rgba(15,23,42,.94);border-bottom-color:var(--line)}
 html[data-theme="dark"] .badge,html[data-theme="dark"] .pill,html[data-theme="dark"] .round-card,html[data-theme="dark"] .part-card,html[data-theme="dark"] .choice,html[data-theme="dark"] .form-card,html[data-theme="dark"] .field input{background:#111827;color:var(--ink);border-color:var(--line)}
@@ -117,6 +148,14 @@ html[data-theme="dark"] .choice .num,html[data-theme="dark"] .code{background:#1
 html[data-theme="dark"] .choice.correct .num{background:#14532d;color:#bbf7d0}
 html[data-theme="dark"] .choice.wrong .num{background:#7f1d1d;color:#fecaca}
 html[data-theme="dark"] .progressbar{background:#1f2937}
+html[data-theme="dark"] .random-card{background:var(--card);border-color:var(--line);box-shadow:var(--shadow)}
+html[data-theme="dark"] .random-panel,html[data-theme="dark"] .range-details{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .random-mini-badge{background:#172554;color:#dbeafe;border-color:#1d4ed8}
+html[data-theme="dark"] .range-line select,html[data-theme="dark"] .count-line input,html[data-theme="dark"] .segmented span,html[data-theme="dark"] .check-grid label{background:#111827;color:#e5e7eb;border-color:#334155}
+html[data-theme="dark"] .segmented input:checked+span,html[data-theme="dark"] .count-chip.active{background:#2563eb;border-color:#60a5fa;color:#fff}
+html[data-theme="dark"] .check-grid label:has(input:checked){background:#172554;border-color:#60a5fa;color:#dbeafe}
+html[data-theme="dark"] .range-toolbar{border-top-color:#334155}
+
 html[data-theme="dark"] .source-img{background:#fff;border-color:#334155}
 html[data-theme="dark"] .site-footer{border-top-color:#334155}
 html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status-warn{color:#fcd34d}
@@ -147,46 +186,58 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
 <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
 <div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DBアップロード / 共有</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><span class="pill" id="roundCount"></span></div>
 <section class="random-card">
+  <div class="random-head">
+    <div>
   <h3>ランダム出題</h3>
-  <p class="small">
-    試験回・午前/午後・出題範囲・問題数を指定して、ランダムに出題できます。
-    例：第42回〜第44回、午前＋午後、基礎医学だけ、20問。
-  </p>
-  <div class="random-grid">
-    <div class="field">
-      <label for="randomFrom">何回から</label>
-      <select id="randomFrom" onchange="renderRandomMenu()"></select>
+      <p class="small">回数・午前/午後・範囲・問題数を指定してミックス出題できます。</p>
     </div>
-    <div class="field">
-      <label for="randomTo">何回まで</label>
+    <span class="random-mini-badge" id="randomPoolInfo">条件を選択中</span>
+  </div>
+
+  <div class="random-smart-grid">
+    <div class="random-panel">
+      <div class="field-label">試験回</div>
+      <div class="range-line">
+        <select id="randomFrom" onchange="renderRandomMenu()"></select>
+        <span class="range-sep">〜</span>
       <select id="randomTo" onchange="renderRandomMenu()"></select>
     </div>
-    <div class="field">
-      <label>午前 / 午後</label>
-      <div class="check-row">
-        <label><input type="checkbox" id="randomAm" checked onchange="renderRandomMenu()"> 午前</label>
-        <label><input type="checkbox" id="randomPm" checked onchange="renderRandomMenu()"> 午後</label>
       </div>
+
+    <div class="random-panel">
+      <div class="field-label">午前 / 午後</div>
+      <div class="segmented">
+        <label><input type="checkbox" id="randomAm" checked onchange="renderRandomMenu()"><span>午前</span></label>
+        <label><input type="checkbox" id="randomPm" checked onchange="renderRandomMenu()"><span>午後</span></label>
     </div>
-    <div class="field">
-      <label for="randomCount">出題数</label>
-      <input id="randomCount" type="number" min="1" max="300" value="20">
     </div>
+
+    <div class="random-panel">
+      <div class="field-label">問題数</div>
+      <div class="count-line">
+        <button class="ghost count-chip" type="button" onclick="setRandomCount(10)">10</button>
+        <button class="ghost count-chip" type="button" onclick="setRandomCount(20)">20</button>
+        <button class="ghost count-chip" type="button" onclick="setRandomCount(40)">40</button>
+        <button class="ghost count-chip" type="button" onclick="setRandomCount(60)">60</button>
+        <input id="randomCount" type="number" min="1" max="300" value="20" onchange="renderRandomMenu()" oninput="updateRandomPresetButtons()">
   </div>
-  <div class="field">
-    <label>出題範囲</label>
+  </div>
+  </div>
+
+  <details class="range-details">
+    <summary>出題範囲を選択 <span class="small">未選択なら全範囲</span></summary>
+    <div class="range-toolbar">
+      <button class="ghost mini" type="button" onclick="clearRandomRanges()">全範囲にする</button>
+      <button class="ghost mini" type="button" onclick="selectCoreRandomRanges()">基礎＋工学</button>
+      <button class="ghost mini" type="button" onclick="selectClinicalRandomRanges()">計測＋治療＋安全</button>
+    </div>
     <div id="randomRangeChecks" class="check-grid"></div>
-    <p class="small">何も選ばない場合は全範囲から出題します。</p>
-  </div>
-  <div class="row">
-    <button class="ghost" onclick="setRandomCount(10)">10問</button>
-    <button class="ghost" onclick="setRandomCount(20)">20問</button>
-    <button class="ghost" onclick="setRandomCount(40)">40問</button>
-    <button class="ghost" onclick="setRandomCount(60)">60問</button>
+  </details>
+
+  <div class="random-actions">
     <button onclick="startRandomQuiz()">ランダム演習開始</button>
     <button class="secondary hidden" id="resumeRandomBtn" onclick="resumeRandomQuiz()">ランダム途中から</button>
   </div>
-  <div id="randomPoolInfo" class="small">条件を選んで「ランダム演習開始」を押してください。</div>
 </section>
 <div class="grid" id="examGrid"></div></section>
 <section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
@@ -614,7 +665,7 @@ function renderRandomMenu(){
   $('randomFrom').value=currentFrom||String(examNumber(exams[0].id));
   $('randomTo').value=currentTo||String(examNumber(exams[exams.length-1].id));
   if(!$('randomRangeChecks').innerHTML){
-    $('randomRangeChecks').innerHTML=RANDOM_RANGES.map(r=>`<label><input type="checkbox" class="random-range-check" value="${r.id}"> ${r.label}</label>`).join('');
+    $('randomRangeChecks').innerHTML=RANDOM_RANGES.map(r=>`<label><input type="checkbox" class="random-range-check" value="${r.id}" onchange="renderRandomMenu()"> <span>${r.label}</span></label>`).join('');
   }
   const saved=loadLocal(stateKey(RANDOM_EXAM_ID,RANDOM_PART));
   const btn=$('resumeRandomBtn');
@@ -630,10 +681,33 @@ function renderRandomMenu(){
   const parts=getSelectedRandomParts();
   const ranges=getSelectedRandomRanges();
   const nums=ids.map(examNumber);
-  const txt=ids.length?`選択中：第${Math.min(...nums)}回〜第${Math.max(...nums)}回 / ${parts.map(partName).join('・')} / 範囲：${ranges.length?ranges.map(rangeCategoryLabel).join('、'):'全範囲'}`:'試験回が選択されていません。';
+  const txt=ids.length?`第${Math.min(...nums)}回〜第${Math.max(...nums)}回｜${parts.map(partName).join('・')}｜${ranges.length?ranges.length+'範囲':'全範囲'}｜${$('randomCount')?.value||20}問`:'試験回が選択されていません。';
   if($('randomPoolInfo')) $('randomPoolInfo').textContent=txt;
+  updateRandomPresetButtons();
 }
-function setRandomCount(n){$('randomCount').value=n;}
+function updateRandomPresetButtons(){
+  const v=String($('randomCount')?.value||'');
+  document.querySelectorAll('.count-chip').forEach(btn=>{
+    const n=String((btn.textContent||'').replace(/\D/g,''));
+    btn.classList.toggle('active',n===v);
+  });
+}
+function clearRandomRanges(){
+  document.querySelectorAll('.random-range-check').forEach(x=>x.checked=false);
+  renderRandomMenu();
+}
+function selectRandomRanges(ids){
+  const set=new Set(ids);
+  document.querySelectorAll('.random-range-check').forEach(x=>x.checked=set.has(x.value));
+  renderRandomMenu();
+}
+function selectCoreRandomRanges(){
+  selectRandomRanges(['basic','engineering','materials','info']);
+}
+function selectClinicalRandomRanges(){
+  selectRandomRanges(['measure','therapy','safety']);
+}
+function setRandomCount(n){$('randomCount').value=n;updateRandomPresetButtons();renderRandomMenu();}
 function shuffleArray(arr){
   const a=arr.slice();
   for(let i=a.length-1;i>0;i--){
