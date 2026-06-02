@@ -1,5 +1,14 @@
 # 更新履歴
 
+## v1.9.4 - 2026-06-02
+
+- 開発者ログインで `405` が出る問題を修正
+- `functions/api/dev-auth.js` を今回の更新パッチに含めるよう修正
+- `dev-auth` APIに `onRequest` ディスパッチを追加
+- Cloudflare Pages Functions が `onRequestPost` を拾えない場合でもPOST/GETを処理できるように変更
+- AI解説生成側のAPIも `onRequest` に対応
+- 前回までのAI解説生成定義・開発者認証・開発モード・見返し・ランダム履歴機能も同梱
+
 ## v1.9.3 - 2026-06-02
 
 - AI解説生成の定義を追加

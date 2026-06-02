@@ -137,4 +137,5 @@ async function handlePost(context) {
   const result = await callOpenAI(context.env || {}, q, definition);
   return json({ ok: true, definitionUsed: definition, ...result });
 }
+export async function onRequest(context) { try { if (context.request.method.toUpperCase() !== 'POST') return json({ error: 'Method not allowed for /api/ai-explain' }, { status: 405 }); return await handlePost(context); } catch (e) { return json({ error: e && e.message ? e.message : String(e) }, { status: 500 }); } }
 export async function onRequestPost(context) { try { return await handlePost(context); } catch (e) { return json({ error: e && e.message ? e.message : String(e) }, { status: 500 }); } }

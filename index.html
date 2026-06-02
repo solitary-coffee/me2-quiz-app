@@ -226,7 +226,7 @@ html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.3</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.4</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -441,15 +441,25 @@ html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.9.3';
+const APP_VERSION='v1.9.4';
 const APP_UPDATED_AT='2026-06-02';
 const APP_UPDATE_NOTES=[
-  'AI解説生成の定義を追加',
-  '開発モードで解説生成定義を確認・編集可能に変更',
-  '選択肢解説の形式を統一',
-  '前回までのAI解説再生成・開発者認証機能も同梱'
+  '開発者ログインで405が出る問題を修正',
+  'dev-auth APIを更新ファイルに必ず同梱',
+  'POST/GETをonRequestでも処理するように安定化',
+  '前回までのAI解説定義・開発モード機能も同梱'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.9.4',
+    date:'2026-06-02',
+    notes:[
+      '開発者ログイン時に405が出る問題を修正',
+      'functions/api/dev-auth.jsを更新パッチに含めるよう修正',
+      'dev-auth APIにonRequestディスパッチを追加してPOST/GET処理を安定化',
+      'AI解説生成定義・開発者認証・見返し・ランダム履歴機能も同梱'
+    ]
+  },
   {
     version:'v1.9.3',
     date:'2026-06-02',
@@ -1814,7 +1824,9 @@ async function loginDevMode(){
     devLoginStatus('ログインしました。開発モードを開きます。',true);
     setTimeout(showDevModeUnlocked,300);
   }catch(e){
-    devLoginStatus('開発者ログインに失敗しました：'+escapeHtml(e.message||e));
+    const msg=String(e.message||e);
+    const hint=msg==='405'?'（functions/api/dev-auth.js がGitHubへ反映されていない、またはCloudflare Pages FunctionsがPOSTを受け取れていない可能性があります）':'';
+    devLoginStatus('開発者ログインに失敗しました：'+escapeHtml(msg)+hint);
   }
 }
 async function logoutDevMode(){
