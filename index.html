@@ -180,10 +180,53 @@ html[data-theme="dark"] .answer-card .explain-table tr:hover th,html[data-theme=
 html[data-theme="dark"] .site-footer{border-top-color:#334155}
 html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status-warn{color:#fcd34d}
 
+
+/* 開発モード・見返し・消去法メモ */
+.dev-grid{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);gap:14px}
+.dev-panel{border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:14px}
+.dev-panel h3{margin:0 0 10px}
+.dev-field{margin:10px 0}
+.dev-field label{display:block;font-weight:800;font-size:13px;color:var(--muted);margin-bottom:6px}
+.dev-field input,.dev-field select,.dev-field textarea{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:9px 10px;font:inherit}
+.dev-field textarea{min-height:74px;resize:vertical}
+.dev-choice-editor{border:1px solid var(--line);border-radius:14px;padding:10px;margin:10px 0;background:var(--card)}
+.dev-choice-editor h4{margin:0 0 8px}
+.dev-preview{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:12px;margin-top:12px}
+.dev-preview h4{margin:0 0 8px}
+.dev-status{margin-top:10px;font-size:13px;color:var(--muted)}
+.quiz-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.elim-wrap{display:flex;align-items:stretch;gap:8px}
+.elim-btn{min-width:44px;width:44px;min-height:44px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-weight:900}
+.elim-btn.mark-x{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+.elim-btn.mark-tri{background:#fef3c7;color:#92400e;border-color:#fde68a}
+.elim-btn.mark-o{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+.bookmark-card{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:12px;margin:10px 0}
+.bookmark-card h3{margin:0 0 6px}
+.bookmark-meta{color:var(--muted);font-size:13px;line-height:1.55}
+html[data-theme="dark"] .dev-panel{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .dev-field input,html[data-theme="dark"] .dev-field select,html[data-theme="dark"] .dev-field textarea,html[data-theme="dark"] .dev-choice-editor,html[data-theme="dark"] .dev-preview,html[data-theme="dark"] .bookmark-card{background:#111827;color:#e5e7eb;border-color:#334155}
+html[data-theme="dark"] .elim-btn{background:#0f172a;color:#cbd5e1;border-color:#334155}
+html[data-theme="dark"] .elim-btn.mark-x{background:#450a0a;color:#fecaca;border-color:#7f1d1d}
+html[data-theme="dark"] .elim-btn.mark-tri{background:#451a03;color:#fde68a;border-color:#92400e}
+html[data-theme="dark"] .elim-btn.mark-o{background:#052e16;color:#bbf7d0;border-color:#166534}
+@media(max-width:760px){.dev-grid{grid-template-columns:1fr}.elim-wrap{gap:6px}.elim-btn{min-width:40px;width:40px}.quiz-tools button{width:100%}}
+
+
+.footer-dev-button{margin-top:10px;min-height:36px;padding:7px 12px;font-size:12px;border-radius:999px}
+.dev-lock-note{border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:10px;margin:10px 0;color:var(--muted)}
+html[data-theme="dark"] .dev-lock-note{background:#0f172a;border-color:#334155;color:#cbd5e1}
+
+
+.dev-definition-box{border:1px solid var(--line);border-radius:16px;background:var(--bg);padding:12px;margin:12px 0}
+.dev-definition-box summary{cursor:pointer;font-weight:900;color:var(--accent)}
+.dev-definition-box textarea{width:100%;min-height:260px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:10px;font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace}
+html[data-theme="dark"] .dev-definition-box{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e5e7eb;border-color:#334155}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.8.3</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.3</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -219,7 +262,7 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
  </details>
 </section>
 <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
-<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DBアップロード / 共有</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><span class="pill" id="roundCount"></span></div>
+<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DBアップロード / 共有</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><button class="ghost" onclick="showBookmarks()">あとで見返す</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button><span class="pill" id="roundCount"></span></div>
 <section class="random-card">
  <div class="random-head">
   <div>
@@ -317,26 +360,138 @@ html[data-theme="dark"] .status-ok{color:#86efac}html[data-theme="dark"] .status
  <div class="row" id="answerViewControls" style="margin:12px 0"></div>
  <div id="answerViewList"></div>
 </section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
-<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="startAttempt(state.part,'all')">もう一度全問</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button></div><div id="wrongList"></div></section>
+<section id="bookmarkCard" class="card hidden">
+  <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
+  <h2>あとで見返す問題</h2>
+  <p class="small">演習中に保存した問題をここで確認できます。問題文・正答・要点解説・図表も見返せます。</p>
+  <div id="bookmarkList"></div>
+</section>
+<section id="devLoginCard" class="card hidden">
+  <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
+  <h2>開発者ログイン</h2>
+  <p class="small">
+    開発モードは、問題データ・画像パス・解説を編集できるため、開発者IDとパスワードで保護しています。
+  </p>
+  <div class="form-grid">
+    <div class="form-card">
+      <h3>開発モードに入る</h3>
+      <div class="field"><label for="devLoginId">開発者ID</label><input id="devLoginId" autocomplete="username" placeholder="開発者ID"></div>
+      <div class="field"><label for="devLoginPassword">開発者パスワード</label><input id="devLoginPassword" type="password" autocomplete="current-password" placeholder="8文字以上"></div>
+      <button class="secondary" onclick="loginDevMode()">開発モードへ入る</button>
+    </div>
+    <div class="form-card">
+      <h3>設定について</h3>
+      <p class="small">
+        Cloudflare Pages の環境変数で <span class="code">ME2_DEV_ID</span> と
+        <span class="code">ME2_DEV_PASSWORD</span> または <span class="code">ME2_DEV_PASSWORD_HASH</span> を設定してください。
+      </p>
+      <p class="small">共有サイトでは、開発者以外にこの情報を渡さないでください。</p>
+      <button class="ghost" onclick="logoutDevMode()">開発者ログアウト</button>
+    </div>
+  </div>
+  <div id="devLoginStatus" class="login-status">下部の「開発者用」から開発モードへ入れます。</div>
+</section>
+<section id="devModeCard" class="card hidden">
+  <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
+  <h2>開発モード</h2>
+  <div class="dev-lock-note">開発者ログイン中です。編集後はJSON保存またはJSONコピーで出力してください。<button class="ghost" style="margin-left:8px" onclick="logoutDevMode();openDevModeGate()">ログアウト</button></div>
+  <p class="small">問題・解答・画像パス・解説を同時に確認しながら修正できます。AIで解説再生成後、手修正してJSON保存またはコピーできます。</p><p class="small"><b>AI再生成：</b>Cloudflare環境変数に <span class="code">OPENAI_API_KEY</span> を設定すると利用できます。モデルは <span class="code">ME2_AI_MODEL</span> で変更可能です。</p>
+  <details class="dev-definition-box">
+    <summary>解説生成定義を確認・編集</summary>
+    <p class="small">AI再生成時にこの定義を一緒に送信します。ここを変えると、生成される解説の形式を統一・調整できます。</p>
+    <textarea id="devExplanationDefinition"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="ghost" onclick="resetExplanationDefinition()">定義を初期値に戻す</button>
+      <button class="ghost" onclick="copyExplanationDefinition()">定義をコピー</button>
+    </div>
+  </details>
+  <div class="dev-grid">
+    <div class="dev-panel">
+      <h3>編集対象</h3>
+      <div class="dev-field"><label>試験回</label><select id="devExamSelect" onchange="devLoadExam()"></select></div>
+      <div class="dev-field"><label>午前 / 午後</label><select id="devPartSelect" onchange="devLoadPart()"><option value="am">午前</option><option value="pm">午後</option></select></div>
+      <div class="dev-field"><label>問題番号</label><select id="devQuestionSelect" onchange="devRenderEditor()"></select></div>
+      <div class="row">
+        <button class="secondary" onclick="devApplyChanges()">この問題に反映</button>
+        <button class="ghost" onclick="devRegenerateExplanation()">AIで解説再生成</button>
+        <button class="ghost" onclick="devRegenerateExplanationLocal()">ローカル簡易生成</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button onclick="devExportJson()">JSON保存</button>
+        <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
+      </div>
+      <div id="devStatus" class="dev-status">編集対象を選択してください。</div>
+    </div>
+    <div class="dev-panel">
+      <h3>問題・解答・画像・解説</h3>
+      <div id="devEditor"></div>
+      <div id="devPreview" class="dev-preview"></div>
+    </div>
+  </div>
+</section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="backToPartOrMenu()">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><div id="wrongList"></div></section>
 
 <footer class="site-footer">
  <b>ME2種 過去問演習</b> — 第2種ME技術実力検定試験の学習支援サイト。<br>
  開発者：孤独のコーヒー<br>
  お問い合わせ・不具合報告・機能追加希望：<a href="mailto:kikukazu.kk0226@gmail.com">kikukazu.kk0226@gmail.com</a><br>
- 本サイトは非公式の学習補助ツールです。公式情報・教材とあわせてご利用ください。
+ 本サイトは非公式の学習補助ツールです。公式情報・教材とあわせてご利用ください。<br>
+  <button class="ghost footer-dev-button" onclick="openDevModeGate()" type="button">開発者用</button>
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.8.3';
+const APP_VERSION='v1.9.3';
 const APP_UPDATED_AT='2026-06-02';
 const APP_UPDATE_NOTES=[
-  '開発者表記を「孤独のコーヒー」に統一',
-  'ユーザーID表記を削除',
-  '連絡先メールアドレスを変更',
-  'バージョン履歴表示は継続'
+  'AI解説生成の定義を追加',
+  '開発モードで解説生成定義を確認・編集可能に変更',
+  '選択肢解説の形式を統一',
+  '前回までのAI解説再生成・開発者認証機能も同梱'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.9.3',
+    date:'2026-06-02',
+    notes:[
+      'AI解説生成の定義を追加',
+      '開発モードで解説生成定義を確認・編集可能に変更',
+      '正答・誤答・誤っているもの問題の解説形式を統一',
+      'センサ・薬剤・材料・装置などの説明ルールを追加'
+    ]
+  },
+  {
+    version:'v1.9.2',
+    date:'2026-06-02',
+    notes:[
+      '開発モードでAIによる解説再生成に対応',
+      '要点解説と各選択肢解説をAIでまとめて生成可能に変更',
+      'AI生成後も開発モード内で手修正してJSON保存・コピー可能',
+      'OpenAI APIキー未設定時に分かりやすく表示'
+    ]
+  },
+  {
+    version:'v1.9.1',
+    date:'2026-06-02',
+    notes:[
+      '開発モードの入口をトップから下部へ移動',
+      '開発モードをID・パスワード管理に変更',
+      'Cloudflare Functionsの開発者用ログインAPIを追加',
+      '前回追加した開発モード・前後移動・○×△メモ・見返し・ランダム履歴機能も同梱'
+    ]
+  },
+  {
+    version:'v1.9.0',
+    date:'2026-06-02',
+    notes:[
+      '開発モードを追加し、問題・解答・画像・解説を同時確認しながら編集可能に変更',
+      '編集した問題データをJSONとして保存・コピーできるように変更',
+      '問題中に前の問題へ戻れるように変更',
+      '各選択肢に○×△の消去法メモを追加',
+      'あとで見返す保存ボタンと見返しリストを追加',
+      'ランダム演習履歴をトップから確認可能に変更'
+    ]
+  },
   {
     version:'v1.8.3',
     date:'2026-06-02',
@@ -401,6 +556,63 @@ const APP_VERSION_HISTORY=[
   ]
  }
 ];
+
+const EXPLANATION_DEFINITION=`# ME2種 AI解説生成の定義
+
+## 1. 共通ルール
+- 解説は暗記用として短く、同じ構成で生成する。
+- 問題文・選択肢そのものを不必要に長く繰り返さない。
+- 選択肢ごとに「何を示すか」「何に使うか」「分類」「正誤理由」をできるだけ入れる。
+- 断定できない内容は断定しない。
+- 医療・安全に関係する内容は、一般的なME2種学習範囲として説明する。
+- 1つの選択肢解説は原則2〜4文まで。
+- 文字化け・不要な記号・孤立した数字は入れない。
+
+## 2. 正しいものを選ぶ問題
+### 正答選択肢
+「正答。〜は〜である。〜なので設問条件に合う。」
+### 誤答選択肢
+「誤りポイント：「誤っている語句・考え方」が誤り。正しくは「〜」。〜なので設問条件に合わない。」
+
+## 3. 誤っているものを選ぶ問題
+### 選ぶべき誤りの選択肢
+「正答。誤りポイント：「誤っている語句・考え方」が誤り。正しくは「〜」。」
+### 誤りではない選択肢
+「この選択肢は誤りではない。正しい内容なので本問では選ばない。〜である。」
+
+## 4. センサ・トランスデューサ・計測機器
+- 何を測定するかを書く。
+- 何を電気量へ変換するかを書く。
+例：
+- ストレインゲージ：ひずみを抵抗変化に変換。力・圧力・荷重測定に利用。
+- 差動トランス：変位・位置を電圧変化として測定。
+- ホール素子：磁場・磁束密度を電圧に変換。
+- 圧電素子：圧力・力・振動・加速度を電圧に変換。
+- 熱電対：温度差を熱起電力として測定。
+
+## 5. 薬剤・消毒薬・材料・装置・方法・規格・部品
+- 分類を書く。
+- 用途を書く。
+- 何に有効か、何に不向きかを書く。
+- 装置や部品は、役割・接続先・使用場面を書く。
+
+## 6. 要点解説 tip
+以下の形を基本にする。
+「要点：〜。覚える：〜。」
+- 重要語句・数値・分類を含める。
+- 長くしすぎない。
+
+## 7. choiceNotesの統一書式
+各選択肢の解説は、次のどれかの書き出しに統一する。
+- 正答。
+- 誤りポイント：
+- この選択肢は誤りではない。
+
+## 8. 出力条件
+- tipは1つ。
+- choiceNotesは選択肢数と同じ数。
+- JSONのみで返す。
+`;
 
 const APP_CONFIG = {
  // auto: /api/github → 同梱ファイル → GitHub Raw の順に自動で試します。
@@ -518,6 +730,8 @@ function correctLabel(q){return q.correct.length>1?q.correct.join(' または ')
 let activeSourceMode = 'local';
 const GUEST_KEY = 'me2_guest_login';
 const SITE_AUTH_KEY = 'me2_site_auth';
+const BOOKMARK_KEY='me2_bookmarks_v1';
+const DEV_AUTH_KEY='me2_dev_auth';
 function safeAssetPath(path){return String(path||'').replace(/^\.\//,'').replace(/^\//,'')}
 function githubConfigured(){const g=APP_CONFIG.github||{};return Boolean(g.owner&&g.repo&&g.owner!=='YOUR_GITHUB_USER'&&g.repo!=='ME2_JSON_App')}
 function sourceLabel(mode){return {auto:'自動',cloudflare_proxy:'Cloudflare Proxy',github_raw:'GitHub Raw',local:'同梱ファイル'}[mode]||mode}
@@ -767,7 +981,7 @@ async function loadIndex(){
 }
 async function getPart(examId,part){const key=`${examId}_${part}`;if(partsCache[key])return partsCache[key];const rec=getExamRecord(examId);const path=rec?.parts?.[part];if(!path)throw new Error('part path missing');partsCache[key]=await fetchJSON(path);return partsCache[key]}
 function getExamRecord(id){return examsIndex.exams.find(x=>String(x.id)===String(id))}
-function hideAll(){['menuCard','loginCard','syncCard','partCard','answerViewCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
+function hideAll(){['menuCard','loginCard','syncCard','partCard','answerViewCard','bookmarkCard','devLoginCard','devModeCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
 function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();$('menuCard').classList.remove('hidden');renderVersionInfo();renderMenu();updateHeader()}
 function renderMenu(){renderRandomMenu();const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
 
@@ -1010,8 +1224,8 @@ async function renderPartMenu(){
   box.innerHTML=`<h3>${partName(part)}</h3><p class="small">${savedText}履歴 ${hist.length}件${lastText}</p><div class="row"><button onclick="startAttempt('${part}','all')">最初から</button>${saved&&!saved.finished?`<button class="secondary" onclick="resumeAttempt('${part}')">途中から</button>`:''}<button class="ghost" onclick="showHistory('${part}')">履歴</button><button class="secondary" onclick="showAnswerView('${part}')">問題・回答を見る</button></div>`;
  }
 }
-async function startAttempt(part,mode='all'){const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,attemptId:makeAttemptId(),order:[...Array(total).keys()],index:0,correct:0,answers:[],startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
-async function resumeAttempt(part){let s=loadLocal(stateKey(currentExamId,part));if(!s&&hasCloudLogin())s=await loadCloudState(currentExamId,part);if(!s)return;state=ensureTimingFields(s);state.timerRunning=false;state.sessionStartedAt=null;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
+async function startAttempt(part,mode='all'){const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,attemptId:makeAttemptId(),order:[...Array(total).keys()],index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
+async function resumeAttempt(part){let s=loadLocal(stateKey(currentExamId,part));if(!s&&hasCloudLogin())s=await loadCloudState(currentExamId,part);if(!s)return;state=ensureTimingFields(s);if(!state.eliminations)state.eliminations={};state.timerRunning=false;state.sessionStartedAt=null;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
 
 async function showAnswerView(part,filter='all'){
  if(state&&state.timerRunning){pauseTimer();saveState()}
@@ -1080,13 +1294,186 @@ function answerQuestionHtml(q){
  </details>`;
 }
 
+
+function backToPartOrMenu(){
+ if(state?.quizType==='random')showMenu();
+ else selectExam(state.examId);
+}
+function qRef(q){
+ return [q.sourceExamId||state.examId,q.sourcePart||state.part,q.number].join('_');
+}
+function answeredAtIndex(i=state.index){return Boolean(state.answers&&state.answers[i]);}
+function eliminationMark(q,n){
+ const ref=qRef(q);
+ return state.eliminations?.[ref]?.[n]||'';
+}
+function eliminationClass(mark){
+ return mark==='×'?'mark-x':mark==='△'?'mark-tri':mark==='○'?'mark-o':'';
+}
+function cycleElim(n,ev){
+ if(ev)ev.stopPropagation();
+ const q=getCurrentQuestion(), ref=qRef(q);
+ if(!state.eliminations)state.eliminations={};
+ if(!state.eliminations[ref])state.eliminations[ref]={};
+ const order=['','×','△','○'];
+ const cur=state.eliminations[ref][n]||'';
+ const next=order[(order.indexOf(cur)+1)%order.length];
+ if(next)state.eliminations[ref][n]=next;else delete state.eliminations[ref][n];
+ saveState();
+ renderQuestion();
+}
+function loadBookmarks(){return loadLocal(BOOKMARK_KEY,[])}
+function saveBookmarks(list){saveLocal(BOOKMARK_KEY,list)}
+function bookmarkFromQuestion(q){
+ return {
+  id:qRef(q),
+  savedAt:new Date().toISOString(),
+  examId:q.sourceExamId||state.examId,
+  part:q.sourcePart||state.part,
+  title:q.sourceTitle||getExamRecord(state.examId)?.title||'ランダム',
+  number:q.number,
+  range:q.range||'',
+  stem:q.stem||'',
+  choices:q.choices||[],
+  correct:q.correct||[],
+  tip:q.tip||'',
+  choiceNotes:q.choiceNotes||[],
+  hasFigure:!!q.hasFigure,
+  image:q.image||''
+ };
+}
+function isBookmarked(q){return loadBookmarks().some(b=>b.id===qRef(q))}
+function updateBookmarkButton(){
+ const btn=$('bookmarkBtn'); if(!btn)return;
+ const q=getCurrentQuestion(); if(!q){btn.textContent='あとで見返す';return;}
+ btn.textContent=isBookmarked(q)?'見返し保存済み ★':'あとで見返す ☆';
+}
+function toggleBookmarkCurrent(){
+ const q=getCurrentQuestion(); if(!q)return;
+ const id=qRef(q);
+ let list=loadBookmarks();
+ if(list.some(b=>b.id===id)){
+  list=list.filter(b=>b.id!==id);
+ }else{
+  list=[bookmarkFromQuestion(q),...list].slice(0,300);
+ }
+ saveBookmarks(list);
+ updateBookmarkButton();
+}
+function deleteBookmark(id){
+ saveBookmarks(loadBookmarks().filter(b=>b.id!==id));
+ showBookmarks();
+}
+function bookmarkHtml(b){
+ const q={...b, correct:b.correct||[], choices:b.choices||[]};
+ const img=(b.hasFigure&&b.image)?`<details><summary>図・表を表示</summary><img class="source-img" src="${escapeHtml(assetUrl(b.image))}" /></details>`:'';
+ const rows=(b.choices||[]).map((c,i)=>{
+  const n=i+1,isC=(b.correct||[]).includes(n),note=(b.choiceNotes||[])[i]||'';
+  return `<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml(note)}</td></tr>`;
+ }).join('');
+ return `<div class="bookmark-card">
+  <h3>${escapeHtml(b.title||'')} ${partName(b.part)} 第${escapeHtml(b.number)}問</h3>
+  <div class="bookmark-meta">保存日：${new Date(b.savedAt||Date.now()).toLocaleString()} / 範囲：${escapeHtml(b.range||'未設定')}</div>
+  <p><b>問題：</b>${escapeHtml(b.stem||'')}</p>
+  <p><b>正答：</b>${escapeHtml((b.correct||[]).join(' または '))}</p>
+  <p><b>要点解説：</b>${escapeHtml(b.tip||'')}</p>
+  ${img}
+  <details><summary>選択肢解説を見る</summary><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table></details>
+  <div class="row" style="margin-top:10px"><button class="danger" onclick="deleteBookmark('${escapeHtml(b.id)}')">見返しから削除</button></div>
+ </div>`;
+}
+function showBookmarks(){
+ if(state&&state.timerRunning){pauseTimer();saveState()}
+ hideAll();$('bookmarkCard').classList.remove('hidden');
+ const list=loadBookmarks();
+ $('bookmarkList').innerHTML=list.length?list.map(bookmarkHtml).join(''):'<p class="small">保存された問題はまだありません。</p>';
+ updateHeader();
+}
+function questionSourceLabelForState(q,st){
+ if(st?.quizType==='random')return `${q.sourceTitle||'試験回'} ${partName(q.sourcePart)} 第${q.number}問`;
+ return `${getExamRecord(st.examId)?.title||'試験回'} ${partName(st.part)} 第${q.number}問`;
+}
+async function showRandomHistory(){
+ if(state&&state.timerRunning){pauseTimer();saveState()}
+ hideAll();$('finishCard').classList.remove('hidden');
+ $('wrongList').innerHTML='<h3>ランダム演習履歴</h3><p class="small">履歴を読み込み中…</p>';
+ let hist=loadLocal(historyKey(RANDOM_EXAM_ID,RANDOM_PART),[]);
+ if(hasCloudLogin()){const cloudHist=await loadCloudHistory(RANDOM_EXAM_ID,RANDOM_PART);hist=mergeHistory(hist,cloudHist);}
+ hist=mergeHistory(hist);
+ saveMergedHistoryLocal(RANDOM_EXAM_ID,RANDOM_PART,hist);
+ const rows=hist.map((h,idx)=>{
+  const total=h.order?.length||h.answers?.length||0, rate=total?Math.round((h.correct||0)/total*1000)/10:0;
+  const qs=h.randomQuestions||[];
+  const wrong=(h.answers||[]).map((a,i)=>({a,q:qs[h.order?.[i]]||qs[i]})).filter(x=>x.a&&!x.a.correct&&x.q);
+  const wrongHtml=wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabelForState(q,h))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解、または間違いデータなし。</p>';
+  const st=h.randomSettings||{};
+  const setting=`第${st.fromExam||'?'}回〜第${st.toExam||'?'}回 / ${(st.parts||[]).map(partName).join('・')||'午前・午後'} / ${st.ranges?.length?st.ranges.length+'範囲':'全範囲'}`;
+  return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${escapeHtml(setting)}<br>${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<details><summary>この回の間違いを見る</summary>${wrongHtml}</details></div>`;
+ }).join('');
+ $('finalPart').textContent='ランダム履歴';
+ $('finalScore').textContent='-';$('finalRate').textContent='-';$('finalTime').textContent='-';
+ $('wrongList').innerHTML=`<h3>ランダム演習履歴：${hist.length}件</h3>`+(hist.length?rows:'<p class="small">ランダム演習履歴はまだありません。</p>');
+ updateHeader();
+}
+
 function showQuiz(){hideAll();$('quizCard').classList.remove('hidden')}
-function currentPack(){return state?.quizType==='random'?{questions:state.randomQuestions||[]}:partsCache[`${state.examId}_${state.part}`]}function getCurrentQuestion(){return currentPack()?.questions?.[state.order[state.index]]}
-function renderQuestion(){const q=getCurrentQuestion();if(!q){showFinish();return}$('qMeta').textContent=`${questionSourceLabel(q)} / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}${state.quizType==='random'?' / カテゴリ：'+(q.sourceRangeCategoryLabel||rangeCategoryLabel(rangeCategory(q.range||''))):''}`;$('bar').style.width=`${state.index/state.order.length*100}%`;$('stem').textContent=q.stem;const qImg=$('questionImage');qImg.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を表示（解答前に確認）</summary><p class="image-hint">この問題は図・表を使います。画像を確認して解答してください。</p><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';const choices=$('choices');choices.innerHTML='';q.choices.forEach((c,i)=>{const btn=document.createElement('button');btn.className='choice';btn.onclick=()=>answer(i+1);btn.innerHTML=`<span class="num">${i+1}</span><span>${escapeHtml(c)}</span>`;choices.appendChild(btn)});$('result').style.display='none';$('result').className='result';$('result').innerHTML='';$('nextBtn').classList.add('hidden');updateHeader();saveState()}
-function answeredCount(){return state.answers.length}
-function answer(choice){const q=getCurrentQuestion();if(state.answers[state.index])return;const correct=q.correct.includes(choice);state.answers[state.index]={q:q.number,sourceExamId:q.sourceExamId||state.examId,sourcePart:q.sourcePart||state.part,sourceTitle:q.sourceTitle||getExamRecord(state.examId)?.title,choice,correct,correctAnswer:q.correct.slice(),time:currentElapsedMs(),range:q.range||''};if(correct)state.correct++;Array.from(document.querySelectorAll('.choice')).forEach((btn,i)=>{btn.disabled=true;const n=i+1;if(q.correct.includes(n))btn.classList.add('correct');if(n===choice&&!correct)btn.classList.add('wrong')});showExplanation(q,choice,correct);$('nextBtn').classList.remove('hidden');$('bar').style.width=`${(state.index+1)/state.order.length*100}%`;saveState();updateHeader();setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80)}
-function showExplanation(q,choice,correct){const rate=answeredCount()?Math.round(state.correct/answeredCount()*1000)/10:0,res=$('result');res.style.display='block';res.className='result '+(correct?'good':'bad');const rows=q.choices.map((c,i)=>{const n=i+1,isC=q.correct.includes(n),note=(q.choiceNotes&&q.choiceNotes[i])?q.choiceNotes[i]:(isC?'この選択肢が正答です。':'誤りポイント：正答は '+correctLabel(q)+' です。');return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml(note)}</td></tr>`}).join('');const img=(q.hasFigure&&q.image)?`<details><summary>図・表を再表示</summary><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" /></details>`:'';res.innerHTML=`<h3>${correct?'正解！':'不正解'}</h3><p><b>あなたの回答：</b>${choice}　<b>正答：</b>${correctLabel(q)}　<b>現在の正答率：</b>${rate}%</p><p><b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>要点解説：</b>${escapeHtml(q.tip||'正答表に基づいて判定します。')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>どこが違う？ / 解説ポイント</th></tr></thead><tbody>${rows}</tbody></table>${img}`}
-function nextQuestion(){if(state.index>=state.order.length-1){pauseTimer();state.finished=true;saveState();saveHistory();showFinish();return}state.index++;saveState();renderQuestion()}
+function currentPack(){return state?.quizType==='random'?{questions:state.randomQuestions||[]}:partsCache[`${state.examId}_${state.part}`]}
+function getCurrentQuestion(){return currentPack()?.questions?.[state.order[state.index]]}
+function renderQuestion(){
+ const q=getCurrentQuestion();if(!q){showFinish();return}
+ const answered=state.answers?.[state.index];
+ $('qMeta').textContent=`${questionSourceLabel(q)} / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}${state.quizType==='random'?' / カテゴリ：'+(q.sourceRangeCategoryLabel||rangeCategoryLabel(rangeCategory(q.range||''))):''}`;
+ $('bar').style.width=`${state.index/state.order.length*100}%`;
+ $('stem').textContent=q.stem;
+ const qImg=$('questionImage');
+ qImg.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を表示（解答前に確認）</summary><p class="image-hint">この問題は図・表を使います。画像を確認して解答してください。</p><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';
+ const choices=$('choices');choices.innerHTML='';
+ q.choices.forEach((c,i)=>{
+  const n=i+1;
+  const mark=eliminationMark(q,n);
+  const wrap=document.createElement('div');wrap.className='elim-wrap';
+  const elim=document.createElement('button');elim.type='button';elim.className='elim-btn '+eliminationClass(mark);elim.textContent=mark||'・';elim.title='消去法メモ：クリックで × → △ → ○ → 空欄';elim.onclick=(ev)=>cycleElim(n,ev);
+  const btn=document.createElement('button');btn.className='choice';btn.onclick=()=>answer(n);btn.innerHTML=`<span class="num">${n}</span><span>${escapeHtml(c)}</span>`;
+  if(answered){btn.disabled=true;if(q.correct.includes(n))btn.classList.add('correct');if(n===answered.choice&&!answered.correct)btn.classList.add('wrong')}
+  wrap.appendChild(elim);wrap.appendChild(btn);choices.appendChild(wrap);
+ });
+ $('result').style.display='none';$('result').className='result';$('result').innerHTML='';
+ $('prevBtn').disabled=state.index===0;
+ if(answered){
+  showExplanation(q,answered.choice,answered.correct,false);
+  $('nextBtn').classList.remove('hidden');
+  $('nextBtn').textContent=state.index>=state.order.length-1?'終了する':'次の問題へ';
+  $('bar').style.width=`${(state.index+1)/state.order.length*100}%`;
+ }else{
+  $('nextBtn').classList.add('hidden');
+ }
+ updateBookmarkButton();
+ updateHeader();saveState();
+}
+function answeredCount(){return (state.answers||[]).filter(Boolean).length}
+function recalcCorrect(){state.correct=(state.answers||[]).filter(a=>a&&a.correct).length}
+function answer(choice){
+ const q=getCurrentQuestion();if(state.answers[state.index])return;
+ const correct=q.correct.includes(choice);
+ state.answers[state.index]={q:q.number,sourceExamId:q.sourceExamId||state.examId,sourcePart:q.sourcePart||state.part,sourceTitle:q.sourceTitle||getExamRecord(state.examId)?.title,choice,correct,correctAnswer:q.correct.slice(),time:currentElapsedMs(),range:q.range||''};
+ recalcCorrect();
+ renderQuestion();
+ saveState();updateHeader();
+ setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+function showExplanation(q,choice,correct,scroll=true){
+ const rate=answeredCount()?Math.round(state.correct/answeredCount()*1000)/10:0,res=$('result');
+ res.style.display='block';res.className='result '+(correct?'good':'bad');
+ const rows=q.choices.map((c,i)=>{const n=i+1,isC=q.correct.includes(n),note=(q.choiceNotes&&q.choiceNotes[i])?q.choiceNotes[i]:(isC?'この選択肢が正答です。':'誤りポイント：正答は '+correctLabel(q)+' です。');return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml(note)}</td></tr>`}).join('');
+ const img=(q.hasFigure&&q.image)?`<details><summary>図・表を再表示</summary><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" /></details>`:'';
+ res.innerHTML=`<h3>${correct?'正解！':'不正解'}</h3><p><b>あなたの回答：</b>${choice}　<b>正答：</b>${correctLabel(q)}　<b>現在の正答率：</b>${rate}%</p><p><b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>要点解説：</b>${escapeHtml(q.tip||'正答表に基づいて判定します。')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>どこが違う？ / 解説ポイント</th></tr></thead><tbody>${rows}</tbody></table>${img}`;
+}
+function prevQuestion(){if(state.index<=0)return;state.index--;saveState();renderQuestion()}
+function nextQuestion(){
+ if(!state.answers[state.index])return;
+ if(state.index>=state.order.length-1){pauseTimer();state.finished=true;recalcCorrect();saveState();saveHistory();showFinish();return}
+ state.index++;saveState();renderQuestion();
+}
 function startTimer(){clearInterval(tickHandle);ensureTimingFields(state);state.timerRunning=true;state.sessionStartedAt=Date.now();tickHandle=setInterval(updateHeader,1000);updateHeader()}
 function pauseTimer(){clearInterval(tickHandle);if(state&&state.examId&&state.part){state.elapsedMs=currentElapsedMs();state.sessionStartedAt=null;state.timerRunning=false;}updateHeader()}
 function updateHeader(){const total=state.order?.length||0;$('partBadge').textContent=state.part?`${sessionTitle()} ${total?Math.min(state.index+1,total):0}/${total}`:'未開始';$('scoreBadge').textContent=`${state.correct}/${answeredCount()} 正解`;$('timerBadge').textContent=fmtTime(currentElapsedMs())}
@@ -1102,7 +1489,7 @@ function saveState(){if(!state.examId||!state.part)return;ensureTimingFields(sta
 function saveHistory(){const k=historyKey(state.examId,state.part);const snap={...snapshotState(),attemptId:state.attemptId||makeAttemptId(),finished:true,completedAt:new Date().toISOString()};const hist=mergeHistory([snap],loadLocal(k,[])).slice(0,300);saveLocal(k,hist);scheduleCloudStateSave(snap,true);apiProgress('POST',{type:'attempt',examId:state.examId,part:state.part,data:snap})}
 async function resetPart(part){if(confirm(`${getExamRecord(currentExamId).title} ${partName(part)} の途中保存を削除しますか？`)){localStorage.removeItem(stateKey(currentExamId,part));await apiProgress('DELETE',{type:'state',examId:currentExamId,part});renderPartMenu()}}
 function showFinish(){pauseTimer();hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=sessionTitle();$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
-function renderWrongList(){const pack=currentPack(), wrong=state.answers.map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabel(q))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
+function renderWrongList(){const pack=currentPack(), wrong=(state.answers||[]).map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>x.a&&!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabel(q))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
 function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
 function historyStatsHtml(hist, pack){
  const base=hist.filter(h=>h && (h.mode||'all')==='all');
@@ -1369,8 +1756,253 @@ async function maybeOpenSharedLink(){
 function downloadText(filename,text,type='application/json'){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
 function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part}.json`,JSON.stringify(snapshotState(),null,2))}
 function exportAllProgress(){const data={exportedAt:new Date().toISOString(),localStorage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('me2_'))data.localStorage[k]=localStorage.getItem(k)}downloadText('me2_all_progress_backup.json',JSON.stringify(data,null,2))}
-function exportCurrentCSV(){const rows=[['回','部門','問題','範囲','あなたの回答','正答','正誤','経過時間']];const pack=currentPack();state.answers.forEach((a,i)=>{const q=pack.questions[state.order[i]];rows.push([getExamRecord(state.examId).title,partName(state.part),q.number,q.range||'',a.choice,a.correctAnswer.join('/'),a.correct?'正解':'不正解',fmtTime(a.time)])});const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(`result_${state.examId}_${state.part}.csv`,csv,'text/csv;charset=utf-8')}
+function exportCurrentCSV(){const rows=[['回','部門','問題','範囲','あなたの回答','正答','正誤','経過時間']];const pack=currentPack();(state.answers||[]).forEach((a,i)=>{if(!a)return;const q=pack.questions[state.order[i]];rows.push([q.sourceTitle||getExamRecord(state.examId)?.title||'ランダム',partName(q.sourcePart||state.part),q.number,q.range||'',a.choice,a.correctAnswer.join('/'),a.correct?'正解':'不正解',fmtTime(a.time)])});const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(`result_${state.examId}_${state.part}.csv`,csv,'text/csv;charset=utf-8')}
 function importProgress(input){const f=input.files?.[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{try{const obj=JSON.parse(reader.result);if(obj.localStorage){Object.entries(obj.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));alert('進行データを読み込みました。')}else if(obj.examId&&obj.part){saveLocal(stateKey(obj.examId,obj.part),obj);alert('進行データを読み込みました。')}}catch(e){alert('JSONを読み込めませんでした。')}};reader.readAsText(f)}
+
+let devPack=null, devExamId=null, devPart='am';
+
+function getDevAuth(){
+  try{return JSON.parse(localStorage.getItem(DEV_AUTH_KEY)||'null')}catch(e){return null}
+}
+function setDevAuth(data){
+  localStorage.setItem(DEV_AUTH_KEY,JSON.stringify(data||{}));
+}
+function clearDevAuth(){
+  localStorage.removeItem(DEV_AUTH_KEY);
+}
+function devLoginStatus(msg,ok=false){
+  const el=$('devLoginStatus');
+  if(el){el.innerHTML=msg;el.className='login-status '+(ok?'status-ok':'status-warn')}
+}
+function devHeaders(){
+  const a=getDevAuth();
+  return a?.sessionToken?{'X-ME2-Dev-Session':a.sessionToken}:{};
+}
+async function apiDevAuth(payload){
+  const r=await fetchWithTimeout('/api/dev-auth',{method:'POST',headers:{'content-type':'application/json',...devHeaders()},body:JSON.stringify(payload)},10000);
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(data.error||String(r.status));
+  return data;
+}
+async function verifyDevMode(){
+  const a=getDevAuth();
+  if(!a?.sessionToken)return false;
+  try{
+    const r=await fetchWithTimeout('/api/dev-auth',{method:'GET',headers:devHeaders()},5000);
+    const data=await r.json().catch(()=>({}));
+    return Boolean(r.ok&&data.ok);
+  }catch(e){return false}
+}
+async function openDevModeGate(){
+  if(state&&state.timerRunning){pauseTimer();saveState()}
+  hideAll();
+  const ok=await verifyDevMode();
+  if(ok){showDevModeUnlocked();return}
+  $('devLoginCard').classList.remove('hidden');
+  devLoginStatus('開発者IDとパスワードを入力してください。');
+  updateHeader();
+}
+async function loginDevMode(){
+  const id=String($('devLoginId').value||'').trim();
+  const password=String($('devLoginPassword').value||'');
+  if(!id||!password)return devLoginStatus('開発者IDとパスワードを入力してください。');
+  if(password.length<8)return devLoginStatus('開発者パスワードは8文字以上にしてください。');
+  devLoginStatus('認証中…');
+  try{
+    const data=await apiDevAuth({action:'login',id,password});
+    setDevAuth({sessionToken:data.sessionToken,expiresAt:data.expiresAt,id:data.id});
+    devLoginStatus('ログインしました。開発モードを開きます。',true);
+    setTimeout(showDevModeUnlocked,300);
+  }catch(e){
+    devLoginStatus('開発者ログインに失敗しました：'+escapeHtml(e.message||e));
+  }
+}
+async function logoutDevMode(){
+  try{await apiDevAuth({action:'logout'});}catch(e){}
+  clearDevAuth();
+  devLoginStatus('開発者ログアウトしました。',true);
+}
+function showDevMode(){
+  openDevModeGate();
+}
+function showDevModeUnlocked(){
+ if(state&&state.timerRunning){pauseTimer();saveState()}
+ hideAll();$('devModeCard').classList.remove('hidden');
+ const def=$('devExplanationDefinition'); if(def&&!def.value)def.value=getExplanationDefinition();
+ const exSel=$('devExamSelect');
+ exSel.innerHTML=(examsIndex.exams||[]).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
+ if(currentExamId)exSel.value=currentExamId;
+ devLoadExam();
+ updateHeader();
+}
+async function devLoadExam(){
+ devExamId=$('devExamSelect')?.value||examsIndex.exams?.[0]?.id;
+ devPart=$('devPartSelect')?.value||'am';
+ await devLoadPart();
+}
+async function devLoadPart(){
+ devExamId=$('devExamSelect')?.value||devExamId;
+ devPart=$('devPartSelect')?.value||'am';
+ devPack=await getPart(devExamId,devPart);
+ const qSel=$('devQuestionSelect');
+ qSel.innerHTML=(devPack.questions||[]).map((q,i)=>`<option value="${i}">第${q.number}問：${escapeHtml((q.range||'未設定').slice(0,26))}</option>`).join('');
+ devRenderEditor();
+}
+function devCurrentQuestion(){
+ const i=Number($('devQuestionSelect')?.value||0);
+ return devPack?.questions?.[i];
+}
+function devRenderEditor(){
+ const q=devCurrentQuestion();
+ if(!q){$('devEditor').innerHTML='<p class="small">問題がありません。</p>';return;}
+ const choices=(q.choices||[]).map((c,i)=>`<div class="dev-choice-editor">
+  <h4>選択肢 ${i+1}</h4>
+  <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}">${escapeHtml(c)}</textarea></div>
+  <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}">${escapeHtml((q.choiceNotes||[])[i]||'')}</textarea></div>
+ </div>`).join('');
+ $('devEditor').innerHTML=`<div class="dev-field"><label>問題文</label><textarea id="devStem">${escapeHtml(q.stem||'')}</textarea></div>
+ <div class="dev-field"><label>範囲</label><input id="devRange" value="${escapeHtml(q.range||'')}"></div>
+ <div class="dev-field"><label>正答（例：1 または 2,4）</label><input id="devCorrect" value="${escapeHtml((q.correct||[]).join(','))}"></div>
+ <div class="row">
+  <label class="pill"><input type="checkbox" id="devNegative" ${q.negative?'checked':''}> 誤っているものを選ぶ問題</label>
+  <label class="pill"><input type="checkbox" id="devHasFigure" ${q.hasFigure?'checked':''}> 図表あり</label>
+ </div>
+ <div class="dev-field"><label>画像ファイル表記 / パス</label><input id="devImage" value="${escapeHtml(q.image||'')}" placeholder="Date/img/44/44_am_q01.png"></div>
+ <div class="dev-field"><label>要点解説</label><textarea id="devTip">${escapeHtml(q.tip||'')}</textarea></div>
+ ${choices}`;
+ devRenderPreview();
+ ['devStem','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
+ ['devNegative','devHasFigure'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
+ (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
+}
+function devReadForm(){
+ const q=devCurrentQuestion();
+ const correct=String($('devCorrect').value||'').split(/[,\s、/]+/).map(x=>Number(x)).filter(n=>n>=1&&n<=5);
+ const choices=(q.choices||[]).map((_,i)=>$(`devChoice${i}`)?.value||'');
+ const notes=(q.choices||[]).map((_,i)=>$(`devNote${i}`)?.value||'');
+ return {...q,stem:$('devStem').value,range:$('devRange').value,correct:correct.length?correct:q.correct,negative:$('devNegative').checked,hasFigure:$('devHasFigure').checked,image:$('devImage').value,tip:$('devTip').value,choices,choiceNotes:notes};
+}
+function devRenderPreview(){
+ const q=devReadForm();
+ const img=(q.hasFigure&&q.image)?`<img class="source-img" src="${escapeHtml(assetUrl(q.image))}" onerror="this.insertAdjacentHTML('afterend','<p class=&quot;status-warn&quot;>画像を読み込めません。パスを確認してください。</p>')">`:'<p class="small">図表なし</p>';
+ const rows=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml((q.choiceNotes||[])[i]||'')}</td></tr>`}).join('');
+ $('devPreview').innerHTML=`<h4>プレビュー</h4><p><b>問題：</b>${escapeHtml(q.stem)}</p><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p>${img}<table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function devApplyChanges(){
+ const i=Number($('devQuestionSelect').value||0);
+ devPack.questions[i]=devReadForm();
+ partsCache[`${devExamId}_${devPart}`]=devPack;
+ $('devStatus').innerHTML='<span class="status-ok">この問題に反映しました。JSON保存またはコピーで出力できます。</span>';
+ devRenderEditor();
+}
+function devRoleNote(choice){
+ const c=String(choice||'');
+ const dict=[
+  ['ストレインゲージ','ストレインゲージはひずみを電気抵抗の変化に変換する。力・圧力・荷重の測定にも利用される。'],
+  ['差動トランス','差動トランスは変位・位置を電圧変化として測定する。'],
+  ['ホール素子','ホール素子は磁場・磁束密度を電圧に変換する。'],
+  ['圧電素子','圧電素子は圧力・力・振動・加速度などを電圧に変換する。'],
+  ['熱電対','熱電対は温度差を熱起電力として測定する。'],
+  ['オルトフタルアルデヒド','オルトフタルアルデヒド（フタラール）は高水準消毒薬。内視鏡など熱に弱い医療器具の高水準消毒に用いられる。'],
+  ['グルコン酸クロルヘキシジン','グルコン酸クロルヘキシジンは皮膚・粘膜の消毒に用いられる。高水準消毒薬ではない。'],
+  ['塩化ベンザルコニウム','塩化ベンザルコニウムは陽イオン界面活性剤で、低水準消毒薬に分類される。'],
+  ['消毒用エタノール','消毒用エタノールは手指・皮膚・環境表面などの消毒に用いられるが、芽胞には効きにくい。']
+ ];
+ const hit=dict.find(([k])=>c.includes(k));
+ return hit?hit[1]:'この選択肢が何を示すか・何に使うかを確認する。';
+}
+function devApplyExplanation(q){
+ const i=Number($('devQuestionSelect').value||0);
+ devPack.questions[i]=q; partsCache[`${devExamId}_${devPart}`]=devPack;
+ devRenderEditor();
+}
+function devEnsureChoiceNotes(q){
+ if(!Array.isArray(q.choiceNotes))q.choiceNotes=[];
+ while(q.choiceNotes.length<q.choices.length)q.choiceNotes.push('');
+ if(q.choiceNotes.length>q.choices.length)q.choiceNotes=q.choiceNotes.slice(0,q.choices.length);
+ return q;
+}
+function getExplanationDefinition(){
+  try{return localStorage.getItem('me2_explanation_definition')||EXPLANATION_DEFINITION}catch(e){return EXPLANATION_DEFINITION}
+}
+function setExplanationDefinition(v){
+  try{localStorage.setItem('me2_explanation_definition',String(v||EXPLANATION_DEFINITION))}catch(e){}
+}
+function resetExplanationDefinition(){
+  const el=$('devExplanationDefinition');
+  if(el)el.value=EXPLANATION_DEFINITION;
+  setExplanationDefinition(EXPLANATION_DEFINITION);
+  $('devStatus').innerHTML='<span class="status-ok">解説生成定義を初期値に戻しました。</span>';
+}
+function copyExplanationDefinition(){
+  const text=$('devExplanationDefinition')?.value||getExplanationDefinition();
+  navigator.clipboard?.writeText(text).then(()=>$('devStatus').innerHTML='<span class="status-ok">解説生成定義をコピーしました。</span>').catch(()=>{$('devStatus').textContent='コピーできませんでした。'});
+}
+async function devRegenerateExplanation(){
+ let q=devReadForm();
+ q=devEnsureChoiceNotes(q);
+ $('devStatus').innerHTML='<span class="status-warn">AIで解説を再生成中です…</span>';
+ try{
+  const definition=$('devExplanationDefinition')?.value||getExplanationDefinition();
+  setExplanationDefinition(definition);
+  const r=await fetchWithTimeout('/api/ai-explain',{
+   method:'POST',
+   headers:{'content-type':'application/json',...devHeaders()},
+   body:JSON.stringify({
+    definition,
+    question:{
+     number:q.number,
+     range:q.range||'',
+     stem:q.stem||'',
+     choices:q.choices||[],
+     correct:q.correct||[],
+     negative:!!q.negative,
+     hasFigure:!!q.hasFigure,
+     image:q.image||'',
+     tip:q.tip||'',
+     choiceNotes:q.choiceNotes||[]
+    }
+   })
+  },30000);
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(data.error||String(r.status));
+  if(!data.tip||!Array.isArray(data.choiceNotes))throw new Error('AI応答の形式が不正です。');
+  q.tip=String(data.tip||'');
+  q.choiceNotes=data.choiceNotes.map(x=>String(x||'')).slice(0,q.choices.length);
+  q=devEnsureChoiceNotes(q);
+  devApplyExplanation(q);
+  $('devStatus').innerHTML='<span class="status-ok">AIで解説を再生成しました。内容を確認して、必要なら手修正してください。</span>';
+ }catch(e){
+  $('devStatus').innerHTML=`<span class="status-warn">AI再生成に失敗しました：${escapeHtml(e.message||e)}<br>必要に応じて「ローカル簡易生成」を使ってください。</span>`;
+ }
+}
+function devRegenerateExplanationLocal(){
+ const q=devReadForm();
+ q.choiceNotes=q.choices.map((c,i)=>{
+  const n=i+1,isC=q.correct.includes(n),role=devRoleNote(c);
+  if(q.negative){
+   return isC?`正答。誤りポイント：「${c}」が本問で選ぶ内容。${role}`:`この選択肢は誤りではない。正しい内容なので本問では選ばない。${role}`;
+  }
+  return isC?`正答。${role}`:`誤りポイント：「${c}」が誤り。正答は「${correctLabel(q)}」。${role}`;
+ });
+ q.tip=q.tip||'正答と各選択肢の役割・分類を確認する。';
+ devApplyExplanation(q);
+ $('devStatus').innerHTML='<span class="status-ok">ローカル簡易生成を実行しました。AIではないため、内容を確認して手修正してください。</span>';
+}
+function devCurrentFileName(){
+ const rec=getExamRecord(devExamId);
+ return `${devExamId}_${devPart}_edited.json`.replace(/[^\w.-]+/g,'_');
+}
+function devExportJson(){
+ devApplyChanges();
+ downloadText(devCurrentFileName(),JSON.stringify(devPack,null,2));
+}
+function devCopyJson(){
+ devApplyChanges();
+ const text=JSON.stringify(devPack,null,2);
+ navigator.clipboard?.writeText(text).then(()=>$('devStatus').innerHTML='<span class="status-ok">JSONをコピーしました。</span>').catch(()=>{$('devStatus').textContent='コピーできませんでした。JSON保存を使用してください。'});
+}
+
 async function init(){
  applyTheme(getStoredTheme());
  renderVersionInfo();
