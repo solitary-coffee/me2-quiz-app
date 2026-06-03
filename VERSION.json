@@ -1,12 +1,12 @@
 {
-  "version": "v1.9.8",
+  "version": "v1.9.9",
   "updatedAt": "2026-06-03",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "await構文エラーを修正",
-    "バージョン番号と変更点をCHANGELOG.mdから読み込む方式に変更",
-    "トップの現在バージョン・過去バージョン表示をCHANGELOG.md連動に変更"
+    "async is not defined エラーを修正",
+    "共有リンク制を廃止",
+    "DB同期をログインアカウント内のアップロード・ダウンロード方式に変更"
   ]
 }

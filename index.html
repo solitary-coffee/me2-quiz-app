@@ -251,7 +251,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.8</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.9</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -287,7 +287,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
  </details>
 </section>
 <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
-<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DBアップロード / 共有</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><button class="ghost" onclick="showBookmarks()">あとで見返す</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button><span class="pill" id="roundCount"></span></div>
+<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DB同期</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><button class="ghost" onclick="showBookmarks()">あとで見返す</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button><span class="pill" id="roundCount"></span></div>
 <section class="random-card">
  <div class="random-head">
   <div>
@@ -345,34 +345,28 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 <div class="grid" id="examGrid"></div></section>
 <section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.8.2</span> / 更新日：2026-06-02</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
- <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
- <h2>DBアップロード / 共有</h2>
- <p class="small">
-  JSONファイルとして端末へ保存する代わりに、端末内に残っている進行データ・履歴をCloudflare KVへアップロードします。
-  別端末で同じログインIDを使うとDBから復元できます。
- </p>
- <div class="mobile-note small">
-  <b>使い方：</b><br>
-  1. 先に「ログイン / 登録」でサイトログインする<br>
-  2. 「端末データをDBへアップロード」を押す<br>
-  3. 必要なら「共有リンクを作成」を押して、共有コードまたはURLを渡す
- </div>
- <div class="row" style="margin-top:14px">
-  <button onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button>
-  <button class="secondary" onclick="createShareLinkFromDb()">共有リンクを作成</button>
-  <button class="ghost" onclick="checkCloudSyncStatus()">DB保存状態を確認</button>
- </div>
- <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
- <h3>共有データを取り込む</h3>
- <p class="small">共有コードまたは共有URLを入力すると、共有された進行データを現在のログインIDのDBへ取り込めます。</p>
- <div class="field">
-  <label for="shareCodeInput">共有コード / 共有URL</label>
-  <input id="shareCodeInput" placeholder="例：ABCD1234 または https://.../?share=ABCD1234">
- </div>
- <div class="row">
-  <button class="secondary" onclick="importSharedProgressToDb()">共有データを取り込む</button>
- </div>
- <div id="dbSyncStatus" class="login-status">まだ操作していません。</div>
+  <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
+  <h2>DB同期</h2>
+  <p class="small">
+    共有リンク制は廃止しました。現在は、ログインアカウント内で端末データとCloudflare KVのDBデータを同期します。
+  </p>
+  <div class="mobile-note small">
+    <b>使い方：</b><br>
+    1. 先に「ログイン / 登録」でサイトログインする<br>
+    2. この端末のデータを保存したい場合は「ローカル→DBアップロード」<br>
+    3. 別端末などのDBデータをこの端末へ反映したい場合は「DB→ローカルダウンロード」<br>
+    4. 履歴は重複を避けながらローカルへ統合されます。
+  </div>
+  <div class="row" style="margin-top:14px">
+    <button onclick="uploadLocalProgressToDb()">ローカル→DBアップロード</button>
+    <button class="secondary" onclick="downloadDbProgressToLocal()">DB→ローカルダウンロード</button>
+    <button class="ghost" onclick="syncLocalAndDb()">双方向同期</button>
+    <button class="ghost" onclick="checkCloudSyncStatus()">DB保存状態を確認</button>
+  </div>
+  <div class="disclaimer small">
+    <b>注意：</b>DB同期は現在ログイン中のアカウント内で行います。共有コード・共有URLで他者へ渡す方式は廃止済みです。
+  </div>
+  <div id="dbSyncStatus" class="login-status">まだ操作していません。</div>
 </section>
 <section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← 回数選択へ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
 <section id="answerViewCard" class="card hidden">
@@ -483,15 +477,25 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.9.8';
+const APP_VERSION='v1.9.9';
 const APP_UPDATED_AT='2026-06-03';
 const APP_UPDATE_NOTES=[
-  'await構文エラーを修正',
-  'バージョン番号と変更点をCHANGELOG.mdから読み込む方式に変更',
-  'CHANGELOG.mdをトップの現在バージョン・過去バージョン表示の元データに変更',
-  'パスワード自動補完とPWA meta警告を軽減'
+  'async is not defined エラーを修正',
+  '共有リンク制を廃止',
+  'ログインアカウント内でローカル→DBアップロードとDB→ローカルダウンロードに変更',
+  'DB同期画面を整理'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.9.9',
+    date:'2026-06-03',
+    notes:[
+      'async is not defined エラーを修正',
+      '共有リンク制を廃止',
+      'ログインアカウント内でローカル→DBアップロードとDB→ローカルダウンロードに変更',
+      'DB同期画面を整理'
+    ]
+  },
   {
     version:'v1.9.8',
     date:'2026-06-03',
@@ -1680,7 +1684,7 @@ function historyStatsHtml(hist, pack){
 }
 async function cleanupDuplicateHistoryDb(part){
  if(!hasCloudLogin()){
-  alert('DBの重複削除には、サイトログインまたはゲストログインが必要です。未ログインの場合は端末内の履歴だけが使われます。');
+  alert('DBの重複削除には、サイトログインが必要です。未ログインの場合は端末内の履歴だけが使われます。');
   return;
  }
  const title=`${getExamRecord(currentExamId)?.title||''} ${partName(part)}`;
@@ -1699,7 +1703,6 @@ async function cleanupDuplicateHistoryDb(part){
  alert(`DB重複削除が完了しました。\n整理前：${res.before ?? '?'}件\n整理後：${res.after ?? '?'}件\n削除：${res.deleted ?? 0}件`);
  await showHistory(part);
 }
-async 
 function historyWrongIndexes(h, pack){
  const wrong=[];
  (h.answers||[]).forEach((a,i)=>{
@@ -1850,7 +1853,7 @@ function showDbSyncPanel(){
  $('syncCard').classList.remove('hidden');
  updateHeader();
  const p=collectLocalProgressObject();
- dbStatus(`端末内に途中保存 ${p.states.length}件、履歴 ${p.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件があります。<br>DBへアップロードするには、先にサイトログインまたはゲストログインしてください。`);
+ dbStatus(`端末内に途中保存 ${p.states.length}件、履歴 ${p.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件があります。<br>DB同期するには、先にサイトログインしてください。同じログインID内でアップロード・ダウンロードできます。`);
 }
 async function uploadLocalProgressToDb(opts={}){
  const silent=!!opts.silent;
@@ -1894,77 +1897,73 @@ async function uploadCurrentProgressToDb(){
  if(res&&res.ok) alert('現在の進行をDBへ保存しました。');
  else alert('DB保存に失敗しました。ログイン状態やKV設定を確認してください。');
 }
-async function apiShare(method,payload=null){
- try{
-  let url='/api/share';
-  const opt={method,headers:{'content-type':'application/json',...guestHeaders()}};
-  if(method==='GET'&&payload){
-   const params=new URLSearchParams();
-   Object.entries(payload).forEach(([k,v])=>{if(v!==undefined&&v!==null)params.set(k,String(v))});
-   url+='?'+params.toString();
-  }else if(payload){opt.body=JSON.stringify(payload);}
-  const r=await fetchWithTimeout(url,opt,5000);
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error(data.error||String(r.status));
-  return data;
- }catch(e){
-  return {ok:false,error:e.message||String(e)};
- }
+function syncTargets(){
+ const targets=[];
+ (examsIndex.exams||[]).forEach(ex=>{
+  ['am','pm'].forEach(part=>targets.push({examId:String(ex.id),part,title:ex.title||String(ex.id)}));
+ });
+ targets.push({examId:RANDOM_EXAM_ID,part:RANDOM_PART,title:'ランダム演習'});
+ return targets;
 }
-async function createShareLinkFromDb(){
+function unwrapCloudState(res){
+ const d=res?.data;
+ if(!d)return null;
+ return d.data&&typeof d.data==='object'?d.data:d;
+}
+async function downloadDbProgressToLocal(opts={}){
+ const silent=!!opts.silent;
+ if(!hasCloudLogin()){
+  if(!silent){
+   showDbSyncPanel();
+   dbStatus('<b>ダウンロードできません。</b><br>先に「ログイン / 登録」からサイトログインしてください。');
+  }
+  return {ok:false,reason:'not_logged_in',states:0,histories:0,errors:0};
+ }
+ const targets=syncTargets();
+ if(!silent)dbStatus(`DBからローカルへダウンロード中…<br>対象：${targets.length}部門`);
+ let states=0,histories=0,errors=0;
+ for(const t of targets){
+  const st=await apiProgress('GET',{type:'state',examId:t.examId,part:t.part});
+  if(st&&st.ok){
+   const data=unwrapCloudState(st);
+   if(data&&data.examId&&data.part){saveLocal(stateKey(data.examId,data.part),data);states++;}
+  }else{
+   errors++;
+  }
+  const hi=await apiProgress('GET',{type:'history',examId:t.examId,part:t.part});
+  if(hi&&hi.ok){
+   const arr=Array.isArray(hi.data)?hi.data:[];
+   if(arr.length){
+    const merged=mergeHistory(arr,loadLocal(historyKey(t.examId,t.part),[])).slice(0,300);
+    saveLocal(historyKey(t.examId,t.part),merged);
+    histories+=arr.length;
+   }
+  }else{
+   errors++;
+  }
+ }
+ if(!silent){
+  dbStatus(`<b>DB→ローカル ダウンロード完了。</b><br>途中保存 ${states}件、履歴 ${histories}件をこの端末へ反映しました。${errors?`<br>確認できなかった項目：${errors}件`:''}`);
+  if(currentExamId) await renderPartMenu();
+  renderRandomMenu();
+ }
+ return {ok:errors===0,states,histories,errors};
+}
+async function syncLocalAndDb(){
  showDbSyncPanel();
  if(!hasCloudLogin()){
-  dbStatus('<b>共有リンクを作成できません。</b><br>先にサイトログインまたはゲストログインしてください。');
+  dbStatus('<b>同期できません。</b><br>先に「ログイン / 登録」からサイトログインしてください。');
   return;
  }
- dbStatus('共有用データを準備中… 端末データをDBへアップロードしています。');
- const uploaded=await uploadLocalProgressToDb({silent:true});
- const payload=collectLocalProgressObject();
- const totalHist=payload.histories.reduce((a,h)=>a+(h.data?.length||0),0);
- if(!payload.states.length&&!totalHist){
-  dbStatus('共有できる進行データがありません。演習後にもう一度試してください。');
-  return;
- }
- const res=await apiShare('POST',{title:'ME2種 進行データ共有',data:payload});
- if(!res||!res.ok){
-  dbStatus(`<b>共有リンク作成に失敗しました。</b><br>${escapeHtml(res?.error||'Cloudflare Functions / KV設定を確認してください。')}`);
-  return;
- }
- dbStatus(`<b>共有リンクを作成しました。</b><br>
-  共有コード：<span class="code">${escapeHtml(res.code)}</span><br>
-  共有URL：<span class="code">${escapeHtml(res.url)}</span><br>
-  <button class="secondary" style="margin-top:10px" onclick="copyText('${escapeHtml(res.url)}')">共有URLをコピー</button>
-  <p class="small">共有相手はこのURLまたはコードを「共有データを取り込む」に入力すると、進行データをDBへ取り込めます。</p>`);
-}
-function extractShareCode(v){
- const s=String(v||'').trim();
- if(!s)return '';
- try{
-  const u=new URL(s,location.href);
-  return (u.searchParams.get('share')||u.searchParams.get('code')||'').trim();
- }catch(e){}
- return s.replace(/[^a-zA-Z0-9_-]/g,'').slice(0,32);
-}
-async function importSharedProgressToDb(){
- const code=extractShareCode($('shareCodeInput')?.value||new URLSearchParams(location.search).get('share')||'');
- showDbSyncPanel();
- if(!code){dbStatus('共有コードまたは共有URLを入力してください。');return;}
- dbStatus(`共有コード <span class="code">${escapeHtml(code)}</span> を読み込み中…`);
- const res=await apiShare('GET',{code});
- if(!res||!res.ok){
-  dbStatus(`<b>共有データを読み込めませんでした。</b><br>${escapeHtml(res?.error||'共有コードを確認してください。')}`);
-  return;
- }
- const applied=applyProgressPayloadToLocal(res.data);
- let uploadMsg='';
- if(hasCloudLogin()){
-  const up=await uploadLocalProgressToDb({silent:true});
-  uploadMsg=`<br>現在のログインIDのDBへアップロード：途中保存 ${up.states||0}件、履歴 ${up.histories||0}件`;
- }else{
-  uploadMsg='<br><b>注意：</b>未ログインのため、まず端末キャッシュに取り込みました。ログイン後に「端末データをDBへアップロード」を押してください。';
- }
- dbStatus(`<b>共有データを取り込みました。</b><br>途中保存 ${applied.states}件、履歴 ${applied.histories}件${uploadMsg}`);
- if(currentExamId) renderPartMenu();
+ dbStatus('双方向同期中…<br>1. ローカルデータをDBへアップロード<br>2. DBデータをローカルへダウンロード');
+ const up=await uploadLocalProgressToDb({silent:true});
+ const down=await downloadDbProgressToLocal({silent:true});
+ dbStatus(`<b>双方向同期完了。</b><br>
+  アップロード：途中保存 ${up.states||0}件、履歴 ${up.histories||0}件<br>
+  ダウンロード：途中保存 ${down.states||0}件、履歴 ${down.histories||0}件<br>
+  ${up.errors||down.errors?`確認が必要な項目：${(up.errors||0)+(down.errors||0)}件`:''}`);
+ if(currentExamId) await renderPartMenu();
+ renderRandomMenu();
 }
 function copyText(text){
  const raw=String(text||'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
@@ -1974,17 +1973,17 @@ async function checkCloudSyncStatus(){
  showDbSyncPanel();
  if(!hasCloudLogin()){dbStatus('未ログインです。DB保存状態の確認にはログインが必要です。');return;}
  const local=collectLocalProgressObject();
+ const targets=syncTargets();
  dbStatus(`ログイン確認中…<br>端末内：途中保存 ${local.states.length}件、履歴 ${local.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件`);
  const r=await apiProgress('GET');
- if(r&&r.ok) dbStatus(`DB接続OK。保存先：${escapeHtml(r.account?.label||'現在のアカウント')}<br>端末内：途中保存 ${local.states.length}件、履歴 ${local.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件`);
+ if(r&&r.ok) dbStatus(`DB接続OK。保存先：${escapeHtml(r.account?.label||'現在のアカウント')}<br>同期対象：${targets.length}部門<br>端末内：途中保存 ${local.states.length}件、履歴 ${local.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件`);
  else dbStatus('DB接続を確認できませんでした。KV Binding、ログイン状態、Functionsの設定を確認してください。');
 }
 async function maybeOpenSharedLink(){
  const code=new URLSearchParams(location.search).get('share');
  if(code){
   showDbSyncPanel();
-  if($('shareCodeInput')) $('shareCodeInput').value=code;
-  dbStatus(`共有リンクを検出しました。<br>共有コード：<span class="code">${escapeHtml(code)}</span><br>「共有データを取り込む」を押してください。`);
+  dbStatus('<b>共有リンク制は廃止されました。</b><br>現在はログインアカウント内のDB同期を使用してください。<br>「DB→ローカルダウンロード」で同じログインIDのデータをこの端末へ反映できます。');
  }
 }
 
