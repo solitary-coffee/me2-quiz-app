@@ -223,10 +223,34 @@ html[data-theme="dark"] .dev-lock-note{background:#0f172a;border-color:#334155;c
 html[data-theme="dark"] .dev-definition-box{background:#0f172a;border-color:#334155}
 html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e5e7eb;border-color:#334155}
 
+
+.dev-check-panel{border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:14px;margin:14px 0}
+.dev-check-grid{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;align-items:end}
+.dev-check-result{margin-top:12px}
+.dev-issue-card{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:12px;margin:10px 0}
+.dev-issue-card h4{margin:0 0 6px}
+.dev-issue-meta{font-size:13px;color:var(--muted);line-height:1.55}
+.dev-issue-list{margin:8px 0 0;padding-left:1.2em}
+.dev-issue-list li{margin:4px 0}
+.issue-high{border-color:#fecaca;background:#fff1f2}
+.issue-mid{border-color:#fde68a;background:#fffbeb}
+.issue-low{border-color:#bfdbfe;background:#eff6ff}
+.issue-badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:3px 8px;font-weight:900;font-size:12px;margin-left:6px}
+.issue-badge.high{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+.issue-badge.mid{background:#fef3c7;color:#92400e;border-color:#fde68a}
+.issue-badge.low{background:#dbeafe;color:#1e40af;border-color:#bfdbfe}
+.check-summary{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+html[data-theme="dark"] .dev-check-panel{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .dev-issue-card{background:#111827;color:#e5e7eb;border-color:#334155}
+html[data-theme="dark"] .issue-high{background:#450a0a;border-color:#7f1d1d}
+html[data-theme="dark"] .issue-mid{background:#451a03;border-color:#92400e}
+html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
+@media(max-width:760px){.dev-check-grid{grid-template-columns:1fr 1fr}.dev-check-grid button{width:100%}}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.5</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.6</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -405,6 +429,23 @@ html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e
       <button class="ghost" onclick="copyExplanationDefinition()">定義をコピー</button>
     </div>
   </details>
+  <section class="dev-check-panel">
+    <h3>文面チェック</h3>
+    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説が、日本語として不自然でないか、形式が揃っているかを一括チェックします。</p>
+    <div class="dev-check-grid">
+      <div class="dev-field"><label>開始回</label><select id="checkFromExam"></select></div>
+      <div class="dev-field"><label>終了回</label><select id="checkToExam"></select></div>
+      <div class="dev-field"><label>対象</label><select id="checkPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
+      <div class="dev-field"><label>表示</label><select id="checkSeverity"><option value="all">すべて</option><option value="high">重要のみ</option><option value="mid">重要・確認</option></select></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="secondary" onclick="runDevTextCheck()">文面チェック開始</button>
+      <button class="ghost" onclick="exportDevCheckCsv()">チェック結果CSV保存</button>
+      <button class="ghost" onclick="clearDevCheckResults()">結果をクリア</button>
+    </div>
+    <div id="devCheckStatus" class="dev-status">範囲を選択してチェックできます。</div>
+    <div id="devCheckResult" class="dev-check-result"></div>
+  </section>
   <div class="dev-grid">
     <div class="dev-panel">
       <h3>編集対象</h3>
@@ -441,15 +482,25 @@ html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.9.5';
+const APP_VERSION='v1.9.6';
 const APP_UPDATED_AT='2026-06-02';
 const APP_UPDATE_NOTES=[
-  '各履歴から間違った問題だけを再演習できる機能を追加',
-  '通常履歴・ランダム履歴の両方に対応',
-  '履歴ごとに「この回の間違いだけ解く」ボタンを追加',
-  '前回までのAI解説定義・開発者認証機能も同梱'
+  '開発モードに文面チェック機能を追加',
+  '第何回〜第何回・午前/午後を指定して一括チェック可能に変更',
+  '問題文・選択肢・正答・画像パス・各解説の異常をピックアップ',
+  '前回までの履歴間違い再演習・AI解説定義機能も同梱'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.9.6',
+    date:'2026-06-02',
+    notes:[
+      '開発モードに文面チェック機能を追加',
+      '試験回範囲と午前/午後を指定して一括チェック可能に変更',
+      '問題文・選択肢・正答・画像パス・各解説の異常をピックアップ',
+      'チェック結果から該当問題を開発モードで直接開けるように変更'
+    ]
+  },
   {
     version:'v1.9.5',
     date:'2026-06-02',
@@ -1939,6 +1990,7 @@ function showDevModeUnlocked(){
  const exSel=$('devExamSelect');
  exSel.innerHTML=(examsIndex.exams||[]).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
  if(currentExamId)exSel.value=currentExamId;
+ checkExamOptions();
  devLoadExam();
  updateHeader();
 }
@@ -2108,6 +2160,158 @@ function devCopyJson(){
  devApplyChanges();
  const text=JSON.stringify(devPack,null,2);
  navigator.clipboard?.writeText(text).then(()=>$('devStatus').innerHTML='<span class="status-ok">JSONをコピーしました。</span>').catch(()=>{$('devStatus').textContent='コピーできませんでした。JSON保存を使用してください。'});
+}
+
+
+let devCheckIssues=[];
+function checkExamOptions(){
+ const opts=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id)).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
+ ['checkFromExam','checkToExam'].forEach(id=>{const el=$(id);if(el&&!el.options.length)el.innerHTML=opts;});
+ const to=$('checkToExam'); if(to&&to.options.length)to.selectedIndex=to.options.length-1;
+}
+function severityRank(s){return s==='high'?3:s==='mid'?2:1}
+function addIssue(list,severity,field,msg){list.push({severity,field,msg});}
+function hasMojibake(s){return /�|Ã|Â|縺|繧|荳|譁|螟|邱|蜷|莉|邨|豈|鬆|髮|[?？]{3,}|undefined|null|NaN/.test(String(s||''));}
+function hasJapaneseText(s){return /[ぁ-んァ-ン一-龥]/.test(String(s||''));}
+function oddText(s){
+ const t=String(s||'').trim();
+ if(!t)return true;
+ if(hasMojibake(t))return true;
+ if(/(.)\1{12,}/.test(t))return true;
+ if(/[■□◆◇●○△▲▽▼]{5,}/.test(t))return true;
+ if(/<\/?[a-z][\s\S]*>/i.test(t))return true;
+ return false;
+}
+function isNegativeStem(stem){return /誤って|誤り|適切でない|正しくない|不適切|間違って/.test(String(stem||''));}
+function notePrefixOk(note,q,isCorrect){
+ const n=String(note||'').trim();
+ if(!n)return false;
+ if(q.negative){
+  if(isCorrect)return n.startsWith('正答。')||n.startsWith('正答。誤りポイント');
+  return n.startsWith('この選択肢は誤りではない。');
+ }
+ if(isCorrect)return n.startsWith('正答。');
+ return n.startsWith('誤りポイント：')||n.startsWith('誤りポイント:');
+}
+function checkOneQuestion(q,ctx){
+ const issues=[];
+ const choices=Array.isArray(q.choices)?q.choices:[];
+ const correct=Array.isArray(q.correct)?q.correct.map(Number):[];
+ const notes=Array.isArray(q.choiceNotes)?q.choiceNotes:[];
+ const stem=String(q.stem||'').trim();
+ if(!stem)addIssue(issues,'high','問題文','問題文が空欄です。');
+ else{
+  if(stem.length<8)addIssue(issues,'mid','問題文','問題文が短すぎる可能性があります。');
+  if(oddText(stem))addIssue(issues,'high','問題文','文字化け・不要な記号・HTML・異常な繰り返しが含まれる可能性があります。');
+  if(!hasJapaneseText(stem))addIssue(issues,'mid','問題文','日本語が含まれていない可能性があります。');
+ }
+ if(choices.length!==5)addIssue(issues,'high','選択肢',`選択肢数が5ではありません。現在：${choices.length}`);
+ const seen=new Map();
+ choices.forEach((c,i)=>{
+  const text=String(c||'').trim();
+  const n=i+1;
+  if(!text)addIssue(issues,'high',`選択肢${n}`,'選択肢が空欄です。');
+  else{
+   if(oddText(text))addIssue(issues,'high',`選択肢${n}`,'文字化け・不要な記号・HTML・異常な繰り返しが含まれる可能性があります。');
+   if(!hasJapaneseText(text)&&text.length>0)addIssue(issues,'low',`選択肢${n}`,'日本語が含まれていない可能性があります。単位・記号のみなら確認してください。');
+   const key=text.replace(/\s+/g,'');
+   if(seen.has(key))addIssue(issues,'high',`選択肢${n}`,`選択肢${seen.get(key)}と重複している可能性があります。`);
+   seen.set(key,n);
+  }
+ });
+ if(!correct.length)addIssue(issues,'high','正答','正答が設定されていません。');
+ correct.forEach(n=>{if(!Number.isInteger(n)||n<1||n>choices.length)addIssue(issues,'high','正答',`正答番号 ${n} が選択肢範囲外です。`);});
+ if(isNegativeStem(stem)&&!q.negative)addIssue(issues,'mid','問題形式','問題文は「誤っているもの」系ですが negative が true ではありません。');
+ if(!isNegativeStem(stem)&&q.negative)addIssue(issues,'mid','問題形式','negative が true ですが、問題文に「誤っているもの」系の表現が見当たりません。');
+ if(q.hasFigure&&!q.image)addIssue(issues,'high','画像','図表ありですが画像パスが空欄です。');
+ if(!q.hasFigure&&q.image)addIssue(issues,'low','画像','画像パスがありますが hasFigure が false です。');
+ if(q.image){
+  if(hasMojibake(q.image))addIssue(issues,'high','画像パス','画像パスに文字化けの可能性があります。');
+  if(!/\.(png|jpg|jpeg|webp|gif|svg)$/i.test(q.image))addIssue(issues,'mid','画像パス','画像ファイル拡張子が画像形式ではない可能性があります。');
+  if(/\s/.test(q.image))addIssue(issues,'low','画像パス','画像パスに空白が含まれています。読み込み失敗の原因になることがあります。');
+ }
+ const tip=String(q.tip||'').trim();
+ if(!tip)addIssue(issues,'mid','要点解説','要点解説が空欄です。');
+ else{
+  if(oddText(tip))addIssue(issues,'high','要点解説','文字化け・不要な記号・HTML・異常な繰り返しが含まれる可能性があります。');
+  if(!/^要点：/.test(tip))addIssue(issues,'low','要点解説','定義上は「要点：〜。覚える：〜。」の形式が推奨です。');
+ }
+ if(notes.length!==choices.length)addIssue(issues,'high','各解説',`choiceNotes数が選択肢数と一致しません。choiceNotes:${notes.length} / choices:${choices.length}`);
+ choices.forEach((_,i)=>{
+  const n=i+1,isC=correct.includes(n),note=String(notes[i]||'').trim();
+  if(!note)addIssue(issues,'high',`選択肢${n}解説`,'解説が空欄です。');
+  else{
+   if(oddText(note))addIssue(issues,'high',`選択肢${n}解説`,'文字化け・不要な記号・HTML・異常な繰り返しが含まれる可能性があります。');
+   if(!notePrefixOk(note,q,isC))addIssue(issues,'mid',`選択肢${n}解説`,'解説の書き出しが定義とずれている可能性があります。');
+   if(note.length<12)addIssue(issues,'low',`選択肢${n}解説`,'解説が短すぎる可能性があります。');
+  }
+ });
+ if(!issues.length)return null;
+ const high=issues.some(x=>x.severity==='high'), mid=issues.some(x=>x.severity==='mid');
+ return {...ctx,q,issues,severity:high?'high':mid?'mid':'low'};
+}
+function selectedCheckExamIds(){
+ const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
+ const from=examNumber($('checkFromExam')?.value||records[0]?.id), to=examNumber($('checkToExam')?.value||records[records.length-1]?.id);
+ const lo=Math.min(from,to), hi=Math.max(from,to);
+ return records.filter(ex=>examNumber(ex.id)>=lo&&examNumber(ex.id)<=hi);
+}
+function selectedCheckParts(){const m=$('checkPartMode')?.value||'both';return m==='both'?['am','pm']:[m];}
+async function runDevTextCheck(){
+ checkExamOptions();
+ const records=selectedCheckExamIds(), parts=selectedCheckParts(), min=$('checkSeverity')?.value||'all';
+ devCheckIssues=[];
+ $('devCheckStatus').innerHTML='<span class="status-warn">文面チェック中…</span>';
+ $('devCheckResult').innerHTML='';
+ for(const ex of records){
+  for(const part of parts){
+   try{
+    const pack=await getPart(ex.id,part);
+    (pack.questions||[]).forEach((q,idx)=>{
+     const issue=checkOneQuestion(q,{examId:String(ex.id),part,title:ex.title,index:idx,number:q.number});
+     if(issue)devCheckIssues.push(issue);
+    });
+   }catch(e){
+    devCheckIssues.push({examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]});
+   }
+  }
+ }
+ const filtered=devCheckIssues.filter(x=>min==='all'||severityRank(x.severity)>=severityRank(min));
+ renderDevCheckResults(filtered);
+}
+function renderDevCheckResults(list){
+ const total=devCheckIssues.length, high=devCheckIssues.filter(x=>x.severity==='high').length, mid=devCheckIssues.filter(x=>x.severity==='mid').length, low=devCheckIssues.filter(x=>x.severity==='low').length;
+ $('devCheckStatus').innerHTML=`<span class="status-ok">チェック完了：指摘 ${total}件</span>`;
+ const summary=`<div class="check-summary"><span class="issue-badge high">重要 ${high}</span><span class="issue-badge mid">確認 ${mid}</span><span class="issue-badge low">軽微 ${low}</span></div>`;
+ if(!list.length){$('devCheckResult').innerHTML=summary+'<p class="small">表示条件に一致する指摘はありません。</p>';return;}
+ $('devCheckResult').innerHTML=summary+list.map(item=>{
+  const sevLabel=item.severity==='high'?'重要':item.severity==='mid'?'確認':'軽微';
+  const lis=item.issues.map(i=>`<li><b>${escapeHtml(i.field)}</b>：${escapeHtml(i.msg)} <span class="issue-badge ${i.severity}">${i.severity==='high'?'重要':i.severity==='mid'?'確認':'軽微'}</span></li>`).join('');
+  const stem=item.q?.stem?`<p class="small"><b>問題文：</b>${escapeHtml(String(item.q.stem).slice(0,140))}${String(item.q.stem).length>140?'…':''}</p>`:'';
+  return `<div class="dev-issue-card issue-${item.severity}">
+    <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${item.severity}">${sevLabel}</span></h4>
+    <div class="dev-issue-meta">範囲：${escapeHtml(item.q?.range||'未設定')} / 指摘数：${item.issues.length}</div>
+    ${stem}
+    <ul class="dev-issue-list">${lis}</ul>
+    <div class="row" style="margin-top:10px"><button class="secondary" onclick="openDevIssue('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0})">この問題を開く</button></div>
+  </div>`;
+ }).join('');
+}
+async function openDevIssue(examId,part,index){
+ $('devExamSelect').value=examId;
+ $('devPartSelect').value=part;
+ await devLoadPart();
+ $('devQuestionSelect').value=String(index);
+ devRenderEditor();
+ window.scrollTo({top:$('devModeCard').offsetTop,behavior:'smooth'});
+}
+function clearDevCheckResults(){devCheckIssues=[];$('devCheckStatus').textContent='結果をクリアしました。';$('devCheckResult').innerHTML='';}
+function exportDevCheckCsv(){
+ if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
+ const rows=[['回','午前午後','問題番号','重要度','項目','指摘内容','範囲','問題文']];
+ devCheckIssues.forEach(item=>{item.issues.forEach(i=>rows.push([item.title||item.examId,partName(item.part),item.number,i.severity,i.field,i.msg,item.q?.range||'',item.q?.stem||'']));});
+ const csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+ downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');
 }
 
 async function init(){
