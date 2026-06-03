@@ -226,7 +226,7 @@ html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.4</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.5</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -441,15 +441,25 @@ html[data-theme="dark"] .dev-definition-box textarea{background:#111827;color:#e
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.9.4';
+const APP_VERSION='v1.9.5';
 const APP_UPDATED_AT='2026-06-02';
 const APP_UPDATE_NOTES=[
-  '開発者ログインで405が出る問題を修正',
-  'dev-auth APIを更新ファイルに必ず同梱',
-  'POST/GETをonRequestでも処理するように安定化',
-  '前回までのAI解説定義・開発モード機能も同梱'
+  '各履歴から間違った問題だけを再演習できる機能を追加',
+  '通常履歴・ランダム履歴の両方に対応',
+  '履歴ごとに「この回の間違いだけ解く」ボタンを追加',
+  '前回までのAI解説定義・開発者認証機能も同梱'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.9.5',
+    date:'2026-06-02',
+    notes:[
+      '各履歴から間違った問題だけを再演習できる機能を追加',
+      '通常履歴・ランダム履歴の両方に対応',
+      '履歴ごとに「この回の間違いだけ解く」ボタンを追加',
+      '再演習結果は別履歴として保存'
+    ]
+  },
   {
     version:'v1.9.4',
     date:'2026-06-02',
@@ -1418,11 +1428,11 @@ async function showRandomHistory(){
   const wrongHtml=wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabelForState(q,h))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解、または間違いデータなし。</p>';
   const st=h.randomSettings||{};
   const setting=`第${st.fromExam||'?'}回〜第${st.toExam||'?'}回 / ${(st.parts||[]).map(partName).join('・')||'午前・午後'} / ${st.ranges?.length?st.ranges.length+'範囲':'全範囲'}`;
-  return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${escapeHtml(setting)}<br>${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<details><summary>この回の間違いを見る</summary>${wrongHtml}</details></div>`;
+  return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${escapeHtml(setting)}<br>${h.mode==='history_wrong'?'間違い復習 / ':''}${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<details><summary>この回の間違いを見る</summary>${wrongHtml}</details><div class="row" style="margin-top:8px"><button class="secondary" ${wrong.length?'':'disabled'} onclick="retryRandomHistoryWrong('${escapeHtml(h.attemptId||'legacy')}')">この回の間違いだけ解く</button></div></div>`;
  }).join('');
  $('finalPart').textContent='ランダム履歴';
  $('finalScore').textContent='-';$('finalRate').textContent='-';$('finalTime').textContent='-';
- $('wrongList').innerHTML=`<h3>ランダム演習履歴：${hist.length}件</h3>`+(hist.length?rows:'<p class="small">ランダム演習履歴はまだありません。</p>');
+ $('wrongList').innerHTML=`<h3>ランダム演習履歴：${hist.length}件</h3><p class="small">各履歴の「この回の間違いだけ解く」から、その回で間違えた問題だけ再演習できます。</p>`+(hist.length?rows:'<p class="small">ランダム演習履歴はまだありません。</p>');
  updateHeader();
 }
 
@@ -1500,7 +1510,7 @@ function saveHistory(){const k=historyKey(state.examId,state.part);const snap={.
 async function resetPart(part){if(confirm(`${getExamRecord(currentExamId).title} ${partName(part)} の途中保存を削除しますか？`)){localStorage.removeItem(stateKey(currentExamId,part));await apiProgress('DELETE',{type:'state',examId:currentExamId,part});renderPartMenu()}}
 function showFinish(){pauseTimer();hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=sessionTitle();$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
 function renderWrongList(){const pack=currentPack(), wrong=(state.answers||[]).map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>x.a&&!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabel(q))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
-function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
+function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
 function historyStatsHtml(hist, pack){
  const base=hist.filter(h=>h && (h.mode||'all')==='all');
  const target=base.length?base:hist;
@@ -1559,7 +1569,92 @@ async function cleanupDuplicateHistoryDb(part){
  alert(`DB重複削除が完了しました。\n整理前：${res.before ?? '?'}件\n整理後：${res.after ?? '?'}件\n削除：${res.deleted ?? 0}件`);
  await showHistory(part);
 }
-async function showHistory(part){
+async 
+function historyWrongIndexes(h, pack){
+ const wrong=[];
+ (h.answers||[]).forEach((a,i)=>{
+  if(a && !a.correct && typeof h.order?.[i] !== 'undefined' && pack?.questions?.[h.order[i]]) wrong.push(h.order[i]);
+ });
+ return wrong;
+}
+function historyWrongRandomQuestions(h){
+ const qs=h.randomQuestions||[];
+ const wrong=[];
+ (h.answers||[]).forEach((a,i)=>{
+  const q=qs[h.order?.[i]]||qs[i];
+  if(a && !a.correct && q) wrong.push(q);
+ });
+ return wrong;
+}
+function findHistoryAttempt(hist, attemptId){
+ return (hist||[]).find(h=>String(h.attemptId||'legacy')===String(attemptId));
+}
+async function retryHistoryWrong(part, attemptId){
+ const examId=currentExamId||state.examId;
+ await getPart(examId,part);
+ let hist=loadLocal(historyKey(examId,part),[]);
+ if(hasCloudLogin()){
+  const cloudHist=await loadCloudHistory(examId,part);
+  hist=mergeHistory(hist,cloudHist);
+ }
+ const h=findHistoryAttempt(hist,attemptId);
+ if(!h){alert('この履歴を読み込めませんでした。');return;}
+ const pack=partsCache[`${examId}_${part}`];
+ const wrongIndexes=historyWrongIndexes(h,pack);
+ if(!wrongIndexes.length){alert('この履歴に間違った問題はありません。');return;}
+ state={
+  examId,
+  part,
+  mode:'history_wrong',
+  retryFromAttemptId:h.attemptId||attemptId,
+  attemptId:makeAttemptId(),
+  order:wrongIndexes,
+  index:0,
+  correct:0,
+  answers:[],
+  eliminations:{},
+  startedAt:Date.now(),
+  elapsedMs:0,
+  sessionStartedAt:null,
+  timerRunning:false,
+  finished:false
+ };
+ startTimer();saveState();showQuiz();renderQuestion();
+}
+async function retryRandomHistoryWrong(attemptId){
+ let hist=loadLocal(historyKey(RANDOM_EXAM_ID,RANDOM_PART),[]);
+ if(hasCloudLogin()){
+  const cloudHist=await loadCloudHistory(RANDOM_EXAM_ID,RANDOM_PART);
+  hist=mergeHistory(hist,cloudHist);
+ }
+ const h=findHistoryAttempt(hist,attemptId);
+ if(!h){alert('このランダム履歴を読み込めませんでした。');return;}
+ const wrongQs=historyWrongRandomQuestions(h);
+ if(!wrongQs.length){alert('この履歴に間違った問題はありません。');return;}
+ state={
+  examId:RANDOM_EXAM_ID,
+  part:RANDOM_PART,
+  quizType:'random',
+  mode:'history_wrong',
+  retryFromAttemptId:h.attemptId||attemptId,
+  attemptId:makeAttemptId(),
+  randomQuestions:wrongQs,
+  randomSettings:{...(h.randomSettings||{}), retryFromAttemptId:h.attemptId||attemptId, wrongOnly:true},
+  order:wrongQs.map((_,i)=>i),
+  index:0,
+  correct:0,
+  answers:[],
+  eliminations:{},
+  startedAt:Date.now(),
+  elapsedMs:0,
+  sessionStartedAt:null,
+  timerRunning:false,
+  finished:false
+ };
+ startTimer();saveState();showQuiz();renderQuestion();
+}
+
+function showHistory(part){
  hideAll();$('finishCard').classList.remove('hidden');
  $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴</h3><p class="small">履歴を読み込み中…</p>`;
  await getPart(currentExamId,part);
@@ -1573,9 +1668,9 @@ async function showHistory(part){
   const total=h.order?.length||h.answers?.length||0, rate=total?Math.round((h.correct||0)/total*1000)/10:0;
   const wrong=(h.answers||[]).map((a,i)=>({a,q:pack?.questions?.[h.order?.[i]]})).filter(x=>x.a&&!x.a.correct&&x.q);
   const wrongHtml=wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>第${q.number}問 / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解、または間違いデータなし。</p>';
-  return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${h.mode==='wrong'?'間違い復習 / ':''}${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<br><span class="small">履歴ID：${escapeHtml(h.attemptId||'legacy')}</span><details><summary>この回の間違いを見る</summary>${wrongHtml}</details></div>`;
+  return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${h.mode==='wrong'||h.mode==='history_wrong'?'間違い復習 / ':''}${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<br><span class="small">履歴ID：${escapeHtml(h.attemptId||'legacy')}</span><details><summary>この回の間違いを見る</summary>${wrongHtml}</details><div class="row" style="margin-top:8px"><button class="secondary" ${wrong.length?'':'disabled'} onclick="retryHistoryWrong('${part}','${escapeHtml(h.attemptId||'legacy')}')">この回の間違いだけ解く</button></div></div>`;
  }).join('');
- $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3>${stats}<div class="row" style="margin:10px 0 14px"><button class="warn" onclick="cleanupDuplicateHistoryDb('${part}')">DBの重複履歴を削除</button><span class="small">表示上の重複除去だけでなく、Cloudflare KV内の重複データも1件に整理します。</span></div>`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
+ $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3><p class="small">各履歴の「この回の間違いだけ解く」から、その回で間違えた問題だけ再演習できます。</p>${stats}<div class="row" style="margin:10px 0 14px"><button class="warn" onclick="cleanupDuplicateHistoryDb('${part}')">DBの重複履歴を削除</button><span class="small">表示上の重複除去だけでなく、Cloudflare KV内の重複データも1件に整理します。</span></div>`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
 }
 
 function parseProgressStorageKey(k){
