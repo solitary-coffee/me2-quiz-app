@@ -2,6 +2,7 @@
 <html lang="ja" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="UTF-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="ME2種演習" />
@@ -250,7 +251,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.7</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.8</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -400,7 +401,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
     <div class="form-card">
       <h3>開発モードに入る</h3>
       <div class="field"><label for="devLoginId">開発者ID</label><input id="devLoginId" autocomplete="username" placeholder="開発者ID"></div>
-      <div class="field"><label for="devLoginPassword">開発者パスワード</label><input id="devLoginPassword" type="password" autocomplete="current-password" placeholder="8文字以上"></div>
+      <div class="field"><label for="devLoginPassword">開発者パスワード</label><input id="devLoginPassword" name="devLoginPassword" type="password" autocomplete="current-password" placeholder="8文字以上"></div>
       <button class="secondary" onclick="loginDevMode()">開発モードへ入る</button>
     </div>
     <div class="form-card">
@@ -482,15 +483,25 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.9.7';
-const APP_UPDATED_AT='2026-06-02';
+const APP_VERSION='v1.9.8';
+const APP_UPDATED_AT='2026-06-03';
 const APP_UPDATE_NOTES=[
-  '文面チェックに公式・代入式チェックを追加',
-  '計算問題で公式の記載があるか確認可能に変更',
-  '正答解説に代入した式・単位が含まれるかチェック',
-  '前回までの開発モード文面チェック機能も同梱'
+  'await構文エラーを修正',
+  'バージョン番号と変更点をCHANGELOG.mdから読み込む方式に変更',
+  'CHANGELOG.mdをトップの現在バージョン・過去バージョン表示の元データに変更',
+  'パスワード自動補完とPWA meta警告を軽減'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.9.8',
+    date:'2026-06-03',
+    notes:[
+      'await構文エラーを修正',
+      'バージョン番号と変更点をCHANGELOG.mdから読み込む方式に変更',
+      'トップの現在バージョン・過去バージョン表示をCHANGELOG.md連動に変更',
+      'パスワード自動補完とPWA meta警告を軽減'
+    ]
+  },
   {
     version:'v1.9.7',
     date:'2026-06-02',
@@ -756,21 +767,70 @@ const RANDOM_RANGES=[
 
 let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
-function renderVersionInfo(){
- const current=APP_VERSION_HISTORY.find(x=>x.version===APP_VERSION)||{version:APP_VERSION,date:APP_UPDATED_AT,notes:APP_UPDATE_NOTES};
- const title=$('currentVersionTitle'), date=$('currentVersionDate'), pill=$('currentVersionPill'), notes=$('currentVersionNotes'), list=$('versionHistoryList');
- if(title)title.textContent=`${current.version} の変更点`;
- if(date)date.textContent=`更新日：${current.date||APP_UPDATED_AT}`;
- if(pill)pill.textContent=current.version;
- if(notes)notes.innerHTML=(current.notes||APP_UPDATE_NOTES).map(n=>`<li>${escapeHtml(n)}</li>`).join('');
- if(list){
-  const past=APP_VERSION_HISTORY.filter(x=>x.version!==current.version);
-  list.innerHTML=past.map(v=>`<div class="version-history-item">
-   <h4>${escapeHtml(v.version)} <span class="small">/ ${escapeHtml(v.date||'')}</span></h4>
-   <ul>${(v.notes||[]).map(n=>`<li>${escapeHtml(n)}</li>`).join('')}</ul>
-  </div>`).join('');
- }
+
+async function fetchTextNoCache(path){
+  const r=await fetch(path,{cache:'no-store'});
+  if(!r.ok)throw new Error(String(r.status));
+  return await r.text();
 }
+function parseChangelogMarkdown(md){
+  const lines=String(md||'').split(/\r?\n/);
+  const history=[];
+  let cur=null;
+  for(const line of lines){
+    const h=line.match(/^##\s+(.+?)\s*-\s*(\d{4}-\d{2}-\d{2})\s*$/);
+    if(h){
+      if(cur)history.push(cur);
+      cur={version:h[1].trim(),date:h[2].trim(),notes:[]};
+      continue;
+    }
+    const bullet=line.match(/^\s*[-*]\s+(.+?)\s*$/);
+    if(cur&&bullet)cur.notes.push(bullet[1].trim());
+  }
+  if(cur)history.push(cur);
+  return history;
+}
+async function loadVersionFromMarkdown(){
+  try{
+    const md=await fetchTextNoCache('CHANGELOG.md');
+    const hist=parseChangelogMarkdown(md);
+    if(hist.length){
+      window.APP_VERSION_HISTORY_MD=hist;
+      window.APP_VERSION_MD=hist[0].version;
+      window.APP_UPDATED_AT_MD=hist[0].date;
+      window.APP_UPDATE_NOTES_MD=hist[0].notes;
+      const vb=$('versionBadge');
+      if(vb)vb.textContent=window.APP_VERSION_MD;
+      renderVersionInfo();
+      return true;
+    }
+  }catch(e){
+    console.warn('CHANGELOG.mdを読み込めませんでした。内蔵バージョン情報を使用します。',e);
+  }
+  return false;
+}
+
+function renderVersionInfo(){
+  const history=window.APP_VERSION_HISTORY_MD||APP_VERSION_HISTORY;
+  const current={
+    version:window.APP_VERSION_MD||APP_VERSION,
+    date:window.APP_UPDATED_AT_MD||APP_UPDATED_AT,
+    notes:window.APP_UPDATE_NOTES_MD||APP_UPDATE_NOTES
+  };
+  const title=$('currentVersionTitle'), date=$('currentVersionDate'), pill=$('currentVersionPill'), notes=$('currentVersionNotes'), list=$('versionHistoryList');
+  if(title)title.textContent=`${current.version} の変更点`;
+  if(date)date.textContent=`更新日：${current.date||APP_UPDATED_AT}`;
+  if(pill)pill.textContent=current.version;
+  if(notes)notes.innerHTML=(current.notes||[]).map(n=>`<li>${escapeHtml(n)}</li>`).join('');
+  if(list){
+    const past=(history||[]).filter(x=>x.version!==current.version);
+    list.innerHTML=past.map(v=>`<div class="version-history-item">
+      <h4>${escapeHtml(v.version)} <span class="small">/ ${escapeHtml(v.date||'')}</span></h4>
+      <ul>${(v.notes||[]).map(n=>`<li>${escapeHtml(n)}</li>`).join('')}</ul>
+    </div>`).join('');
+  }
+}
+
 
 function fmtTime(ms){if(!ms||ms<0)return'00:00';const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60,h=Math.floor(m/60),mm=m%60;return h>0?`${h}:${String(mm).padStart(2,'0')}:${String(sec).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
 function makeAttemptId(){return 'att_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,10)}
@@ -939,15 +999,15 @@ function showLoginInfo(){
     <p class="small">ログインIDは自分で決められます。英数字・_・- の3〜32文字です。保存用パスワードは8文字以上にしてください。</p>
     <div class="field"><label for="regLoginId">ログインID</label><input id="regLoginId" autocomplete="username" placeholder="例：me2_user01"></div>
     <div class="field"><label for="regName">表示名</label><input id="regName" autocomplete="nickname" placeholder="例：太郎 / ゲスト など"></div>
-    <div class="field"><label for="regPassword">保存用パスワード</label><input id="regPassword" type="password" autocomplete="new-password" placeholder="8文字以上" minlength="8" maxlength="128" oninput="updatePasswordMeter()"><div class="password-meter"><span id="passwordMeterBar"></span></div><div id="passwordHint" class="password-hint">8文字以上。英字・数字・記号を混ぜるとより安全です。</div></div>
-    <div class="field"><label for="regPassword2">保存用パスワード確認</label><input id="regPassword2" type="password" autocomplete="new-password" placeholder="もう一度入力" minlength="8" maxlength="128"></div>
+    <div class="field"><label for="regPassword">保存用パスワード</label><input id="regPassword" name="regPassword" type="password" autocomplete="new-password" placeholder="8文字以上" minlength="8" maxlength="128" oninput="updatePasswordMeter()"><div class="password-meter"><span id="passwordMeterBar"></span></div><div id="passwordHint" class="password-hint">8文字以上。英字・数字・記号を混ぜるとより安全です。</div></div>
+    <div class="field"><label for="regPassword2">保存用パスワード確認</label><input id="regPassword2" name="regPassword2" type="password" autocomplete="new-password" placeholder="もう一度入力" minlength="8" maxlength="128"></div>
     <button onclick="registerSiteAccount()">このIDで登録</button>
    </div>
    <div class="form-card">
     <h3>ログイン</h3>
     <p class="small">登録済みのログインIDと保存用パスワードでログインします。新規登録は8文字以上のパスワードが必要です。</p>
     <div class="field"><label for="loginId">ログインID</label><input id="loginId" autocomplete="username" placeholder="登録したID"></div>
-    <div class="field"><label for="loginPassword">保存用パスワード</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="保存用パスワード" minlength="8" maxlength="128"></div>
+    <div class="field"><label for="loginPassword">保存用パスワード</label><input id="loginPassword" name="loginPassword" type="password" autocomplete="current-password" placeholder="保存用パスワード" minlength="8" maxlength="128"></div>
     <button class="secondary" onclick="loginSiteAccount()">ログイン</button>
    </div>
   </div>
@@ -1724,7 +1784,7 @@ async function retryRandomHistoryWrong(attemptId){
  startTimer();saveState();showQuiz();renderQuestion();
 }
 
-function showHistory(part){
+async function showHistory(part){
  hideAll();$('finishCard').classList.remove('hidden');
  $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴</h3><p class="small">履歴を読み込み中…</p>`;
  await getPart(currentExamId,part);
@@ -1931,7 +1991,7 @@ async function maybeOpenSharedLink(){
 function downloadText(filename,text,type='application/json'){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}
 function exportCurrentJSON(){downloadText(`progress_${state.examId}_${state.part}.json`,JSON.stringify(snapshotState(),null,2))}
 function exportAllProgress(){const data={exportedAt:new Date().toISOString(),localStorage:{}};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('me2_'))data.localStorage[k]=localStorage.getItem(k)}downloadText('me2_all_progress_backup.json',JSON.stringify(data,null,2))}
-function exportCurrentCSV(){const rows=[['回','部門','問題','範囲','あなたの回答','正答','正誤','経過時間']];const pack=currentPack();(state.answers||[]).forEach((a,i)=>{if(!a)return;const q=pack.questions[state.order[i]];rows.push([q.sourceTitle||getExamRecord(state.examId)?.title||'ランダム',partName(q.sourcePart||state.part),q.number,q.range||'',a.choice,a.correctAnswer.join('/'),a.correct?'正解':'不正解',fmtTime(a.time)])});const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(`result_${state.examId}_${state.part}.csv`,csv,'text/csv;charset=utf-8')}
+async function exportCurrentCSV(){const rows=[['回','部門','問題','範囲','あなたの回答','正答','正誤','経過時間']];const pack=currentPack();(state.answers||[]).forEach((a,i)=>{if(!a)return;const q=pack.questions[state.order[i]];rows.push([q.sourceTitle||getExamRecord(state.examId)?.title||'ランダム',partName(q.sourcePart||state.part),q.number,q.range||'',a.choice,a.correctAnswer.join('/'),a.correct?'正解':'不正解',fmtTime(a.time)])});const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(`result_${state.examId}_${state.part}.csv`,csv,'text/csv;charset=utf-8')}
 function importProgress(input){const f=input.files?.[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{try{const obj=JSON.parse(reader.result);if(obj.localStorage){Object.entries(obj.localStorage).forEach(([k,v])=>localStorage.setItem(k,v));alert('進行データを読み込みました。')}else if(obj.examId&&obj.part){saveLocal(stateKey(obj.examId,obj.part),obj);alert('進行データを読み込みました。')}}catch(e){alert('JSONを読み込めませんでした。')}};reader.readAsText(f)}
 
 let devPack=null, devExamId=null, devPart='am';
@@ -2372,6 +2432,7 @@ function exportDevCheckCsv(){
 async function init(){
  applyTheme(getStoredTheme());
  renderVersionInfo();
+ await loadVersionFromMarkdown();
  $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/端末キャッシュ'; }
  try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }
