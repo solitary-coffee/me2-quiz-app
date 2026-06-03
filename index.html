@@ -290,81 +290,66 @@ html[data-theme="dark"] .top-hero-actions,html[data-theme="dark"] .top-status>di
   .section-head{display:block}
 }
 
+
+/* トップ画面：整理前スタイル寄りの整理版 */
+.menu-classic{padding:18px}
+.classic-action-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.classic-action-row button{min-height:42px}
+.classic-status{margin:10px 0 14px}
+.classic-info-details{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:0;margin:14px 0;overflow:hidden}
+.classic-info-details>summary{cursor:pointer;padding:13px 15px;font-weight:900;color:var(--accent);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.classic-info-details>summary::after{content:'開く';font-size:12px;color:var(--muted);font-weight:800}
+.classic-info-details[open]>summary::after{content:'閉じる'}
+.classic-info-details .version-card,.classic-info-details .contact-card,.classic-info-details .disclaimer{margin:12px 14px}
+.menu-classic .random-card{margin:14px 0}
+.menu-classic #examGrid{margin-top:12px}
+.menu-classic .public-intro{margin-bottom:12px}
+html[data-theme="dark"] .classic-info-details{background:#0f172a;border-color:#334155}
+@media(max-width:760px){
+  .menu-classic{padding:14px}
+  .classic-action-row button{flex:1 1 calc(50% - 8px)}
+  .classic-action-row .pill{width:100%;justify-content:center}
+  .menu-classic .random-actions button{width:100%}
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.1</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.2</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
-<section id="menuCard" class="card menu-clean">
-  <div class="top-hero">
-    <div class="top-hero-main">
-      <span class="eyebrow">ME2 Study App</span>
-      <h2>第2種ME技術実力検定試験 過去問演習</h2>
-      <p>午前・午後別の演習、ランダム出題、履歴、あとで見返す、DB同期に対応した学習支援ツールです。</p>
-      <div class="hero-pills">
-        <span class="pill" id="roundCount">読み込み中</span>
-        <span class="pill">スマホ・iPad対応</span>
-        <span class="pill">非公式学習補助</span>
-      </div>
-    </div>
-    <div class="top-hero-actions">
-      <button onclick="showLoginInfo()">ログイン / 登録</button>
-      <button class="secondary" onclick="showDbSyncPanel()">DB同期</button>
-      <button class="ghost" onclick="showBookmarks()">あとで見返す</button>
-      <button class="ghost" onclick="showRandomHistory()">ランダム履歴</button>
-    </div>
+<section id="menuCard" class="card menu-classic">
+  <h2>試験回を選択</h2>
+
+  <div class="public-intro small">
+    <h3>第2種ME技術実力検定試験の過去問演習サイト</h3>
+    <p>ME2種の過去問をスマホ・iPad・PCで1問ずつ演習できる非公式の学習支援ツールです。午前・午後別の出題、正答率、タイマー、間違い一覧、進行状況保存に対応しています。</p>
+    <ul>
+      <li>ログインなしでも利用可能です。</li>
+      <li>サイト内ログインを使うと、別端末でも進行状況を保存・復元できます。</li>
+      <li>解説は学習補助を目的としたものです。最終確認は公式情報・教材で行ってください。</li>
+    </ul>
   </div>
 
-  <div class="top-status">
-    <div><b>読み込み</b><span id="loadMode">確認中</span></div>
-    <div><b>進行保存</b><span id="progressMode">端末キャッシュ + DB保存確認中</span></div>
-    <button class="ghost mini-reload" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button>
+  <div class="classic-action-row">
+    <button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button>
+    <button class="ghost" onclick="showDbSyncPanel()">DB同期</button>
+    <button class="ghost" onclick="showBookmarks()">あとで見返す</button>
+    <span class="pill" id="roundCount">読み込み中</span>
   </div>
 
-  <details class="top-info-details">
-    <summary>サイト情報・更新履歴</summary>
-    <div class="top-info-grid">
-      <div class="public-intro small">
-        <h3>このサイトについて</h3>
-        <p>ME2種の過去問を1問ずつ演習できる非公式の学習支援サイトです。解説は学習補助を目的としています。</p>
-        <ul>
-          <li>ログインなしでも利用可能です。</li>
-          <li>サイト内ログインを使うと、別端末でも進行状況を保存・復元できます。</li>
-          <li>最終確認は公式情報・教材で行ってください。</li>
-        </ul>
-      </div>
-      <section class="version-card small" id="versionCard">
-        <div class="version-current">
-          <div>
-            <div class="version-label">現在のバージョン</div>
-            <h3 id="currentVersionTitle">読み込み中</h3>
-            <p id="currentVersionDate" class="small"></p>
-          </div>
-          <span class="version-pill" id="currentVersionPill">v</span>
-        </div>
-        <ul id="currentVersionNotes" class="version-notes"></ul>
-        <details class="version-history">
-          <summary>過去のバージョンはこちら</summary>
-          <div id="versionHistoryList"></div>
-        </details>
-      </section>
-      <div class="contact-card small">
-        <b>開発者：</b>孤独のコーヒー<br>
-        <b>連絡先：</b>
-        <a href="mailto:kikukazu.kk0226@gmail.com?subject=ME2%E7%A8%AE%E9%81%8E%E5%8E%BB%E5%95%8F%E6%BC%94%E7%BF%92%E3%81%AE%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E8%A6%81%E6%9C%9B&body=%E3%80%90%E5%86%85%E5%AE%B9%E3%80%91%0A%0A%E3%80%90%E4%BD%BF%E7%94%A8%E7%AB%AF%E6%9C%AB%E3%80%91%0A%0A%E3%80%90%E8%A9%A6%E9%A8%93%E5%9B%9E%E3%83%BB%E5%8D%88%E5%89%8D%2F%E5%8D%88%E5%BE%8C%E3%83%BB%E5%95%8F%E9%A1%8C%E7%95%AA%E5%8F%B7%E3%80%91%0A">kikukazu.kk0226@gmail.com</a>
-      </div>
-      <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
-    </div>
-  </details>
+  <div class="mobile-note small classic-status">
+    <b>読み込み状態：</b><span id="loadMode">確認中</span><br>
+    <b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span>
+  </div>
 
-  <details class="random-card random-compact">
-    <summary class="random-summary">
-      <span>
-        <b>ランダム出題</b>
-        <small>回数・午前/午後・範囲・問題数を指定できます</small>
-      </span>
+  <section class="random-card">
+    <div class="random-head">
+      <div>
+        <h3>ランダム出題</h3>
+        <p class="small">回数・午前/午後・範囲・問題数を指定してミックス出題できます。</p>
+      </div>
       <span class="random-mini-badge" id="randomPoolInfo">条件を選択中</span>
-    </summary>
+    </div>
 
     <div class="random-smart-grid">
       <div class="random-panel">
@@ -409,16 +394,40 @@ html[data-theme="dark"] .top-hero-actions,html[data-theme="dark"] .top-status>di
     <div class="random-actions">
       <button onclick="startRandomQuiz()">ランダム演習開始</button>
       <button class="secondary hidden" id="resumeRandomBtn" onclick="resumeRandomQuiz()">ランダム途中から</button>
+      <button class="ghost" onclick="showRandomHistory()">ランダム履歴</button>
     </div>
+  </section>
+
+  <details class="classic-info-details">
+    <summary>サイト情報・更新履歴・連絡先</summary>
+    <section class="version-card small" id="versionCard">
+      <div class="version-current">
+        <div>
+          <div class="version-label">現在のバージョン</div>
+          <h3 id="currentVersionTitle">読み込み中</h3>
+          <p id="currentVersionDate" class="small"></p>
+        </div>
+        <span class="version-pill" id="currentVersionPill">v</span>
+      </div>
+      <ul id="currentVersionNotes" class="version-notes"></ul>
+      <details class="version-history">
+        <summary>過去のバージョンはこちら</summary>
+        <div id="versionHistoryList"></div>
+      </details>
+    </section>
+
+    <div class="contact-card small">
+      <b>開発者：</b>孤独のコーヒー<br>
+      <b>不具合・追加してほしい機能の連絡先：</b>
+      <a href="mailto:kikukazu.kk0226@gmail.com?subject=ME2%E7%A8%AE%E9%81%8E%E5%8E%BB%E5%95%8F%E6%BC%94%E7%BF%92%E3%81%AE%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E8%A6%81%E6%9C%9B&body=%E3%80%90%E5%86%85%E5%AE%B9%E3%80%91%0A%0A%E3%80%90%E4%BD%BF%E7%94%A8%E7%AB%AF%E6%9C%AB%E3%80%91%0A%0A%E3%80%90%E8%A9%A6%E9%A8%93%E5%9B%9E%E3%83%BB%E5%8D%88%E5%89%8D%2F%E5%8D%88%E5%BE%8C%E3%83%BB%E5%95%8F%E9%A1%8C%E7%95%AA%E5%8F%B7%E3%80%91%0A">kikukazu.kk0226@gmail.com</a>
+    </div>
+
+    <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
   </details>
 
-  <div class="section-head">
-    <h2>試験回を選択</h2>
-    <p class="small">通常演習はここから開始します。</p>
-  </div>
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.10.1</span> / 更新日：2026-06-03</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.10.2</span> / 更新日：2026-06-03</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -552,15 +561,25 @@ html[data-theme="dark"] .top-hero-actions,html[data-theme="dark"] .top-status>di
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.10.1';
+const APP_VERSION='v1.10.2';
 const APP_UPDATED_AT='2026-06-03';
 const APP_UPDATE_NOTES=[
-  'トップ画面を整理',
-  'サイト情報・更新履歴を折りたたみ表示に変更',
-  'ランダム出題を折りたたみ表示に変更',
-  '主要操作をクイック操作としてまとめて表示'
+  'トップ画面を整理前に近いカード型へ調整',
+  'ボタンを削除',
+  'ランダム履歴をランダム出題内へ移動',
+  'トップのクイック操作を必要最低限に整理'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.10.2',
+    date:'2026-06-03',
+    notes:[
+      'トップ画面を整理前に近いカード型へ調整',
+      'ボタンを削除',
+      'ランダム履歴をランダム出題内へ移動',
+      'トップのクイック操作を必要最低限に整理'
+    ]
+  },
   {
     version:'v1.10.1',
     date:'2026-06-03',
