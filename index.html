@@ -250,7 +250,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.6</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.7</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -431,7 +431,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
   </details>
   <section class="dev-check-panel">
     <h3>文面チェック</h3>
-    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説が、日本語として不自然でないか、形式が揃っているかを一括チェックします。</p>
+    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説が、日本語として不自然でないか、形式が揃っているかを一括チェックします。計算問題では公式・代入式・単位の記載も確認します。</p>
     <div class="dev-check-grid">
       <div class="dev-field"><label>開始回</label><select id="checkFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="checkToExam"></select></div>
@@ -482,15 +482,25 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.9.6';
+const APP_VERSION='v1.9.7';
 const APP_UPDATED_AT='2026-06-02';
 const APP_UPDATE_NOTES=[
-  '開発モードに文面チェック機能を追加',
-  '第何回〜第何回・午前/午後を指定して一括チェック可能に変更',
-  '問題文・選択肢・正答・画像パス・各解説の異常をピックアップ',
-  '前回までの履歴間違い再演習・AI解説定義機能も同梱'
+  '文面チェックに公式・代入式チェックを追加',
+  '計算問題で公式の記載があるか確認可能に変更',
+  '正答解説に代入した式・単位が含まれるかチェック',
+  '前回までの開発モード文面チェック機能も同梱'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.9.7',
+    date:'2026-06-02',
+    notes:[
+      '文面チェックに公式・代入式チェックを追加',
+      '計算問題で公式の記載があるか確認可能に変更',
+      '正答解説に代入した式・計算過程・単位が含まれるかチェック',
+      'AI解説生成定義にも公式・代入式のルールを追加'
+    ]
+  },
   {
     version:'v1.9.6',
     date:'2026-06-02',
@@ -667,19 +677,28 @@ const EXPLANATION_DEFINITION=`# ME2種 AI解説生成の定義
 - 何に有効か、何に不向きかを書く。
 - 装置や部品は、役割・接続先・使用場面を書く。
 
-## 6. 要点解説 tip
+## 6. 計算・公式問題
+- 公式を必ず書く。
+- 代入した式を必ず書く。
+- 計算結果には単位を付ける。
+- 誤答選択肢では、公式・代入・計算・単位のどこが違うかを書く。
+例：
+「正答。公式：V=IR。代入：V=2×50=100V。したがって設問条件に合う。」
+「誤りポイント：代入式が誤り。正しくは I=V/R=100/50=2A。」
+
+## 7. 要点解説 tip
 以下の形を基本にする。
 「要点：〜。覚える：〜。」
 - 重要語句・数値・分類を含める。
 - 長くしすぎない。
 
-## 7. choiceNotesの統一書式
+## 8. choiceNotesの統一書式
 各選択肢の解説は、次のどれかの書き出しに統一する。
 - 正答。
 - 誤りポイント：
 - この選択肢は誤りではない。
 
-## 8. 出力条件
+## 9. 出力条件
 - tipは1つ。
 - choiceNotesは選択肢数と同じ数。
 - JSONのみで返す。
@@ -2183,6 +2202,30 @@ function oddText(s){
  return false;
 }
 function isNegativeStem(stem){return /誤って|誤り|適切でない|正しくない|不適切|間違って/.test(String(stem||''));}
+
+function hasNumberLike(s){
+ return /[0-9０-９]/.test(String(s||''));
+}
+function hasCalculationKeyword(s){
+ return /求め|計算|算出|公式|式|代入|値|何V|何A|何W|何Ω|電圧|電流|抵抗|インピーダンス|電力|エネルギ|仕事|周波数|周期|波長|容量|圧力|流量|濃度|希釈|倍率|比|効率|損失|利得|ゲイン|dB|デシベル|時定数|半減期|酸素|換気量|分時換気量|コンプライアンス|クリアランス/.test(String(s||''));
+}
+function hasUnitLike(s){
+ return /(V|A|W|Ω|ohm|Hz|Pa|mmHg|L\/min|mL|L|kg|g|mg|μg|mA|μA|kΩ|MΩ|dB|%|秒|分|時間|℃|mol|mmol|mEq|J|cal|N|F|H)(?![a-zA-Z])/i.test(String(s||''));
+}
+function hasFormulaLike(s){
+ const t=String(s||'');
+ return /公式|式|=|＝|×|÷|√|\^|→|⇒|≒|≈|≤|≥|log|ln|sin|cos|tan|π|Δ|Σ|[A-Za-zΑ-ω]\s*[=＝]|[A-Za-z]\s*\/\s*[A-Za-z]/.test(t);
+}
+function hasSubstitutionLike(s){
+ const t=String(s||'');
+ return /代入|[0-9０-９].*[=＝].*[0-9０-９]|[A-Za-zΑ-ω]\s*[=＝].*[0-9０-９]|[0-9０-９].*(×|÷|\+|-|\/).*[0-9０-９]|→|⇒/.test(t);
+}
+function isFormulaQuestion(q){
+ const all=[q.stem,q.range,q.tip,...(q.choices||[]),...(q.choiceNotes||[])].join(' ');
+ const numericChoices=(q.choices||[]).filter(c=>hasNumberLike(c)||hasUnitLike(c)).length;
+ return hasCalculationKeyword(all)||numericChoices>=2||(/計算|公式|物理|電気|電子|基礎工学|基礎ME/.test(String(q.range||''))&&hasNumberLike(all));
+}
+
 function notePrefixOk(note,q,isCorrect){
  const n=String(note||'').trim();
  if(!n)return false;
@@ -2237,12 +2280,24 @@ function checkOneQuestion(q,ctx){
   if(!/^要点：/.test(tip))addIssue(issues,'low','要点解説','定義上は「要点：〜。覚える：〜。」の形式が推奨です。');
  }
  if(notes.length!==choices.length)addIssue(issues,'high','各解説',`choiceNotes数が選択肢数と一致しません。choiceNotes:${notes.length} / choices:${choices.length}`);
+ const formulaQuestion=isFormulaQuestion(q);
+ if(formulaQuestion){
+  const combined=[tip,...notes].join(' ');
+  if(!hasFormulaLike(combined))addIssue(issues,'mid','公式','計算・公式問題の可能性がありますが、公式の記載が見当たりません。');
+  if(!hasSubstitutionLike(combined))addIssue(issues,'mid','代入式','計算・公式問題の可能性がありますが、代入した式・計算過程の記載が見当たりません。');
+  if(hasNumberLike(combined)&&!hasUnitLike(combined))addIssue(issues,'low','単位','数値はありますが単位の記載が不足している可能性があります。');
+ }
+ 
  choices.forEach((_,i)=>{
   const n=i+1,isC=correct.includes(n),note=String(notes[i]||'').trim();
   if(!note)addIssue(issues,'high',`選択肢${n}解説`,'解説が空欄です。');
   else{
    if(oddText(note))addIssue(issues,'high',`選択肢${n}解説`,'文字化け・不要な記号・HTML・異常な繰り返しが含まれる可能性があります。');
    if(!notePrefixOk(note,q,isC))addIssue(issues,'mid',`選択肢${n}解説`,'解説の書き出しが定義とずれている可能性があります。');
+   if(formulaQuestion&&isC&&!hasFormulaLike(note))addIssue(issues,'mid',`選択肢${n}解説`,'正答解説に公式の記載が不足している可能性があります。');
+   if(formulaQuestion&&isC&&!hasSubstitutionLike(note))addIssue(issues,'mid',`選択肢${n}解説`,'正答解説に代入した式・計算過程の記載が不足している可能性があります。');
+   if(formulaQuestion&&isC&&hasNumberLike(note)&&!hasUnitLike(note))addIssue(issues,'low',`選択肢${n}解説`,'正答解説に単位の記載が不足している可能性があります。');
+   if(formulaQuestion&&!isC&&/計算|代入|公式|値|単位/.test(note)&&!hasFormulaLike(note))addIssue(issues,'low',`選択肢${n}解説`,'誤答解説で計算に触れていますが、公式・式の記載が不足している可能性があります。');
    if(note.length<12)addIssue(issues,'low',`選択肢${n}解説`,'解説が短すぎる可能性があります。');
   }
  });
