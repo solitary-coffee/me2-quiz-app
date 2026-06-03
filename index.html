@@ -312,10 +312,32 @@ html[data-theme="dark"] .classic-info-details{background:#0f172a;border-color:#3
   .menu-classic .random-actions button{width:100%}
 }
 
+
+/* トップ画面：配置再調整 */
+.top-disclaimer{margin:12px 0;background:#fff7ed;border-color:#fed7aa}
+.top-status-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin:12px 0 14px}
+.top-status-tools button{min-height:42px}
+.viewer-card{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:14px;margin:14px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.9fr);gap:14px;align-items:center}
+.viewer-card h3{margin:0 0 4px}
+.viewer-card p{margin:0}
+.viewer-controls{display:grid;grid-template-columns:1fr 90px;gap:8px}
+.viewer-controls button{min-height:42px}
+.viewer-controls select{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:9px 10px;font:inherit;min-height:42px}
+html[data-theme="dark"] .top-disclaimer{background:#451a03;border-color:#92400e;color:#fed7aa}
+html[data-theme="dark"] .viewer-card{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .viewer-controls select{background:#111827;color:#e5e7eb;border-color:#334155}
+@media(max-width:760px){
+  .top-status-tools{grid-template-columns:1fr}
+  .top-status-tools button{width:100%}
+  .viewer-card{grid-template-columns:1fr}
+  .viewer-controls{grid-template-columns:1fr 1fr}
+  .viewer-controls button{width:100%}
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.2</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.3</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>試験回を選択</h2>
@@ -330,17 +352,65 @@ html[data-theme="dark"] .classic-info-details{background:#0f172a;border-color:#3
     </ul>
   </div>
 
+  <div class="disclaimer small top-disclaimer">
+    <b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。
+  </div>
+
   <div class="classic-action-row">
     <button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button>
-    <button class="ghost" onclick="showDbSyncPanel()">DB同期</button>
     <button class="ghost" onclick="showBookmarks()">あとで見返す</button>
     <span class="pill" id="roundCount">読み込み中</span>
   </div>
 
-  <div class="mobile-note small classic-status">
-    <b>読み込み状態：</b><span id="loadMode">確認中</span><br>
-    <b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span>
+  <details class="classic-info-details">
+    <summary>サイト情報・更新履歴・連絡先</summary>
+    <section class="version-card small" id="versionCard">
+      <div class="version-current">
+        <div>
+          <div class="version-label">現在のバージョン</div>
+          <h3 id="currentVersionTitle">読み込み中</h3>
+          <p id="currentVersionDate" class="small"></p>
+        </div>
+        <span class="version-pill" id="currentVersionPill">v</span>
+      </div>
+      <ul id="currentVersionNotes" class="version-notes"></ul>
+      <details class="version-history">
+        <summary>過去のバージョンはこちら</summary>
+        <div id="versionHistoryList"></div>
+      </details>
+    </section>
+
+    <div class="contact-card small">
+      <b>開発者：</b>孤独のコーヒー<br>
+      <b>不具合・追加してほしい機能の連絡先：</b>
+      <a href="mailto:kikukazu.kk0226@gmail.com?subject=ME2%E7%A8%AE%E9%81%8E%E5%8E%BB%E5%95%8F%E6%BC%94%E7%BF%92%E3%81%AE%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E8%A6%81%E6%9C%9B&body=%E3%80%90%E5%86%85%E5%AE%B9%E3%80%91%0A%0A%E3%80%90%E4%BD%BF%E7%94%A8%E7%AB%AF%E6%9C%AB%E3%80%91%0A%0A%E3%80%90%E8%A9%A6%E9%A8%93%E5%9B%9E%E3%83%BB%E5%8D%88%E5%89%8D%2F%E5%8D%88%E5%BE%8C%E3%83%BB%E5%95%8F%E9%A1%8C%E7%95%AA%E5%8F%B7%E3%80%91%0A">kikukazu.kk0226@gmail.com</a>
+    </div>
+  </details>
+
+  <div class="mobile-note small classic-status top-status-tools">
+    <div class="status-texts">
+      <b>読み込み状態：</b><span id="loadMode">確認中</span><br>
+      <b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br>
+      <b>DB最終同期：</b><span id="dbLastSync">未同期</span>
+    </div>
+    <button class="secondary" onclick="syncLocalAndDb()">DB同期</button>
   </div>
+
+  <section class="viewer-card">
+    <div>
+      <h3>問題閲覧</h3>
+      <p class="small">演習を始める前に、問題・正答・解説を確認できます。回数から始める画面の「問題・回答を見る」はそのまま利用できます。</p>
+    </div>
+    <div class="viewer-controls">
+      <select id="viewerExamSelect"></select>
+      <select id="viewerPartSelect">
+        <option value="am">午前</option>
+        <option value="pm">午後</option>
+      </select>
+      <button class="secondary" onclick="openViewerFromTop()">問題確認</button>
+      <button class="ghost" onclick="showBookmarks()">あとで見返す</button>
+    </div>
+  </section>
 
   <section class="random-card">
     <div class="random-head">
@@ -397,33 +467,6 @@ html[data-theme="dark"] .classic-info-details{background:#0f172a;border-color:#3
       <button class="ghost" onclick="showRandomHistory()">ランダム履歴</button>
     </div>
   </section>
-
-  <details class="classic-info-details">
-    <summary>サイト情報・更新履歴・連絡先</summary>
-    <section class="version-card small" id="versionCard">
-      <div class="version-current">
-        <div>
-          <div class="version-label">現在のバージョン</div>
-          <h3 id="currentVersionTitle">読み込み中</h3>
-          <p id="currentVersionDate" class="small"></p>
-        </div>
-        <span class="version-pill" id="currentVersionPill">v</span>
-      </div>
-      <ul id="currentVersionNotes" class="version-notes"></ul>
-      <details class="version-history">
-        <summary>過去のバージョンはこちら</summary>
-        <div id="versionHistoryList"></div>
-      </details>
-    </section>
-
-    <div class="contact-card small">
-      <b>開発者：</b>孤独のコーヒー<br>
-      <b>不具合・追加してほしい機能の連絡先：</b>
-      <a href="mailto:kikukazu.kk0226@gmail.com?subject=ME2%E7%A8%AE%E9%81%8E%E5%8E%BB%E5%95%8F%E6%BC%94%E7%BF%92%E3%81%AE%E4%B8%8D%E5%85%B7%E5%90%88%E3%83%BB%E8%A6%81%E6%9C%9B&body=%E3%80%90%E5%86%85%E5%AE%B9%E3%80%91%0A%0A%E3%80%90%E4%BD%BF%E7%94%A8%E7%AB%AF%E6%9C%AB%E3%80%91%0A%0A%E3%80%90%E8%A9%A6%E9%A8%93%E5%9B%9E%E3%83%BB%E5%8D%88%E5%89%8D%2F%E5%8D%88%E5%BE%8C%E3%83%BB%E5%95%8F%E9%A1%8C%E7%95%AA%E5%8F%B7%E3%80%91%0A">kikukazu.kk0226@gmail.com</a>
-    </div>
-
-    <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
-  </details>
 
   <div class="grid" id="examGrid"></div>
 </section>
@@ -561,15 +604,25 @@ html[data-theme="dark"] .classic-info-details{background:#0f172a;border-color:#3
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.10.2';
+const APP_VERSION='v1.10.3';
 const APP_UPDATED_AT='2026-06-03';
 const APP_UPDATE_NOTES=[
-  'トップ画面を整理前に近いカード型へ調整',
-  'ボタンを削除',
-  'ランダム履歴をランダム出題内へ移動',
-  'トップのクイック操作を必要最低限に整理'
+  'トップ画面の配置を再調整',
+  '注意文を折りたたみ外へ移動',
+  'DB同期ボタンを読み込み状態欄へ移動',
+  '問題閲覧用の枠を追加'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.10.3',
+    date:'2026-06-03',
+    notes:[
+      'トップ画面の配置を再調整',
+      '注意文を折りたたみ外へ移動',
+      'DB同期ボタンを読み込み状態欄へ移動',
+      '問題閲覧用の枠を追加'
+    ]
+  },
   {
     version:'v1.10.2',
     date:'2026-06-03',
@@ -1250,8 +1303,8 @@ async function loadIndex(){
 async function getPart(examId,part){const key=`${examId}_${part}`;if(partsCache[key])return partsCache[key];const rec=getExamRecord(examId);const path=rec?.parts?.[part];if(!path)throw new Error('part path missing');partsCache[key]=await fetchJSON(path);return partsCache[key]}
 function getExamRecord(id){return examsIndex.exams.find(x=>String(x.id)===String(id))}
 function hideAll(){['menuCard','loginCard','syncCard','partCard','answerViewCard','bookmarkCard','devLoginCard','devModeCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
-function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();$('menuCard').classList.remove('hidden');renderVersionInfo();renderMenu();updateHeader()}
-function renderMenu(){renderRandomMenu();const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
+function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();$('menuCard').classList.remove('hidden');renderVersionInfo();renderMenu();updateDbLastSync();updateHeader()}
+function renderMenu(){populateViewerSelects();updateDbLastSync();renderRandomMenu();const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
 
 function examNumber(id){
  const m=String(id||'').match(/\d+/);
@@ -2074,6 +2127,7 @@ async function syncLocalAndDb(){
  const up=await uploadLocalProgressToDb({silent:true});
  const down=await downloadDbProgressToLocal({silent:true});
  dbStatus(`<b>双方向同期完了。</b><br>DBへ保存：途中保存 ${up.states||0}件、履歴 ${up.histories||0}件<br>この端末へ反映：途中保存 ${down.states||0}件、履歴 ${down.histories||0}件<br>${up.errors||down.errors?`確認が必要な項目：${(up.errors||0)+(down.errors||0)}件`:''}`);
+ setDbLastSyncNow();
  if(currentExamId) await renderPartMenu();
  renderRandomMenu();
 }
@@ -2540,6 +2594,35 @@ function exportDevCheckCsv(){
  downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');
 }
 
+
+function fmtLocalDateTime(ts){
+ if(!ts)return '未同期';
+ try{return new Date(ts).toLocaleString()}catch(e){return '未同期'}
+}
+function updateDbLastSync(){
+ const el=$('dbLastSync');
+ if(el)el.textContent=fmtLocalDateTime(localStorage.getItem('me2_db_last_sync_at'));
+}
+function setDbLastSyncNow(){
+ localStorage.setItem('me2_db_last_sync_at',new Date().toISOString());
+ updateDbLastSync();
+}
+function populateViewerSelects(){
+ const sel=$('viewerExamSelect');
+ if(!sel)return;
+ const current=sel.value;
+ sel.innerHTML=(examsIndex.exams||[]).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title||ex.id)}</option>`).join('');
+ if(current&&[...sel.options].some(o=>o.value===current))sel.value=current;
+ else if(currentExamId&&[...sel.options].some(o=>o.value===currentExamId))sel.value=currentExamId;
+}
+async function openViewerFromTop(){
+ const examId=$('viewerExamSelect')?.value || currentExamId || examsIndex.exams?.[0]?.id;
+ const part=$('viewerPartSelect')?.value || 'am';
+ if(!examId){alert('問題データを読み込み中です。少し待ってから試してください。');return;}
+ currentExamId=examId;
+ await showAnswerView(part,'all');
+}
+
 async function init(){
  applyTheme(getStoredTheme());
  renderVersionInfo();
@@ -2548,6 +2631,8 @@ async function init(){
  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/端末キャッシュ'; }
  try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }
  showMenu();
+ populateViewerSelects();
+ updateDbLastSync();
  await maybeOpenSharedLink();
  // 進行状況のクラウド確認は画面表示後に実行。ここで止まってもメニュー表示を妨げない。
  apiProgress('GET').catch(()=>null);
