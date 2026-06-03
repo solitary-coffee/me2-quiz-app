@@ -347,10 +347,104 @@ html[data-theme="dark"] .viewer-random-style select{background:#111827;color:#e5
   .viewer-action-buttons{grid-template-columns:1fr}
 }
 
+
+/* 問題閲覧枠 表示崩れ修正版 */
+.viewer-card.viewer-random-style{
+  display:block !important;
+  grid-template-columns:none !important;
+  align-items:initial !important;
+  padding:16px !important;
+  margin:14px 0 !important;
+}
+.viewer-random-style .viewer-head{
+  display:flex !important;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:14px;
+}
+.viewer-random-style .viewer-head h3{
+  margin:0 0 4px;
+}
+.viewer-random-style .viewer-head p{
+  margin:0;
+  max-width:720px;
+  line-height:1.7;
+}
+.viewer-random-style .viewer-badge{
+  flex:0 0 auto;
+  white-space:nowrap;
+  align-self:flex-start;
+}
+.viewer-random-style .viewer-smart-grid{
+  display:grid !important;
+  grid-template-columns:minmax(220px,1.1fr) minmax(170px,.75fr) minmax(300px,1.15fr) !important;
+  gap:12px;
+  align-items:stretch;
+}
+.viewer-random-style .random-panel{
+  min-height:auto;
+}
+.viewer-random-style .range-line{
+  display:flex;
+  align-items:center;
+}
+.viewer-random-style select{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--card);
+  color:var(--ink);
+  padding:9px 10px;
+  font:inherit;
+  min-height:42px;
+}
+.viewer-action-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.viewer-action-buttons button{
+  min-height:42px;
+  width:100%;
+  white-space:nowrap;
+  word-break:keep-all;
+  padding-left:12px;
+  padding-right:12px;
+}
+html[data-theme="dark"] .viewer-random-style select{
+  background:#111827;
+  color:#e5e7eb;
+  border-color:#334155;
+}
+@media(max-width:900px){
+  .viewer-random-style .viewer-smart-grid{
+    grid-template-columns:1fr 1fr !important;
+  }
+  .viewer-random-style .viewer-action-panel{
+    grid-column:1 / -1;
+  }
+}
+@media(max-width:760px){
+  .viewer-random-style .viewer-head{
+    display:block !important;
+  }
+  .viewer-random-style .viewer-badge{
+    margin-top:10px;
+    display:inline-flex;
+  }
+  .viewer-random-style .viewer-smart-grid{
+    grid-template-columns:1fr !important;
+  }
+  .viewer-action-buttons{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.4</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.5</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>試験回を選択</h2>
@@ -409,12 +503,12 @@ html[data-theme="dark"] .viewer-random-style select{background:#111827;color:#e5
   </div>
 
   <section class="viewer-card random-card viewer-random-style">
-    <div class="random-head">
+    <div class="random-head viewer-head">
       <div>
         <h3>問題閲覧</h3>
         <p class="small">演習を始める前に、問題・正答・解説を確認できます。回数から始める画面の「問題・回答を見る」はそのまま維持しています。</p>
       </div>
-      <span class="random-mini-badge">閲覧モード</span>
+      <span class="random-mini-badge viewer-badge">閲覧モード</span>
     </div>
 
     <div class="random-smart-grid viewer-smart-grid">
@@ -638,15 +732,25 @@ html[data-theme="dark"] .viewer-random-style select{background:#111827;color:#e5
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.10.4';
+const APP_VERSION='v1.10.5';
 const APP_UPDATED_AT='2026-06-03';
 const APP_UPDATE_NOTES=[
-  '問題閲覧枠をランダム出題と同じカード型へ調整',
-  '問題閲覧で午前・午後・両方を選択可能に変更',
-  'あとで見返すボタンを問題閲覧枠内に整理',
-  'ログイン横のあとで見返す重複ボタンを削除'
+  '問題閲覧枠の表示崩れを修正',
+  '以前のviewer-card CSSとランダムカード風CSSの競合を解消',
+  '閲覧モードバッジと操作ボタンの配置を調整',
+  '問題確認・あとで見返すボタンの文字折れを軽減'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.10.5',
+    date:'2026-06-03',
+    notes:[
+      '問題閲覧枠の表示崩れを修正',
+      '以前のviewer-card CSSとランダムカード風CSSの競合を解消',
+      '閲覧モードバッジと操作ボタンの配置を調整',
+      '問題確認・あとで見返すボタンの文字折れを軽減'
+    ]
+  },
   {
     version:'v1.10.4',
     date:'2026-06-03',
