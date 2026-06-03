@@ -1,12 +1,13 @@
 {
-  "version": "v1.9.9",
+  "version": "v1.10.0",
   "updatedAt": "2026-06-03",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "async is not defined エラーを修正",
-    "共有リンク制を廃止",
-    "DB同期をログインアカウント内のアップロード・ダウンロード方式に変更"
+    "DB同期を双方向同期のみの操作に整理",
+    "ローカル→DBアップロード単独ボタンを削除",
+    "DB→ローカルダウンロード単独ボタンを削除",
+    "同期は双方向同期ボタンで完了"
   ]
 }

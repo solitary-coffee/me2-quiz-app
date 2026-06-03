@@ -251,7 +251,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.9.9</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card"><h2>試験回を選択</h2>
 <div class="public-intro small">
@@ -287,7 +287,7 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
  </details>
 </section>
 <div class="disclaimer small"><b>注意：</b>このサイトは学習補助用の非公式サイトです。掲載内容の正確性には注意していますが、試験実施団体・公式解答・教科書等での確認を推奨します。</div>
-<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DB同期</button><button class="ghost" onclick="uploadLocalProgressToDb()">端末データをDBへアップロード</button><button class="ghost" onclick="showBookmarks()">あとで見返す</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button><span class="pill" id="roundCount"></span></div>
+<div class="mobile-note small"><b>読み込み状態：</b><span id="loadMode">確認中</span><br><b>進行保存：</b><span id="progressMode">端末キャッシュ + DB保存確認中</span><br><button class="ghost" style="margin-top:8px;min-height:38px;padding:8px 12px;font-size:13px" onclick="loadIndex().then(showMenu)">問題データを再読み込み</button></div><div class="row" style="margin-bottom:12px"><button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button><button class="ghost" onclick="showDbSyncPanel()">DB同期</button><button class="ghost" onclick="showBookmarks()">あとで見返す</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button><span class="pill" id="roundCount"></span></div>
 <section class="random-card">
  <div class="random-head">
   <div>
@@ -348,23 +348,23 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
   <p class="small">
-    共有リンク制は廃止しました。現在は、ログインアカウント内で端末データとCloudflare KVのDBデータを同期します。
+    データ同期は、ログインアカウント内の <b>双方向同期</b> のみで行います。
+    ローカル側データのアップロードとDB側データのダウンロードをまとめて実行します。
   </p>
   <div class="mobile-note small">
-    <b>使い方：</b><br>
-    1. 先に「ログイン / 登録」でサイトログインする<br>
-    2. この端末のデータを保存したい場合は「ローカル→DBアップロード」<br>
-    3. 別端末などのDBデータをこの端末へ反映したい場合は「DB→ローカルダウンロード」<br>
-    4. 履歴は重複を避けながらローカルへ統合されます。
+    <b>同期の流れ：</b><br>
+    1. この端末の途中保存・履歴をDBへ保存<br>
+    2. DB内の途中保存・履歴をこの端末へ反映<br>
+    3. 履歴は重複を避けながら統合<br>
+    <br>
+    別端末と同期したい場合も、同じログインIDでログインしてから「双方向同期」を押してください。
   </div>
   <div class="row" style="margin-top:14px">
-    <button onclick="uploadLocalProgressToDb()">ローカル→DBアップロード</button>
-    <button class="secondary" onclick="downloadDbProgressToLocal()">DB→ローカルダウンロード</button>
-    <button class="ghost" onclick="syncLocalAndDb()">双方向同期</button>
+    <button class="secondary" onclick="syncLocalAndDb()">双方向同期</button>
     <button class="ghost" onclick="checkCloudSyncStatus()">DB保存状態を確認</button>
   </div>
   <div class="disclaimer small">
-    <b>注意：</b>DB同期は現在ログイン中のアカウント内で行います。共有コード・共有URLで他者へ渡す方式は廃止済みです。
+    <b>注意：</b>共有リンク制、単独同期操作は廃止しました。同期はこの画面の「双方向同期」で完了します。
   </div>
   <div id="dbSyncStatus" class="login-status">まだ操作していません。</div>
 </section>
@@ -477,22 +477,32 @@ html[data-theme="dark"] .issue-low{background:#172554;border-color:#1d4ed8}
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.9.9';
+const APP_VERSION='v1.10.0';
 const APP_UPDATED_AT='2026-06-03';
 const APP_UPDATE_NOTES=[
-  'async is not defined エラーを修正',
-  '共有リンク制を廃止',
-  'ログインアカウント内でローカル→DBアップロードとDB→ローカルダウンロードに変更',
-  'DB同期画面を整理'
+  'DB同期を双方向同期のみの操作に整理',
+  '双方向同期単独ボタンを非表示化',
+  '双方向同期単独ボタンを非表示化',
+  '同期処理は双方向同期ボタンで完結するように変更'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.10.0',
+    date:'2026-06-03',
+    notes:[
+      'DB同期を双方向同期のみの操作に整理',
+      '双方向同期単独ボタンを非表示化',
+      '双方向同期単独ボタンを非表示化',
+      '同期処理は双方向同期ボタンで完結するように変更'
+    ]
+  },
   {
     version:'v1.9.9',
     date:'2026-06-03',
     notes:[
       'async is not defined エラーを修正',
       '共有リンク制を廃止',
-      'ログインアカウント内でローカル→DBアップロードとDB→ローカルダウンロードに変更',
+      'ログインアカウント内で双方向同期と双方向同期に変更',
       'DB同期画面を整理'
     ]
   },
@@ -1853,7 +1863,8 @@ function showDbSyncPanel(){
  $('syncCard').classList.remove('hidden');
  updateHeader();
  const p=collectLocalProgressObject();
- dbStatus(`端末内に途中保存 ${p.states.length}件、履歴 ${p.histories.reduce((a,h)=>a+(h.data?.length||0),0)}件があります。<br>DB同期するには、先にサイトログインしてください。同じログインID内でアップロード・ダウンロードできます。`);
+ const localHist=p.histories.reduce((a,h)=>a+(h.data?.length||0),0);
+ dbStatus(`端末内に途中保存 ${p.states.length}件、履歴 ${localHist}件があります。<br>ログイン後、「双方向同期」でローカルとDBをまとめて同期できます。`);
 }
 async function uploadLocalProgressToDb(opts={}){
  const silent=!!opts.silent;
@@ -1955,13 +1966,10 @@ async function syncLocalAndDb(){
   dbStatus('<b>同期できません。</b><br>先に「ログイン / 登録」からサイトログインしてください。');
   return;
  }
- dbStatus('双方向同期中…<br>1. ローカルデータをDBへアップロード<br>2. DBデータをローカルへダウンロード');
+ dbStatus('双方向同期中…<br>この端末のデータをDBへ保存し、続けてDBデータをこの端末へ反映しています。');
  const up=await uploadLocalProgressToDb({silent:true});
  const down=await downloadDbProgressToLocal({silent:true});
- dbStatus(`<b>双方向同期完了。</b><br>
-  アップロード：途中保存 ${up.states||0}件、履歴 ${up.histories||0}件<br>
-  ダウンロード：途中保存 ${down.states||0}件、履歴 ${down.histories||0}件<br>
-  ${up.errors||down.errors?`確認が必要な項目：${(up.errors||0)+(down.errors||0)}件`:''}`);
+ dbStatus(`<b>双方向同期完了。</b><br>DBへ保存：途中保存 ${up.states||0}件、履歴 ${up.histories||0}件<br>この端末へ反映：途中保存 ${down.states||0}件、履歴 ${down.histories||0}件<br>${up.errors||down.errors?`確認が必要な項目：${(up.errors||0)+(down.errors||0)}件`:''}`);
  if(currentExamId) await renderPartMenu();
  renderRandomMenu();
 }
@@ -1983,7 +1991,7 @@ async function maybeOpenSharedLink(){
  const code=new URLSearchParams(location.search).get('share');
  if(code){
   showDbSyncPanel();
-  dbStatus('<b>共有リンク制は廃止されました。</b><br>現在はログインアカウント内のDB同期を使用してください。<br>「DB→ローカルダウンロード」で同じログインIDのデータをこの端末へ反映できます。');
+  dbStatus('<b>共有リンク制は廃止されました。</b><br>現在はログインアカウント内のDB同期を使用してください。<br>「双方向同期」で同じログインIDのデータをこの端末へ反映できます。');
  }
 }
 
