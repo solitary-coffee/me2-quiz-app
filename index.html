@@ -334,10 +334,23 @@ html[data-theme="dark"] .viewer-controls select{background:#111827;color:#e5e7eb
   .viewer-controls button{width:100%}
 }
 
+
+/* 問題閲覧枠：ランダム出題風に調整 */
+.viewer-random-style{margin:14px 0}
+.viewer-random-style .viewer-smart-grid{grid-template-columns:minmax(180px,1fr) minmax(180px,.8fr) minmax(220px,.9fr)}
+.viewer-random-style select{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:9px 10px;font:inherit;min-height:42px}
+.viewer-action-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.viewer-action-buttons button{min-height:42px;width:100%}
+html[data-theme="dark"] .viewer-random-style select{background:#111827;color:#e5e7eb;border-color:#334155}
+@media(max-width:760px){
+  .viewer-random-style .viewer-smart-grid{grid-template-columns:1fr}
+  .viewer-action-buttons{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.3</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.4</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>試験回を選択</h2>
@@ -358,7 +371,6 @@ html[data-theme="dark"] .viewer-controls select{background:#111827;color:#e5e7eb
 
   <div class="classic-action-row">
     <button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button>
-    <button class="ghost" onclick="showBookmarks()">あとで見返す</button>
     <span class="pill" id="roundCount">読み込み中</span>
   </div>
 
@@ -396,19 +408,41 @@ html[data-theme="dark"] .viewer-controls select{background:#111827;color:#e5e7eb
     <button class="secondary" onclick="syncLocalAndDb()">DB同期</button>
   </div>
 
-  <section class="viewer-card">
-    <div>
-      <h3>問題閲覧</h3>
-      <p class="small">演習を始める前に、問題・正答・解説を確認できます。回数から始める画面の「問題・回答を見る」はそのまま利用できます。</p>
+  <section class="viewer-card random-card viewer-random-style">
+    <div class="random-head">
+      <div>
+        <h3>問題閲覧</h3>
+        <p class="small">演習を始める前に、問題・正答・解説を確認できます。回数から始める画面の「問題・回答を見る」はそのまま維持しています。</p>
+      </div>
+      <span class="random-mini-badge">閲覧モード</span>
     </div>
-    <div class="viewer-controls">
-      <select id="viewerExamSelect"></select>
-      <select id="viewerPartSelect">
-        <option value="am">午前</option>
-        <option value="pm">午後</option>
-      </select>
-      <button class="secondary" onclick="openViewerFromTop()">問題確認</button>
-      <button class="ghost" onclick="showBookmarks()">あとで見返す</button>
+
+    <div class="random-smart-grid viewer-smart-grid">
+      <div class="random-panel">
+        <div class="field-label">試験回</div>
+        <div class="range-line">
+          <select id="viewerExamSelect"></select>
+        </div>
+      </div>
+
+      <div class="random-panel">
+        <div class="field-label">午前 / 午後</div>
+        <div class="range-line">
+          <select id="viewerPartSelect">
+            <option value="am">午前</option>
+            <option value="pm">午後</option>
+            <option value="both">午前・午後 両方</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="random-panel viewer-action-panel">
+        <div class="field-label">操作</div>
+        <div class="viewer-action-buttons">
+          <button class="secondary" onclick="openViewerFromTop()">問題確認</button>
+          <button class="ghost" onclick="showBookmarks()">あとで見返す</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -604,15 +638,25 @@ html[data-theme="dark"] .viewer-controls select{background:#111827;color:#e5e7eb
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.10.3';
+const APP_VERSION='v1.10.4';
 const APP_UPDATED_AT='2026-06-03';
 const APP_UPDATE_NOTES=[
-  'トップ画面の配置を再調整',
-  '注意文を折りたたみ外へ移動',
-  'DB同期ボタンを読み込み状態欄へ移動',
-  '問題閲覧用の枠を追加'
+  '問題閲覧枠をランダム出題と同じカード型へ調整',
+  '問題閲覧で午前・午後・両方を選択可能に変更',
+  'あとで見返すボタンを問題閲覧枠内に整理',
+  'ログイン横のあとで見返す重複ボタンを削除'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.10.4',
+    date:'2026-06-03',
+    notes:[
+      '問題閲覧枠をランダム出題と同じカード型へ調整',
+      '問題閲覧で午前・午後・両方を選択可能に変更',
+      'あとで見返すボタンを問題閲覧枠内に整理',
+      'ログイン横のあとで見返す重複ボタンを削除'
+    ]
+  },
   {
     version:'v1.10.3',
     date:'2026-06-03',
@@ -2620,7 +2664,42 @@ async function openViewerFromTop(){
  const part=$('viewerPartSelect')?.value || 'am';
  if(!examId){alert('問題データを読み込み中です。少し待ってから試してください。');return;}
  currentExamId=examId;
+ if(part==='both'){await showAnswerViewBoth('all');return;}
  await showAnswerView(part,'all');
+}
+async function showAnswerViewBoth(filter='all'){
+ if(state&&state.timerRunning){pauseTimer();saveState()}
+ const examId=currentExamId||state.examId;
+ currentAnswerPart='both';
+ await getPart(examId,'am');
+ await getPart(examId,'pm');
+ hideAll();
+ $('answerViewCard').classList.remove('hidden');
+ renderAnswerViewBoth(filter);
+ updateHeader();
+}
+function renderAnswerViewBoth(filter='all'){
+ const examId=currentExamId||state.examId;
+ const rec=getExamRecord(examId);
+ $('answerViewTitle').textContent=`${rec?.title||'試験回'} 午前・午後 問題・回答閲覧`;
+ const controls=$('answerViewControls');
+ controls.className='row answer-controls';
+ controls.innerHTML=[
+  ['all','全問'],
+  ['figure','図表あり'],
+  ['negative','誤っているもの問題']
+ ].map(([k,label])=>`<button class="${filter===k?'active':'ghost'}" onclick="renderAnswerViewBoth('${k}')">${label}</button>`).join('')
+  + `<span class="pill">${answerFilterLabel(filter)}</span>`;
+ const sections=['am','pm'].map(part=>{
+  const pack=partsCache[`${examId}_${part}`];
+  if(!pack||!pack.questions)return `<h3>${partName(part)}</h3><p class="small">問題データを読み込めませんでした。</p>`;
+  let questions=pack.questions.slice();
+  if(filter==='figure') questions=questions.filter(q=>q.hasFigure&&q.image);
+  if(filter==='negative') questions=questions.filter(q=>q.negative);
+  const body=questions.length?questions.map(q=>answerQuestionHtml(q)).join(''):'<p class="small">該当する問題はありません。</p>';
+  return `<h3 style="margin-top:18px">${partName(part)}</h3>${body}`;
+ });
+ $('answerViewList').innerHTML=sections.join('');
 }
 
 async function init(){
