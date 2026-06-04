@@ -486,7 +486,7 @@ html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.8</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.9</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -641,7 +641,7 @@ html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.10.8</span> / 更新日：2026-06-04</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.10.9</span> / 更新日：2026-06-04</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -783,15 +783,25 @@ html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.10.8';
+const APP_VERSION='v1.10.9';
 const APP_UPDATED_AT='2026-06-04';
 const APP_UPDATE_NOTES=[
-  '開発モードの編集レイアウトを再配置',
-  '画像を追加・画像DL機能を編集対象枠に追加',
-  '文面チェックで問題全体の最高ステータスと内訳を表示',
-  '出題プレビューと解説プレビューを下部に分けて表示'
+  'GitHubからの問題データ読み込みを廃止',
+  '問題JSON・画像をサイト内のDateフォルダから読み込む方式に変更',
+  '外部GitHub読み込み / Cloudflare GitHub Proxyへのフォールバックを停止',
+  '読み込み状態の表示をサイト内データ用に整理'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.10.9',
+    date:'2026-06-04',
+    notes:[
+      'GitHubからの問題データ読み込みを廃止',
+      '問題JSON・画像をサイト内のDateフォルダから読み込む方式に変更',
+      '外部GitHub読み込み / Cloudflare GitHub Proxyへのフォールバックを停止',
+      '読み込み状態の表示をサイト内データ用に整理'
+    ]
+  },
   {
     version:'v1.10.8',
     date:'2026-06-04',
@@ -1115,10 +1125,9 @@ const EXPLANATION_DEFINITION=`# ME2種 AI解説生成の定義
 `;
 
 const APP_CONFIG = {
- // auto: /api/github → 同梱ファイル → GitHub Raw の順に自動で試します。
- // Cloudflare側のGitHub環境変数が未設定でも、Date/Ques の同梱JSONから読み込めます。
- sourceMode: 'local',
- github: { owner: '', repo: '', branch: 'main', rootPath: '' },
+ // 問題JSON・画像はすべてサイト内の Date フォルダから読み込みます。
+ // 外部GitHub読み込み や Cloudflare GitHub Proxy からの読み込みは廃止しました。
+ sourceMode: 'site_internal',
  cloudProgress: true
 };
 const $=id=>document.getElementById(id);
@@ -1282,8 +1291,8 @@ const SITE_AUTH_KEY = 'me2_site_auth';
 const BOOKMARK_KEY='me2_bookmarks_v1';
 const DEV_AUTH_KEY='me2_dev_auth';
 function safeAssetPath(path){return String(path||'').replace(/^\.\//,'').replace(/^\//,'')}
-function githubConfigured(){const g=APP_CONFIG.github||{};return Boolean(g.owner&&g.repo&&g.owner!=='YOUR_GITHUB_USER'&&g.repo!=='ME2_JSON_App')}
-function sourceLabel(mode){return {auto:'自動',cloudflare_proxy:'Cloudflare Proxy',github_raw:'GitHub Raw',local:'同梱ファイル'}[mode]||mode}
+function githubConfigured(){return false}
+function sourceLabel(mode){return {site_internal:'サイト内データ',local:'サイト内データ'}[mode]||'サイト内データ'}
 
 function fetchWithTimeout(url, options={}, ms=2500){
  const ctrl = new AbortController();
@@ -1295,35 +1304,28 @@ function friendlyFetchError(e){
  return e?.message || String(e);
 }
 function assetUrlForMode(path, mode){
- const safe=safeAssetPath(path);
- if(mode==='github_raw'){
-  const g=APP_CONFIG.github, root=(g.rootPath||'').replace(/^\//,'').replace(/\/$/,'');
-  return `https://raw.githubusercontent.com/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}/${encodeURIComponent(g.branch||'main')}/${root?root+'/':''}${safe}`;
- }
- if(mode==='cloudflare_proxy') return `/api/github?path=${encodeURIComponent(safe)}`;
- return safe;
+ return safeAssetPath(path);
 }
-function assetUrl(path){return assetUrlForMode(path, activeSourceMode || 'local')}
+function assetUrl(path){
+ return safeAssetPath(path);
+}
 function candidateSourceModes(){
- if(APP_CONFIG.sourceMode && APP_CONFIG.sourceMode !== 'auto') return [APP_CONFIG.sourceMode];
- // 固まる原因になりやすい /api/github より、まず同梱ファイルを読む。
- const modes=['local','cloudflare_proxy'];
- if(githubConfigured()) modes.push('github_raw');
- return modes;
+ return ['site_internal'];
 }
 async function fetchJSON(path){
- const errors=[];
- for(const mode of candidateSourceModes()){
-  try{
-   const r=await fetchWithTimeout(assetUrlForMode(path, mode),{cache:'no-store'},2500);
-   if(!r.ok) throw new Error(`${r.status}`);
-   const data=await r.json();
-   activeSourceMode=mode;
-   $('sourceBadge').textContent=sourceLabel(mode);
-   return data;
-  }catch(e){errors.push(`${mode}:${friendlyFetchError(e)}`)}
+ const safe=safeAssetPath(path);
+ try{
+  const r=await fetchWithTimeout(safe,{cache:'no-store'},2500);
+  if(!r.ok) throw new Error(`${r.status}`);
+  const data=await r.json();
+  activeSourceMode='site_internal';
+  const badge=$('sourceBadge');
+  if(badge) badge.textContent=sourceLabel(activeSourceMode);
+  return data;
+ }catch(e){
+  const msg=friendlyFetchError(e);
+  throw new Error(`${safe}: サイト内データを読み込めませんでした。Date/Ques と Date/img がデプロイに含まれているか確認してください。詳細：${msg}`);
  }
- throw new Error(`${path}: ${errors.join(' / ')}`);
 }
 function randomId(prefix='guest'){
  const a=new Uint8Array(8); crypto.getRandomValues(a);
@@ -1519,12 +1521,12 @@ function logoutGuest(){
  loadMe().then(showLoginInfo);
 }
 async function loadIndex(){
- $('sourceBadge').textContent='自動確認中';
+ $('sourceBadge').textContent='サイト内確認中';
  try{
   examsIndex=await fetchJSON('Date/Ques/exams_index.json');
-  $('loadMode').innerHTML=`<span class="status-ok">読み込み成功（${sourceLabel(activeSourceMode)}）</span>`;
+  $('loadMode').innerHTML=`<span class="status-ok">読み込み成功（サイト内データ）</span>`;
  }catch(e){
-  $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：Date/Ques/exams_index.json が見つかりません。GitHubにDateフォルダが上がっているか確認してください。<br><span class="code">${escapeHtml(e.message||e)}</span></span>`;
+  $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：サイト内の Date/Ques/exams_index.json が見つかりません。<br>Date/Ques と Date/img をサイトのデプロイ対象に含めてください。<br><span class="code">${escapeHtml(e.message||e)}</span></span>`;
   examsIndex={exams:[]};
  }
 }

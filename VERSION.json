@@ -1,13 +1,13 @@
 {
-  "version": "v1.10.8",
+  "version": "v1.10.9",
   "updatedAt": "2026-06-04",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "開発モードの編集レイアウトを再配置",
-    "画像を追加・画像DL機能を追加",
-    "文面チェックで最高ステータスと内訳を表示",
-    "出題プレビューと解説プレビューを両方表示"
+    "GitHubからの問題データ読み込みを廃止",
+    "問題JSON・画像をサイト内Dateフォルダから読み込む方式に変更",
+    "GitHub Raw / Cloudflare GitHub Proxyへのフォールバックを停止",
+    "読み込み状態の表示をサイト内データ用に整理"
   ]
 }
