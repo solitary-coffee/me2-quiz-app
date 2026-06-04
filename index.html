@@ -464,10 +464,29 @@ html[data-theme="dark"] .issue-warn{background:#431407;border-color:#9a3412}
 html[data-theme="dark"] .issue-badge.warn{background:#431407;color:#fed7aa;border-color:#9a3412}
 html[data-theme="dark"] .issue-fixed-label{background:#0f172a;border-color:#334155;color:#cbd5e1}
 
+
+/* 開発モード：編集レイアウト・画像操作・プレビュー再配置 */
+.dev-grid-rebalanced{grid-template-columns:minmax(300px,.95fr) minmax(0,1.05fr)}
+.dev-editor-basic{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.dev-image-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.dev-image-tools button{min-height:40px;padding:8px 12px;font-size:13px}
+.dev-preview-section{border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:14px;margin:14px 0}
+.dev-preview-section h3{margin:0 0 10px}
+.dev-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dev-preview .choice-preview{border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:10px;margin:8px 0;line-height:1.55}
+.dev-preview .choice-preview.correct{border-color:#86efac;background:#f0fdf4;color:#166534}
+.dev-check-counts{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}
+.dev-check-counts .issue-badge{margin-left:0}
+html[data-theme="dark"] .dev-editor-basic{border-top-color:#334155}
+html[data-theme="dark"] .dev-preview-section{background:#0f172a;border-color:#334155}
+html[data-theme="dark"] .dev-preview .choice-preview{background:#0f172a;border-color:#334155;color:#e5e7eb}
+html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;border-color:#16a34a;color:#bbf7d0}
+@media(max-width:920px){.dev-grid-rebalanced,.dev-preview-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.7</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">GitHub確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.8</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -622,7 +641,7 @@ html[data-theme="dark"] .issue-fixed-label{background:#0f172a;border-color:#3341
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.10.7</span> / 更新日：2026-06-03</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.10.8</span> / 更新日：2026-06-04</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -704,8 +723,8 @@ html[data-theme="dark"] .issue-fixed-label{background:#0f172a;border-color:#3341
     </div>
   </details>
   
-  <div class="dev-grid">
-    <div class="dev-panel">
+  <div class="dev-grid dev-grid-rebalanced">
+    <div class="dev-panel dev-left-panel">
       <h3>編集対象</h3>
       <div class="dev-field"><label>試験回</label><select id="devExamSelect" onchange="devLoadExam()"></select></div>
       <div class="dev-field"><label>午前 / 午後</label><select id="devPartSelect" onchange="devLoadPart()"><option value="am">午前</option><option value="pm">午後</option></select></div>
@@ -720,13 +739,20 @@ html[data-theme="dark"] .issue-fixed-label{background:#0f172a;border-color:#3341
         <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
       </div>
       <div id="devStatus" class="dev-status">編集対象を選択してください。</div>
+      <div id="devEditorBasic" class="dev-editor-basic"></div>
     </div>
-    <div class="dev-panel">
-      <h3>問題・解答・画像・解説</h3>
-      <div id="devEditor"></div>
-      <div id="devPreview" class="dev-preview"></div>
+    <div class="dev-panel dev-right-panel">
+      <h3>要点解説・選択肢・各解説</h3>
+      <div id="devEditorAdvanced"></div>
     </div>
   </div>
+  <section class="dev-preview-section">
+    <h3>プレビュー</h3>
+    <div class="dev-preview-grid">
+      <div id="devQuizPreview" class="dev-preview"></div>
+      <div id="devExplainPreview" class="dev-preview"></div>
+    </div>
+  </section>
   <section class="dev-check-panel">
     <h3>文面チェック</h3>
     <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説が、日本語として不自然でないか、形式が揃っているかを一括チェックします。計算問題では公式・代入式・単位の記載も確認します。修正済みにチェックした項目は下へ移動します。</p>
@@ -757,15 +783,25 @@ html[data-theme="dark"] .issue-fixed-label{background:#0f172a;border-color:#3341
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.10.7';
-const APP_UPDATED_AT='2026-06-03';
+const APP_VERSION='v1.10.8';
+const APP_UPDATED_AT='2026-06-04';
 const APP_UPDATE_NOTES=[
-  '開発モードの並びを編集・プレビュー後に文面チェックへ変更',
-  '文面チェックを重要・注意・確認・軽微の4段階に変更',
-  '抽出レベルを選択できるように変更',
-  '修正済みチェックを追加し、チェック済みは下に表示'
+  '開発モードの編集レイアウトを再配置',
+  '画像を追加・画像DL機能を編集対象枠に追加',
+  '文面チェックで問題全体の最高ステータスと内訳を表示',
+  '出題プレビューと解説プレビューを下部に分けて表示'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v1.10.8',
+    date:'2026-06-04',
+    notes:[
+      '開発モードの編集レイアウトを再配置',
+      '画像を追加・画像DL機能を編集対象枠に追加',
+      '文面チェックで問題全体の最高ステータスと内訳を表示',
+      '出題プレビューと解説プレビューを下部に分けて表示'
+    ]
+  },
   {
     version:'v1.10.7',
     date:'2026-06-03',
@@ -2447,41 +2483,103 @@ function devCurrentQuestion(){
  const i=Number($('devQuestionSelect')?.value||0);
  return devPack?.questions?.[i];
 }
+function devCurrentImageName(){
+ const q=devReadForm();
+ const raw=String(q.image||'').split('?')[0].split('#')[0];
+ const name=raw.startsWith('data:')?'uploaded_question_image.png':(raw.split('/').pop()||`me2_${devExamId||'exam'}_${devPart||'part'}_q${(q.number||'image')}.png`);
+ return name.replace(/[^a-zA-Z0-9._-]/g,'_');
+}
+function devTriggerImageUpload(){
+ const input=$('devImageUpload');
+ if(input){input.value='';input.click();}
+}
+function devUploadImage(input){
+ const f=input?.files?.[0];
+ if(!f)return;
+ if(!f.type.startsWith('image/')){alert('画像ファイルを選択してください。');return;}
+ const reader=new FileReader();
+ reader.onload=()=>{
+  if($('devImage'))$('devImage').value=String(reader.result||'');
+  if($('devHasFigure'))$('devHasFigure').checked=true;
+  $('devStatus').innerHTML='<span class="status-ok">画像を追加しました。この問題に反映後、JSON保存またはコピーしてください。</span>';
+  devRenderPreview();
+ };
+ reader.onerror=()=>alert('画像を読み込めませんでした。');
+ reader.readAsDataURL(f);
+}
+async function devDownloadImage(){
+ const q=devReadForm();
+ if(!q.image){alert('画像パスが空です。');return;}
+ try{
+  const url=assetUrl(q.image);
+  const r=await fetch(url,{cache:'no-store'});
+  if(!r.ok)throw new Error(String(r.status));
+  const blob=await r.blob();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=devCurrentImageName();
+  a.click();
+  URL.revokeObjectURL(a.href);
+ }catch(e){
+  if(String(q.image).startsWith('data:')){
+   const a=document.createElement('a');a.href=q.image;a.download=devCurrentImageName();a.click();return;
+  }
+  alert('画像をDLできませんでした。画像パスまたは配置を確認してください。');
+ }
+}
 function devRenderEditor(){
  const q=devCurrentQuestion();
- if(!q){$('devEditor').innerHTML='<p class="small">問題がありません。</p>';return;}
+ if(!q){
+  ['devEditorBasic','devEditorAdvanced','devQuizPreview','devExplainPreview'].forEach(id=>{if($(id))$(id).innerHTML='<p class="small">問題がありません。</p>'});
+  return;
+ }
  const choices=(q.choices||[]).map((c,i)=>`<div class="dev-choice-editor">
   <h4>選択肢 ${i+1}</h4>
   <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}">${escapeHtml(c)}</textarea></div>
   <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}">${escapeHtml((q.choiceNotes||[])[i]||'')}</textarea></div>
  </div>`).join('');
- $('devEditor').innerHTML=`<div class="dev-field"><label>問題文</label><textarea id="devStem">${escapeHtml(q.stem||'')}</textarea></div>
+ $('devEditorBasic').innerHTML=`<h3>問題・解答・画像の設定</h3>
+ <div class="dev-field"><label>問題文</label><textarea id="devStem">${escapeHtml(q.stem||'')}</textarea></div>
  <div class="dev-field"><label>範囲</label><input id="devRange" value="${escapeHtml(q.range||'')}"></div>
  <div class="dev-field"><label>正答（例：1 または 2,4）</label><input id="devCorrect" value="${escapeHtml((q.correct||[]).join(','))}"></div>
  <div class="row">
   <label class="pill"><input type="checkbox" id="devNegative" ${q.negative?'checked':''}> 誤っているものを選ぶ問題</label>
   <label class="pill"><input type="checkbox" id="devHasFigure" ${q.hasFigure?'checked':''}> 図表あり</label>
  </div>
- <div class="dev-field"><label>画像ファイル表記 / パス</label><input id="devImage" value="${escapeHtml(q.image||'')}" placeholder="Date/img/44/44_am_q01.png"></div>
- <div class="dev-field"><label>要点解説</label><textarea id="devTip">${escapeHtml(q.tip||'')}</textarea></div>
- ${choices}`;
+ <div class="dev-field"><label>画像ファイル表記 / パス</label><input id="devImage" value="${escapeHtml(q.image||'')}" placeholder="Date/img/44/44_am_q01.png または data:image/... "></div>
+ <div class="dev-image-tools">
+  <button class="ghost" type="button" onclick="devTriggerImageUpload()">画像を追加</button>
+  <button class="ghost" type="button" onclick="devDownloadImage()">画像DL</button>
+  <input id="devImageUpload" type="file" accept="image/*" class="hidden" onchange="devUploadImage(this)">
+ </div>`;
+ $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip">${escapeHtml(q.tip||'')}</textarea></div>${choices}`;
  devRenderPreview();
  ['devStem','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
  ['devNegative','devHasFigure'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
  (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
 }
 function devReadForm(){
- const q=devCurrentQuestion();
- const correct=String($('devCorrect').value||'').split(/[,\s、/]+/).map(x=>Number(x)).filter(n=>n>=1&&n<=5);
+ const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
+ const correct=String($('devCorrect')?.value||'').split(/[,\s、/]+/).map(x=>Number(x)).filter(n=>n>=1&&n<=5);
  const choices=(q.choices||[]).map((_,i)=>$(`devChoice${i}`)?.value||'');
  const notes=(q.choices||[]).map((_,i)=>$(`devNote${i}`)?.value||'');
- return {...q,stem:$('devStem').value,range:$('devRange').value,correct:correct.length?correct:q.correct,negative:$('devNegative').checked,hasFigure:$('devHasFigure').checked,image:$('devImage').value,tip:$('devTip').value,choices,choiceNotes:notes};
+ return {...q,
+  stem:$('devStem')?.value||'',
+  range:$('devRange')?.value||'',
+  correct:correct.length?correct:q.correct,
+  negative:Boolean($('devNegative')?.checked),
+  hasFigure:Boolean($('devHasFigure')?.checked),
+  image:$('devImage')?.value||'',
+  tip:$('devTip')?.value||'',
+  choices,choiceNotes:notes};
 }
 function devRenderPreview(){
  const q=devReadForm();
  const img=(q.hasFigure&&q.image)?`<img class="source-img" src="${escapeHtml(assetUrl(q.image))}" onerror="this.insertAdjacentHTML('afterend','<p class=&quot;status-warn&quot;>画像を読み込めません。パスを確認してください。</p>')">`:'<p class="small">図表なし</p>';
+ const quizChoices=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return `<div class="choice-preview ${isC?'correct':''}"><b>${n}.</b> ${escapeHtml(c)} ${isC?'<span class="issue-badge high">正答</span>':''}</div>`}).join('');
  const rows=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml((q.choiceNotes||[])[i]||'')}</td></tr>`}).join('');
- $('devPreview').innerHTML=`<h4>プレビュー</h4><p><b>問題：</b>${escapeHtml(q.stem)}</p><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p>${img}<table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
+ if($('devQuizPreview'))$('devQuizPreview').innerHTML=`<h4>出題プレビュー</h4><div class="question-title">${escapeHtml(devExamId||'')} ${partName(devPart||'am')} / ${escapeHtml(q.range||'未設定')}</div><div class="stem">${escapeHtml(q.stem||'')}</div>${img}<div style="margin-top:10px">${quizChoices}</div>`;
+ if($('devExplainPreview'))$('devExplainPreview').innerHTML=`<h4>解説プレビュー</h4><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p><p><b>要点解説：</b>${escapeHtml(q.tip||'')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 function devApplyChanges(){
  const i=Number($('devQuestionSelect').value||0);
@@ -2603,6 +2701,20 @@ let devCheckIssues=[];
 let devCheckLastFilter='all';
 function severityLabel(s){return s==='high'?'重要':s==='warn'?'注意':s==='mid'?'確認':'軽微'}
 function severityClass(s){return s==='high'?'high':s==='warn'?'warn':s==='mid'?'mid':'low'}
+function devIssueCounts(item){
+ const arr=item?.issues||[];
+ return {
+  high:arr.filter(i=>i.severity==='high').length,
+  warn:arr.filter(i=>i.severity==='warn').length,
+  mid:arr.filter(i=>i.severity==='mid').length,
+  low:arr.filter(i=>i.severity==='low').length
+ };
+}
+function devIssueCountsHtml(item){
+ const c=devIssueCounts(item);
+ return `<div class="dev-check-counts"><span class="issue-badge high">重要${c.high}</span><span class="issue-badge warn">注意${c.warn}</span><span class="issue-badge mid">確認${c.mid}</span><span class="issue-badge low">軽微${c.low}</span></div>`;
+}
+
 function devFixedMap(){
  try{return JSON.parse(localStorage.getItem('me2_dev_check_fixed')||'{}')}catch(e){return {}}
 }
@@ -2762,8 +2874,8 @@ function checkOneQuestion(q,ctx){
   }
  });
  if(!issues.length)return null;
- const high=issues.some(x=>x.severity==='high'), mid=issues.some(x=>x.severity==='mid');
- return {...ctx,q,issues,severity:high?'high':mid?'mid':'low'};
+ const top=issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'low';
+ return {...ctx,q,issues,severity:top};
 }
 function selectedCheckExamIds(){
  const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
@@ -2823,7 +2935,8 @@ function renderDevCheckResults(list){
   const stem=item.q?.stem?`<p class="small"><b>問題文：</b>${escapeHtml(String(item.q.stem).slice(0,140))}${String(item.q.stem).length>140?'…':''}</p>`:'';
   return `<div class="dev-issue-card issue-${sevClass} ${checked?'issue-fixed':''}">
     <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${sevClass}">${sevLabel}</span></h4>
-    <div class="dev-issue-meta">範囲：${escapeHtml(item.q?.range||'未設定')} / 指摘数：${item.issues.length}</div>
+    <div class="dev-issue-meta">範囲：${escapeHtml(item.q?.range||'未設定')} / 最高ステータス：${sevLabel} / 指摘数：${item.issues.length}</div>
+    ${devIssueCountsHtml(item)}
     ${stem}
     <ul class="dev-issue-list">${lis}</ul>
     <div class="row" style="margin-top:10px">
