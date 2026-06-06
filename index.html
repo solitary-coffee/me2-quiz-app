@@ -661,10 +661,27 @@ html[data-theme="dark"] .dev-pr-commit-preview{
   color:#e5e7eb;
 }
 
+
+/* 開発モード：コミットメッセージ入力欄は常時表示 */
+.dev-commit-input-visible{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--card);
+  padding:12px;
+  margin:12px 0;
+}
+.dev-commit-input-visible .small{
+  margin:6px 0 0;
+}
+html[data-theme="dark"] .dev-commit-input-visible{
+  background:#111827;
+  border-color:#334155;
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.4</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.5</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -819,7 +836,7 @@ html[data-theme="dark"] .dev-pr-commit-preview{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.4</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.5</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -917,13 +934,13 @@ html[data-theme="dark"] .dev-pr-commit-preview{
         <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
       </div>
 
+      <div class="dev-commit-input-visible">
+        <div class="dev-field"><label>各問題のコミットメッセージ / 編集箇所</label><input id="devPrEditSummary" placeholder="例：問題文・正答・解説を修正"></div>
+        <p class="small">この欄は折りたたみ外で常に表示します。`この問題に反映` を押した時点の内容が、その問題のコミットメッセージに使われます。</p>
+      </div>
+
       <details class="dev-pr-panel" id="devPrDetails">
-        <summary>
-          <span class="dev-pr-summary-title">GitHub 一括PR作成</span>
-          <div class="dev-pr-commit-preview" id="devPrCommitPreview">
-            <span class="muted">送信予定コミット：まだありません</span>
-          </div>
-        </summary>
+        <summary>GitHub 一括PR作成</summary>
         <p class="small">
           編集した問題を一括リストへ追加し、複数問題をまとめて1つのPull Requestに送信します。
           回数・午前/午後が違う問題も同じPRにできます。既に問題編集PRがある場合は、同じPRブランチへ追加コミットします。
@@ -932,7 +949,7 @@ html[data-theme="dark"] .dev-pr-commit-preview{
           <div class="dev-pr-auto-note small">
             <b>自動追加：</b>「この問題に反映」を押すと、その時点の内容が一括PRリストへ自動追加・更新されます。PR作成操作はこの折りたたみ内から実行します。
           </div>
-          <div class="dev-field"><label>編集箇所 / コミット用メモ</label><input id="devPrEditSummary" placeholder="例：問題文・正答・解説を修正"></div>
+          
           <div class="dev-field"><label>PRタイトル</label><input id="devPrTitle" placeholder="例：[ME2問題編集] 複数問題を修正"></div>
           <div class="dev-field"><label>PR説明</label><textarea id="devPrBody"></textarea></div>
           <div class="dev-pr-files small">
@@ -946,6 +963,9 @@ html[data-theme="dark"] .dev-pr-commit-preview{
             <button class="secondary" onclick="devAddCurrentToPrBatch()">現在の問題を手動で追加/更新</button>
             <button class="ghost" onclick="devRemoveCurrentFromPrBatch()">この問題をリストから削除</button>
             <button class="ghost" onclick="devRefreshPrPaths()">送信先を更新</button>
+          </div>
+          <div class="dev-pr-commit-preview" id="devPrCommitPreview">
+            <span class="muted">送信予定コミット：まだありません</span>
           </div>
           <div class="dev-pr-summary small" id="devPrBatchSummary">一括PRリスト：0件</div>
           <div id="devPrBatchList" class="dev-pr-list"></div>
@@ -1002,14 +1022,23 @@ html[data-theme="dark"] .dev-pr-commit-preview{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.3.4';
+const APP_VERSION='v2.3.5';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  'PR操作部を折りたたんだ状態でも送信予定コミットメッセージを表示',
-  '展開時の一括PRリストの順番は現在の追加順を維持',
-  '一括PRリストが空の時の表示を整理'
+  '各問題のコミットメッセージ入力欄を折りたたみ外へ移動',
+  'PR操作部を閉じた状態でも編集箇所を入力できるように変更',
+  '送信予定コミット一覧はPR操作部内に表示するように整理'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.3.5',
+    date:'2026-06-06',
+    notes:[
+      '各問題のコミットメッセージ入力欄を折りたたみ外へ移動',
+      'PR操作部を閉じた状態でも編集箇所を入力できるように変更',
+      '送信予定コミット一覧はPR操作部内に表示するように整理'
+    ]
+  },
   {
     version:'v2.3.4',
     date:'2026-06-06',
