@@ -1,13 +1,12 @@
 {
-  "version": "v2.3.0",
+  "version": "v2.3.1",
   "updatedAt": "2026-06-06",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "複数問題をまとめて1つのGitHub Pull Requestに送信できる機能を追加",
-    "回数や午前・午後が違う問題も同じ一括PRにまとめられるように変更",
-    "既存の問題編集PRがある場合は同じPRブランチへ追加コミット",
-    "JSONはPRブランチ上の最新データから対象問題だけ差し替え"
+    "この問題に反映で一括PRリストへ自動追加・更新",
+    "PR操作部を折りたたみ式に変更",
+    "不用意なPR作成操作を防ぐ表示に調整"
   ]
 }

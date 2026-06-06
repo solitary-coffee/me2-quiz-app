@@ -581,10 +581,54 @@ html[data-theme="dark"] .dev-pr-summary{
   border-color:#334155;
 }
 
+
+/* 開発モード：PR操作部を折りたたみ式へ */
+details.dev-pr-panel{
+  padding:0;
+  overflow:hidden;
+}
+details.dev-pr-panel > summary{
+  list-style:none;
+  cursor:pointer;
+  padding:12px 14px;
+  font-weight:900;
+  color:var(--accent);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+details.dev-pr-panel > summary::-webkit-details-marker{
+  display:none;
+}
+details.dev-pr-panel > summary::after{
+  content:'開く';
+  font-size:12px;
+  color:var(--muted);
+  font-weight:900;
+}
+details.dev-pr-panel[open] > summary::after{
+  content:'閉じる';
+}
+details.dev-pr-panel .dev-pr-grid{
+  padding:0 12px 12px;
+}
+.dev-pr-auto-note{
+  border:1px dashed var(--line);
+  border-radius:14px;
+  background:var(--bg);
+  padding:9px 10px;
+  margin:0 0 10px;
+}
+html[data-theme="dark"] .dev-pr-auto-note{
+  background:#0f172a;
+  border-color:#334155;
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.1</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -739,7 +783,7 @@ html[data-theme="dark"] .dev-pr-summary{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.1</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -828,7 +872,7 @@ html[data-theme="dark"] .dev-pr-summary{
       <div class="dev-field"><label>午前 / 午後</label><select id="devPartSelect" onchange="devLoadPart()"><option value="am">午前</option><option value="pm">午後</option></select></div>
       <div class="dev-field"><label>問題番号</label><select id="devQuestionSelect" onchange="devRenderEditor()"></select></div>
       <div class="row">
-        <button class="secondary" onclick="devApplyChanges()">この問題に反映</button>
+        <button class="secondary" onclick="devApplyChanges(true)">この問題に反映</button>
         <button class="ghost" onclick="devRegenerateExplanation()">AIで解説再生成</button>
         <button class="ghost" onclick="devRegenerateExplanationLocal()">ローカル簡易生成</button>
       </div>
@@ -837,13 +881,16 @@ html[data-theme="dark"] .dev-pr-summary{
         <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
       </div>
 
-      <div class="dev-pr-panel">
-        <h3>GitHub 一括PR作成</h3>
+      <details class="dev-pr-panel" id="devPrDetails">
+        <summary>GitHub 一括PR作成</summary>
         <p class="small">
           編集した問題を一括リストへ追加し、複数問題をまとめて1つのPull Requestに送信します。
           回数・午前/午後が違う問題も同じPRにできます。既に問題編集PRがある場合は、同じPRブランチへ追加コミットします。
         </p>
         <div class="dev-pr-grid">
+          <div class="dev-pr-auto-note small">
+            <b>自動追加：</b>「この問題に反映」を押すと、その時点の内容が一括PRリストへ自動追加・更新されます。PR作成操作はこの折りたたみ内から実行します。
+          </div>
           <div class="dev-field"><label>編集箇所 / コミット用メモ</label><input id="devPrEditSummary" placeholder="例：問題文・正答・解説を修正"></div>
           <div class="dev-field"><label>PRタイトル</label><input id="devPrTitle" placeholder="例：[ME2問題編集] 複数問題を修正"></div>
           <div class="dev-field"><label>PR説明</label><textarea id="devPrBody"></textarea></div>
@@ -855,19 +902,19 @@ html[data-theme="dark"] .dev-pr-summary{
           <div class="dev-field"><label>画像PR先パス（画像を追加・差し替えした場合）</label><input id="devPrImagePath" placeholder="Date/img/..."></div>
           <label class="pill"><input type="checkbox" id="devPrDraft" checked> 新規作成時はDraft PRとして作成</label>
           <div class="dev-pr-actions">
-            <button class="secondary" onclick="devAddCurrentToPrBatch()">この問題を一括PRに追加</button>
+            <button class="secondary" onclick="devAddCurrentToPrBatch()">現在の問題を手動で追加/更新</button>
             <button class="ghost" onclick="devRemoveCurrentFromPrBatch()">この問題をリストから削除</button>
             <button class="ghost" onclick="devRefreshPrPaths()">送信先を更新</button>
           </div>
           <div class="dev-pr-summary small" id="devPrBatchSummary">一括PRリスト：0件</div>
           <div id="devPrBatchList" class="dev-pr-list"></div>
           <div class="dev-pr-actions">
-            <button onclick="devCreateGitHubPr()">一括PRを作成 / 既存PRへ追加</button>
+            <button onclick="devCreateGitHubPr()">一括PRを作成 / 既存PRへ更新</button>
             <button class="danger" onclick="devClearPrBatch()">一括PRリストを全削除</button>
           </div>
           <div id="devPrStatus" class="dev-pr-status">まだPRは作成していません。</div>
         </div>
-      </div>
+      </details>
 
       <div id="devStatus" class="dev-status">編集対象を選択してください。</div>
       <div id="devEditorBasic" class="dev-editor-basic"></div>
@@ -914,15 +961,23 @@ html[data-theme="dark"] .dev-pr-summary{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.3.0';
+const APP_VERSION='v2.3.1';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  '複数問題をまとめて1つのGitHub Pull Requestに送信できる機能を追加',
-  '回数や午前・午後が違う問題も同じ一括PRにまとめられるように変更',
-  '既存の問題編集PRがある場合は同じPRブランチへ追加コミットするように変更',
-  'コミットメッセージを「第〇回 午前・午後 第〇問：編集箇所」形式に整理'
+  '「この問題に反映」で自動的に一括PRリストへ追加するように変更',
+  'PR操作部を折りたたみ式に変更',
+  '不用意なPR作成操作を防ぎやすい表示に調整'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.3.1',
+    date:'2026-06-06',
+    notes:[
+      '「この問題に反映」で自動的に一括PRリストへ追加するように変更',
+      'PR操作部を折りたたみ式に変更',
+      '不用意なPR作成操作を防ぎやすい表示に調整'
+    ]
+  },
   {
     version:'v2.3.0',
     date:'2026-06-06',
@@ -2748,11 +2803,20 @@ function devRenderPreview(){
  if($('devQuizPreview'))$('devQuizPreview').innerHTML=`<h4>出題プレビュー</h4><div class="question-title">${escapeHtml(devExamId||'')} ${partName(devPart||'am')} / ${escapeHtml(q.range||'未設定')}</div><div class="stem">${escapeHtml(q.stem||'')}</div>${img}<div style="margin-top:10px">${quizChoices}</div>`;
  if($('devExplainPreview'))$('devExplainPreview').innerHTML=`<h4>解説プレビュー</h4><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p><p><b>要点解説：</b>${escapeHtml(q.tip||'')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
-function devApplyChanges(){
+function devApplyChanges(autoAddToBatch=false){
  const i=Number($('devQuestionSelect').value||0);
  devPack.questions[i]=devReadForm();
  partsCache[`${devExamId}_${devPart}`]=devPack;
- $('devStatus').innerHTML='<span class="status-ok">この問題に反映しました。JSON保存またはコピーで出力できます。</span>';
+ let msg='この問題に反映しました。JSON保存またはコピーで出力できます。';
+ if(autoAddToBatch && typeof devAddCurrentToPrBatch==='function'){
+  try{
+   devAddCurrentToPrBatch({silent:true});
+   msg='この問題に反映し、一括PRリストへ自動追加・更新しました。';
+  }catch(e){
+   msg=`この問題に反映しましたが、一括PRリストへの自動追加に失敗しました：${escapeHtml(e.message||e)}`;
+  }
+ }
+ $('devStatus').innerHTML=`<span class="status-ok">${msg}</span>`;
  devRenderEditor();
 }
 function devRoleNote(choice){
@@ -2993,7 +3057,8 @@ function devPrepareCurrentBatchItem(){
   updatedAt:new Date().toISOString()
  };
 }
-function devAddCurrentToPrBatch(){
+function devAddCurrentToPrBatch(options={}){
+ const silent=Boolean(options&&options.silent);
  try{
   const item=devPrepareCurrentBatchItem();
   const batch=devPrBatch();
@@ -3002,9 +3067,11 @@ function devAddCurrentToPrBatch(){
   saveDevPrBatch(batch);
   if($('devPrTitle')&&!$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle();
   if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
-  devSetPrStatus(`${escapeHtml(item.label)} を一括PRリストへ追加しました。`,true);
+  if(!silent)devSetPrStatus(`${escapeHtml(item.label)} を一括PRリストへ追加・更新しました。`,true);
+  return item;
  }catch(e){
-  devSetPrStatus(`一括PRリストへの追加に失敗しました：${escapeHtml(e.message||e)}`);
+  if(!silent)devSetPrStatus(`一括PRリストへの追加に失敗しました：${escapeHtml(e.message||e)}`);
+  throw e;
  }
 }
 function devRemoveCurrentFromPrBatch(){
@@ -3102,7 +3169,7 @@ function devBuildBatchPayload(){
 }
 async function devCreateGitHubPr(){
  try{
-  devAddCurrentToPrBatch();
+  devAddCurrentToPrBatch({silent:true});
   const payload=devBuildBatchPayload();
   if(!payload.title)throw new Error('PRタイトルを入力してください。');
   if(!payload.items.length)throw new Error('一括PRリストに問題がありません。');
