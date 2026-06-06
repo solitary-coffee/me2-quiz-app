@@ -1,13 +1,12 @@
 {
-  "version": "v2.4.0",
+  "version": "v2.4.4",
   "updatedAt": "2026-06-06",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "PRマージ後にサイト内の最新問題データを再取得できる機能を追加",
-    "ブラウザ内の問題キャッシュをクリアしてDate/QuesとDate/imgを再読み込み",
-    "マージ済みの編集データを一括PRリストから自動削除",
-    "開発モードの表示中問題も最新データから再読み込み"
+    "SNS共有時にサイト説明文が表示されるようにOGP/Twitter Cardメタタグを追加",
+    "リンクカード用のOGP画像 assets/ogp.png を追加",
+    "検索結果・ブラウザ向けdescriptionを整理"
   ]
 }

@@ -6,23 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="ME2種演習" />
-<meta name="description" content="第2種ME技術実力検定試験（ME2種）の過去問を、午前・午後別にボタン形式で演習できる非公式の学習支援サイトです。正答率、タイマー、間違い一覧、進行状況保存に対応しています。" />
 <meta name="keywords" content="ME2種, 第2種ME技術実力検定試験, 過去問, 臨床工学技士, ME技術, 医療機器, 試験対策" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="googlebot" content="index, follow, max-image-preview:large" />
 <meta name="author" content="孤独のコーヒー" />
-<meta name="theme-color" content="#2563eb" />
 <meta name="format-detection" content="telephone=no" />
-<meta property="og:locale" content="ja_JP" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="ME2種 過去問演習" />
-<meta property="og:title" content="ME2種 過去問演習｜第2種ME技術実力検定試験の学習支援サイト" />
-<meta property="og:description" content="第2種ME技術実力検定試験（ME2種）の過去問を、午前・午後別にボタン形式で演習できる非公式の学習支援サイトです。正答率、タイマー、間違い一覧、進行状況保存に対応しています。" />
-<meta property="og:url" content="/" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="ME2種 過去問演習｜第2種ME技術実力検定試験の学習支援サイト" />
-<meta name="twitter:description" content="第2種ME技術実力検定試験（ME2種）の過去問を、午前・午後別にボタン形式で演習できる非公式の学習支援サイトです。正答率、タイマー、間違い一覧、進行状況保存に対応しています。" />
-<link rel="canonical" href="/" />
 <link rel="contact" href="mailto:kikukazu.kk0226@gmail.com" />
 <script type="application/ld+json">
 {
@@ -61,7 +49,24 @@
  }
 }
 </script>
-<title>第2種ME技術実力検定試験の過去問サイト</title>
+<title>ME2種 過去問演習</title>
+<meta name="description" content="第2種ME技術実力検定試験の過去問をスマホ・iPad・PCで演習できる非公式学習支援サイトです。午前・午後別の出題、正答率、タイマー、解説、間違い復習、進行状況保存に対応しています。">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ME2種 過去問演習">
+<meta property="og:title" content="ME2種 過去問演習">
+<meta property="og:description" content="第2種ME技術実力検定試験の過去問をスマホ・iPad・PCで演習できる非公式学習支援サイトです。午前・午後別の出題、正答率、タイマー、解説、間違い復習、進行状況保存に対応しています。">
+<meta property="og:image" content="/assets/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ME2種 過去問演習">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ME2種 過去問演習">
+<meta name="twitter:description" content="第2種ME技術実力検定試験の過去問をスマホ・iPad・PCで演習できる非公式学習支援サイトです。午前・午後別の出題、正答率、タイマー、解説、間違い復習、進行状況保存に対応しています。">
+<meta name="twitter:image" content="/assets/ogp.png">
+<meta name="twitter:image:alt" content="ME2種 過去問演習">
+
 <script>
 (function(){
  try{
@@ -698,10 +703,69 @@ html[data-theme="dark"] .dev-refresh-note{
   border-color:#334155;
 }
 
+
+/* 開発モード：レイアウト整理 */
+.dev-target-panel{margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.dev-target-panel h3{margin:0 0 10px;color:var(--accent)}
+.dev-target-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dev-editor-actions{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.dev-editor-actions .row{margin-top:0}.dev-left-stack{display:grid;gap:12px}.dev-commit-input-visible{margin:0}.dev-commit-input-visible h3{margin:0 0 10px;color:var(--accent)}.dev-pr-panel{margin-top:0}
+@media(max-width:760px){.dev-target-grid{grid-template-columns:1fr}}
+html[data-theme="dark"] .dev-target-panel{background:#111827;border-color:#334155}
+
+
+/* 開発モード：余白修正・編集対象幅調整 */
+.dev-target-grid{
+  grid-template-columns:minmax(120px,.6fr) minmax(110px,.55fr) minmax(360px,1.85fr) !important;
+  align-items:end;
+}
+.dev-left-stack{
+  display:flex !important;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  align-content:flex-start;
+  gap:12px !important;
+}
+.dev-left-stack > *{
+  flex:0 0 auto;
+}
+.dev-status{
+  margin-top:0;
+  min-height:0;
+}
+.dev-status:empty{
+  display:none;
+}
+.dev-editor-basic{
+  margin-top:0;
+}
+.dev-commit-input-visible,
+.dev-pr-panel{
+  height:auto;
+  min-height:0;
+}
+.dev-commit-input-visible .dev-field{
+  margin-bottom:6px;
+}
+details.dev-pr-panel:not([open]){
+  padding-bottom:0;
+}
+@media(max-width:980px){
+  .dev-target-grid{
+    grid-template-columns:minmax(110px,.7fr) minmax(100px,.55fr) minmax(260px,1.6fr) !important;
+  }
+}
+@media(max-width:760px){
+  .dev-target-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.4</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -856,7 +920,7 @@ html[data-theme="dark"] .dev-refresh-note{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.4</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -881,9 +945,9 @@ html[data-theme="dark"] .dev-refresh-note{
   </div>
   <div id="dbSyncStatus" class="login-status">まだ操作していません。</div>
 </section>
-<section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← 回数選択へ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
+<section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
 <section id="answerViewCard" class="card hidden">
- <div class="menu-crumb"><button class="ghost" onclick="selectExam(currentExamId||state.examId)">← 午前/午後選択へ</button></div>
+ <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
  <h2 id="answerViewTitle">問題・回答閲覧</h2>
  <p class="small">
   演習を開始しなくても、問題文・選択肢・正答・要点解説・各選択肢の解説ポイントを確認できます。
@@ -926,8 +990,9 @@ html[data-theme="dark"] .dev-refresh-note{
 <section id="devModeCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>開発モード</h2>
-  <div class="dev-lock-note">開発者ログイン中です。編集後はJSON保存またはJSONコピーで出力してください。<button class="ghost" style="margin-left:8px" onclick="logoutDevMode();openDevModeGate()">ログアウト</button></div>
-  <p class="small">問題・解答・画像パス・解説を同時に確認しながら修正できます。AIで解説再生成後、手修正してJSON保存またはコピーできます。</p><p class="small"><b>AI再生成：</b>Cloudflare環境変数に <span class="code">OPENAI_API_KEY</span> を設定すると利用できます。モデルは <span class="code">ME2_AI_MODEL</span> で変更可能です。</p>
+  <div class="dev-lock-note">開発者ログイン中です。編集後はJSON保存・JSONコピー・GitHub PR作成を行えます。<button class="ghost" style="margin-left:8px" onclick="logoutDevMode();openDevModeGate()">ログアウト</button></div>
+  <p class="small">問題・解答・画像パス・解説を同時に確認しながら修正できます。</p>
+
   <details class="dev-definition-box">
     <summary>解説生成定義を確認・編集</summary>
     <p class="small">AI再生成時にこの定義を一緒に送信します。ここを変えると、生成される解説の形式を統一・調整できます。</p>
@@ -937,32 +1002,25 @@ html[data-theme="dark"] .dev-refresh-note{
       <button class="ghost" onclick="copyExplanationDefinition()">定義をコピー</button>
     </div>
   </details>
-  
-  <div class="dev-grid dev-grid-rebalanced">
-    <div class="dev-panel dev-left-panel">
-      <h3>編集対象</h3>
+
+  <section class="dev-target-panel">
+    <h3>編集対象</h3>
+    <div class="dev-target-grid">
       <div class="dev-field"><label>試験回</label><select id="devExamSelect" onchange="devChangeExam()"></select></div>
       <div class="dev-field"><label>午前 / 午後</label><select id="devPartSelect" onchange="devChangePart()"><option value="am">午前</option><option value="pm">午後</option></select></div>
       <div class="dev-field"><label>問題番号</label><select id="devQuestionSelect" onchange="devChangeQuestion()"></select></div>
-      <div class="row">
-        <button class="secondary" onclick="devApplyChanges(true)">この問題に反映</button>
-        <button class="ghost" onclick="devRegenerateExplanation()">AIで解説再生成</button>
-        <button class="ghost" onclick="devRegenerateExplanationLocal()">ローカル簡易生成</button>
-      </div>
-      <div class="row" style="margin-top:10px">
-        <button onclick="devExportJson()">JSON保存</button>
-        <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
-      </div>
+    </div>
+  </section>
+
+  <div class="dev-grid dev-grid-rebalanced">
+    <div class="dev-panel dev-left-panel dev-left-stack">
+      <div id="devStatus" class="dev-status"></div>
+      <div id="devEditorBasic" class="dev-editor-basic"></div>
 
       <div class="dev-commit-input-visible">
-        <div class="dev-field"><label>各問題のコミットメッセージ / 編集箇所</label><input id="devPrEditSummary" placeholder="例：問題文・正答・解説を修正"></div>
-        <p class="small">この欄は折りたたみ外で常に表示します。`この問題に反映` を押した時点の内容が、その問題のコミットメッセージに使われます。</p>
-        <div class="dev-refresh-note small">
-          PRをマージしてCloudflare Pagesの再デプロイが終わった後は、下のボタンでサイト内の最新問題データを再取得できます。
-        </div>
-        <div class="dev-refresh-actions">
-          <button class="ghost" type="button" onclick="devRefreshAfterPrMerge()">マージ後の最新データ取得</button>
-        </div>
+        <h3>各問題のコミットメッセージ / 編集箇所</h3>
+        <div class="dev-field"><label>編集箇所</label><input id="devPrEditSummary" placeholder="例：問題文・正答・解説を修正"></div>
+        <p class="small">`この問題に反映` を押した時点の内容が、その問題のコミットメッセージに使われます。</p>
       </div>
 
       <details class="dev-pr-panel" id="devPrDetails">
@@ -972,6 +1030,12 @@ html[data-theme="dark"] .dev-refresh-note{
           回数・午前/午後が違う問題も同じPRにできます。既に問題編集PRがある場合は、同じPRブランチへ追加コミットします。
         </p>
         <div class="dev-pr-grid">
+          <div class="dev-refresh-note small">
+            PRをマージしてCloudflare Pagesの再デプロイが終わった後は、下のボタンでサイト内の最新問題データを再取得できます。
+          </div>
+          <div class="dev-refresh-actions">
+            <button class="ghost" type="button" onclick="devRefreshAfterPrMerge()">マージ後の最新データ取得</button>
+          </div>
           <div class="dev-pr-auto-note small">
             <b>自動追加：</b>「この問題に反映」を押すと、その時点の内容が一括PRリストへ自動追加・更新されます。PR作成操作はこの折りたたみ内から実行します。
           </div>
@@ -1002,9 +1066,6 @@ html[data-theme="dark"] .dev-refresh-note{
           <div id="devPrStatus" class="dev-pr-status">まだPRは作成していません。</div>
         </div>
       </details>
-
-      <div id="devStatus" class="dev-status">編集対象を選択してください。</div>
-      <div id="devEditorBasic" class="dev-editor-basic"></div>
     </div>
     <div class="dev-panel dev-right-panel">
       <h3>要点解説・選択肢・各解説</h3>
@@ -1028,16 +1089,18 @@ html[data-theme="dark"] .dev-refresh-note{
       <div class="dev-field"><label>抽出レベル</label><select id="checkSeverity"><option value="all">すべて</option><option value="high">重要のみ</option><option value="warn">重要・注意</option><option value="mid">重要・注意・確認</option><option value="low">軽微まで</option></select></div>
     </div>
     <div class="row" style="margin-top:10px">
-      <button class="secondary" onclick="runDevTextCheck()">文面チェック開始</button>
-      <button class="ghost" onclick="exportDevCheckCsv()">チェック結果CSV保存</button>
-      <button class="ghost" onclick="clearDevCheckResults()">結果をクリア</button>
+      <button class="secondary" onclick="runDevTextCheck()">文面を一括チェック</button>
+      <button class="ghost" onclick="copyDevCheckSummary()">結果コピー</button>
+      <button class="ghost" onclick="exportDevCheckCsv()">CSV保存</button>
+      <button class="ghost" onclick="clearDevCheckResults()">結果クリア</button>
+      <button class="ghost" onclick="clearDevCheckFixed()">修正済みチェックをリセット</button>
     </div>
-    <div id="devCheckStatus" class="dev-status">範囲を選択してチェックできます。</div>
-    <div id="devCheckResult" class="dev-check-result"></div>
+    <div id="devCheckSummary" class="small" style="margin-top:10px"></div>
+    <div id="devCheckResults" class="dev-check-results"></div>
   </section>
 </section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="backToPartOrMenu()">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
-<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><div id="wrongList"></div></section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><div id="wrongList"></div></section>
 
 <footer class="site-footer">
  <b>ME2種 過去問演習</b> — 第2種ME技術実力検定試験の学習支援サイト。<br>
@@ -1048,15 +1111,51 @@ html[data-theme="dark"] .dev-refresh-note{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.4.0';
+const APP_VERSION='v2.4.4';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  'PRマージ後にサイト内の最新問題データを再取得できる機能を追加',
-  'ブラウザ内の問題キャッシュをクリアしてDate/QuesとDate/imgを再読み込み',
-  'マージ済みの編集内容を一括PRリストから自動削除する処理を追加',
-  'Cloudflare再デプロイ後の最新データ確認をしやすく改善'
+  'SNS共有時にサイト説明文が表示されるようにOGP/Twitter Cardメタタグを追加',
+  'リンクカード用のOGP画像 assets/ogp.png を追加',
+  '検索結果・ブラウザ向けdescriptionを整理'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.4.4',
+    date:'2026-06-06',
+    notes:[
+      'SNS共有時にサイト説明文が表示されるようにOGP/Twitter Cardメタタグを追加',
+      'リンクカード用のOGP画像 assets/ogp.png を追加',
+      '検索結果・ブラウザ向けdescriptionを整理'
+    ]
+  },
+  {
+    version:'v2.4.3',
+    date:'2026-06-06',
+    notes:[
+      '文面一括チェックの結果表示ID不一致を修正',
+      '戻るボタンの文言をメニューへへ統一',
+      '未使用の表記をログイン情報から削除'
+    ]
+  },
+  {
+    version:'v2.4.2',
+    date:'2026-06-06',
+    notes:[
+      '開発モード左側パネル内の不要な縦空白を削減',
+      'コミットメッセージ欄とGitHub一括PR欄が縦に伸びすぎる問題を修正',
+      '編集対象の試験回と午前午後欄を短くし、問題番号欄を広く調整'
+    ]
+  },
+  {
+    version:'v2.4.1',
+    date:'2026-06-06',
+    notes:[
+      '開発モードの編集対象を解説生成定義の下へ単独配置',
+      '問題操作ボタンを問題・解答・画像の設定枠の下へ移動',
+      '左側パネルを問題設定、コミットメッセージ、GitHub一括PRの順に整理',
+      'マージ後の最新データ取得ボタンをGitHub一括PRの折りたたみ内へ移動'
+    ]
+  },
   {
     version:'v2.4.0',
     date:'2026-06-06',
@@ -1784,7 +1883,7 @@ function showLoginInfo(){
     <button class="secondary" onclick="loadMe().then(showLoginInfo)">ログイン状態を再確認</button>
    </div>
   </div>
-  <p class="small"><b>Cloudflare Access：</b>${escapeHtml(me.access?.email||me.email||'-')}</p>
+  <p class="small"><b>：</b>${escapeHtml(me.access?.email||me.email||'-')}</p>
  `;
 }
 const MIN_PASSWORD_LENGTH=8;
@@ -2841,6 +2940,12 @@ async function devLoadPart(){
  qSel.innerHTML=(devPack.questions||[]).map((q,i)=>`<option value="${i}">第${q.number}問：${escapeHtml((q.range||'未設定').slice(0,26))}</option>`).join('');
  devRenderEditor();
 }
+function devClearGenericDevStatus(){
+ const el=$('devStatus');
+ if(!el)return;
+ const t=String(el.textContent||'').trim();
+ if(t==='編集対象を選択してください。'||t==='試験回を変更しました。'||t==='午前/午後を変更しました。'||t==='問題を変更しました。')el.textContent='';
+}
 function devClearStatusMessages(reason=''){
  const dev=$('devStatus');
  if(dev)dev.textContent=reason||'編集対象を変更しました。';
@@ -2941,6 +3046,16 @@ function devRenderEditor(){
   <button class="ghost" type="button" onclick="devTriggerImageUpload()">画像を追加</button>
   <button class="ghost" type="button" onclick="devDownloadImage()">画像DL</button>
   <input id="devImageUpload" type="file" accept="image/*" class="hidden" onchange="devUploadImage(this)">
+ </div>
+ <div class="dev-editor-actions">
+  <div class="row">
+   <button class="secondary" onclick="devApplyChanges(true)">この問題に反映</button>
+   <button class="ghost" onclick="devRegenerateExplanation()">AIで解説再生成</button>
+  </div>
+  <div class="row" style="margin-top:8px">
+   <button onclick="devExportJson()">JSON保存</button>
+   <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
+  </div>
  </div>`;
  $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip">${escapeHtml(q.tip||'')}</textarea></div>${choices}`;
  devRenderPreview();
@@ -2949,6 +3064,7 @@ function devRenderEditor(){
  (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
  devRefreshPrPaths();
  renderDevPrBatchList();
+ devClearGenericDevStatus();
 }
 function devReadForm(){
  const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
@@ -3685,8 +3801,8 @@ async function runDevTextCheck(){
  checkExamOptions();
  const records=selectedCheckExamIds(), parts=selectedCheckParts(), min=$('checkSeverity')?.value||'all';
  devCheckIssues=[];
- $('devCheckStatus').innerHTML='<span class="status-warn">文面チェック中…</span>';
- $('devCheckResult').innerHTML='';
+ $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中…</span>';
+ $('devCheckResults').innerHTML='';
  for(const ex of records){
   for(const part of parts){
    try{
@@ -3711,7 +3827,7 @@ function renderDevCheckResults(list){
  const low=devCheckIssues.filter(x=>x.severity==='low').length;
  const fixed=devCheckIssues.filter(x=>isDevIssueFixed(x)).length;
  const sorted=sortDevIssues(list||[]);
- $('devCheckStatus').innerHTML=`<span class="status-ok">チェック完了：指摘 ${total}件 / 修正済み ${fixed}件</span>`;
+ $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：指摘 ${total}件 / 修正済み ${fixed}件</span>`;
  const summary=`<div class="check-summary">
    <span class="issue-badge high">重要 ${high}</span>
    <span class="issue-badge warn">注意 ${warn}</span>
@@ -3719,8 +3835,8 @@ function renderDevCheckResults(list){
    <span class="issue-badge low">軽微 ${low}</span>
    <span class="issue-fixed-label">修正済み ${fixed}</span>
   </div>`;
- if(!sorted.length){$('devCheckResult').innerHTML=summary+'<p class="small">表示条件に一致する指摘はありません。</p>';return;}
- $('devCheckResult').innerHTML=summary+sorted.map(item=>{
+ if(!sorted.length){$('devCheckResults').innerHTML=summary+'<p class="small">表示条件に一致する指摘はありません。</p>';return;}
+ $('devCheckResults').innerHTML=summary+sorted.map(item=>{
   const sevClass=severityClass(item.severity);
   const sevLabel=severityLabel(item.severity);
   const key=devIssueKey(item);
@@ -3751,7 +3867,16 @@ async function openDevIssue(examId,part,index){
  devRenderEditor();
  window.scrollTo({top:$('devModeCard').offsetTop,behavior:'smooth'});
 }
-function clearDevCheckResults(){devCheckIssues=[];$('devCheckStatus').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResult').innerHTML='';}
+function clearDevCheckFixed(){
+ saveDevFixedMap({});
+ renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter));
+}
+function copyDevCheckSummary(){
+ const text=[($('devCheckSummary')?.innerText||''),($('devCheckResults')?.innerText||'')].join('\n').trim();
+ if(!text){alert('コピーするチェック結果がありません。');return;}
+ navigator.clipboard?.writeText(text).then(()=>alert('文面チェック結果をコピーしました。')).catch(()=>alert('コピーできませんでした。'));
+}
+function clearDevCheckResults(){devCheckIssues=[];$('devCheckSummary').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResults').innerHTML='';}
 function exportDevCheckCsv(){
  if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
  const rows=[['回','午前午後','問題番号','重要度','修正済み','項目','指摘内容','範囲','問題文']];
