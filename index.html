@@ -760,7 +760,7 @@ details.dev-pr-panel:not([open]){
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.2</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.3</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -915,7 +915,7 @@ details.dev-pr-panel:not([open]){
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.2</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.3</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -940,9 +940,9 @@ details.dev-pr-panel:not([open]){
   </div>
   <div id="dbSyncStatus" class="login-status">まだ操作していません。</div>
 </section>
-<section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← 回数選択へ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
+<section id="partCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2 id="selectedExamTitle"></h2><p class="small">午前・午後を選んでください。途中保存がある場合は「途中から」で再開できます。</p><div class="grid"><div class="part-card" id="amBox"></div><div class="part-card" id="pmBox"></div></div><div class="row" style="margin-top:12px"><button class="danger" onclick="resetPart('am')">午前の途中保存を削除</button><button class="danger" onclick="resetPart('pm')">午後の途中保存を削除</button></div></section>
 <section id="answerViewCard" class="card hidden">
- <div class="menu-crumb"><button class="ghost" onclick="selectExam(currentExamId||state.examId)">← 午前/午後選択へ</button></div>
+ <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
  <h2 id="answerViewTitle">問題・回答閲覧</h2>
  <p class="small">
   演習を開始しなくても、問題文・選択肢・正答・要点解説・各選択肢の解説ポイントを確認できます。
@@ -1086,14 +1086,16 @@ details.dev-pr-panel:not([open]){
     <div class="row" style="margin-top:10px">
       <button class="secondary" onclick="runDevTextCheck()">文面を一括チェック</button>
       <button class="ghost" onclick="copyDevCheckSummary()">結果コピー</button>
+      <button class="ghost" onclick="exportDevCheckCsv()">CSV保存</button>
+      <button class="ghost" onclick="clearDevCheckResults()">結果クリア</button>
       <button class="ghost" onclick="clearDevCheckFixed()">修正済みチェックをリセット</button>
     </div>
     <div id="devCheckSummary" class="small" style="margin-top:10px"></div>
     <div id="devCheckResults" class="dev-check-results"></div>
   </section>
 </section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="backToPartOrMenu()">← 午前/午後選択へ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
-<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="selectExam(state.examId)">← 午前/午後選択へ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><div id="wrongList"></div></section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><div id="wrongList"></div></section>
 
 <footer class="site-footer">
  <b>ME2種 過去問演習</b> — 第2種ME技術実力検定試験の学習支援サイト。<br>
@@ -1104,14 +1106,23 @@ details.dev-pr-panel:not([open]){
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.4.2';
+const APP_VERSION='v2.4.3';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  '開発モード左側パネル内の不要な縦空白を削減',
-  'コミットメッセージ欄とGitHub一括PR欄が縦に伸びすぎる問題を修正',
-  '編集対象の試験回と午前午後欄を短くし、問題番号欄を広く調整'
+  '文面一括チェックの結果表示ID不一致を修正',
+  '戻るボタンの文言をメニューへへ統一',
+  '未使用の表記をログイン情報から削除'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.4.3',
+    date:'2026-06-06',
+    notes:[
+      '文面一括チェックの結果表示ID不一致を修正',
+      '戻るボタンの文言をメニューへへ統一',
+      '未使用の表記をログイン情報から削除'
+    ]
+  },
   {
     version:'v2.4.2',
     date:'2026-06-06',
@@ -1858,7 +1869,7 @@ function showLoginInfo(){
     <button class="secondary" onclick="loadMe().then(showLoginInfo)">ログイン状態を再確認</button>
    </div>
   </div>
-  <p class="small"><b>Cloudflare Access：</b>${escapeHtml(me.access?.email||me.email||'-')}</p>
+  <p class="small"><b>：</b>${escapeHtml(me.access?.email||me.email||'-')}</p>
  `;
 }
 const MIN_PASSWORD_LENGTH=8;
@@ -3776,8 +3787,8 @@ async function runDevTextCheck(){
  checkExamOptions();
  const records=selectedCheckExamIds(), parts=selectedCheckParts(), min=$('checkSeverity')?.value||'all';
  devCheckIssues=[];
- $('devCheckStatus').innerHTML='<span class="status-warn">文面チェック中…</span>';
- $('devCheckResult').innerHTML='';
+ $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中…</span>';
+ $('devCheckResults').innerHTML='';
  for(const ex of records){
   for(const part of parts){
    try{
@@ -3802,7 +3813,7 @@ function renderDevCheckResults(list){
  const low=devCheckIssues.filter(x=>x.severity==='low').length;
  const fixed=devCheckIssues.filter(x=>isDevIssueFixed(x)).length;
  const sorted=sortDevIssues(list||[]);
- $('devCheckStatus').innerHTML=`<span class="status-ok">チェック完了：指摘 ${total}件 / 修正済み ${fixed}件</span>`;
+ $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：指摘 ${total}件 / 修正済み ${fixed}件</span>`;
  const summary=`<div class="check-summary">
    <span class="issue-badge high">重要 ${high}</span>
    <span class="issue-badge warn">注意 ${warn}</span>
@@ -3810,8 +3821,8 @@ function renderDevCheckResults(list){
    <span class="issue-badge low">軽微 ${low}</span>
    <span class="issue-fixed-label">修正済み ${fixed}</span>
   </div>`;
- if(!sorted.length){$('devCheckResult').innerHTML=summary+'<p class="small">表示条件に一致する指摘はありません。</p>';return;}
- $('devCheckResult').innerHTML=summary+sorted.map(item=>{
+ if(!sorted.length){$('devCheckResults').innerHTML=summary+'<p class="small">表示条件に一致する指摘はありません。</p>';return;}
+ $('devCheckResults').innerHTML=summary+sorted.map(item=>{
   const sevClass=severityClass(item.severity);
   const sevLabel=severityLabel(item.severity);
   const key=devIssueKey(item);
@@ -3842,7 +3853,16 @@ async function openDevIssue(examId,part,index){
  devRenderEditor();
  window.scrollTo({top:$('devModeCard').offsetTop,behavior:'smooth'});
 }
-function clearDevCheckResults(){devCheckIssues=[];$('devCheckStatus').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResult').innerHTML='';}
+function clearDevCheckFixed(){
+ saveDevFixedMap({});
+ renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter));
+}
+function copyDevCheckSummary(){
+ const text=[($('devCheckSummary')?.innerText||''),($('devCheckResults')?.innerText||'')].join('\n').trim();
+ if(!text){alert('コピーするチェック結果がありません。');return;}
+ navigator.clipboard?.writeText(text).then(()=>alert('文面チェック結果をコピーしました。')).catch(()=>alert('コピーできませんでした。'));
+}
+function clearDevCheckResults(){devCheckIssues=[];$('devCheckSummary').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResults').innerHTML='';}
 function exportDevCheckCsv(){
  if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
  const rows=[['回','午前午後','問題番号','重要度','修正済み','項目','指摘内容','範囲','問題文']];

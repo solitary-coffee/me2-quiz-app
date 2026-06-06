@@ -1,12 +1,12 @@
 {
-  "version": "v2.4.2",
+  "version": "v2.4.3",
   "updatedAt": "2026-06-06",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "開発モード左側パネル内の不要な縦空白を削減",
-    "コミットメッセージ欄とGitHub一括PR欄が縦に伸びすぎる問題を修正",
-    "試験回と午前午後欄を短めにし、問題番号欄を広く調整"
+    "文面一括チェックの結果表示ID不一致を修正",
+    "戻るボタンの文言をメニューへへ統一",
+    "未使用のCloudflare Access表記を削除"
   ]
 }
