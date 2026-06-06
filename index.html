@@ -538,10 +538,53 @@ html[data-theme="dark"] .dev-pr-files{
   border-color:#334155;
 }
 
+
+/* 開発モード：一括PR */
+.dev-pr-list{
+  display:grid;
+  gap:8px;
+  margin-top:8px;
+}
+.dev-pr-item{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--bg);
+  padding:10px;
+}
+.dev-pr-item h4{
+  margin:0 0 5px;
+  font-size:14px;
+}
+.dev-pr-item .small{
+  margin:0;
+}
+.dev-pr-summary{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--bg);
+  padding:10px;
+  margin-top:8px;
+}
+.dev-pr-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.dev-pr-actions button{
+  min-height:40px;
+  padding:8px 12px;
+  font-size:13px;
+}
+html[data-theme="dark"] .dev-pr-item,
+html[data-theme="dark"] .dev-pr-summary{
+  background:#0f172a;
+  border-color:#334155;
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.2.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -696,7 +739,7 @@ html[data-theme="dark"] .dev-pr-files{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.2.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -795,21 +838,32 @@ html[data-theme="dark"] .dev-pr-files{
       </div>
 
       <div class="dev-pr-panel">
-        <h3>GitHub PR作成</h3>
-        <p class="small">現在の問題JSONと、追加・差し替えした画像をGitHubへ送信してPull Requestを作成します。GitHubトークンはCloudflare側だけで使用します。</p>
+        <h3>GitHub 一括PR作成</h3>
+        <p class="small">
+          編集した問題を一括リストへ追加し、複数問題をまとめて1つのPull Requestに送信します。
+          回数・午前/午後が違う問題も同じPRにできます。既に問題編集PRがある場合は、同じPRブランチへ追加コミットします。
+        </p>
         <div class="dev-pr-grid">
-          <div class="dev-field"><label>PRタイトル</label><input id="devPrTitle" placeholder="例：第44回 午前 第1問を修正"></div>
+          <div class="dev-field"><label>編集箇所 / コミット用メモ</label><input id="devPrEditSummary" placeholder="例：問題文・正答・解説を修正"></div>
+          <div class="dev-field"><label>PRタイトル</label><input id="devPrTitle" placeholder="例：[ME2問題編集] 複数問題を修正"></div>
           <div class="dev-field"><label>PR説明</label><textarea id="devPrBody"></textarea></div>
           <div class="dev-pr-files small">
-            <b>送信予定ファイル</b><br>
+            <b>現在の問題の送信先</b><br>
             JSON：<span class="code" id="devPrJsonPath">-</span><br>
             画像：<span class="code" id="devPrImagePathPreview">画像追加時のみ</span>
           </div>
           <div class="dev-field"><label>画像PR先パス（画像を追加・差し替えした場合）</label><input id="devPrImagePath" placeholder="Date/img/..."></div>
-          <label class="pill"><input type="checkbox" id="devPrDraft" checked> Draft PRとして作成</label>
-          <div class="row">
-            <button class="secondary" onclick="devCreateGitHubPr()">GitHub PR作成</button>
+          <label class="pill"><input type="checkbox" id="devPrDraft" checked> 新規作成時はDraft PRとして作成</label>
+          <div class="dev-pr-actions">
+            <button class="secondary" onclick="devAddCurrentToPrBatch()">この問題を一括PRに追加</button>
+            <button class="ghost" onclick="devRemoveCurrentFromPrBatch()">この問題をリストから削除</button>
             <button class="ghost" onclick="devRefreshPrPaths()">送信先を更新</button>
+          </div>
+          <div class="dev-pr-summary small" id="devPrBatchSummary">一括PRリスト：0件</div>
+          <div id="devPrBatchList" class="dev-pr-list"></div>
+          <div class="dev-pr-actions">
+            <button onclick="devCreateGitHubPr()">一括PRを作成 / 既存PRへ追加</button>
+            <button class="danger" onclick="devClearPrBatch()">一括PRリストを全削除</button>
           </div>
           <div id="devPrStatus" class="dev-pr-status">まだPRは作成していません。</div>
         </div>
@@ -860,15 +914,35 @@ html[data-theme="dark"] .dev-pr-files{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.2.0';
+const APP_VERSION='v2.3.0';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  '開発モードからGitHub Pull Requestを作成できる機能を追加',
-  '編集中の問題JSONをDate/QuesへPR送信可能に変更',
-  '追加・差し替え画像をDate/imgへPR送信可能に変更',
-  'GitHubトークンをブラウザに出さずCloudflare Functions側で処理'
+  '複数問題をまとめて1つのGitHub Pull Requestに送信できる機能を追加',
+  '回数や午前・午後が違う問題も同じ一括PRにまとめられるように変更',
+  '既存の問題編集PRがある場合は同じPRブランチへ追加コミットするように変更',
+  'コミットメッセージを「第〇回 午前・午後 第〇問：編集箇所」形式に整理'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.3.0',
+    date:'2026-06-06',
+    notes:[
+      '複数問題をまとめて1つのGitHub Pull Requestに送信できる機能を追加',
+      '回数や午前・午後が違う問題も同じ一括PRにまとめられるように変更',
+      '既存の問題編集PRがある場合は同じPRブランチへ追加コミットするように変更',
+      'コミットメッセージを「第〇回 午前・午後 第〇問：編集箇所」形式に整理'
+    ]
+  },
+  {
+    version:'v2.2.1',
+    date:'2026-06-06',
+    notes:[
+      'GitHub PR作成時の権限エラー表示を改善',
+      'ブランチ作成に必要なGitHubトークン権限の案内を追加',
+      'Cloudflare環境変数の確認メッセージを整理',
+      'Resource not accessible by personal access token の原因を特定しやすく修正'
+    ]
+  },
   {
     version:'v2.2.0',
     date:'2026-06-06',
@@ -2649,6 +2723,7 @@ function devRenderEditor(){
  ['devNegative','devHasFigure'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
  (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
  devRefreshPrPaths();
+ renderDevPrBatchList();
 }
 function devReadForm(){
  const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
@@ -2775,6 +2850,8 @@ function devRegenerateExplanationLocal(){
  $('devStatus').innerHTML='<span class="status-ok">ローカル簡易生成を実行しました。AIではないため、内容を確認して手修正してください。</span>';
 }
 
+const DEV_PR_BATCH_KEY='me2_dev_pr_batch_v2';
+
 function devCurrentJsonPath(){
  const rec=getExamRecord(devExamId);
  const path=rec?.parts?.[devPart] || `Date/Ques/${devExamId}_${devPart}.json`;
@@ -2796,23 +2873,75 @@ function devDefaultPrImagePath(q){
  const ext=info?.ext || 'png';
  return `Date/img/${devExamId}/${devExamId}_${devPart}_q${devPad2(q?.number)}.${ext}`;
 }
-function devBuildPrDefaultTitle(q){
- const title=getExamRecord(devExamId)?.title || devExamId || 'ME2';
- return `${title} ${partName(devPart)} 第${q?.number||'?'}問を修正`;
+function devQuestionLabel(examId=devExamId,part=devPart,q={}){
+ const rec=getExamRecord(examId);
+ const title=rec?.title || String(examId||'');
+ return `${title} ${partName(part||'am')} 第${q?.number||'?'}問`;
 }
-function devBuildPrDefaultBody(q,jsonPath,imagePath){
- return [
+function devBuildPrDefaultTitle(){
+ return '[ME2問題編集] 複数問題を修正';
+}
+function devBuildPrDefaultBodyFromItems(items){
+ const arr=items&&items.length?items:devPrBatch().items;
+ const lines=[
   '## 修正内容',
-  `- ${getExamRecord(devExamId)?.title || devExamId} ${partName(devPart)} 第${q?.number||'?'}問を修正`,
-  `- 問題JSON：\`${jsonPath}\``,
-  imagePath?`- 画像：\`${imagePath}\``:'- 画像：変更なし',
+  '',
+  ...arr.map(item=>`- ${item.label}：${item.editSummary||'編集'}`),
+  '',
+  '## 送信ファイル',
+  ...[...new Set(arr.map(item=>item.jsonPath))].map(p=>`- \`${p}\``),
+  ...arr.filter(item=>item.imagePath).map(item=>`- \`${item.imagePath}\``),
   '',
   '## 確認',
   '- [ ] 問題文・選択肢を確認',
   '- [ ] 正答を確認',
   '- [ ] 解説を確認',
   '- [ ] 画像表示を確認'
- ].join('\n');
+ ];
+ return lines.join('\n');
+}
+function devBuildPrDefaultBody(q,jsonPath,imagePath){
+ return devBuildPrDefaultBodyFromItems([{
+  label:devQuestionLabel(devExamId,devPart,q),
+  editSummary:$('devPrEditSummary')?.value||'編集',
+  jsonPath,
+  imagePath
+ }]);
+}
+function devSetPrStatus(msg,ok=false){
+ const el=$('devPrStatus');
+ if(el)el.innerHTML=`<span class="${ok?'status-ok':'status-warn'}">${msg}</span>`;
+}
+function devClone(obj){
+ return JSON.parse(JSON.stringify(obj));
+}
+function devPrBatch(){
+ try{
+  const data=JSON.parse(localStorage.getItem(DEV_PR_BATCH_KEY)||'null');
+  if(data&&Array.isArray(data.items))return data;
+ }catch(e){}
+ return {items:[]};
+}
+function saveDevPrBatch(batch){
+ localStorage.setItem(DEV_PR_BATCH_KEY,JSON.stringify({items:batch.items||[]}));
+ renderDevPrBatchList();
+}
+function devPrItemKey(examId,part,index){
+ return `${examId}__${part}__${Number(index)||0}`;
+}
+function devCurrentPrKey(){
+ return devPrItemKey(devExamId,devPart,Number($('devQuestionSelect')?.value||0));
+}
+function devApplyQuestionToLocal(item){
+ if(!item)return;
+ const key=`${item.examId}_${item.part}`;
+ const pack=partsCache[key];
+ if(pack&&Array.isArray(pack.questions)){
+  pack.questions[Number(item.index)||0]=devClone(item.question);
+ }
+ if(item.examId===devExamId&&item.part===devPart&&devPack&&Array.isArray(devPack.questions)){
+  devPack.questions[Number(item.index)||0]=devClone(item.question);
+ }
 }
 function devRefreshPrPaths(){
  const q=devReadForm();
@@ -2822,75 +2951,188 @@ function devRefreshPrPaths(){
  if($('devPrJsonPath'))$('devPrJsonPath').textContent=jsonPath;
  if($('devPrImagePathPreview'))$('devPrImagePathPreview').textContent=imagePath || '画像追加時のみ';
  if($('devPrImagePath') && imageInfo && !$('devPrImagePath').value)$('devPrImagePath').value=imagePath;
- if($('devPrTitle') && !$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle(q);
- if($('devPrBody') && !$('devPrBody').value)$('devPrBody').value=devBuildPrDefaultBody(q,jsonPath,imagePath);
+ if($('devPrTitle') && !$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle();
+ const batch=devPrBatch();
+ if($('devPrBody') && !$('devPrBody').value && batch.items.length)$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
+ renderDevPrBatchList();
 }
-function devSetPrStatus(msg,ok=false){
- const el=$('devPrStatus');
- if(el)el.innerHTML=`<span class="${ok?'status-ok':'status-warn'}">${msg}</span>`;
-}
-function devClone(obj){
- return JSON.parse(JSON.stringify(obj));
-}
-function devPreparePrPayload(){
+function devPrepareCurrentBatchItem(){
  const currentIndex=Number($('devQuestionSelect')?.value||0);
  const q=devReadForm();
- const pack=devClone(devPack);
+ const qForCommit=devClone(q);
  const jsonPath=devCurrentJsonPath();
- const files=[];
- let imagePath='';
  const imageInfo=devDataUrlInfo(q.image);
-
+ let imagePath='';
+ let imageFile=null;
  if(imageInfo){
   imagePath=safeAssetPath($('devPrImagePath')?.value || devDefaultPrImagePath(q));
   if(!imagePath.startsWith('Date/img/'))throw new Error('画像PR先パスは Date/img/ から始めてください。');
-  q.image=imagePath;
-  q.hasFigure=true;
-  files.push({
+  qForCommit.image=imagePath;
+  qForCommit.hasFigure=true;
+  imageFile={
    path:imagePath,
    encoding:'base64',
    contentBase64:imageInfo.base64,
-   message:`Update image for ${devExamId} ${devPart} q${q.number||currentIndex+1}`
-  });
+   message:`${devQuestionLabel(devExamId,devPart,q)}：画像追加・差し替え`
+  };
  }
-
- pack.questions[currentIndex]=q;
- files.unshift({
-  path:jsonPath,
-  encoding:'utf-8',
-  content:JSON.stringify(pack,null,2),
-  message:`Update ${devExamId} ${devPart} question data`
+ const editSummary=String($('devPrEditSummary')?.value||'問題内容・解説を修正').trim()||'問題内容・解説を修正';
+ return {
+  key:devPrItemKey(devExamId,devPart,currentIndex),
+  examId:devExamId,
+  part:devPart,
+  index:currentIndex,
+  number:q.number||currentIndex+1,
+  label:devQuestionLabel(devExamId,devPart,q),
+  jsonPath,
+  editSummary,
+  commitMessage:`${devQuestionLabel(devExamId,devPart,q)}：${editSummary}`,
+  question:qForCommit,
+  imagePath,
+  imageFile,
+  updatedAt:new Date().toISOString()
+ };
+}
+function devAddCurrentToPrBatch(){
+ try{
+  const item=devPrepareCurrentBatchItem();
+  const batch=devPrBatch();
+  const idx=batch.items.findIndex(x=>x.key===item.key);
+  if(idx>=0)batch.items[idx]=item;else batch.items.push(item);
+  saveDevPrBatch(batch);
+  if($('devPrTitle')&&!$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle();
+  if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
+  devSetPrStatus(`${escapeHtml(item.label)} を一括PRリストへ追加しました。`,true);
+ }catch(e){
+  devSetPrStatus(`一括PRリストへの追加に失敗しました：${escapeHtml(e.message||e)}`);
+ }
+}
+function devRemoveCurrentFromPrBatch(){
+ const key=devCurrentPrKey();
+ const batch=devPrBatch();
+ const before=batch.items.length;
+ batch.items=batch.items.filter(x=>x.key!==key);
+ saveDevPrBatch(batch);
+ if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
+ devSetPrStatus(before===batch.items.length?'この問題は一括PRリストにありません。':'この問題を一括PRリストから削除しました。', before!==batch.items.length);
+}
+function devRemovePrBatchItem(key){
+ const batch=devPrBatch();
+ batch.items=batch.items.filter(x=>x.key!==key);
+ saveDevPrBatch(batch);
+ if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
+}
+function devClearPrBatch(){
+ if(!confirm('一括PRリストを全削除しますか？'))return;
+ saveDevPrBatch({items:[]});
+ if($('devPrBody'))$('devPrBody').value='';
+ devSetPrStatus('一括PRリストを削除しました。',true);
+}
+function devRenderPrItem(item){
+ const img=item.imagePath?`<br>画像：<span class="code">${escapeHtml(item.imagePath)}</span>`:'';
+ return `<div class="dev-pr-item">
+  <h4>${escapeHtml(item.label)}</h4>
+  <p class="small">編集箇所：${escapeHtml(item.editSummary||'編集')}<br>JSON：<span class="code">${escapeHtml(item.jsonPath)}</span>${img}</p>
+  <div class="dev-pr-actions" style="margin-top:8px">
+    <button class="ghost" type="button" onclick="devOpenBatchItem('${escapeHtml(item.key)}')">開く</button>
+    <button class="danger" type="button" onclick="devRemovePrBatchItem('${escapeHtml(item.key)}')">削除</button>
+  </div>
+ </div>`;
+}
+async function devOpenBatchItem(key){
+ const item=devPrBatch().items.find(x=>x.key===key);
+ if(!item)return;
+ if(String(devExamId)!==String(item.examId)){
+  $('devExamSelect').value=item.examId;
+  await devLoadExam();
+ }
+ if(devPart!==item.part){
+  $('devPartSelect').value=item.part;
+  await devLoadPart();
+ }
+ $('devQuestionSelect').value=String(item.index);
+ devRenderEditor();
+}
+function renderDevPrBatchList(){
+ const batch=devPrBatch();
+ const list=$('devPrBatchList');
+ const summary=$('devPrBatchSummary');
+ if(summary){
+  const jsonCount=new Set(batch.items.map(x=>x.jsonPath)).size;
+  const imageCount=batch.items.filter(x=>x.imagePath).length;
+  summary.innerHTML=`一括PRリスト：<b>${batch.items.length}</b>問 / JSON <b>${jsonCount}</b>件 / 画像 <b>${imageCount}</b>件`;
+ }
+ if(list){
+  list.innerHTML=batch.items.length?batch.items.map(devRenderPrItem).join(''):'<p class="small">まだ一括PRリストに問題がありません。</p>';
+ }
+}
+function devBuildBatchPayload(){
+ let batch=devPrBatch();
+ const currentKey=devCurrentPrKey();
+ if(batch.items.length===0){
+  const current=devPrepareCurrentBatchItem();
+  batch={items:[current]};
+ }
+ const byJson=new Map();
+ const files=[];
+ batch.items.forEach(item=>{
+  if(!byJson.has(item.jsonPath)){
+   byJson.set(item.jsonPath,{
+    path:item.jsonPath,
+    examId:item.examId,
+    part:item.part,
+    title:getExamRecord(item.examId)?.title||item.examId,
+    updates:[]
+   });
+  }
+  byJson.get(item.jsonPath).updates.push({
+   index:item.index,
+   number:item.number,
+   question:item.question,
+   label:item.label,
+   editSummary:item.editSummary,
+   commitMessage:item.commitMessage
+  });
+  if(item.imageFile)files.push(item.imageFile);
  });
-
- const title=String($('devPrTitle')?.value||devBuildPrDefaultTitle(q)).trim();
- const body=String($('devPrBody')?.value||devBuildPrDefaultBody(q,jsonPath,imagePath)).trim();
+ const title=String($('devPrTitle')?.value||devBuildPrDefaultTitle()).trim();
+ const body=String($('devPrBody')?.value||devBuildPrDefaultBodyFromItems(batch.items)).trim();
  const draft=Boolean($('devPrDraft')?.checked);
-
- return {title,body,draft,files,updatedPack:pack,updatedQuestion:q,jsonPath,imagePath,currentIndex};
+ return {title,body,draft,items:batch.items,jsonUpdates:[...byJson.values()],files};
 }
 async function devCreateGitHubPr(){
  try{
-  devApplyChanges();
-  devRefreshPrPaths();
-  const payload=devPreparePrPayload();
+  devAddCurrentToPrBatch();
+  const payload=devBuildBatchPayload();
   if(!payload.title)throw new Error('PRタイトルを入力してください。');
-  devSetPrStatus('GitHub PRを作成中です…');
+  if(!payload.items.length)throw new Error('一括PRリストに問題がありません。');
+  devSetPrStatus('一括PRを作成 / 既存PRへ追加中です…');
   const r=await fetchWithTimeout('/api/github-pr',{
    method:'POST',
    headers:{'content-type':'application/json',...devHeaders()},
-   body:JSON.stringify({title:payload.title,body:payload.body,draft:payload.draft,files:payload.files})
-  },45000);
+   body:JSON.stringify({
+    title:payload.title,
+    body:payload.body,
+    draft:payload.draft,
+    reuseOpenPr:true,
+    marker:'ME2_QUESTION_EDIT_PR',
+    jsonUpdates:payload.jsonUpdates,
+    files:payload.files
+   })
+  },60000);
   const data=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(data.error||String(r.status));
-
-  devPack=payload.updatedPack;
-  partsCache[`${devExamId}_${devPart}`]=devPack;
-  if($('devImage'))$('devImage').value=payload.updatedQuestion.image||'';
+  payload.items.forEach(devApplyQuestionToLocal);
+  if(payload.items.some(x=>x.key===devCurrentPrKey())){
+   const current=payload.items.find(x=>x.key===devCurrentPrKey());
+   if($('devImage'))$('devImage').value=current?.question?.image||'';
+  }
   devRenderEditor();
-  const fileList=(data.files||payload.files).map(f=>`<li><span class="code">${escapeHtml(f.path||f)}</span></li>`).join('');
-  devSetPrStatus(`PRを作成しました。<br><a href="${escapeHtml(data.pullRequestUrl||data.url||'#')}" target="_blank" rel="noopener">GitHubでPRを開く</a><br>ブランチ：<span class="code">${escapeHtml(data.branch||'')}</span><ul>${fileList}</ul>`,true);
+  const fileList=(data.files||[]).map(f=>`<li><span class="code">${escapeHtml(f.path||f)}</span></li>`).join('');
+  const prAction=data.reused?'既存PRへ追加コミットしました':'PRを作成しました';
+  devSetPrStatus(`${prAction}。<br><a href="${escapeHtml(data.pullRequestUrl||data.url||'#')}" target="_blank" rel="noopener">GitHubでPRを開く</a><br>ブランチ：<span class="code">${escapeHtml(data.branch||'')}</span><ul>${fileList}</ul>`,true);
  }catch(e){
-  devSetPrStatus(`PR作成に失敗しました：${escapeHtml(e.message||e)}<br>Cloudflareの環境変数、GitHubトークン権限、開発者ログイン状態を確認してください。`);
+  devSetPrStatus(`PR作成に失敗しました：${escapeHtml(e.message||e)}<br>Cloudflareの GITHUB_TOKEN / GITHUB_OWNER / GITHUB_REPO / GITHUB_BRANCH と、GitHubトークンの Contents・Pull requests 権限を確認してください。`);
  }
 }
 

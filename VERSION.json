@@ -1,13 +1,13 @@
 {
-  "version": "v2.2.0",
+  "version": "v2.3.0",
   "updatedAt": "2026-06-06",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "開発モードからGitHub Pull Requestを作成できる機能を追加",
-    "編集中の問題JSONをDate/QuesへPR送信可能に変更",
-    "追加・差し替え画像をDate/imgへPR送信可能に変更",
-    "GitHubトークンをブラウザに出さずCloudflare Functions側で処理"
+    "複数問題をまとめて1つのGitHub Pull Requestに送信できる機能を追加",
+    "回数や午前・午後が違う問題も同じ一括PRにまとめられるように変更",
+    "既存の問題編集PRがある場合は同じPRブランチへ追加コミット",
+    "JSONはPRブランチ上の最新データから対象問題だけ差し替え"
   ]
 }

@@ -1,5 +1,23 @@
 # 更新履歴
 
+## v2.3.0 - 2026-06-06
+
+- 複数問題をまとめて1つのGitHub Pull Requestに送信できる機能を追加
+- 回数や午前・午後が違う問題も同じ一括PRにまとめられるように変更
+- 既存の問題編集PRがある場合は同じPRブランチへ追加コミットするように変更
+- JSON更新時にPRブランチ上の最新JSONを取得し、対象問題だけを差し替える方式に変更
+- コミットメッセージを `第〇回 午前・午後 第〇問：編集箇所` 形式に整理
+- `GITHUB_PR_BRANCH_PREFIX=me2/dev-batch` を推奨設定に変更
+
+## v2.2.1 - 2026-06-06
+
+- GitHub PR作成時の権限エラー表示を改善
+- `Resource not accessible by personal access token` の原因と対応を表示
+- GitHubトークンに必要な `Contents: Read and write` / `Pull requests: Read and write` を案内
+- Cloudflare環境変数の確認メッセージを整理
+- `/api/github-pr` のGET接続確認を追加
+- `GITHUB_PR_BRANCH_PREFIX` に対応
+
 ## v2.2.0 - 2026-06-06
 
 - 開発モードからGitHub Pull Requestを作成できる機能を追加

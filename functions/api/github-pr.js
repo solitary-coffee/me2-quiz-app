@@ -1,5 +1,5 @@
-const SESSION_TTL_SECONDS = 60 * 60 * 12;
 const GITHUB_API_VERSION = '2022-11-28';
+const PR_MARKER = '<!-- ME2_QUESTION_EDIT_PR -->';
 
 function json(data, init = {}) {
   return new Response(JSON.stringify(data), {
@@ -49,7 +49,7 @@ function requireEnv(env) {
     if (!env[name]) missing.push(name);
   }
   if (missing.length) {
-    throw new Error(`GitHub PR作成に必要な環境変数が未設定です：${missing.join(', ')}`);
+    throw new Error(`GitHub PR作成に必要なCloudflare環境変数が未設定です：${missing.join(', ')}。Cloudflare PagesのVariables and Secretsを確認してください。`);
   }
 }
 
@@ -90,15 +90,69 @@ function base64FromUtf8(text) {
   return btoa(binary);
 }
 
+function utf8FromBase64(b64) {
+  const binary = atob(String(b64 || '').replace(/\s+/g, ''));
+  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
 function cleanBase64(input) {
   const raw = String(input || '').trim();
   const m = raw.match(/^data:[^;,]+;base64,(.+)$/);
   return (m ? m[1] : raw).replace(/\s+/g, '');
 }
 
+function explainGitHubError(context, method, path, message) {
+  const env = context.env || {};
+  const repo = `${env.GITHUB_OWNER || '(GITHUB_OWNER未設定)'}/${env.GITHUB_REPO || '(GITHUB_REPO未設定)'}`;
+  const base = env.GITHUB_BRANCH || 'main';
+  const raw = String(message || '');
+
+  if (raw.includes('Resource not accessible by personal access token')) {
+    return [
+      'GitHubトークンの権限不足でPR作成用ブランチを作成できませんでした。',
+      '',
+      `失敗箇所：${method} ${path}`,
+      `対象リポジトリ：${repo}`,
+      `baseブランチ：${base}`,
+      '',
+      'Cloudflareの GITHUB_TOKEN に設定している Fine-grained personal access token を確認してください。',
+      '',
+      '必要な設定：',
+      '1. Resource owner が対象リポジトリの所有者と一致している',
+      `2. Repository access で ${repo} が選択されている`,
+      '3. Repository permissions の Contents が Read and write',
+      '4. Repository permissions の Pull requests が Read and write',
+      '5. Organizationリポジトリの場合、作成したトークンがOrganization側で承認されている',
+      '',
+      '修正後は、Cloudflare Pages の GITHUB_TOKEN を新しいトークンに差し替えて再デプロイしてください。',
+      '',
+      `GitHub APIからの元メッセージ：${raw}`
+    ].join('\n');
+  }
+
+  if (raw.includes('Bad credentials')) {
+    return [
+      'GitHubトークンが無効です。',
+      'Cloudflare Pages の Secret「GITHUB_TOKEN」が正しいか、期限切れではないか確認してください。',
+      `GitHub APIからの元メッセージ：${raw}`
+    ].join('\n');
+  }
+
+  if (raw.includes('Not Found')) {
+    return [
+      'GitHubリポジトリを取得できませんでした。',
+      `対象：${repo}`,
+      'GITHUB_OWNER / GITHUB_REPO の値、またはトークンのRepository accessを確認してください。',
+      `GitHub APIからの元メッセージ：${raw}`
+    ].join('\n');
+  }
+
+  return `${method} ${path} failed: ${raw}`;
+}
+
 async function gh(context, method, path, body = null) {
   const env = context.env || {};
-  const url = `https://api.github.com${path}`;
   const headers = {
     'accept': 'application/vnd.github+json',
     'authorization': `Bearer ${env.GITHUB_TOKEN}`,
@@ -110,15 +164,20 @@ async function gh(context, method, path, body = null) {
     headers['content-type'] = 'application/json';
     init.body = JSON.stringify(body);
   }
-  const r = await fetch(url, init);
+  const r = await fetch(`https://api.github.com${path}`, init);
   const text = await r.text();
   let data = {};
   try { data = text ? JSON.parse(text) : {}; } catch (_) { data = { raw: text }; }
   if (!r.ok) {
     const msg = data?.message || data?.error || text || `GitHub API ${r.status}`;
-    throw new Error(`${method} ${path} failed: ${msg}`);
+    throw new Error(explainGitHubError(context, method, path, msg));
   }
   return data;
+}
+
+async function validateGitHubAccess(context, owner, repo, base) {
+  await gh(context, 'GET', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`);
+  await gh(context, 'GET', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/ref/heads/${encodeURIComponent(base)}`);
 }
 
 async function getBaseSha(context, owner, repo, base) {
@@ -132,7 +191,8 @@ async function createBranch(context, owner, repo, base, title) {
 
   const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);
   const rand = crypto.randomUUID().slice(0, 8);
-  const branch = `me2/dev-${stamp}-${cleanBranchPart(title)}-${rand}`.slice(0, 120);
+  const prefix = String(context.env.GITHUB_PR_BRANCH_PREFIX || 'me2/dev-batch').replace(/^\/+|\/+$/g, '') || 'me2/dev-batch';
+  const branch = `${prefix}-${stamp}-${cleanBranchPart(title)}-${rand}`.slice(0, 120);
 
   await gh(context, 'POST', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/refs`, {
     ref: `refs/heads/${branch}`,
@@ -142,15 +202,61 @@ async function createBranch(context, owner, repo, base, title) {
   return branch;
 }
 
+async function getContent(context, owner, repo, path, branch) {
+  return await gh(context, 'GET', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${githubPath(path)}?ref=${encodeURIComponent(branch)}`);
+}
+
 async function getExistingSha(context, owner, repo, path, branch) {
   try {
-    const data = await gh(context, 'GET', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${githubPath(path)}?ref=${encodeURIComponent(branch)}`);
+    const data = await getContent(context, owner, repo, path, branch);
     return data?.sha || null;
   } catch (e) {
-    if (String(e.message || '').includes('404')) return null;
-    if (String(e.message || '').includes('Not Found')) return null;
+    const msg = String(e.message || '');
+    if (msg.includes('404') || msg.includes('Not Found')) return null;
     return null;
   }
+}
+
+function normalizeFiles(files) {
+  if (!Array.isArray(files)) return [];
+  if (files.length > 20) throw new Error('一度に送信できる画像ファイルは20個までです。');
+  return files.map(f => ({
+    path: normalizeRepoPath(f.path),
+    encoding: String(f.encoding || 'utf-8'),
+    content: f.content,
+    contentBase64: f.contentBase64,
+    message: f.message
+  }));
+}
+
+function normalizeJsonUpdates(jsonUpdates) {
+  if (!Array.isArray(jsonUpdates)) return [];
+  if (jsonUpdates.length > 30) throw new Error('一度に送信できるJSON更新は30件までです。');
+  return jsonUpdates.map(group => ({
+    path: normalizeRepoPath(group.path),
+    examId: group.examId,
+    part: group.part,
+    title: group.title,
+    updates: Array.isArray(group.updates) ? group.updates.map(u => ({
+      index: Number(u.index),
+      number: u.number,
+      question: u.question,
+      label: String(u.label || ''),
+      editSummary: String(u.editSummary || '編集'),
+      commitMessage: String(u.commitMessage || '')
+    })) : []
+  })).filter(g => g.updates.length);
+}
+
+function compactCommitMessageFromUpdates(group) {
+  const updates = group.updates || [];
+  if (updates.length === 1) {
+    const u = updates[0];
+    return (u.commitMessage || `${u.label || group.title || group.path}：${u.editSummary || '編集'}`).slice(0, 160);
+  }
+  const first = updates[0];
+  const label = first?.label ? `${first.label}ほか` : `${group.title || group.path} 複数問題`;
+  return `${label}：複数問題編集`.slice(0, 160);
 }
 
 async function putFile(context, owner, repo, branch, file, committer) {
@@ -182,16 +288,80 @@ async function putFile(context, owner, repo, branch, file, committer) {
   return { path, sha: result?.content?.sha || null, commitSha: result?.commit?.sha || null };
 }
 
-function cleanFiles(files) {
-  if (!Array.isArray(files) || !files.length) throw new Error('送信ファイルがありません。');
-  if (files.length > 8) throw new Error('一度に送信できるファイルは8個までです。');
-  return files.map(f => ({
-    path: normalizeRepoPath(f.path),
-    encoding: String(f.encoding || 'utf-8'),
-    content: f.content,
-    contentBase64: f.contentBase64,
-    message: f.message
-  }));
+async function putJsonUpdateGroup(context, owner, repo, branch, group, committer) {
+  const path = withRoot(context.env || {}, group.path);
+  let current;
+  try {
+    current = await getContent(context, owner, repo, path, branch);
+  } catch (e) {
+    throw new Error(`${path} をGitHubから取得できませんでした。既存JSONを取得してから部分更新するため、対象ファイルが必要です。詳細：${e.message || e}`);
+  }
+
+  const raw = utf8FromBase64(current.content || '');
+  let pack;
+  try { pack = JSON.parse(raw); } catch (e) { throw new Error(`${path} のJSONを解析できませんでした。`); }
+  if (!Array.isArray(pack.questions)) throw new Error(`${path} に questions 配列がありません。`);
+
+  const touched = [];
+  for (const update of group.updates) {
+    let idx = Number.isInteger(update.index) && update.index >= 0 ? update.index : -1;
+    if (idx < 0 || idx >= pack.questions.length) {
+      idx = pack.questions.findIndex(q => String(q.number) === String(update.number));
+    }
+    if (idx < 0 || idx >= pack.questions.length) {
+      throw new Error(`${path} の第${update.number || '?'}問を特定できませんでした。`);
+    }
+    pack.questions[idx] = update.question;
+    touched.push({ index: idx, number: update.number || pack.questions[idx]?.number, label: update.label, editSummary: update.editSummary });
+  }
+
+  const body = {
+    message: compactCommitMessageFromUpdates(group),
+    content: base64FromUtf8(JSON.stringify(pack, null, 2)),
+    branch,
+    sha: current.sha
+  };
+  if (committer.name && committer.email) {
+    body.committer = committer;
+    body.author = committer;
+  }
+
+  const result = await gh(context, 'PUT', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${githubPath(path)}`, body);
+  return { path, sha: result?.content?.sha || null, commitSha: result?.commit?.sha || null, touched };
+}
+
+async function findExistingEditPull(context, owner, repo, base) {
+  const pulls = await gh(context, 'GET', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls?state=open&base=${encodeURIComponent(base)}&per_page=100`);
+  const prefix = String(context.env.GITHUB_PR_BRANCH_PREFIX || 'me2/dev-batch').replace(/^\/+|\/+$/g, '') || 'me2/dev-batch';
+  return (pulls || []).find(pr => {
+    const ref = String(pr?.head?.ref || '');
+    const title = String(pr?.title || '');
+    const body = String(pr?.body || '');
+    return ref.startsWith(`${prefix}-`) || title.includes('[ME2問題編集]') || body.includes(PR_MARKER);
+  }) || null;
+}
+
+async function patchPull(context, owner, repo, number, title, body) {
+  return await gh(context, 'PATCH', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${encodeURIComponent(number)}`, {
+    title,
+    body
+  });
+}
+
+function mergePrBody(oldBody, newBody) {
+  const base = String(oldBody || '').includes(PR_MARKER) ? String(oldBody || '') : `${PR_MARKER}\n${oldBody || ''}`.trim();
+  const add = String(newBody || '').trim();
+  if (!add || base.includes(add.slice(0, 80))) return base;
+  return `${base}\n\n---\n\n${add}`.slice(0, 6000);
+}
+
+async function tryUpdateBranch(context, owner, repo, pullNumber) {
+  try {
+    await gh(context, 'PUT', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${encodeURIComponent(pullNumber)}/update-branch`, {});
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 async function handlePost(context) {
@@ -202,12 +372,14 @@ async function handlePost(context) {
   requireEnv(env);
 
   const body = await bodyJson(context.request);
-  const title = String(body.title || '').trim().slice(0, 160);
-  const prBody = String(body.body || '').trim().slice(0, 6000);
-  const files = cleanFiles(body.files);
+  const title = String(body.title || '[ME2問題編集] 複数問題を修正').trim().slice(0, 160);
+  const incomingBody = String(body.body || '').trim().slice(0, 6000);
+  const files = normalizeFiles(body.files);
+  const jsonUpdates = normalizeJsonUpdates(body.jsonUpdates);
   const draft = body.draft !== false;
+  const reuseOpenPr = body.reuseOpenPr !== false;
 
-  if (!title) return json({ error: 'PRタイトルが空です。' }, { status: 400 });
+  if (!files.length && !jsonUpdates.length) return json({ error: '送信する更新がありません。' }, { status: 400 });
 
   const owner = env.GITHUB_OWNER;
   const repo = env.GITHUB_REPO;
@@ -217,23 +389,46 @@ async function handlePost(context) {
     email: env.GITHUB_COMMITTER_EMAIL || 'actions@users.noreply.github.com'
   };
 
-  const branch = await createBranch(context, owner, repo, base, title);
+  await validateGitHubAccess(context, owner, repo, base);
+
+  let pull = reuseOpenPr ? await findExistingEditPull(context, owner, repo, base) : null;
+  let branch = '';
+  let reused = false;
+
+  if (pull) {
+    reused = true;
+    branch = pull.head.ref;
+    await tryUpdateBranch(context, owner, repo, pull.number);
+  } else {
+    branch = await createBranch(context, owner, repo, base, title);
+  }
+
   const committed = [];
+  for (const group of jsonUpdates) {
+    committed.push(await putJsonUpdateGroup(context, owner, repo, branch, group, committer));
+  }
   for (const file of files) {
     committed.push(await putFile(context, owner, repo, branch, file, committer));
   }
 
-  const pull = await gh(context, 'POST', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls`, {
-    title,
-    head: branch,
-    base,
-    body: prBody || `ME2アプリの開発モードから作成されたPull Requestです。`,
-    draft,
-    maintainer_can_modify: true
-  });
+  const prBody = `${PR_MARKER}\n${incomingBody || 'ME2アプリの開発モードから作成された問題編集Pull Requestです。'}`;
+
+  if (pull) {
+    pull = await patchPull(context, owner, repo, pull.number, pull.title.includes('[ME2問題編集]') ? pull.title : title, mergePrBody(pull.body || '', prBody));
+  } else {
+    pull = await gh(context, 'POST', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls`, {
+      title,
+      head: branch,
+      base,
+      body: prBody,
+      draft,
+      maintainer_can_modify: true
+    });
+  }
 
   return json({
     ok: true,
+    reused,
     branch,
     base,
     files: committed,
@@ -243,9 +438,36 @@ async function handlePost(context) {
   });
 }
 
+async function handleGet(context) {
+  try {
+    const verified = await verifyDevSession(context);
+    if (!verified.ok) return json({ ok: false, error: verified.error }, { status: 401 });
+
+    const env = context.env || {};
+    requireEnv(env);
+    const owner = env.GITHUB_OWNER;
+    const repo = env.GITHUB_REPO;
+    const base = env.GITHUB_BRANCH || 'main';
+
+    await validateGitHubAccess(context, owner, repo, base);
+    const pull = await findExistingEditPull(context, owner, repo, base);
+
+    return json({
+      ok: true,
+      message: 'GitHub接続確認OKです。PR作成に必要な最低限の読み取り確認に成功しました。',
+      repository: `${owner}/${repo}`,
+      base,
+      existingEditPull: pull ? { number: pull.number, url: pull.html_url, branch: pull.head.ref, title: pull.title } : null
+    });
+  } catch (e) {
+    return json({ ok: false, error: e && e.message ? e.message : String(e) }, { status: 500 });
+  }
+}
+
 async function route(context) {
   const method = context.request.method.toUpperCase();
   if (method === 'POST') return handlePost(context);
+  if (method === 'GET') return handleGet(context);
   if (method === 'OPTIONS') return json({ ok: true });
   return json({ error: `Method ${method} is not allowed for /api/github-pr` }, { status: 405 });
 }
@@ -257,4 +479,7 @@ export async function onRequest(context) {
 export async function onRequestPost(context) {
   try { return await handlePost(context); }
   catch (e) { return json({ error: e && e.message ? e.message : String(e) }, { status: 500 }); }
+}
+export async function onRequestGet(context) {
+  return handleGet(context);
 }
