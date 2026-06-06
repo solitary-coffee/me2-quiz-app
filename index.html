@@ -708,10 +708,59 @@ html[data-theme="dark"] .dev-refresh-note{
 @media(max-width:760px){.dev-target-grid{grid-template-columns:1fr}}
 html[data-theme="dark"] .dev-target-panel{background:#111827;border-color:#334155}
 
+
+/* 開発モード：余白修正・編集対象幅調整 */
+.dev-target-grid{
+  grid-template-columns:minmax(120px,.6fr) minmax(110px,.55fr) minmax(360px,1.85fr) !important;
+  align-items:end;
+}
+.dev-left-stack{
+  display:flex !important;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  align-content:flex-start;
+  gap:12px !important;
+}
+.dev-left-stack > *{
+  flex:0 0 auto;
+}
+.dev-status{
+  margin-top:0;
+  min-height:0;
+}
+.dev-status:empty{
+  display:none;
+}
+.dev-editor-basic{
+  margin-top:0;
+}
+.dev-commit-input-visible,
+.dev-pr-panel{
+  height:auto;
+  min-height:0;
+}
+.dev-commit-input-visible .dev-field{
+  margin-bottom:6px;
+}
+details.dev-pr-panel:not([open]){
+  padding-bottom:0;
+}
+@media(max-width:980px){
+  .dev-target-grid{
+    grid-template-columns:minmax(110px,.7fr) minmax(100px,.55fr) minmax(260px,1.6fr) !important;
+  }
+}
+@media(max-width:760px){
+  .dev-target-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.1</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.2</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -866,7 +915,7 @@ html[data-theme="dark"] .dev-target-panel{background:#111827;border-color:#33415
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.1</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.2</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -960,7 +1009,7 @@ html[data-theme="dark"] .dev-target-panel{background:#111827;border-color:#33415
 
   <div class="dev-grid dev-grid-rebalanced">
     <div class="dev-panel dev-left-panel dev-left-stack">
-      <div id="devStatus" class="dev-status">編集対象を選択してください。</div>
+      <div id="devStatus" class="dev-status"></div>
       <div id="devEditorBasic" class="dev-editor-basic"></div>
 
       <div class="dev-commit-input-visible">
@@ -1055,15 +1104,23 @@ html[data-theme="dark"] .dev-target-panel{background:#111827;border-color:#33415
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.4.1';
+const APP_VERSION='v2.4.2';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  '開発モードの編集対象を解説生成定義の下へ単独配置',
-  '問題操作ボタンを問題・解答・画像の設定枠の下へ移動',
-  '左側パネルを問題設定、コミットメッセージ、GitHub一括PRの順に整理',
-  'マージ後の最新データ取得ボタンをGitHub一括PRの折りたたみ内へ移動'
+  '開発モード左側パネル内の不要な縦空白を削減',
+  'コミットメッセージ欄とGitHub一括PR欄が縦に伸びすぎる問題を修正',
+  '編集対象の試験回と午前午後欄を短くし、問題番号欄を広く調整'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.4.2',
+    date:'2026-06-06',
+    notes:[
+      '開発モード左側パネル内の不要な縦空白を削減',
+      'コミットメッセージ欄とGitHub一括PR欄が縦に伸びすぎる問題を修正',
+      '編集対象の試験回と午前午後欄を短くし、問題番号欄を広く調整'
+    ]
+  },
   {
     version:'v2.4.1',
     date:'2026-06-06',
@@ -2858,6 +2915,12 @@ async function devLoadPart(){
  qSel.innerHTML=(devPack.questions||[]).map((q,i)=>`<option value="${i}">第${q.number}問：${escapeHtml((q.range||'未設定').slice(0,26))}</option>`).join('');
  devRenderEditor();
 }
+function devClearGenericDevStatus(){
+ const el=$('devStatus');
+ if(!el)return;
+ const t=String(el.textContent||'').trim();
+ if(t==='編集対象を選択してください。'||t==='試験回を変更しました。'||t==='午前/午後を変更しました。'||t==='問題を変更しました。')el.textContent='';
+}
 function devClearStatusMessages(reason=''){
  const dev=$('devStatus');
  if(dev)dev.textContent=reason||'編集対象を変更しました。';
@@ -2976,6 +3039,7 @@ function devRenderEditor(){
  (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
  devRefreshPrPaths();
  renderDevPrBatchList();
+ devClearGenericDevStatus();
 }
 function devReadForm(){
  const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
