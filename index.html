@@ -678,10 +678,30 @@ html[data-theme="dark"] .dev-commit-input-visible{
   border-color:#334155;
 }
 
+
+/* 開発モード：PRマージ後の最新データ取得 */
+.dev-refresh-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+.dev-refresh-note{
+  border:1px dashed var(--line);
+  border-radius:14px;
+  background:var(--bg);
+  padding:9px 10px;
+  margin-top:8px;
+}
+html[data-theme="dark"] .dev-refresh-note{
+  background:#0f172a;
+  border-color:#334155;
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.5</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -836,7 +856,7 @@ html[data-theme="dark"] .dev-commit-input-visible{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.5</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -937,6 +957,12 @@ html[data-theme="dark"] .dev-commit-input-visible{
       <div class="dev-commit-input-visible">
         <div class="dev-field"><label>各問題のコミットメッセージ / 編集箇所</label><input id="devPrEditSummary" placeholder="例：問題文・正答・解説を修正"></div>
         <p class="small">この欄は折りたたみ外で常に表示します。`この問題に反映` を押した時点の内容が、その問題のコミットメッセージに使われます。</p>
+        <div class="dev-refresh-note small">
+          PRをマージしてCloudflare Pagesの再デプロイが終わった後は、下のボタンでサイト内の最新問題データを再取得できます。
+        </div>
+        <div class="dev-refresh-actions">
+          <button class="ghost" type="button" onclick="devRefreshAfterPrMerge()">マージ後の最新データ取得</button>
+        </div>
       </div>
 
       <details class="dev-pr-panel" id="devPrDetails">
@@ -1022,14 +1048,25 @@ html[data-theme="dark"] .dev-commit-input-visible{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.3.5';
+const APP_VERSION='v2.4.0';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  '各問題のコミットメッセージ入力欄を折りたたみ外へ移動',
-  'PR操作部を閉じた状態でも編集箇所を入力できるように変更',
-  '送信予定コミット一覧はPR操作部内に表示するように整理'
+  'PRマージ後にサイト内の最新問題データを再取得できる機能を追加',
+  'ブラウザ内の問題キャッシュをクリアしてDate/QuesとDate/imgを再読み込み',
+  'マージ済みの編集内容を一括PRリストから自動削除する処理を追加',
+  'Cloudflare再デプロイ後の最新データ確認をしやすく改善'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.4.0',
+    date:'2026-06-06',
+    notes:[
+      'PRマージ後にサイト内の最新問題データを再取得できる機能を追加',
+      'ブラウザ内の問題キャッシュをクリアしてDate/QuesとDate/imgを再読み込み',
+      'マージ済みの編集内容を一括PRリストから自動削除する処理を追加',
+      'Cloudflare再デプロイ後の最新データ確認をしやすく改善'
+    ]
+  },
   {
     version:'v2.3.5',
     date:'2026-06-06',
@@ -1476,6 +1513,7 @@ function toggleTheme(){
 let me={authenticated:false,email:null,name:null};
 let examsIndex={exams:[]};
 let currentExamId=null, partsCache={}, tickHandle=null, currentAnswerPart=null;
+let assetCacheBuster='';
 
 const RANDOM_PART='mix';
 const RANDOM_EXAM_ID='random';
@@ -1492,7 +1530,7 @@ let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,corr
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 
 async function fetchTextNoCache(path){
-  const r=await fetch(path,{cache:'no-store'});
+  const r=await fetch(withAssetCacheBuster(path),{cache:'no-store'});
   if(!r.ok)throw new Error(String(r.status));
   return await r.text();
 }
@@ -1618,19 +1656,26 @@ function friendlyFetchError(e){
  if(e && (e.name === 'AbortError' || String(e.message||'').includes('aborted'))) return 'タイムアウト';
  return e?.message || String(e);
 }
+function withAssetCacheBuster(url){
+ const raw=String(url||'');
+ if(!assetCacheBuster)return raw;
+ const sep=raw.includes('?')?'&':'?';
+ return `${raw}${sep}_me2v=${encodeURIComponent(assetCacheBuster)}`;
+}
 function assetUrlForMode(path, mode){
- return safeAssetPath(path);
+ return withAssetCacheBuster(safeAssetPath(path));
 }
 function assetUrl(path){
- return safeAssetPath(path);
+ return withAssetCacheBuster(safeAssetPath(path));
 }
 function candidateSourceModes(){
  return ['site_internal'];
 }
 async function fetchJSON(path){
  const safe=safeAssetPath(path);
+ const url=withAssetCacheBuster(safe);
  try{
-  const r=await fetchWithTimeout(safe,{cache:'no-store'},2500);
+  const r=await fetchWithTimeout(url,{cache:'no-store'},2500);
   if(!r.ok) throw new Error(`${r.status}`);
   const data=await r.json();
   activeSourceMode='site_internal';
@@ -3133,6 +3178,104 @@ function devApplyQuestionToLocal(item){
   devPack.questions[Number(item.index)||0]=devClone(item.question);
  }
 }
+
+function devComparableQuestion(q){
+ q=q||{};
+ return {
+  number:q.number??null,
+  range:String(q.range||''),
+  stem:String(q.stem||''),
+  choices:(q.choices||[]).map(x=>String(x||'')),
+  correct:(q.correct||[]).map(Number),
+  negative:Boolean(q.negative),
+  hasFigure:Boolean(q.hasFigure),
+  image:String(q.image||''),
+  tip:String(q.tip||''),
+  choiceNotes:(q.choiceNotes||[]).map(x=>String(x||''))
+ };
+}
+function devQuestionMatchesMerged(latest, edited){
+ return JSON.stringify(devComparableQuestion(latest))===JSON.stringify(devComparableQuestion(edited));
+}
+async function devRemoveMergedBatchItems(){
+ const batch=devPrBatch();
+ if(!batch.items.length)return {removed:0,kept:0,total:0};
+ const packs={};
+ const kept=[];
+ const removed=[];
+ for(const item of batch.items){
+  try{
+   const path=safeAssetPath(item.jsonPath);
+   if(!packs[path])packs[path]=await fetchJSON(path);
+   const pack=packs[path];
+   let latest=pack?.questions?.[Number(item.index)||0];
+   if(!latest && Array.isArray(pack?.questions)){
+    latest=pack.questions.find(q=>String(q.number)===String(item.number));
+   }
+   if(latest && devQuestionMatchesMerged(latest,item.question)){
+    removed.push(item);
+   }else{
+    kept.push(item);
+   }
+  }catch(e){
+   kept.push(item);
+  }
+ }
+ saveDevPrBatch({items:kept});
+ return {removed:removed.length,kept:kept.length,total:batch.items.length};
+}
+async function devReloadCurrentEditorAfterRefresh(oldExamId,oldPart,oldIndex){
+ if(!oldExamId||!examsIndex.exams.some(ex=>String(ex.id)===String(oldExamId))){
+  if($('devExamSelect')){
+   $('devExamSelect').innerHTML=(examsIndex.exams||[]).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
+  }
+  await devLoadExam();
+  return;
+ }
+ if($('devExamSelect')){
+  $('devExamSelect').innerHTML=(examsIndex.exams||[]).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
+  $('devExamSelect').value=oldExamId;
+ }
+ if($('devPartSelect'))$('devPartSelect').value=oldPart||'am';
+ devExamId=oldExamId;
+ devPart=oldPart||'am';
+ await devLoadPart();
+ const qSel=$('devQuestionSelect');
+ if(qSel && Number.isFinite(Number(oldIndex)) && Number(oldIndex)<qSel.options.length){
+  qSel.value=String(oldIndex);
+  devRenderEditor();
+ }
+}
+async function devRefreshAfterPrMerge(){
+ try{
+  const oldExamId=devExamId;
+  const oldPart=devPart;
+  const oldIndex=Number($('devQuestionSelect')?.value||0);
+  devSetPrStatus('サイト内の最新問題データを再取得中です…。Cloudflare Pagesの再デプロイ直後は反映まで少し時間がかかる場合があります。');
+  assetCacheBuster=`merge_${Date.now()}`;
+  partsCache={};
+  await loadVersionFromMarkdown().catch(()=>null);
+  await loadIndex();
+  const result=await devRemoveMergedBatchItems();
+  if($('menuCard')&&!$('menuCard').classList.contains('hidden'))renderMenu();
+  if($('devModeCard')&&!$('devModeCard').classList.contains('hidden')){
+   await devReloadCurrentEditorAfterRefresh(oldExamId,oldPart,oldIndex);
+  }
+  populateViewerSelects();
+  renderDevPrBatchList();
+  const msg=[
+   'サイト内の問題データを最新取得しました。',
+   `マージ済みとして一括PRリストから削除：${result.removed}件`,
+   `未反映または差分ありとして残した編集：${result.kept}件`
+  ].join('<br>');
+  devSetPrStatus(msg,true);
+  const dev=$('devStatus');
+  if(dev)dev.innerHTML=`<span class="status-ok">最新データを取得しました。現在表示中の問題もサイト内データから再読み込みしました。</span>`;
+ }catch(e){
+  devSetPrStatus(`最新データ取得に失敗しました：${escapeHtml(e.message||e)}<br>Cloudflare Pagesのデプロイ完了後に再度実行してください。`);
+ }
+}
+
 function devRefreshPrPaths(){
  const q=devReadForm();
  const jsonPath=devCurrentJsonPath();
