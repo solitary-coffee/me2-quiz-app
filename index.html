@@ -762,10 +762,47 @@ details.dev-pr-panel:not([open]){
   }
 }
 
+
+/* トップ：CE国家試験版リンク */
+.ce-exam-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:9px 14px;
+  border-radius:999px;
+  border:1px solid #2563eb;
+  background:#2563eb;
+  color:#fff;
+  text-decoration:none;
+  font-weight:900;
+  box-shadow:0 10px 22px rgba(37,99,235,.22);
+  transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+.ce-exam-link:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.03);
+  box-shadow:0 14px 28px rgba(37,99,235,.28);
+}
+.ce-exam-link:focus-visible{
+  outline:3px solid rgba(37,99,235,.35);
+  outline-offset:3px;
+}
+html[data-theme="dark"] .ce-exam-link{
+  background:#3b82f6;
+  border-color:#60a5fa;
+  color:#fff;
+}
+@media(max-width:620px){
+  .classic-action-row .ce-exam-link{
+    width:100%;
+  }
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.4</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.5</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -786,6 +823,7 @@ details.dev-pr-panel:not([open]){
   <div class="classic-action-row">
     <button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button>
     <span class="pill" id="roundCount">読み込み中</span>
+    <a class="ce-exam-link" id="ceExamLink" href="/ce/" target="_blank" rel="noopener">CE国家試験版はこちら！！</a>
   </div>
 
   <details class="classic-info-details">
@@ -920,7 +958,7 @@ details.dev-pr-panel:not([open]){
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.4</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.5</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -1111,14 +1149,24 @@ details.dev-pr-panel:not([open]){
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.4.4';
+const APP_VERSION='v2.4.5';
 const APP_UPDATED_AT='2026-06-06';
+const CE_EXAM_SITE_URL='/ce/';
 const APP_UPDATE_NOTES=[
-  'SNS共有時にサイト説明文が表示されるようにOGP/Twitter Cardメタタグを追加',
-  'リンクカード用のOGP画像 assets/ogp.png を追加',
-  '検索結果・ブラウザ向けdescriptionを整理'
+  'トップ画面のログイン/登録・回数表示の右側にCE国家試験版リンクボタンを追加',
+  'CE国家試験版リンク先を定数で変更できるように追加',
+  'スマホ表示でもボタンが崩れにくいようにスタイルを調整'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.4.5',
+    date:'2026-06-06',
+    notes:[
+      'トップ画面のログイン/登録・回数表示の右側にCE国家試験版リンクボタンを追加',
+      'CE国家試験版リンク先を定数で変更できるように追加',
+      'スマホ表示でもボタンが崩れにくいようにスタイルを調整'
+    ]
+  },
   {
     version:'v2.4.4',
     date:'2026-06-06',
