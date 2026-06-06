@@ -348,11 +348,77 @@ async function patchPull(context, owner, repo, number, title, body) {
   });
 }
 
+function normalizePrLine(line) {
+  return String(line || '').replace(/\s+/g, ' ').trim();
+}
+
+function parsePrSections(body) {
+  const text = String(body || '').replace(PR_MARKER, '').replace(/---+/g, '\n').trim();
+  const sections = { fixes: [], files: [], checks: [] };
+  let current = '';
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    if (/^#+\s*修正内容/.test(line)) { current = 'fixes'; continue; }
+    if (/^#+\s*送信ファイル/.test(line)) { current = 'files'; continue; }
+    if (/^#+\s*確認/.test(line)) { current = 'checks'; continue; }
+    if (/^#+\s*/.test(line)) { current = ''; continue; }
+    if (!current) continue;
+    if (/^[-*]\s+/.test(line) || /^\[[ xX]\]\s+/.test(line)) {
+      const normalized = normalizePrLine(line);
+      if (normalized) sections[current].push(normalized);
+    }
+  }
+  return sections;
+}
+
+function uniquePush(list, line) {
+  const normalized = normalizePrLine(line);
+  if (!normalized) return;
+  const key = normalized
+    .replace(/^[-*]\s+/, '')
+    .replace(/^- \[[ xX]\]\s+/, '')
+    .replace(/`/g, '')
+    .toLowerCase();
+  const exists = list.some(x => x.replace(/^[-*]\s+/, '').replace(/^- \[[ xX]\]\s+/, '').replace(/`/g, '').toLowerCase() === key);
+  if (!exists) list.push(normalized);
+}
+
 function mergePrBody(oldBody, newBody) {
-  const base = String(oldBody || '').includes(PR_MARKER) ? String(oldBody || '') : `${PR_MARKER}\n${oldBody || ''}`.trim();
-  const add = String(newBody || '').trim();
-  if (!add || base.includes(add.slice(0, 80))) return base;
-  return `${base}\n\n---\n\n${add}`.slice(0, 6000);
+  const oldSections = parsePrSections(oldBody);
+  const newSections = parsePrSections(newBody);
+
+  const fixes = [];
+  const files = [];
+  const checks = [];
+
+  [...oldSections.fixes, ...newSections.fixes].forEach(line => uniquePush(fixes, line));
+  [...oldSections.files, ...newSections.files].forEach(line => uniquePush(files, line));
+
+  const defaultChecks = [
+    '- [ ] 問題文・選択肢を確認',
+    '- [ ] 正答を確認',
+    '- [ ] 解説を確認',
+    '- [ ] 画像表示を確認'
+  ];
+  [...oldSections.checks, ...newSections.checks, ...defaultChecks].forEach(line => uniquePush(checks, line));
+
+  const body = [
+    PR_MARKER,
+    '## 修正内容',
+    '',
+    ...(fixes.length ? fixes : ['- 問題を修正']),
+    '',
+    '## 送信ファイル',
+    '',
+    ...(files.length ? files : ['- 送信ファイルなし']),
+    '',
+    '## 確認',
+    '',
+    ...checks
+  ].join('\n');
+
+  return body.slice(0, 6000);
 }
 
 async function tryUpdateBranch(context, owner, repo, pullNumber) {
@@ -411,7 +477,7 @@ async function handlePost(context) {
     committed.push(await putFile(context, owner, repo, branch, file, committer));
   }
 
-  const prBody = `${PR_MARKER}\n${incomingBody || 'ME2アプリの開発モードから作成された問題編集Pull Requestです。'}`;
+  const prBody = mergePrBody('', incomingBody || '');
 
   if (pull) {
     pull = await patchPull(context, owner, repo, pull.number, pull.title.includes('[ME2問題編集]') ? pull.title : title, mergePrBody(pull.body || '', prBody));
