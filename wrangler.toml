@@ -21,3 +21,23 @@ GITHUB_ROOT = ""
 [[kv_namespaces]]
 binding = "ME2_PROGRESS"
 id = "20aa48fc63bb41bc90c0efa5abc3ac37"
+
+
+# ------------------------------------------------------------
+# GitHub PR作成機能
+# ------------------------------------------------------------
+# GITHUB_TOKEN は絶対にwrangler.tomlへ直書きしないでください。
+# Cloudflare Pages > Settings > Variables and Secrets で Secret として追加します。
+#
+# 必須:
+#   GITHUB_TOKEN = GitHub fine-grained personal access token（Secret）
+#   GITHUB_OWNER = リポジトリ所有者
+#   GITHUB_REPO = リポジトリ名
+#   GITHUB_BRANCH = PRのbaseブランチ
+#
+# 任意:
+#   GITHUB_ROOT = リポジトリ内でサイトがサブフォルダにある場合のみ指定
+#   GITHUB_COMMITTER_NAME = コミット表示名
+#   GITHUB_COMMITTER_EMAIL = コミット表示メール
+# ------------------------------------------------------------
+

@@ -1,5 +1,13 @@
 # 更新履歴
 
+## v2.2.0 - 2026-06-06
+
+- 開発モードからGitHub Pull Requestを作成できる機能を追加
+- 編集中の問題JSONを `Date/Ques` へPR送信できるように変更
+- 追加・差し替え画像を `Date/img` へPR送信できるように変更
+- GitHubトークンをブラウザへ出さず、Cloudflare Functions側だけで使用する方式に変更
+- `/api/github-pr` を追加
+
 ## v2.1.0 - 2026-06-04
 
 - GitHubからの問題データ読み込みを廃止

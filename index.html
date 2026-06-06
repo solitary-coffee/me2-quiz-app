@@ -483,10 +483,65 @@ html[data-theme="dark"] .dev-preview .choice-preview{background:#0f172a;border-c
 html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;border-color:#16a34a;color:#bbf7d0}
 @media(max-width:920px){.dev-grid-rebalanced,.dev-preview-grid{grid-template-columns:1fr}}
 
+
+/* 開発モード：GitHub PR作成 */
+.dev-pr-panel{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--card);
+  padding:12px;
+  margin:12px 0;
+}
+.dev-pr-panel h3{
+  margin:0 0 8px;
+  font-size:16px;
+}
+.dev-pr-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.dev-pr-panel input,
+.dev-pr-panel textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--bg);
+  color:var(--ink);
+  padding:9px 10px;
+  font:inherit;
+}
+.dev-pr-panel textarea{
+  min-height:86px;
+  resize:vertical;
+}
+.dev-pr-files{
+  border:1px dashed var(--line);
+  border-radius:14px;
+  background:var(--bg);
+  padding:10px;
+}
+.dev-pr-status{
+  margin-top:10px;
+  font-size:13px;
+  line-height:1.65;
+}
+html[data-theme="dark"] .dev-pr-panel{
+  background:#111827;
+  border-color:#334155;
+}
+html[data-theme="dark"] .dev-pr-panel input,
+html[data-theme="dark"] .dev-pr-panel textarea,
+html[data-theme="dark"] .dev-pr-files{
+  background:#0f172a;
+  color:#e5e7eb;
+  border-color:#334155;
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v1.10.9</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.2.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -641,7 +696,7 @@ html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v1.10.9</span> / 更新日：2026-06-04</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.2.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -738,6 +793,28 @@ html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;
         <button onclick="devExportJson()">JSON保存</button>
         <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
       </div>
+
+      <div class="dev-pr-panel">
+        <h3>GitHub PR作成</h3>
+        <p class="small">現在の問題JSONと、追加・差し替えした画像をGitHubへ送信してPull Requestを作成します。GitHubトークンはCloudflare側だけで使用します。</p>
+        <div class="dev-pr-grid">
+          <div class="dev-field"><label>PRタイトル</label><input id="devPrTitle" placeholder="例：第44回 午前 第1問を修正"></div>
+          <div class="dev-field"><label>PR説明</label><textarea id="devPrBody"></textarea></div>
+          <div class="dev-pr-files small">
+            <b>送信予定ファイル</b><br>
+            JSON：<span class="code" id="devPrJsonPath">-</span><br>
+            画像：<span class="code" id="devPrImagePathPreview">画像追加時のみ</span>
+          </div>
+          <div class="dev-field"><label>画像PR先パス（画像を追加・差し替えした場合）</label><input id="devPrImagePath" placeholder="Date/img/..."></div>
+          <label class="pill"><input type="checkbox" id="devPrDraft" checked> Draft PRとして作成</label>
+          <div class="row">
+            <button class="secondary" onclick="devCreateGitHubPr()">GitHub PR作成</button>
+            <button class="ghost" onclick="devRefreshPrPaths()">送信先を更新</button>
+          </div>
+          <div id="devPrStatus" class="dev-pr-status">まだPRは作成していません。</div>
+        </div>
+      </div>
+
       <div id="devStatus" class="dev-status">編集対象を選択してください。</div>
       <div id="devEditorBasic" class="dev-editor-basic"></div>
     </div>
@@ -783,15 +860,25 @@ html[data-theme="dark"] .dev-preview .choice-preview.correct{background:#052e16;
 </footer>
 </main>
 <script>
-const APP_VERSION='v1.10.9';
-const APP_UPDATED_AT='2026-06-04';
+const APP_VERSION='v2.2.0';
+const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  'GitHubからの問題データ読み込みを廃止',
-  '問題JSON・画像をサイト内のDateフォルダから読み込む方式に変更',
-  '外部GitHub読み込み / Cloudflare GitHub Proxyへのフォールバックを停止',
-  '読み込み状態の表示をサイト内データ用に整理'
+  '開発モードからGitHub Pull Requestを作成できる機能を追加',
+  '編集中の問題JSONをDate/QuesへPR送信可能に変更',
+  '追加・差し替え画像をDate/imgへPR送信可能に変更',
+  'GitHubトークンをブラウザに出さずCloudflare Functions側で処理'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.2.0',
+    date:'2026-06-06',
+    notes:[
+      '開発モードからGitHub Pull Requestを作成できる機能を追加',
+      '編集中の問題JSONをDate/QuesへPR送信可能に変更',
+      '追加・差し替え画像をDate/imgへPR送信可能に変更',
+      'GitHubトークンをブラウザに出さずCloudflare Functions側で処理'
+    ]
+  },
   {
     version:'v1.10.9',
     date:'2026-06-04',
@@ -2561,6 +2648,7 @@ function devRenderEditor(){
  ['devStem','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
  ['devNegative','devHasFigure'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
  (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
+ devRefreshPrPaths();
 }
 function devReadForm(){
  const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
@@ -2686,6 +2774,126 @@ function devRegenerateExplanationLocal(){
  devApplyExplanation(q);
  $('devStatus').innerHTML='<span class="status-ok">ローカル簡易生成を実行しました。AIではないため、内容を確認して手修正してください。</span>';
 }
+
+function devCurrentJsonPath(){
+ const rec=getExamRecord(devExamId);
+ const path=rec?.parts?.[devPart] || `Date/Ques/${devExamId}_${devPart}.json`;
+ return safeAssetPath(path);
+}
+function devPad2(v){
+ const n=Number(v||0);
+ return Number.isFinite(n)&&n>0?String(n).padStart(2,'0'):String(v||'image');
+}
+function devDataUrlInfo(dataUrl){
+ const m=String(dataUrl||'').match(/^data:([^;,]+);base64,(.+)$/);
+ if(!m)return null;
+ const mime=m[1].toLowerCase();
+ const ext=mime.includes('jpeg')?'jpg':mime.includes('png')?'png':mime.includes('webp')?'webp':mime.includes('gif')?'gif':'png';
+ return {mime,ext,base64:m[2].replace(/\s+/g,'')};
+}
+function devDefaultPrImagePath(q){
+ const info=devDataUrlInfo(q?.image);
+ const ext=info?.ext || 'png';
+ return `Date/img/${devExamId}/${devExamId}_${devPart}_q${devPad2(q?.number)}.${ext}`;
+}
+function devBuildPrDefaultTitle(q){
+ const title=getExamRecord(devExamId)?.title || devExamId || 'ME2';
+ return `${title} ${partName(devPart)} 第${q?.number||'?'}問を修正`;
+}
+function devBuildPrDefaultBody(q,jsonPath,imagePath){
+ return [
+  '## 修正内容',
+  `- ${getExamRecord(devExamId)?.title || devExamId} ${partName(devPart)} 第${q?.number||'?'}問を修正`,
+  `- 問題JSON：\`${jsonPath}\``,
+  imagePath?`- 画像：\`${imagePath}\``:'- 画像：変更なし',
+  '',
+  '## 確認',
+  '- [ ] 問題文・選択肢を確認',
+  '- [ ] 正答を確認',
+  '- [ ] 解説を確認',
+  '- [ ] 画像表示を確認'
+ ].join('\n');
+}
+function devRefreshPrPaths(){
+ const q=devReadForm();
+ const jsonPath=devCurrentJsonPath();
+ const imageInfo=devDataUrlInfo(q.image);
+ const imagePath=imageInfo?($('devPrImagePath')?.value || devDefaultPrImagePath(q)):'';
+ if($('devPrJsonPath'))$('devPrJsonPath').textContent=jsonPath;
+ if($('devPrImagePathPreview'))$('devPrImagePathPreview').textContent=imagePath || '画像追加時のみ';
+ if($('devPrImagePath') && imageInfo && !$('devPrImagePath').value)$('devPrImagePath').value=imagePath;
+ if($('devPrTitle') && !$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle(q);
+ if($('devPrBody') && !$('devPrBody').value)$('devPrBody').value=devBuildPrDefaultBody(q,jsonPath,imagePath);
+}
+function devSetPrStatus(msg,ok=false){
+ const el=$('devPrStatus');
+ if(el)el.innerHTML=`<span class="${ok?'status-ok':'status-warn'}">${msg}</span>`;
+}
+function devClone(obj){
+ return JSON.parse(JSON.stringify(obj));
+}
+function devPreparePrPayload(){
+ const currentIndex=Number($('devQuestionSelect')?.value||0);
+ const q=devReadForm();
+ const pack=devClone(devPack);
+ const jsonPath=devCurrentJsonPath();
+ const files=[];
+ let imagePath='';
+ const imageInfo=devDataUrlInfo(q.image);
+
+ if(imageInfo){
+  imagePath=safeAssetPath($('devPrImagePath')?.value || devDefaultPrImagePath(q));
+  if(!imagePath.startsWith('Date/img/'))throw new Error('画像PR先パスは Date/img/ から始めてください。');
+  q.image=imagePath;
+  q.hasFigure=true;
+  files.push({
+   path:imagePath,
+   encoding:'base64',
+   contentBase64:imageInfo.base64,
+   message:`Update image for ${devExamId} ${devPart} q${q.number||currentIndex+1}`
+  });
+ }
+
+ pack.questions[currentIndex]=q;
+ files.unshift({
+  path:jsonPath,
+  encoding:'utf-8',
+  content:JSON.stringify(pack,null,2),
+  message:`Update ${devExamId} ${devPart} question data`
+ });
+
+ const title=String($('devPrTitle')?.value||devBuildPrDefaultTitle(q)).trim();
+ const body=String($('devPrBody')?.value||devBuildPrDefaultBody(q,jsonPath,imagePath)).trim();
+ const draft=Boolean($('devPrDraft')?.checked);
+
+ return {title,body,draft,files,updatedPack:pack,updatedQuestion:q,jsonPath,imagePath,currentIndex};
+}
+async function devCreateGitHubPr(){
+ try{
+  devApplyChanges();
+  devRefreshPrPaths();
+  const payload=devPreparePrPayload();
+  if(!payload.title)throw new Error('PRタイトルを入力してください。');
+  devSetPrStatus('GitHub PRを作成中です…');
+  const r=await fetchWithTimeout('/api/github-pr',{
+   method:'POST',
+   headers:{'content-type':'application/json',...devHeaders()},
+   body:JSON.stringify({title:payload.title,body:payload.body,draft:payload.draft,files:payload.files})
+  },45000);
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(data.error||String(r.status));
+
+  devPack=payload.updatedPack;
+  partsCache[`${devExamId}_${devPart}`]=devPack;
+  if($('devImage'))$('devImage').value=payload.updatedQuestion.image||'';
+  devRenderEditor();
+  const fileList=(data.files||payload.files).map(f=>`<li><span class="code">${escapeHtml(f.path||f)}</span></li>`).join('');
+  devSetPrStatus(`PRを作成しました。<br><a href="${escapeHtml(data.pullRequestUrl||data.url||'#')}" target="_blank" rel="noopener">GitHubでPRを開く</a><br>ブランチ：<span class="code">${escapeHtml(data.branch||'')}</span><ul>${fileList}</ul>`,true);
+ }catch(e){
+  devSetPrStatus(`PR作成に失敗しました：${escapeHtml(e.message||e)}<br>Cloudflareの環境変数、GitHubトークン権限、開発者ログイン状態を確認してください。`);
+ }
+}
+
 function devCurrentFileName(){
  const rec=getExamRecord(devExamId);
  return `${devExamId}_${devPart}_edited.json`.replace(/[^\w.-]+/g,'_');
