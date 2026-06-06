@@ -628,7 +628,7 @@ html[data-theme="dark"] .dev-pr-auto-note{
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.1</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.3.3</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -783,7 +783,7 @@ html[data-theme="dark"] .dev-pr-auto-note{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.1</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.3.3</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><a class="pill" href="/cdn-cgi/access/logout">Cloudflare Accessログアウト（利用している場合のみ）</a><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -868,9 +868,9 @@ html[data-theme="dark"] .dev-pr-auto-note{
   <div class="dev-grid dev-grid-rebalanced">
     <div class="dev-panel dev-left-panel">
       <h3>編集対象</h3>
-      <div class="dev-field"><label>試験回</label><select id="devExamSelect" onchange="devLoadExam()"></select></div>
-      <div class="dev-field"><label>午前 / 午後</label><select id="devPartSelect" onchange="devLoadPart()"><option value="am">午前</option><option value="pm">午後</option></select></div>
-      <div class="dev-field"><label>問題番号</label><select id="devQuestionSelect" onchange="devRenderEditor()"></select></div>
+      <div class="dev-field"><label>試験回</label><select id="devExamSelect" onchange="devChangeExam()"></select></div>
+      <div class="dev-field"><label>午前 / 午後</label><select id="devPartSelect" onchange="devChangePart()"><option value="am">午前</option><option value="pm">午後</option></select></div>
+      <div class="dev-field"><label>問題番号</label><select id="devQuestionSelect" onchange="devChangeQuestion()"></select></div>
       <div class="row">
         <button class="secondary" onclick="devApplyChanges(true)">この問題に反映</button>
         <button class="ghost" onclick="devRegenerateExplanation()">AIで解説再生成</button>
@@ -961,14 +961,32 @@ html[data-theme="dark"] .dev-pr-auto-note{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.3.1';
+const APP_VERSION='v2.3.3';
 const APP_UPDATED_AT='2026-06-06';
 const APP_UPDATE_NOTES=[
-  '「この問題に反映」で自動的に一括PRリストへ追加するように変更',
-  'PR操作部を折りたたみ式に変更',
-  '不用意なPR作成操作を防ぎやすい表示に調整'
+  '既存PR更新時にPR本文が二重化しないように修正',
+  '修正内容・送信ファイル・確認欄を統合して重複を削除',
+  '同じ項目は追加せず、編集箇所のみ追記されるように調整'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.3.3',
+    date:'2026-06-06',
+    notes:[
+      '既存PR更新時にPR本文が二重化しないように修正',
+      '修正内容・送信ファイル・確認欄を統合して重複を削除',
+      '同じ項目は追加せず、編集箇所のみ追記されるように調整'
+    ]
+  },
+  {
+    version:'v2.3.2',
+    date:'2026-06-06',
+    notes:[
+      '開発モードで問題・回・午前午後を切り替えた時に古いステータスメッセージを消去',
+      '反映メッセージに対象問題を表示',
+      '一括PRリスト追加メッセージに対象問題を表示'
+    ]
+  },
   {
     version:'v2.3.1',
     date:'2026-06-06',
@@ -2699,6 +2717,34 @@ async function devLoadPart(){
  qSel.innerHTML=(devPack.questions||[]).map((q,i)=>`<option value="${i}">第${q.number}問：${escapeHtml((q.range||'未設定').slice(0,26))}</option>`).join('');
  devRenderEditor();
 }
+function devClearStatusMessages(reason=''){
+ const dev=$('devStatus');
+ if(dev)dev.textContent=reason||'編集対象を変更しました。';
+ const pr=$('devPrStatus');
+ if(pr)pr.textContent='PR操作メッセージはクリアされました。';
+}
+function devCurrentTargetLabel(){
+ try{
+  const q=devCurrentQuestion?.();
+  return devQuestionLabel?devQuestionLabel(devExamId,devPart,q):`${devExamId||''} ${partName(devPart||'am')} 第${q?.number||'?'}問`;
+ }catch(e){
+  const q=devCurrentQuestion?.();
+  return `${devExamId||''} ${partName(devPart||'am')} 第${q?.number||'?'}問`;
+ }
+}
+async function devChangeExam(){
+ devClearStatusMessages('試験回を変更しました。');
+ await devLoadExam();
+}
+async function devChangePart(){
+ devClearStatusMessages('午前/午後を変更しました。');
+ await devLoadPart();
+}
+function devChangeQuestion(){
+ devClearStatusMessages('問題を変更しました。');
+ devRenderEditor();
+}
+
 function devCurrentQuestion(){
  const i=Number($('devQuestionSelect')?.value||0);
  return devPack?.questions?.[i];
@@ -2807,13 +2853,14 @@ function devApplyChanges(autoAddToBatch=false){
  const i=Number($('devQuestionSelect').value||0);
  devPack.questions[i]=devReadForm();
  partsCache[`${devExamId}_${devPart}`]=devPack;
- let msg='この問題に反映しました。JSON保存またはコピーで出力できます。';
+ const target=devCurrentTargetLabel();
+ let msg=`${escapeHtml(target)} に反映しました。JSON保存またはコピーで出力できます。`;
  if(autoAddToBatch && typeof devAddCurrentToPrBatch==='function'){
   try{
    devAddCurrentToPrBatch({silent:true});
-   msg='この問題に反映し、一括PRリストへ自動追加・更新しました。';
+   msg=`${escapeHtml(target)} に反映し、一括PRリストへ自動追加・更新しました。`;
   }catch(e){
-   msg=`この問題に反映しましたが、一括PRリストへの自動追加に失敗しました：${escapeHtml(e.message||e)}`;
+   msg=`${escapeHtml(target)} に反映しましたが、一括PRリストへの自動追加に失敗しました：${escapeHtml(e.message||e)}`;
   }
  }
  $('devStatus').innerHTML=`<span class="status-ok">${msg}</span>`;
@@ -3067,7 +3114,7 @@ function devAddCurrentToPrBatch(options={}){
   saveDevPrBatch(batch);
   if($('devPrTitle')&&!$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle();
   if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
-  if(!silent)devSetPrStatus(`${escapeHtml(item.label)} を一括PRリストへ追加・更新しました。`,true);
+  if(!silent)devSetPrStatus(`対象：${escapeHtml(item.label)}<br>一括PRリストへ追加・更新しました。`,true);
   return item;
  }catch(e){
   if(!silent)devSetPrStatus(`一括PRリストへの追加に失敗しました：${escapeHtml(e.message||e)}`);
@@ -3081,7 +3128,7 @@ function devRemoveCurrentFromPrBatch(){
  batch.items=batch.items.filter(x=>x.key!==key);
  saveDevPrBatch(batch);
  if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
- devSetPrStatus(before===batch.items.length?'この問題は一括PRリストにありません。':'この問題を一括PRリストから削除しました。', before!==batch.items.length);
+ devSetPrStatus(before===batch.items.length?`${escapeHtml(devCurrentTargetLabel())} は一括PRリストにありません。`:`${escapeHtml(devCurrentTargetLabel())} を一括PRリストから削除しました。`, before!==batch.items.length);
 }
 function devRemovePrBatchItem(key){
  const batch=devPrBatch();
