@@ -1,12 +1,12 @@
 {
-  "version": "v2.4.3",
+  "version": "v2.4.4",
   "updatedAt": "2026-06-06",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "文面一括チェックの結果表示ID不一致を修正",
-    "戻るボタンの文言をメニューへへ統一",
-    "未使用のCloudflare Access表記を削除"
+    "SNS共有時にサイト説明文が表示されるようにOGP/Twitter Cardメタタグを追加",
+    "リンクカード用のOGP画像 assets/ogp.png を追加",
+    "検索結果・ブラウザ向けdescriptionを整理"
   ]
 }
