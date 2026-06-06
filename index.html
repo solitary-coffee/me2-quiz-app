@@ -823,7 +823,7 @@ html[data-theme="dark"] .ce-exam-link{
   <div class="classic-action-row">
     <button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button>
     <span class="pill" id="roundCount">読み込み中</span>
-    <a class="ce-exam-link" id="ceExamLink" href="/ce/" target="_blank" rel="noopener">CE国家試験版はこちら！！</a>
+    <a class="ce-exam-link" id="ceExamLink" href="https://ce.dpi-bot.com/" target="_blank" rel="noopener">CE国家試験版はこちら！！</a>
   </div>
 
   <details class="classic-info-details">
@@ -1151,7 +1151,7 @@ html[data-theme="dark"] .ce-exam-link{
 <script>
 const APP_VERSION='v2.4.5';
 const APP_UPDATED_AT='2026-06-06';
-const CE_EXAM_SITE_URL='/ce/';
+const CE_EXAM_SITE_URL='https://ce.dpi-bot.com/';
 const APP_UPDATE_NOTES=[
   'トップ画面のログイン/登録・回数表示の右側にCE国家試験版リンクボタンを追加',
   'CE国家試験版リンク先を定数で変更できるように追加',
@@ -3997,8 +3997,14 @@ function renderAnswerViewBoth(filter='all'){
  $('answerViewList').innerHTML=sections.join('');
 }
 
+function setupCeExamLink(){
+ const a=$('ceExamLink');
+ if(!a)return;
+ a.href=CE_EXAM_SITE_URL || 'https://ce.dpi-bot.com/';
+}
 async function init(){
  applyTheme(getStoredTheme());
+ setupCeExamLink();
  renderVersionInfo();
  await loadVersionFromMarkdown();
  $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
