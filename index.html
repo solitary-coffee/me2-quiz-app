@@ -799,10 +799,36 @@ html[data-theme="dark"] .ce-exam-link{
   }
 }
 
+
+/* ランダム出題：種類別フィルタ */
+.kind-details{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--card);
+  padding:0;
+  margin:12px 0;
+  overflow:hidden;
+}
+.kind-details>summary{
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px;
+  font-weight:900;
+  color:var(--accent);
+}
+.kind-details>summary::after{content:'開く';font-size:12px;color:var(--muted);font-weight:800}
+.kind-details[open]>summary::after{content:'閉じる'}
+.kind-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 14px 10px}
+.kind-details .check-grid{margin:0 14px 14px}
+html[data-theme="dark"] .kind-details{background:#0f172a;border-color:#334155}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.4.5</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.5.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -823,7 +849,7 @@ html[data-theme="dark"] .ce-exam-link{
   <div class="classic-action-row">
     <button class="ghost" onclick="showLoginInfo()">ログイン / 登録</button>
     <span class="pill" id="roundCount">読み込み中</span>
-    <a class="ce-exam-link" id="ceExamLink" href="https://ce.dpi-bot.com/" target="_blank" rel="noopener">CE国家試験版はこちら！！</a>
+    <a class="ce-exam-link" id="ceExamLink" href="/ce/" target="_blank" rel="noopener">CE国家試験版はこちら！！</a>
   </div>
 
   <details class="classic-info-details">
@@ -949,6 +975,17 @@ html[data-theme="dark"] .ce-exam-link{
       <div id="randomRangeChecks" class="check-grid"></div>
     </details>
 
+    <details class="kind-details">
+      <summary>種類別に選択 <span class="small">未選択なら全種類</span></summary>
+      <div class="kind-toolbar">
+        <button class="ghost mini" type="button" onclick="clearRandomKinds()">全種類にする</button>
+        <button class="ghost mini" type="button" onclick="selectRandomKindPreset('clinical')">臨床工学系</button>
+        <button class="ghost mini" type="button" onclick="selectRandomKindPreset('safety')">感染・安全</button>
+      </div>
+      <div id="randomKindChecks" class="check-grid"></div>
+      <p class="small" style="margin:0 14px 14px">問題JSONは変更せず、問題文・選択肢・解説などに含まれる語句から自動判定します。</p>
+    </details>
+
     <div class="random-actions">
       <button onclick="startRandomQuiz()">ランダム演習開始</button>
       <button class="secondary hidden" id="resumeRandomBtn" onclick="resumeRandomQuiz()">ランダム途中から</button>
@@ -958,7 +995,7 @@ html[data-theme="dark"] .ce-exam-link{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.4.5</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.5.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -1149,15 +1186,40 @@ html[data-theme="dark"] .ce-exam-link{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.4.5';
+const APP_VERSION='v2.5.0';
 const APP_UPDATED_AT='2026-06-06';
-const CE_EXAM_SITE_URL='https://ce.dpi-bot.com/';
+const CE_EXAM_SITE_URL='/ce/';
 const APP_UPDATE_NOTES=[
-  'トップ画面のログイン/登録・回数表示の右側にCE国家試験版リンクボタンを追加',
-  'CE国家試験版リンク先を定数で変更できるように追加',
-  'スマホ表示でもボタンが崩れにくいようにスタイルを調整'
+  'ランダム出題に種類別フィルタを追加',
+  '呼吸器・人工心肺・感染症・安全管理などで問題を抽出可能に変更',
+  '問題JSONを変更せず、既存データの語句から種類を自動判定する方式に対応'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.5.0',
+    date:'2026-06-06',
+    notes:[
+      'ランダム出題に種類別フィルタを追加',
+      '呼吸器・人工心肺・感染症・安全管理などで問題を抽出可能に変更',
+      '問題JSONを変更せず、既存データの語句から種類を自動判定する方式に対応'
+    ]
+  },
+  {
+    version:'v2.4.7',
+    date:'2026-06-06',
+    notes:[
+      'OGP画像の対応機種表記から「対応機種：」を削除',
+      'SNS共有時のリンクカード画像を更新'
+    ]
+  },
+  {
+    version:'v2.4.6',
+    date:'2026-06-06',
+    notes:[
+      'OGP画像の対応機種表記を「スマホ / iPad / PC など」に変更',
+      'SNS共有時のリンクカード画像を更新'
+    ]
+  },
   {
     version:'v2.4.5',
     date:'2026-06-06',
@@ -1672,6 +1734,18 @@ const RANDOM_RANGES=[
  {id:'operation',label:'操作運用'},
  {id:'maintenance',label:'保守安全'}
 ];
+const RANDOM_KINDS=[
+ {id:'respiratory',label:'呼吸器',keywords:['呼吸器','人工呼吸','換気','吸気','呼気','PEEP','CPAP','IPPV','SIMV','PSV','酸素','加湿','気道','肺','肺胞','気管','スパイロ','フローセンサ','カプノ','CO2','SpO2','パルスオキシ','一回換気量','分時換気量','コンプライアンス']},
+ {id:'heart_lung',label:'人工心肺・ECMO',keywords:['人工心肺','体外循環','ECMO','膜型人工肺','人工肺','ローラポンプ','遠心ポンプ','脱血','送血','灌流','カニューレ','ヘパリン','ACT','IABP','補助循環','酸素加装置']},
+ {id:'infection',label:'感染症・消毒滅菌',keywords:['感染','感染症','免疫','ワクチン','細菌','ウイルス','真菌','滅菌','消毒','消毒薬','芽胞','オートクレーブ','EOG','酸化エチレン','グルタラール','次亜塩素酸','アルコール','無菌','清潔','不潔','手指衛生','標準予防策','隔離']},
+ {id:'safety',label:'安全管理',keywords:['安全管理','医療安全','保守安全','漏れ電流','接地','等電位','非接地','単一故障','電撃','マクロショック','ミクロショック','非常電源','停電','アラーム','警報','JIS','IEC','ME機器管理','点検','保守','医療ガス','ヒヤリ','リスク']},
+ {id:'dialysis',label:'血液浄化・透析',keywords:['透析','血液透析','血液浄化','ダイアライザ','透析膜','限外濾過','除水','透析液','腹膜透析','シャント','抗凝固','ヘパリン','オンラインHDF','血漿交換','吸着','クリアランス','Kt/V']},
+ {id:'circulation',label:'循環器・心電図',keywords:['心電図','ECG','心拍','心室','心房','洞結節','刺激伝導','不整脈','除細動','AED','ペースメーカ','心臓','血圧','血流','心拍出量','脈波','観血','非観血','IABP']},
+ {id:'monitor',label:'生体計測・モニタ',keywords:['モニタ','生体計測','センサ','トランスデューサ','電極','心電計','脳波計','筋電計','血圧計','体温計','パルスオキシ','カプノ','圧力センサ','ストレインゲージ','差動トランス','ホール素子','圧電素子','熱電対']},
+ {id:'imaging',label:'画像診断・内視鏡',keywords:['X線','CT','MRI','超音波','エコー','内視鏡','画像','造影','プローブ','ドプラ','サーモグラ','放射線','ガンマ','核医学']},
+ {id:'surgery',label:'手術室・治療機器',keywords:['手術','電気メス','レーザ','麻酔器','除細動器','ペースメーカ','輸液ポンプ','シリンジポンプ','吸引器','ナビゲーション','凝固','切開','対極板']},
+ {id:'homecare',label:'在宅・酸素療法',keywords:['在宅','酸素濃縮器','HOT','CPAP','睡眠時無呼吸','吸引器','人工呼吸器在宅','ボンベ','酸素療法']}
+];
 
 let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
@@ -2087,8 +2161,31 @@ function rangeCategory(range){
 function rangeCategoryLabel(id){
  return RANDOM_RANGES.find(x=>x.id===id)?.label||id||'その他';
 }
+function randomQuestionSearchText(q){
+ return [
+  q?.range,
+  q?.stem,
+  ...(q?.choices||[]),
+  q?.tip,
+  ...(q?.choiceNotes||[]),
+  q?.image
+ ].map(x=>String(x||'')).join(' ');
+}
+function randomKindIds(q){
+ const text=randomQuestionSearchText(q);
+ return RANDOM_KINDS.filter(k=>(k.keywords||[]).some(word=>text.includes(word))).map(k=>k.id);
+}
+function randomKindLabel(id){
+ return RANDOM_KINDS.find(x=>x.id===id)?.label||id||'その他';
+}
+function randomKindLabels(ids){
+ return (ids||[]).map(randomKindLabel).join('・')||'種類未分類';
+}
 function getSelectedRandomRanges(){
  return Array.from(document.querySelectorAll('.random-range-check:checked')).map(x=>x.value);
+}
+function getSelectedRandomKinds(){
+ return Array.from(document.querySelectorAll('.random-kind-check:checked')).map(x=>x.value);
 }
 function renderRandomMenu(){
  if(!$('randomFrom')||!examsIndex?.exams)return;
@@ -2100,8 +2197,11 @@ function renderRandomMenu(){
  $('randomTo').innerHTML=opts;
  $('randomFrom').value=currentFrom||String(examNumber(exams[0].id));
  $('randomTo').value=currentTo||String(examNumber(exams[exams.length-1].id));
- if(!$('randomRangeChecks').innerHTML){
+ if($('randomRangeChecks')&&!$('randomRangeChecks').innerHTML){
   $('randomRangeChecks').innerHTML=RANDOM_RANGES.map(r=>`<label><input type="checkbox" class="random-range-check" value="${r.id}" onchange="renderRandomMenu()"> <span>${r.label}</span></label>`).join('');
+ }
+ if($('randomKindChecks')&&!$('randomKindChecks').innerHTML){
+  $('randomKindChecks').innerHTML=RANDOM_KINDS.map(k=>`<label><input type="checkbox" class="random-kind-check" value="${k.id}" onchange="renderRandomMenu()"> <span>${k.label}</span></label>`).join('');
  }
  const saved=loadLocal(stateKey(RANDOM_EXAM_ID,RANDOM_PART));
  const btn=$('resumeRandomBtn');
@@ -2116,8 +2216,11 @@ function renderRandomMenu(){
  const ids=getSelectedExamIdsForRandom();
  const parts=getSelectedRandomParts();
  const ranges=getSelectedRandomRanges();
+ const kinds=getSelectedRandomKinds();
  const nums=ids.map(examNumber);
- const txt=ids.length?`第${Math.min(...nums)}回〜第${Math.max(...nums)}回｜${parts.map(partName).join('・')}｜${ranges.length?ranges.length+'範囲':'全範囲'}｜${$('randomCount')?.value||20}問`:'試験回が選択されていません。';
+ const rangeText=ranges.length?`${ranges.length}範囲`:'全範囲';
+ const kindText=kinds.length?`${kinds.length}種類`:'全種類';
+ const txt=ids.length?`第${Math.min(...nums)}回〜第${Math.max(...nums)}回｜${parts.map(partName).join('・')}｜${rangeText}｜${kindText}｜${$('randomCount')?.value||20}問`:'試験回が選択されていません。';
  if($('randomPoolInfo')) $('randomPoolInfo').textContent=txt;
  updateRandomPresetButtons();
 }
@@ -2143,6 +2246,20 @@ function selectCoreRandomRanges(){
 function selectClinicalRandomRanges(){
  selectRandomRanges(['principle','operation','maintenance']);
 }
+function clearRandomKinds(){
+ document.querySelectorAll('.random-kind-check').forEach(x=>x.checked=false);
+ renderRandomMenu();
+}
+function selectRandomKinds(ids){
+ const set=new Set(ids);
+ document.querySelectorAll('.random-kind-check').forEach(x=>x.checked=set.has(x.value));
+ renderRandomMenu();
+}
+function selectRandomKindPreset(name){
+ if(name==='clinical')return selectRandomKinds(['respiratory','heart_lung','dialysis','circulation','monitor']);
+ if(name==='safety')return selectRandomKinds(['infection','safety']);
+ clearRandomKinds();
+}
 function setRandomCount(n){$('randomCount').value=n;updateRandomPresetButtons();renderRandomMenu();}
 function shuffleArray(arr){
  const a=arr.slice();
@@ -2156,6 +2273,7 @@ async function buildRandomPool(){
  const ids=getSelectedExamIdsForRandom();
  const parts=getSelectedRandomParts();
  const ranges=getSelectedRandomRanges();
+ const kinds=getSelectedRandomKinds();
  const pool=[];
  for(const examId of ids){
   const rec=getExamRecord(examId);
@@ -2166,6 +2284,8 @@ async function buildRandomPool(){
    (pack.questions||[]).forEach((q,idx)=>{
     const cat=rangeCategory(q.range||'');
     if(ranges.length&&!ranges.includes(cat))return;
+    const kindIds=randomKindIds(q);
+    if(kinds.length&&!kindIds.some(id=>kinds.includes(id)))return;
     pool.push({
      ...q,
      sourceExamId:String(examId),
@@ -2174,7 +2294,9 @@ async function buildRandomPool(){
      sourcePartLabel:partName(part),
      sourceIndex:idx,
      sourceRangeCategory:cat,
-     sourceRangeCategoryLabel:rangeCategoryLabel(cat)
+     sourceRangeCategoryLabel:rangeCategoryLabel(cat),
+     sourceKindIds:kindIds,
+     sourceKindLabels:randomKindLabels(kindIds)
     });
    });
   }
@@ -2188,11 +2310,11 @@ async function startRandomQuiz(){
   $('randomPoolInfo').textContent='ランダム問題を準備中…';
   const pool=await buildRandomPool();
   if(!pool.length){
-   $('randomPoolInfo').innerHTML='<span class="status-warn">条件に合う問題がありません。回数・午前/午後・範囲を変更してください。</span>';
+   $('randomPoolInfo').innerHTML='<span class="status-warn">条件に合う問題がありません。回数・午前/午後・範囲・種類を変更してください。</span>';
    return;
   }
   const selected=shuffleArray(pool).slice(0,Math.min(count,pool.length));
-  const ids=getSelectedExamIdsForRandom(), parts=getSelectedRandomParts(), ranges=getSelectedRandomRanges();
+  const ids=getSelectedExamIdsForRandom(), parts=getSelectedRandomParts(), ranges=getSelectedRandomRanges(), kinds=getSelectedRandomKinds();
   state={
    quizType:'random',
    examId:RANDOM_EXAM_ID,
@@ -2215,6 +2337,7 @@ async function startRandomQuiz(){
     toExam:Math.max(...ids.map(examNumber)),
     parts,
     ranges,
+    kinds,
     questionCount:selected.length,
     poolCount:pool.length
    }
@@ -2465,7 +2588,7 @@ async function showRandomHistory(){
   const wrong=(h.answers||[]).map((a,i)=>({a,q:qs[h.order?.[i]]||qs[i]})).filter(x=>x.a&&!x.a.correct&&x.q);
   const wrongHtml=wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabelForState(q,h))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解、または間違いデータなし。</p>';
   const st=h.randomSettings||{};
-  const setting=`第${st.fromExam||'?'}回〜第${st.toExam||'?'}回 / ${(st.parts||[]).map(partName).join('・')||'午前・午後'} / ${st.ranges?.length?st.ranges.length+'範囲':'全範囲'}`;
+  const setting=`第${st.fromExam||'?'}回〜第${st.toExam||'?'}回 / ${(st.parts||[]).map(partName).join('・')||'午前・午後'} / ${st.ranges?.length?st.ranges.length+'範囲':'全範囲'} / ${st.kinds?.length?st.kinds.map(randomKindLabel).join('・'):'全種類'}`;
   return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${escapeHtml(setting)}<br>${h.mode==='history_wrong'?'間違い復習 / ':''}${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<details><summary>この回の間違いを見る</summary>${wrongHtml}</details><div class="row" style="margin-top:8px"><button class="secondary" ${wrong.length?'':'disabled'} onclick="retryRandomHistoryWrong('${escapeHtml(h.attemptId||'legacy')}')">この回の間違いだけ解く</button></div></div>`;
  }).join('');
  $('finalPart').textContent='ランダム履歴';
@@ -2480,7 +2603,8 @@ function getCurrentQuestion(){return currentPack()?.questions?.[state.order[stat
 function renderQuestion(){
  const q=getCurrentQuestion();if(!q){showFinish();return}
  const answered=state.answers?.[state.index];
- $('qMeta').textContent=`${questionSourceLabel(q)} / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}${state.quizType==='random'?' / カテゴリ：'+(q.sourceRangeCategoryLabel||rangeCategoryLabel(rangeCategory(q.range||''))):''}`;
+ const kindMeta=state.quizType==='random'?` / 種類：${q.sourceKindLabels||randomKindLabels(randomKindIds(q))}`:'';
+ $('qMeta').textContent=`${questionSourceLabel(q)} / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}${state.quizType==='random'?' / カテゴリ：'+(q.sourceRangeCategoryLabel||rangeCategoryLabel(rangeCategory(q.range||''))):''}${kindMeta}`;
  $('bar').style.width=`${state.index/state.order.length*100}%`;
  $('stem').textContent=q.stem;
  const qImg=$('questionImage');
@@ -4000,7 +4124,7 @@ function renderAnswerViewBoth(filter='all'){
 function setupCeExamLink(){
  const a=$('ceExamLink');
  if(!a)return;
- a.href=CE_EXAM_SITE_URL || 'https://ce.dpi-bot.com/';
+ a.href=CE_EXAM_SITE_URL || '/ce/';
 }
 async function init(){
  applyTheme(getStoredTheme());

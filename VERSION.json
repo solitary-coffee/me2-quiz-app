@@ -1,12 +1,12 @@
 {
-  "version": "v2.4.4",
+  "version": "v2.5.0",
   "updatedAt": "2026-06-06",
   "source": "CHANGELOG.md",
   "developer": "孤独のコーヒー",
   "contactEmail": "kikukazu.kk0226@gmail.com",
   "notes": [
-    "SNS共有時にサイト説明文が表示されるようにOGP/Twitter Cardメタタグを追加",
-    "リンクカード用のOGP画像 assets/ogp.png を追加",
-    "検索結果・ブラウザ向けdescriptionを整理"
+    "ランダム出題に種類別フィルタを追加",
+    "呼吸器・人工心肺・感染症・安全管理などで問題を抽出可能に変更",
+    "問題JSONを変更せず、既存データの語句から種類を自動判定する方式に対応"
   ]
 }
