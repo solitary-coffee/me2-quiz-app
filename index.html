@@ -825,10 +825,359 @@ html[data-theme="dark"] .ce-exam-link{
 .kind-details .check-grid{margin:0 14px 14px}
 html[data-theme="dark"] .kind-details{background:#0f172a;border-color:#334155}
 
+
+/* 開発モード：問題種類別カテゴリ編集 */
+.dev-kind-editor{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:12px;margin:0}
+.dev-kind-editor h3{margin:0 0 10px;color:var(--accent)}
+.dev-kind-editor .kind-check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.dev-kind-editor label{display:flex;gap:7px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:8px;font-weight:800;font-size:13px}
+.dev-kind-editor input[type=checkbox]{width:16px;height:16px;margin-top:2px;flex:0 0 auto}
+html[data-theme="dark"] .dev-kind-editor{background:#111827;border-color:#334155}
+html[data-theme="dark"] .dev-kind-editor label{background:#0f172a;border-color:#334155}
+@media(max-width:760px){.dev-kind-editor .kind-check-grid{grid-template-columns:1fr}}
+
+
+/* 旧JIS・旧規格に関するユーザー向け注意表示 */
+.standard-warning{
+  margin:10px 0;
+  padding:12px 14px;
+  border:1px solid #f59e0b;
+  border-radius:14px;
+  background:#fffbeb;
+  color:#78350f;
+  line-height:1.65;
+}
+.standard-warning strong{display:block;margin-bottom:4px}
+.standard-warning p{margin:0}
+.standard-warning .small{margin-top:5px;color:#92400e}
+html[data-theme="dark"] .standard-warning{
+  background:#451a03;
+  border-color:#f59e0b;
+  color:#fde68a;
+}
+html[data-theme="dark"] .standard-warning .small{color:#fcd34d}
+/* 開発モード：旧JIS・旧規格フラグ */
+.dev-standard-warning{
+  margin-top:12px;
+  padding:12px;
+  border:1px solid #f59e0b;
+  border-radius:14px;
+  background:#fffbeb;
+}
+.dev-standard-warning h4{margin:0 0 9px;color:#92400e}
+.dev-standard-warning .row{margin-top:8px}
+.dev-standard-warning .small{margin:8px 0 0;color:#92400e;line-height:1.55}
+.dev-standard-warning.is-disabled{opacity:.72}
+html[data-theme="dark"] .dev-standard-warning{
+  background:#451a03;
+  border-color:#b45309;
+}
+html[data-theme="dark"] .dev-standard-warning h4,
+html[data-theme="dark"] .dev-standard-warning .small{color:#fde68a}
+
+
+/* 出題画面：計算用ホワイトボード */
+.whiteboard-modal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  background:rgba(15,23,42,.62);
+  backdrop-filter:blur(2px);
+}
+.whiteboard-dialog{
+  width:min(980px,100%);
+  max-height:calc(100dvh - 32px);
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:var(--card);
+  color:var(--ink);
+  box-shadow:0 24px 70px rgba(15,23,42,.35);
+}
+.whiteboard-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--line);
+}
+.whiteboard-head h3{
+  margin:0;
+  font-size:18px;
+}
+.whiteboard-head p{
+  margin:4px 0 0;
+}
+.whiteboard-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+}
+.whiteboard-toolbar button{
+  min-height:38px;
+  padding:7px 11px;
+}
+.whiteboard-toolbar button.active{
+  border-color:var(--accent);
+  background:var(--accent);
+  color:#fff;
+}
+.whiteboard-control{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:38px;
+  padding:6px 9px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--bg);
+  font-size:13px;
+  font-weight:800;
+}
+.whiteboard-control input[type="color"]{
+  width:30px;
+  height:28px;
+  padding:0;
+  border:0;
+  border-radius:7px;
+  background:transparent;
+  cursor:pointer;
+}
+.whiteboard-control input[type="range"]{
+  width:112px;
+  accent-color:var(--accent);
+}
+.whiteboard-size-label{
+  min-width:32px;
+  text-align:right;
+  color:var(--muted);
+}
+.whiteboard-swatches{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+.whiteboard-swatch{
+  width:26px;
+  min-width:26px;
+  height:26px;
+  min-height:26px;
+  padding:0 !important;
+  border-radius:999px !important;
+  border:2px solid rgba(15,23,42,.16) !important;
+}
+.whiteboard-swatch[data-color="#111827"]{background:#111827}
+.whiteboard-swatch[data-color="#dc2626"]{background:#dc2626}
+.whiteboard-swatch[data-color="#2563eb"]{background:#2563eb}
+.whiteboard-swatch[data-color="#16a34a"]{background:#16a34a}
+.whiteboard-swatch[data-color="#7c3aed"]{background:#7c3aed}
+.whiteboard-swatch.active{
+  outline:3px solid rgba(37,99,235,.35);
+  outline-offset:2px;
+}
+.whiteboard-canvas-wrap{
+  padding:14px 16px 16px;
+}
+.whiteboard-canvas{
+  display:block;
+  width:100%;
+  height:min(58dvh,560px);
+  min-height:320px;
+  border:1px solid #cbd5e1;
+  border-radius:16px;
+  background:#fff;
+  touch-action:none;
+  cursor:crosshair;
+  box-shadow:inset 0 0 0 1px rgba(15,23,42,.02);
+}
+.whiteboard-help{
+  margin:9px 2px 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+}
+html[data-theme="dark"] .whiteboard-dialog{
+  background:#111827;
+  border-color:#334155;
+  color:#e5e7eb;
+}
+html[data-theme="dark"] .whiteboard-head,
+html[data-theme="dark"] .whiteboard-toolbar{
+  border-color:#334155;
+}
+html[data-theme="dark"] .whiteboard-control{
+  background:#0f172a;
+  border-color:#334155;
+}
+html[data-theme="dark"] .whiteboard-canvas{
+  border-color:#64748b;
+  background:#fff;
+}
+@media(max-width:760px){
+  .whiteboard-modal{padding:8px}
+  .whiteboard-dialog{max-height:calc(100dvh - 16px);border-radius:18px}
+  .whiteboard-head{padding:12px}
+  .whiteboard-toolbar{padding:10px 12px}
+  .whiteboard-canvas-wrap{padding:12px}
+  .whiteboard-canvas{height:54dvh;min-height:270px}
+  .whiteboard-control input[type="range"]{width:92px}
+}
+
+
+/* ホワイトボード v2.5.6: 問題確認つき・なめらか描画 */
+.whiteboard-dialog{
+  width:min(1180px,100%);
+}
+.whiteboard-body{
+  display:grid;
+  grid-template-columns:minmax(280px,.85fr) minmax(440px,1.35fr);
+  gap:0;
+}
+.whiteboard-preview{
+  border-right:1px solid var(--line);
+  padding:14px 14px 16px;
+  background:var(--bg);
+}
+.whiteboard-preview h4{
+  margin:0 0 8px;
+  font-size:15px;
+}
+.whiteboard-preview-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:8px;
+}
+.whiteboard-preview-stem{
+  white-space:pre-wrap;
+  font-weight:800;
+  line-height:1.7;
+  margin:8px 0 10px;
+}
+.whiteboard-preview-image details{
+  margin:8px 0;
+}
+.whiteboard-preview-image img{
+  max-height:260px;
+  object-fit:contain;
+}
+.whiteboard-preview-choices{
+  display:grid;
+  gap:7px;
+  margin-top:10px;
+}
+.whiteboard-preview-choice{
+  width:100%;
+  text-align:left;
+  justify-content:flex-start;
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  min-height:40px;
+  border-radius:13px;
+  padding:8px 10px;
+}
+.whiteboard-preview-choice .num{
+  flex:0 0 auto;
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:#e0f2fe;
+  color:#0369a1;
+  font-weight:900;
+}
+.whiteboard-preview-choice.correct{
+  border-color:#22c55e;
+  background:#dcfce7;
+  color:#166534;
+}
+.whiteboard-preview-choice.wrong{
+  border-color:#ef4444;
+  background:#fee2e2;
+  color:#991b1b;
+}
+.whiteboard-preview-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:10px 0 12px;
+}
+.whiteboard-board{
+  min-width:0;
+}
+.whiteboard-canvas{
+  height:min(56dvh,540px);
+}
+.whiteboard-open-result{
+  margin-top:10px;
+}
+html[data-theme="dark"] .whiteboard-preview{
+  background:#0f172a;
+  border-color:#334155;
+}
+html[data-theme="dark"] .whiteboard-preview-choice .num{
+  background:#082f49;
+  color:#bae6fd;
+}
+html[data-theme="dark"] .whiteboard-preview-choice.correct{
+  background:#052e16;
+  color:#bbf7d0;
+  border-color:#166534;
+}
+html[data-theme="dark"] .whiteboard-preview-choice.wrong{
+  background:#450a0a;
+  color:#fecaca;
+  border-color:#7f1d1d;
+}
+@media(max-width:920px){
+  .whiteboard-body{
+    grid-template-columns:1fr;
+  }
+  .whiteboard-preview{
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    max-height:38dvh;
+    overflow:auto;
+  }
+  .whiteboard-canvas{
+    height:42dvh;
+    min-height:240px;
+  }
+}
+
+
+/* ホワイトボード v2.5.7: さらに滑らかな描画と明確な問題移動 */
+.whiteboard-nav-button{
+  white-space:nowrap;
+}
+.whiteboard-nav-button[disabled]{
+  opacity:.5;
+  cursor:not-allowed;
+}
+.whiteboard-canvas{
+  will-change:contents;
+  image-rendering:auto;
+}
+@media(max-width:760px){
+  .whiteboard-nav-button{
+    flex:1 1 calc(50% - 6px);
+  }
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.5.0</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.5.9</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -983,7 +1332,7 @@ html[data-theme="dark"] .kind-details{background:#0f172a;border-color:#334155}
         <button class="ghost mini" type="button" onclick="selectRandomKindPreset('safety')">感染・安全</button>
       </div>
       <div id="randomKindChecks" class="check-grid"></div>
-      <p class="small" style="margin:0 14px 14px">問題JSONは変更せず、問題文・選択肢・解説などに含まれる語句から自動判定します。</p>
+      <p class="small" style="margin:0 14px 14px">問題JSON内の kindCategories を優先して分類します。未設定の問題のみカテゴリマップ・キーワード判定を使用します。</p>
     </details>
 
     <div class="random-actions">
@@ -995,7 +1344,7 @@ html[data-theme="dark"] .kind-details{background:#0f172a;border-color:#334155}
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.5.0</span> / 更新日：2026-06-06</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.5.9</span> / 更新日：2026-07-02</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -1091,6 +1440,7 @@ html[data-theme="dark"] .kind-details{background:#0f172a;border-color:#334155}
     <div class="dev-panel dev-left-panel dev-left-stack">
       <div id="devStatus" class="dev-status"></div>
       <div id="devEditorBasic" class="dev-editor-basic"></div>
+      <div id="devKindEditor" class="dev-kind-editor"></div>
 
       <div class="dev-commit-input-visible">
         <h3>各問題のコミットメッセージ / 編集箇所</h3>
@@ -1174,7 +1524,63 @@ html[data-theme="dark"] .kind-details{background:#0f172a;border-color:#334155}
     <div id="devCheckResults" class="dev-check-results"></div>
   </section>
 </section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary hidden" onclick="nextQuestion()">次の問題へ</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+
+<div id="whiteboardModal" class="whiteboard-modal hidden" role="dialog" aria-modal="true" aria-labelledby="whiteboardTitle" onclick="if(event.target===this)closeWhiteboard()">
+  <section class="whiteboard-dialog">
+    <div class="whiteboard-head">
+      <div>
+        <h3 id="whiteboardTitle">計算用ホワイトボード</h3>
+        <p class="small" id="whiteboardQuestionLabel">この問題の計算メモです。</p>
+      </div>
+      <button class="ghost" type="button" onclick="closeWhiteboard()">閉じる</button>
+    </div>
+    <div class="whiteboard-toolbar" aria-label="ホワイトボード操作">
+      <button id="wbPenBtn" class="active" type="button" onclick="setWhiteboardTool('pen')">✏️ ペン</button>
+      <button id="wbEraserBtn" class="ghost" type="button" onclick="setWhiteboardTool('eraser')">消しゴム</button>
+      <span class="whiteboard-control">
+        <label for="wbColor">色</label>
+        <input id="wbColor" type="color" value="#111827" aria-label="ペンの色">
+      </span>
+      <div class="whiteboard-swatches" aria-label="ペン色の候補">
+        <button class="whiteboard-swatch active" type="button" data-color="#111827" aria-label="黒" onclick="setWhiteboardColor('#111827')"></button>
+        <button class="whiteboard-swatch" type="button" data-color="#dc2626" aria-label="赤" onclick="setWhiteboardColor('#dc2626')"></button>
+        <button class="whiteboard-swatch" type="button" data-color="#2563eb" aria-label="青" onclick="setWhiteboardColor('#2563eb')"></button>
+        <button class="whiteboard-swatch" type="button" data-color="#16a34a" aria-label="緑" onclick="setWhiteboardColor('#16a34a')"></button>
+        <button class="whiteboard-swatch" type="button" data-color="#7c3aed" aria-label="紫" onclick="setWhiteboardColor('#7c3aed')"></button>
+      </div>
+      <span class="whiteboard-control">
+        <label for="wbSize">太さ</label>
+        <input id="wbSize" type="range" min="1" max="24" step="1" value="4" aria-label="ペンの太さ">
+        <span class="whiteboard-size-label" id="wbSizeLabel">4px</span>
+      </span>
+      <button id="wbUndoBtn" class="ghost" type="button" onclick="whiteboardUndo()">↶ 描画を1手戻す</button>
+      <button id="wbRedoBtn" class="ghost" type="button" onclick="whiteboardRedo()">↷ 描画を1手進む</button>
+      <button class="danger" type="button" onclick="whiteboardClear()">全消去</button>
+    </div>
+    <div class="whiteboard-body">
+      <aside class="whiteboard-preview" aria-label="問題確認">
+        <h4>問題・選択肢を確認</h4>
+        <div id="wbPreviewMeta" class="whiteboard-preview-meta"></div>
+        <div id="wbPreviewStem" class="whiteboard-preview-stem"></div>
+        <div id="wbPreviewImage" class="whiteboard-preview-image"></div>
+        <div id="wbPreviewChoices" class="whiteboard-preview-choices"></div>
+        <div class="whiteboard-preview-actions">
+          <button class="ghost whiteboard-nav-button" id="wbPrevQuestionBtn" type="button" onclick="whiteboardPrevQuestion()">◀ 1問戻る</button>
+          <button class="secondary whiteboard-nav-button" id="wbNextQuestionBtn" type="button" onclick="whiteboardNextQuestion()">進む ▶</button>
+        </div>
+        <p class="small">左の選択肢ボタンから、そのまま回答できます。</p>
+      </aside>
+      <div class="whiteboard-board">
+        <div class="whiteboard-canvas-wrap">
+          <canvas id="whiteboardCanvas" class="whiteboard-canvas" aria-label="計算用ホワイトボード"></canvas>
+          <p class="whiteboard-help">指・Apple Pencil・マウスで書けます。板書はこの演習中だけ問題ごとに一時保持されます。「前の問題へ」で戻った場合は復元されますが、メニューへ戻る・演習終了・ページ更新時には消去されます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
 <section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><div id="wrongList"></div></section>
 
 <footer class="site-footer">
@@ -1186,15 +1592,96 @@ html[data-theme="dark"] .kind-details{background:#0f172a;border-color:#334155}
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.5.0';
-const APP_UPDATED_AT='2026-06-06';
+const APP_VERSION='v2.5.9';
+const APP_UPDATED_AT='2026-07-02';
 const CE_EXAM_SITE_URL='/ce/';
 const APP_UPDATE_NOTES=[
-  'ランダム出題に種類別フィルタを追加',
-  '呼吸器・人工心肺・感染症・安全管理などで問題を抽出可能に変更',
-  '問題JSONを変更せず、既存データの語句から種類を自動判定する方式に対応'
+  'ホワイトボード上部の問題移動ボタンを削除',
+  '問題移動は左下の「1問戻る」「進む」に統一'
 ];
 const APP_VERSION_HISTORY=[
+  {
+    version:'v2.5.9',
+    date:'2026-07-02',
+    notes:[
+      'ホワイトボード上部の問題移動ボタンを削除',
+      '問題移動は左下の「1問戻る」「進む」に統一'
+    ]
+  },
+  {
+    version:'v2.5.8',
+    date:'2026-07-02',
+    notes:[
+      'ホワイトボードの描画に「1手戻す」と「1手進む」を追加',
+      '描画を戻した後に、取り消した線・消去・全消去を1操作ずつ復元可能に変更',
+      '描画操作ごとにボタンの有効・無効を自動更新'
+    ]
+  },
+  {
+    version:'v2.5.7',
+    date:'2026-07-02',
+    notes:[
+      'ホワイトボードの描画をさらに滑らかに改善',
+      'ホワイトボード上部に「1問戻る」「進む」を追加',
+      'ホワイトボードを閉じずに問題を切り替えられるように変更'
+    ]
+  },
+  {
+    version:'v2.5.6',
+    date:'2026-07-02',
+    notes:[
+      'ホワイトボードの描画を滑らかに改善',
+      'ホワイトボード展開中でも問題文・図表・選択肢を確認可能に変更',
+      'ホワイトボード内から回答・前の問題・進む操作に対応'
+    ]
+  },
+  {
+    version:'v2.5.5',
+    date:'2026-07-02',
+    notes:[
+      'ホワイトボードの板書を端末へ保存しない仕様に変更',
+      '解答中は問題ごとに一時保持し、「前の問題へ」で戻った場合だけ復元',
+      'メニューへ戻る・演習終了・ページ更新時には板書を破棄'
+    ]
+  },
+  {
+    version:'v2.5.4',
+    date:'2026-07-02',
+    notes:[
+      '出題画面に計算用ホワイトボードを追加',
+      'ペン・消しゴム・色・太さ変更・1手戻す・全消去に対応',
+      '問題ごとの板書を端末内に自動保存し、同じ問題を開いたときに復元'
+    ]
+  },
+  {
+    version:'v2.5.3',
+    date:'2026-07-01',
+    notes:[
+      '旧JIS・旧規格に関する注意表示に対応',
+      '問題JSONの standardWarning.legacyJis を読み込み、問題画面と解説に注意を表示',
+      '開発モードで旧JISフラグ・規格名・現行規格との照合要否をチェックボックス形式で編集可能に変更'
+    ]
+  },
+  {
+    version:'v2.5.2',
+    date:'2026-06-06',
+    notes:[
+      '種類別カテゴリを問題JSONの kindCategories に保存する方式へ変更',
+      '問題文・選択肢・解説は変更せず、カテゴリ情報のみを各問題へ追加',
+      '開発モードで問題ごとの種類別カテゴリを直接編集可能に変更',
+      'ランダム出題は kindCategories を最優先し、未設定時のみカテゴリマップ・キーワード判定を使用'
+    ]
+  },
+  {
+    version:'v2.5.1',
+    date:'2026-06-06',
+    notes:[
+      '現在の問題JSONから生成した種類別カテゴリマップを追加',
+      'ランダム出題の種類別判定をキーワード自動判定から明示マップ優先へ変更',
+      '開発モードで各問題の種類別カテゴリを編集・保存・コピーできる機能を追加',
+      '問題JSONの kindCategories で種類別カテゴリを管理'
+    ]
+  },
   {
     version:'v2.5.0',
     date:'2026-06-06',
@@ -1722,6 +2209,22 @@ function toggleTheme(){
 let me={authenticated:false,email:null,name:null};
 let examsIndex={exams:[]};
 let currentExamId=null, partsCache={}, tickHandle=null, currentAnswerPart=null;
+// ホワイトボードは永続保存しない。解答中だけ問題ごとにメモリへ保持する。
+let whiteboardSessionBoards=Object.create(null);
+let whiteboardState={
+  initialized:false,
+  isOpen:false,
+  tool:'pen',
+  color:'#111827',
+  size:4,
+  drawing:false,
+  lastPoint:null,
+  lastMid:null,
+  pendingPoints:[],
+  renderFrame:0,
+  undoStack:[],
+  redoStack:[]
+};
 let assetCacheBuster='';
 
 const RANDOM_PART='mix';
@@ -1734,18 +2237,414 @@ const RANDOM_RANGES=[
  {id:'operation',label:'操作運用'},
  {id:'maintenance',label:'保守安全'}
 ];
+const RANDOM_KIND_MAP_PATH='Date/Ques/random_kind_map.json';
+const RANDOM_KIND_MAP_LOCAL_KEY='me2_random_kind_map_override_v1';
 const RANDOM_KINDS=[
- {id:'respiratory',label:'呼吸器',keywords:['呼吸器','人工呼吸','換気','吸気','呼気','PEEP','CPAP','IPPV','SIMV','PSV','酸素','加湿','気道','肺','肺胞','気管','スパイロ','フローセンサ','カプノ','CO2','SpO2','パルスオキシ','一回換気量','分時換気量','コンプライアンス']},
- {id:'heart_lung',label:'人工心肺・ECMO',keywords:['人工心肺','体外循環','ECMO','膜型人工肺','人工肺','ローラポンプ','遠心ポンプ','脱血','送血','灌流','カニューレ','ヘパリン','ACT','IABP','補助循環','酸素加装置']},
- {id:'infection',label:'感染症・消毒滅菌',keywords:['感染','感染症','免疫','ワクチン','細菌','ウイルス','真菌','滅菌','消毒','消毒薬','芽胞','オートクレーブ','EOG','酸化エチレン','グルタラール','次亜塩素酸','アルコール','無菌','清潔','不潔','手指衛生','標準予防策','隔離']},
- {id:'safety',label:'安全管理',keywords:['安全管理','医療安全','保守安全','漏れ電流','接地','等電位','非接地','単一故障','電撃','マクロショック','ミクロショック','非常電源','停電','アラーム','警報','JIS','IEC','ME機器管理','点検','保守','医療ガス','ヒヤリ','リスク']},
- {id:'dialysis',label:'血液浄化・透析',keywords:['透析','血液透析','血液浄化','ダイアライザ','透析膜','限外濾過','除水','透析液','腹膜透析','シャント','抗凝固','ヘパリン','オンラインHDF','血漿交換','吸着','クリアランス','Kt/V']},
- {id:'circulation',label:'循環器・心電図',keywords:['心電図','ECG','心拍','心室','心房','洞結節','刺激伝導','不整脈','除細動','AED','ペースメーカ','心臓','血圧','血流','心拍出量','脈波','観血','非観血','IABP']},
- {id:'monitor',label:'生体計測・モニタ',keywords:['モニタ','生体計測','センサ','トランスデューサ','電極','心電計','脳波計','筋電計','血圧計','体温計','パルスオキシ','カプノ','圧力センサ','ストレインゲージ','差動トランス','ホール素子','圧電素子','熱電対']},
- {id:'imaging',label:'画像診断・内視鏡',keywords:['X線','CT','MRI','超音波','エコー','内視鏡','画像','造影','プローブ','ドプラ','サーモグラ','放射線','ガンマ','核医学']},
- {id:'surgery',label:'手術室・治療機器',keywords:['手術','電気メス','レーザ','麻酔器','除細動器','ペースメーカ','輸液ポンプ','シリンジポンプ','吸引器','ナビゲーション','凝固','切開','対極板']},
- {id:'homecare',label:'在宅・酸素療法',keywords:['在宅','酸素濃縮器','HOT','CPAP','睡眠時無呼吸','吸引器','人工呼吸器在宅','ボンベ','酸素療法']}
+ {
+  "id": "respiratory",
+  "label": "呼吸器",
+  "keywords": [
+   "呼吸器",
+   "人工呼吸器",
+   "人工呼吸",
+   "換気",
+   "換気量",
+   "肺胞",
+   "気道",
+   "気管",
+   "吸気",
+   "呼気",
+   "呼吸回路",
+   "呼吸仕事",
+   "PEEP",
+   "CPAP",
+   "BIPAP",
+   "IPPV",
+   "SIMV",
+   "PSV",
+   "従量式",
+   "従圧式",
+   "分時換気量",
+   "一回換気量",
+   "加湿器",
+   "ネブライザ",
+   "酸素マスク",
+   "SpO2",
+   "パルスオキシ",
+   "カプノ",
+   "CO2",
+   "スパイロ",
+   "肺活量",
+   "酸素濃度"
+  ]
+ },
+ {
+  "id": "heart_lung",
+  "label": "人工心肺・ECMO",
+  "keywords": [
+   "人工心肺",
+   "体外循環",
+   "ECMO",
+   "PCPS",
+   "膜型人工肺",
+   "人工肺",
+   "ローラポンプ",
+   "遠心ポンプ",
+   "脱血",
+   "送血",
+   "灌流",
+   "カニューレ",
+   "リザーバ",
+   "熱交換器",
+   "ACT",
+   "ヘパリン",
+   "プロタミン",
+   "心筋保護",
+   "補助循環",
+   "IABP",
+   "補助人工心臓",
+   "VAD"
+  ]
+ },
+ {
+  "id": "dialysis",
+  "label": "血液浄化・透析",
+  "keywords": [
+   "血液透析",
+   "透析",
+   "血液浄化",
+   "ダイアライザ",
+   "透析膜",
+   "限外濾過",
+   "除水",
+   "透析液",
+   "腹膜透析",
+   "シャント",
+   "バスキュラーアクセス",
+   "HDF",
+   "HF",
+   "血漿交換",
+   "血液吸着",
+   "クリアランス",
+   "Kt/V",
+   "ドライウェイト",
+   "透析装置",
+   "RO水",
+   "エンドトキシン"
+  ]
+ },
+ {
+  "id": "infection",
+  "label": "感染症・消毒滅菌",
+  "keywords": [
+   "感染",
+   "感染症",
+   "細菌",
+   "ウイルス",
+   "真菌",
+   "芽胞",
+   "滅菌",
+   "消毒",
+   "消毒薬",
+   "オートクレーブ",
+   "高圧蒸気",
+   "EOG",
+   "酸化エチレン",
+   "グルタラール",
+   "グルタルアルデヒド",
+   "次亜塩素酸",
+   "アルコール",
+   "ポビドンヨード",
+   "クロルヘキシジン",
+   "標準予防策",
+   "手指衛生",
+   "無菌",
+   "清潔",
+   "不潔",
+   "滅菌物",
+   "洗浄"
+  ]
+ },
+ {
+  "id": "safety",
+  "label": "安全管理・保守",
+  "keywords": [
+   "安全管理",
+   "医療安全",
+   "保守安全",
+   "保守",
+   "点検",
+   "始業点検",
+   "終業点検",
+   "定期点検",
+   "漏れ電流",
+   "接地",
+   "等電位",
+   "非接地",
+   "保護接地",
+   "単一故障",
+   "電撃",
+   "マクロショック",
+   "ミクロショック",
+   "非常電源",
+   "無停電",
+   "アラーム",
+   "警報",
+   "JIS",
+   "IEC",
+   "ME機器管理",
+   "医療ガス",
+   "酸素ボンベ",
+   "ヒヤリ",
+   "リスクマネジメント",
+   "フェイルセーフ",
+   "フールプルーフ"
+  ]
+ },
+ {
+  "id": "circulation",
+  "label": "循環器・心電図",
+  "keywords": [
+   "心電図",
+   "ECG",
+   "心拍",
+   "心房",
+   "心室",
+   "洞結節",
+   "房室結節",
+   "刺激伝導",
+   "不整脈",
+   "期外収縮",
+   "細動",
+   "除細動",
+   "AED",
+   "ペースメーカ",
+   "心臓",
+   "血圧",
+   "血流",
+   "心拍出量",
+   "脈波",
+   "観血",
+   "非観血",
+   "カテーテル",
+   "スワンガンツ",
+   "心音",
+   "冠動脈"
+  ]
+ },
+ {
+  "id": "biometry_monitor",
+  "label": "生体計測・モニタ",
+  "keywords": [
+   "生体計測",
+   "モニタ",
+   "センサ",
+   "トランスデューサ",
+   "電極",
+   "心電計",
+   "脳波計",
+   "筋電計",
+   "血圧計",
+   "体温計",
+   "パルスオキシ",
+   "カプノメータ",
+   "圧力センサ",
+   "ストレインゲージ",
+   "差動トランス",
+   "ホール素子",
+   "圧電素子",
+   "熱電対",
+   "サーミスタ",
+   "フォトダイオード",
+   "増幅器",
+   "誘導雑音",
+   "アーチファクト"
+  ]
+ },
+ {
+  "id": "imaging",
+  "label": "画像診断・内視鏡",
+  "keywords": [
+   "X線",
+   "エックス線",
+   "CT",
+   "MRI",
+   "超音波診断",
+   "エコー",
+   "内視鏡",
+   "画像診断",
+   "造影",
+   "プローブ",
+   "ドプラ",
+   "放射線",
+   "核医学",
+   "シンチ",
+   "ガンマカメラ",
+   "PET",
+   "サーモグラフィ",
+   "ファイバスコープ",
+   "CCD",
+   "CMOS"
+  ]
+ },
+ {
+  "id": "surgery_treatment",
+  "label": "手術室・治療機器",
+  "keywords": [
+   "手術",
+   "手術室",
+   "電気メス",
+   "レーザ",
+   "レーザー",
+   "麻酔器",
+   "除細動器",
+   "ペースメーカ",
+   "吸引器",
+   "ナビゲーション",
+   "凝固",
+   "切開",
+   "対極板",
+   "低温熱傷",
+   "超音波メス",
+   "結石破砕",
+   "IABP",
+   "補助循環",
+   "治療機器"
+  ]
+ },
+ {
+  "id": "infusion",
+  "label": "輸液・薬剤投与",
+  "keywords": [
+   "輸液ポンプ",
+   "シリンジポンプ",
+   "輸液",
+   "注入",
+   "注射",
+   "投与",
+   "滴下",
+   "流量",
+   "閉塞圧",
+   "フリーフロー",
+   "ボーラス",
+   "シリンジ",
+   "輸液ライン",
+   "薬液",
+   "注入ポンプ"
+  ]
+ },
+ {
+  "id": "homecare",
+  "label": "在宅・酸素療法",
+  "keywords": [
+   "在宅",
+   "酸素濃縮器",
+   "HOT",
+   "酸素療法",
+   "CPAP",
+   "睡眠時無呼吸",
+   "吸引器",
+   "在宅人工呼吸",
+   "ボンベ",
+   "携帯酸素",
+   "酸素ボンベ",
+   "酸素流量"
+  ]
+ },
+ {
+  "id": "basic_medicine",
+  "label": "基礎医学",
+  "keywords": [
+   "解剖",
+   "生理",
+   "人体",
+   "臓器",
+   "神経",
+   "筋",
+   "腎",
+   "尿",
+   "肝臓",
+   "消化",
+   "内分泌",
+   "ホルモン",
+   "血液",
+   "免疫",
+   "代謝",
+   "体温",
+   "公衆衛生",
+   "疾病",
+   "病態",
+   "血糖",
+   "酵素",
+   "細胞",
+   "DNA",
+   "遺伝",
+   "薬理"
+  ]
+ },
+ {
+  "id": "medical_electronics",
+  "label": "医用電気電子・情報",
+  "keywords": [
+   "電気",
+   "電子",
+   "回路",
+   "抵抗",
+   "コンデンサ",
+   "コイル",
+   "オペアンプ",
+   "トランジスタ",
+   "ダイオード",
+   "半導体",
+   "交流",
+   "直流",
+   "電圧",
+   "電流",
+   "インピーダンス",
+   "A/D",
+   "AD変換",
+   "D/A",
+   "2進",
+   "16進",
+   "情報",
+   "コンピュータ",
+   "ネットワーク",
+   "セキュリティ",
+   "システム",
+   "フィルタ"
+  ]
+ },
+ {
+  "id": "basic_engineering",
+  "label": "物理・基礎工学",
+  "keywords": [
+   "物理",
+   "力学",
+   "圧力",
+   "流体",
+   "粘性",
+   "熱",
+   "温度",
+   "音",
+   "音波",
+   "超音波",
+   "光",
+   "波長",
+   "周波数",
+   "磁場",
+   "電磁波",
+   "単位",
+   "SI",
+   "pH",
+   "濃度",
+   "浸透圧",
+   "放射能",
+   "材料",
+   "生体物性"
+  ]
+ }
 ];
+let randomKindMap={schemaVersion:1,kinds:RANDOM_KINDS,items:{}};
 
 let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
@@ -2113,8 +3012,8 @@ async function loadIndex(){
 }
 async function getPart(examId,part){const key=`${examId}_${part}`;if(partsCache[key])return partsCache[key];const rec=getExamRecord(examId);const path=rec?.parts?.[part];if(!path)throw new Error('part path missing');partsCache[key]=await fetchJSON(path);return partsCache[key]}
 function getExamRecord(id){return examsIndex.exams.find(x=>String(x.id)===String(id))}
-function hideAll(){['menuCard','loginCard','syncCard','partCard','answerViewCard','bookmarkCard','devLoginCard','devModeCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
-function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();$('menuCard').classList.remove('hidden');renderVersionInfo();renderMenu();updateDbLastSync();updateHeader()}
+function hideAll(){closeWhiteboard(false);['menuCard','loginCard','syncCard','partCard','answerViewCard','bookmarkCard','devLoginCard','devModeCard','quizCard','finishCard'].forEach(id=>$(id).classList.add('hidden'))}
+function showMenu(){if(state&&state.timerRunning){pauseTimer();saveState()}hideAll();resetWhiteboardSession();$('menuCard').classList.remove('hidden');renderVersionInfo();renderMenu();updateDbLastSync();updateHeader()}
 function renderMenu(){populateViewerSelects();updateDbLastSync();renderRandomMenu();const grid=$('examGrid');grid.innerHTML='';$('roundCount').textContent=`${examsIndex.exams.length}回分`;if(!examsIndex.exams.length){grid.innerHTML='<div class="mobile-note small">試験回を読み込めません。Date/Ques/exams_index.json が配置されているか確認してください。</div>';return}examsIndex.exams.forEach(ex=>{const div=document.createElement('div');div.className='round-card';div.onclick=()=>selectExam(ex.id);div.innerHTML=`<h3>${escapeHtml(ex.title)}</h3><p class="small">${escapeHtml(ex.subtitle||'')}</p><p class="small">問題数：午前/午後 各60問</p>`;grid.appendChild(div)})}
 
 function examNumber(id){
@@ -2171,15 +3070,74 @@ function randomQuestionSearchText(q){
   q?.image
  ].map(x=>String(x||'')).join(' ');
 }
-function randomKindIds(q){
+function randomKindKey(examId,part,q,index){
+ const n=q?.number??(Number(index)+1);
+ const num=String(n).match(/^\d+$/)?String(n).padStart(2,'0'):String(n||'?');
+ return `${examId}_${part}_${num}`;
+}
+function normalizeKindIds(ids){
+ const valid=new Set(RANDOM_KINDS.map(k=>k.id));
+ return Array.from(new Set((ids||[]).map(String).filter(id=>valid.has(id))));
+}
+function randomKindIdsByKeyword(q){
  const text=randomQuestionSearchText(q);
- return RANDOM_KINDS.filter(k=>(k.keywords||[]).some(word=>text.includes(word))).map(k=>k.id);
+ const scored=RANDOM_KINDS.map(k=>{
+  let score=0;
+  (k.keywords||[]).forEach(word=>{
+   if(!word)return;
+   const c=String(text).split(word).length-1;
+   if(c)score+=c;
+   if(String(q?.range||'').includes(word))score+=3;
+   if(String(q?.stem||'').includes(word))score+=2;
+  });
+  return {id:k.id,score};
+ }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+ if(!scored.length)return [];
+ const top=scored[0].score;
+ return scored.filter(x=>x.score>=Math.max(2,top*0.42)).slice(0,3).map(x=>x.id);
+}
+function randomQuestionKindIdsFromJson(q){
+ return normalizeKindIds(q?.kindCategories||q?.kindCategoryIds||q?.kinds||[]);
+}
+function setQuestionKindIds(q,ids){
+ if(!q)return;
+ const cats=normalizeKindIds(ids);
+ q.kindCategories=cats;
+}
+function randomKindIds(q,examId='',part='',index=0){
+ const fromJson=randomQuestionKindIdsFromJson(q);
+ if(fromJson.length)return fromJson;
+ const key=randomKindKey(examId,part,q,index);
+ const entry=randomKindMap?.items?.[key];
+ const explicit=normalizeKindIds(entry?.categories||entry?.kinds||[]);
+ if(explicit.length)return explicit;
+ const byKeyword=randomKindIdsByKeyword(q);
+ if(byKeyword.length)return byKeyword;
+ return [];
 }
 function randomKindLabel(id){
  return RANDOM_KINDS.find(x=>x.id===id)?.label||id||'その他';
 }
 function randomKindLabels(ids){
  return (ids||[]).map(randomKindLabel).join('・')||'種類未分類';
+}
+async function loadRandomKindMap(){
+ const local=loadLocal(RANDOM_KIND_MAP_LOCAL_KEY,null);
+ if(local&&local.items){randomKindMap=local;return randomKindMap;}
+ try{
+  const data=await fetchJSON(RANDOM_KIND_MAP_PATH);
+  if(data&&data.items)randomKindMap=data;
+ }catch(e){
+  randomKindMap={schemaVersion:1,kinds:RANDOM_KINDS,items:{}};
+ }
+ return randomKindMap;
+}
+function saveRandomKindMapLocal(){
+ randomKindMap={...(randomKindMap||{}),schemaVersion:1,kinds:RANDOM_KINDS,items:randomKindMap?.items||{},updatedAt:new Date().toISOString()};
+ saveLocal(RANDOM_KIND_MAP_LOCAL_KEY,randomKindMap);
+}
+function randomKindMapExportText(){
+ return JSON.stringify({schemaVersion:1,updatedAt:new Date().toISOString(),source:'legacy export; app now primarily uses question JSON kindCategories',kinds:RANDOM_KINDS,items:randomKindMap?.items||{}},null,2);
 }
 function getSelectedRandomRanges(){
  return Array.from(document.querySelectorAll('.random-range-check:checked')).map(x=>x.value);
@@ -2284,7 +3242,7 @@ async function buildRandomPool(){
    (pack.questions||[]).forEach((q,idx)=>{
     const cat=rangeCategory(q.range||'');
     if(ranges.length&&!ranges.includes(cat))return;
-    const kindIds=randomKindIds(q);
+    const kindIds=randomKindIds(q,examId,part,idx);
     if(kinds.length&&!kindIds.some(id=>kinds.includes(id)))return;
     pool.push({
      ...q,
@@ -2305,6 +3263,7 @@ async function buildRandomPool(){
 }
 async function startRandomQuiz(){
  try{
+  resetWhiteboardSession();
   if(state&&state.timerRunning){pauseTimer();saveState()}
   const count=Math.max(1,Number($('randomCount')?.value||20));
   $('randomPoolInfo').textContent='ランダム問題を準備中…';
@@ -2405,7 +3364,7 @@ async function renderPartMenu(){
   box.innerHTML=`<h3>${partName(part)}</h3><p class="small">${savedText}履歴 ${hist.length}件${lastText}</p><div class="row"><button onclick="startAttempt('${part}','all')">最初から</button>${saved&&!saved.finished?`<button class="secondary" onclick="resumeAttempt('${part}')">途中から</button>`:''}<button class="ghost" onclick="showHistory('${part}')">履歴</button><button class="secondary" onclick="showAnswerView('${part}')">問題・回答を見る</button></div>`;
  }
 }
-async function startAttempt(part,mode='all'){const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,attemptId:makeAttemptId(),order:[...Array(total).keys()],index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
+async function startAttempt(part,mode='all'){resetWhiteboardSession();const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,attemptId:makeAttemptId(),order:[...Array(total).keys()],index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
 async function resumeAttempt(part){let s=loadLocal(stateKey(currentExamId,part));if(!s&&hasCloudLogin())s=await loadCloudState(currentExamId,part);if(!s)return;state=ensureTimingFields(s);if(!state.eliminations)state.eliminations={};state.timerRunning=false;state.sessionStartedAt=null;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
 
 async function showAnswerView(part,filter='all'){
@@ -2599,12 +3558,423 @@ async function showRandomHistory(){
 
 function showQuiz(){hideAll();$('quizCard').classList.remove('hidden')}
 function currentPack(){return state?.quizType==='random'?{questions:state.randomQuestions||[]}:partsCache[`${state.examId}_${state.part}`]}
+
+function whiteboardMemoryKey(q=getCurrentQuestion()){
+ const exam=String(q?.sourceExamId || state?.examId || 'unknown');
+ const part=String(q?.sourcePart || state?.part || 'unknown');
+ const question=String(q?.id || `q${q?.number || state?.index || 0}`);
+ return `${exam}:${part}:${question}`;
+}
+function resetWhiteboardSession(){
+ whiteboardSessionBoards=Object.create(null);
+ whiteboardState.undoStack=[];
+ whiteboardState.redoStack=[];
+ whiteboardState.drawing=false;
+ whiteboardState.lastPoint=null;
+ whiteboardState.lastMid=null;
+ whiteboardState.pendingPoints=[];
+ if(whiteboardState.renderFrame){
+  cancelAnimationFrame(whiteboardState.renderFrame);
+  whiteboardState.renderFrame=0;
+ }
+}
+function whiteboardCanvas(){
+ return $('whiteboardCanvas');
+}
+function whiteboardContext(){
+ return whiteboardCanvas()?.getContext('2d')||null;
+}
+function whiteboardSetDrawingStyle(ctx){
+ if(!ctx)return;
+ ctx.lineCap='round';
+ ctx.lineJoin='round';
+ ctx.lineWidth=Math.max(1,Number(whiteboardState.size)||4);
+ ctx.globalCompositeOperation=whiteboardState.tool==='eraser'?'destination-out':'source-over';
+ ctx.strokeStyle=whiteboardState.color;
+ ctx.fillStyle=whiteboardState.color;
+}
+function whiteboardMidPoint(a,b){
+ return {x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+}
+function whiteboardSnapshot(){
+ const canvas=whiteboardCanvas();
+ try{return canvas?.toDataURL('image/png')||'';}catch(e){return '';}
+}
+function whiteboardPushUndo(){
+ const snapshot=whiteboardSnapshot();
+ if(!snapshot)return;
+ whiteboardState.undoStack.push(snapshot);
+ if(whiteboardState.undoStack.length>24)whiteboardState.undoStack.shift();
+ whiteboardState.redoStack=[];
+ updateWhiteboardControls();
+}
+function whiteboardClearCanvas(){
+ const canvas=whiteboardCanvas(),ctx=whiteboardContext();
+ if(!canvas||!ctx)return;
+ ctx.save();
+ ctx.setTransform(1,0,0,1,0,0);
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.restore();
+}
+function whiteboardDrawImage(dataUrl,onDone=null){
+ const canvas=whiteboardCanvas(),ctx=whiteboardContext();
+ if(!canvas||!ctx||!dataUrl){
+  if(typeof onDone==='function')onDone();
+  return;
+ }
+ const img=new Image();
+ img.onload=()=>{
+  whiteboardClearCanvas();
+  const rect=canvas.getBoundingClientRect();
+  const dpr=window.devicePixelRatio||1;
+  ctx.save();
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.drawImage(img,0,0,rect.width,rect.height);
+  ctx.restore();
+  if(typeof onDone==='function')onDone();
+ };
+ img.onerror=()=>{if(typeof onDone==='function')onDone();};
+ img.src=dataUrl;
+}
+function whiteboardPersist(){
+ const key=whiteboardMemoryKey();
+ const data=whiteboardSnapshot();
+ if(!key||!data)return;
+ whiteboardSessionBoards[key]=data;
+}
+function whiteboardLoad(){
+ const data=whiteboardSessionBoards[whiteboardMemoryKey()]||'';
+ if(data)whiteboardDrawImage(data);
+}
+function resizeWhiteboardCanvas(keepContent=true){
+ const canvas=whiteboardCanvas();
+ if(!canvas)return;
+ const before=keepContent?whiteboardSnapshot():'';
+ const rect=canvas.getBoundingClientRect();
+ const dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1));
+ const w=Math.max(1,Math.round(rect.width*dpr));
+ const h=Math.max(1,Math.round(rect.height*dpr));
+ if(canvas.width===w&&canvas.height===h)return;
+ canvas.width=w;
+ canvas.height=h;
+ const ctx=whiteboardContext();
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ if(before)whiteboardDrawImage(before);
+}
+function updateWhiteboardControls(){
+ const pen=$('wbPenBtn'),eraser=$('wbEraserBtn'),color=$('wbColor'),size=$('wbSize'),label=$('wbSizeLabel');
+ const undo=$('wbUndoBtn'),redo=$('wbRedoBtn');
+ if(pen)pen.classList.toggle('active',whiteboardState.tool==='pen');
+ if(eraser)eraser.classList.toggle('active',whiteboardState.tool==='eraser');
+ if(pen)pen.classList.toggle('ghost',whiteboardState.tool!=='pen');
+ if(eraser)eraser.classList.toggle('ghost',whiteboardState.tool!=='eraser');
+ if(color)color.value=whiteboardState.color;
+ if(size)size.value=String(whiteboardState.size);
+ if(label)label.textContent=`${whiteboardState.size}px`;
+ if(undo)undo.disabled=whiteboardState.undoStack.length===0;
+ if(redo)redo.disabled=whiteboardState.redoStack.length===0;
+ document.querySelectorAll('.whiteboard-swatch').forEach(btn=>{
+  btn.classList.toggle('active',btn.dataset.color===whiteboardState.color);
+ });
+}
+function setWhiteboardTool(tool){
+ whiteboardState.tool=tool==='eraser'?'eraser':'pen';
+ updateWhiteboardControls();
+}
+function setWhiteboardColor(color){
+ whiteboardState.color=String(color||'#111827');
+ whiteboardState.tool='pen';
+ updateWhiteboardControls();
+}
+function whiteboardPoint(event){
+ const canvas=whiteboardCanvas();
+ const rect=canvas.getBoundingClientRect();
+ const base=Math.max(1,Number(whiteboardState.size)||4);
+ const pressure=(event.pointerType==='pen'&&Number(event.pressure)>0)?Number(event.pressure):0.5;
+ const width=Math.max(1,Math.min(32,base*(event.pointerType==='pen'?(0.55+pressure*0.9):1)));
+ return {
+  x:Math.max(0,Math.min(rect.width,event.clientX-rect.left)),
+  y:Math.max(0,Math.min(rect.height,event.clientY-rect.top)),
+  width
+ };
+}
+function whiteboardDrawSmoothPoint(point){
+ const ctx=whiteboardContext();
+ if(!ctx||!whiteboardState.lastPoint)return;
+ whiteboardSetDrawingStyle(ctx);
+ ctx.lineWidth=(whiteboardState.lastPoint.width+point.width)/2;
+ const mid=whiteboardMidPoint(whiteboardState.lastPoint,point);
+ const from=whiteboardState.lastMid||whiteboardState.lastPoint;
+ ctx.beginPath();
+ ctx.moveTo(from.x,from.y);
+ ctx.quadraticCurveTo(whiteboardState.lastPoint.x,whiteboardState.lastPoint.y,mid.x,mid.y);
+ ctx.stroke();
+ whiteboardState.lastMid=mid;
+ whiteboardState.lastPoint=point;
+}
+function flushWhiteboardPoints(){
+ if(whiteboardState.renderFrame){
+  cancelAnimationFrame(whiteboardState.renderFrame);
+  whiteboardState.renderFrame=0;
+ }
+ const queue=whiteboardState.pendingPoints;
+ while(queue.length){
+  whiteboardDrawSmoothPoint(queue.shift());
+ }
+}
+function scheduleWhiteboardRender(){
+ if(whiteboardState.renderFrame)return;
+ whiteboardState.renderFrame=requestAnimationFrame(()=>{
+  whiteboardState.renderFrame=0;
+  flushWhiteboardPoints();
+ });
+}
+function whiteboardStart(event){
+ if(event.pointerType==='mouse'&&event.button!==0)return;
+ const canvas=whiteboardCanvas(),ctx=whiteboardContext();
+ if(!canvas||!ctx)return;
+ event.preventDefault();
+ whiteboardPushUndo();
+ const point=whiteboardPoint(event);
+ whiteboardState.drawing=true;
+ whiteboardState.lastPoint=point;
+ whiteboardState.lastMid=point;
+ whiteboardState.pendingPoints=[];
+ whiteboardSetDrawingStyle(ctx);
+ ctx.lineWidth=point.width;
+ ctx.beginPath();
+ ctx.arc(point.x,point.y,Math.max(0.5,point.width/2),0,Math.PI*2);
+ ctx.fill();
+ try{canvas.setPointerCapture(event.pointerId)}catch(e){}
+}
+function whiteboardMove(event){
+ if(!whiteboardState.drawing)return;
+ event.preventDefault();
+ const events=typeof event.getCoalescedEvents==='function'?event.getCoalescedEvents():[event];
+ for(const ev of events)whiteboardState.pendingPoints.push(whiteboardPoint(ev));
+ scheduleWhiteboardRender();
+}
+function whiteboardEnd(event){
+ if(!whiteboardState.drawing)return;
+ flushWhiteboardPoints();
+ const canvas=whiteboardCanvas();
+ whiteboardState.drawing=false;
+ whiteboardState.lastPoint=null;
+ whiteboardState.lastMid=null;
+ whiteboardState.pendingPoints=[];
+ try{canvas?.releasePointerCapture(event?.pointerId)}catch(e){}
+ whiteboardPersist();
+}
+function whiteboardUndo(){
+ if(whiteboardState.drawing)flushWhiteboardPoints();
+ const previous=whiteboardState.undoStack.pop();
+ if(!previous)return;
+ const current=whiteboardSnapshot();
+ if(current){
+  whiteboardState.redoStack.push(current);
+  if(whiteboardState.redoStack.length>24)whiteboardState.redoStack.shift();
+ }
+ whiteboardDrawImage(previous,()=>{
+  whiteboardPersist();
+  updateWhiteboardControls();
+ });
+ updateWhiteboardControls();
+}
+function whiteboardRedo(){
+ if(whiteboardState.drawing)flushWhiteboardPoints();
+ const next=whiteboardState.redoStack.pop();
+ if(!next)return;
+ const current=whiteboardSnapshot();
+ if(current){
+  whiteboardState.undoStack.push(current);
+  if(whiteboardState.undoStack.length>24)whiteboardState.undoStack.shift();
+ }
+ whiteboardDrawImage(next,()=>{
+  whiteboardPersist();
+  updateWhiteboardControls();
+ });
+ updateWhiteboardControls();
+}
+function whiteboardClear(){
+ const key=whiteboardMemoryKey();
+ const hasContent=Boolean(whiteboardSnapshot());
+ if(hasContent&&!confirm('この問題のホワイトボードをすべて消去しますか？'))return;
+ whiteboardPushUndo();
+ whiteboardClearCanvas();
+ whiteboardSessionBoards[key]=whiteboardSnapshot();
+ updateWhiteboardControls();
+}
+function initWhiteboard(){
+ if(whiteboardState.initialized)return;
+ const canvas=whiteboardCanvas(),color=$('wbColor'),size=$('wbSize');
+ if(!canvas)return;
+ canvas.addEventListener('pointerdown',whiteboardStart);
+ canvas.addEventListener('pointermove',whiteboardMove);
+ canvas.addEventListener('pointerup',whiteboardEnd);
+ canvas.addEventListener('pointercancel',whiteboardEnd);
+ canvas.addEventListener('pointerleave',event=>{if(event.buttons===0)whiteboardEnd(event)});
+ color?.addEventListener('input',event=>setWhiteboardColor(event.target.value));
+ size?.addEventListener('input',event=>{
+  whiteboardState.size=Math.max(1,Math.min(24,Number(event.target.value)||4));
+  updateWhiteboardControls();
+ });
+ document.addEventListener('keydown',event=>{
+  if(event.key==='Escape'&&whiteboardState.isOpen)closeWhiteboard();
+ });
+ window.addEventListener('resize',()=>{
+  const modal=$('whiteboardModal');
+  if(modal&&!modal.classList.contains('hidden'))resizeWhiteboardCanvas(true);
+ });
+ whiteboardState.initialized=true;
+}
+
+function updateWhiteboardPreview(){
+ const q=getCurrentQuestion();
+ if(!q)return;
+ const answered=state.answers?.[state.index];
+ const meta=$('wbPreviewMeta');
+ if(meta){
+  const chips=[
+   questionSourceLabel(q),
+   `範囲：${q.range||'未設定'}`,
+   q.negative?'形式：誤っているもの':'形式：正しいもの'
+  ];
+  meta.innerHTML=chips.map(x=>`<span class="answer-chip">${escapeHtml(x)}</span>`).join('');
+ }
+ const stem=$('wbPreviewStem');
+ if(stem)stem.textContent=q.stem||'';
+ const img=$('wbPreviewImage');
+ if(img){
+  img.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を確認</summary><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';
+ }
+ const choices=$('wbPreviewChoices');
+ if(choices){
+  choices.innerHTML=(q.choices||[]).map((c,i)=>{
+   const n=i+1;
+   const isAnswered=Boolean(answered);
+   const isCorrect=(q.correct||[]).includes(n);
+   const isWrong=isAnswered&&answered.choice===n&&!answered.correct;
+   const cls=`whiteboard-preview-choice ghost ${isAnswered&&isCorrect?'correct':''} ${isWrong?'wrong':''}`.trim();
+   const label=isAnswered?(isCorrect?'正答':(answered.choice===n?'あなたの回答':'')):'この選択肢で回答';
+   return `<button class="${cls}" type="button" onclick="answerFromWhiteboard(${n})" ${isAnswered?'disabled':''}><span class="num">${n}</span><span>${escapeHtml(c)}${label?`<br><small>${escapeHtml(label)}</small>`:''}</span></button>`;
+  }).join('');
+ }
+ const canGoBack=state.index>0;
+ const canGoNext=Boolean(state.answers?.[state.index]);
+ const isLast=state.index>=state.order.length-1;
+ const prev=$('wbPrevQuestionBtn');
+ if(prev)prev.disabled=!canGoBack;
+ const next=$('wbNextQuestionBtn');
+ if(next){
+  next.disabled=!canGoNext;
+  next.textContent=isLast?'終了する ▶':'進む ▶';
+ }
+}
+function refreshWhiteboardForCurrentQuestion(){
+ if(!whiteboardState.isOpen)return;
+ whiteboardState.undoStack=[];
+ whiteboardState.redoStack=[];
+ whiteboardState.pendingPoints=[];
+ updateWhiteboardControls();
+ updateWhiteboardPreview();
+ requestAnimationFrame(()=>{
+  resizeWhiteboardCanvas(false);
+  whiteboardClearCanvas();
+  whiteboardLoad();
+ });
+}
+function answerFromWhiteboard(choice){
+ if(state.answers?.[state.index])return;
+ whiteboardPersist();
+ answer(choice,true);
+}
+function whiteboardNavigate(direction){
+ const target=state.index+direction;
+ if(target<0||target>=state.order.length)return;
+ whiteboardPersist();
+ state.index=target;
+ saveState();
+ renderQuestion({keepWhiteboard:true});
+}
+function whiteboardPrevQuestion(){
+ whiteboardNavigate(-1);
+}
+function whiteboardNextQuestion(){
+ if(!state.answers?.[state.index])return;
+ if(state.index>=state.order.length-1){
+  nextQuestion();
+  return;
+ }
+ whiteboardNavigate(1);
+}
+function openWhiteboard(){
+ const q=getCurrentQuestion();
+ if(!q)return;
+ initWhiteboard();
+ const modal=$('whiteboardModal');
+ if(!modal)return;
+ whiteboardState.drawing=false;
+ const label=$('whiteboardQuestionLabel');
+ if(label)label.textContent=`${questionSourceLabel(q)} の計算・メモ`;
+ modal.classList.remove('hidden');
+ whiteboardState.isOpen=true;
+ updateWhiteboardControls();
+ refreshWhiteboardForCurrentQuestion();
+}
+function closeWhiteboard(keepForCurrentQuiz=true){
+ const modal=$('whiteboardModal');
+ if(!modal)return;
+ if(whiteboardState.drawing)flushWhiteboardPoints();
+ if(keepForCurrentQuiz&&whiteboardState.isOpen)whiteboardPersist();
+ whiteboardState.drawing=false;
+ whiteboardState.lastPoint=null;
+ whiteboardState.lastMid=null;
+ whiteboardState.pendingPoints=[];
+ whiteboardState.isOpen=false;
+ updateWhiteboardControls();
+ modal.classList.add('hidden');
+}
+
 function getCurrentQuestion(){return currentPack()?.questions?.[state.order[state.index]]}
-function renderQuestion(){
+const LEGACY_JIS_DEFAULT_MESSAGE='この問題は旧JIS規格・旧表記に基づいています。現行のJIS規格や法令・ガイドラインとは内容や表記が異なる場合があります。';
+function normalizeStandardWarning(q){
+ const raw=(q&&typeof q.standardWarning==='object'&&q.standardWarning)?q.standardWarning:{};
+ const legacyJis=Boolean(raw.legacyJis===true || q?.legacyJis===true);
+ const sourceStandard=String(raw.sourceStandard||q?.sourceStandard||'').trim();
+ const reviewRequired=Boolean(raw.reviewRequired===true || q?.standardReviewRequired===true);
+ const message=String(raw.message||'').trim() || (legacyJis?LEGACY_JIS_DEFAULT_MESSAGE:'');
+ return {legacyJis,message,sourceStandard,reviewRequired};
+}
+function standardWarningHtml(q){
+ const info=normalizeStandardWarning(q);
+ if(!info.legacyJis)return '';
+ const source=info.sourceStandard?`<p class="small"><b>関連規格・表記：</b>${escapeHtml(info.sourceStandard)}</p>`:'';
+ const review=info.reviewRequired?'<p class="small">現行のJIS規格・法令・ガイドラインとの照合を推奨します。</p>':'';
+ return `<aside class="standard-warning" role="note"><strong>⚠ 旧JIS・旧規格に関する注意</strong><p>${escapeHtml(info.message)}</p>${source}${review}</aside>`;
+}
+function devStandardWarningFromForm(baseQuestion){
+ const legacyJis=Boolean($('devLegacyJis')?.checked);
+ if(!legacyJis)return null;
+ const sourceStandard=String($('devLegacyJisSource')?.value||'').trim();
+ const reviewRequired=Boolean($('devLegacyJisReview')?.checked);
+ return {legacyJis:true,message:LEGACY_JIS_DEFAULT_MESSAGE,sourceStandard,reviewRequired};
+}
+function devToggleLegacyJisFields(){
+ const on=Boolean($('devLegacyJis')?.checked);
+ const box=$('devLegacyJisDetails');
+ const panel=$('devStandardWarningPanel');
+ if(box)box.classList.toggle('hidden',!on);
+ if(panel)panel.classList.toggle('is-disabled',!on);
+}
+function renderQuestion(options={}){
+ const keepWhiteboard=Boolean(options?.keepWhiteboard);
+ if(!keepWhiteboard)closeWhiteboard(true);
  const q=getCurrentQuestion();if(!q){showFinish();return}
  const answered=state.answers?.[state.index];
  const kindMeta=state.quizType==='random'?` / 種類：${q.sourceKindLabels||randomKindLabels(randomKindIds(q))}`:'';
  $('qMeta').textContent=`${questionSourceLabel(q)} / ${state.order.length}問中${state.index+1}問目　範囲：${q.range||'未設定'}${state.quizType==='random'?' / カテゴリ：'+(q.sourceRangeCategoryLabel||rangeCategoryLabel(rangeCategory(q.range||''))):''}${kindMeta}`;
+ const warningBox=$('standardWarning');
+ if(warningBox)warningBox.innerHTML=standardWarningHtml(q);
  $('bar').style.width=`${state.index/state.order.length*100}%`;
  $('stem').textContent=q.stem;
  const qImg=$('questionImage');
@@ -2621,34 +3991,37 @@ function renderQuestion(){
  });
  $('result').style.display='none';$('result').className='result';$('result').innerHTML='';
  $('prevBtn').disabled=state.index===0;
+ const nextButton=$('nextBtn');
+ if(nextButton){
+  nextButton.classList.remove('hidden');
+  nextButton.disabled=!answered;
+  nextButton.textContent=state.index>=state.order.length-1?'終了する':'進む';
+ }
  if(answered){
   showExplanation(q,answered.choice,answered.correct,false);
-  $('nextBtn').classList.remove('hidden');
-  $('nextBtn').textContent=state.index>=state.order.length-1?'終了する':'次の問題へ';
   $('bar').style.width=`${(state.index+1)/state.order.length*100}%`;
- }else{
-  $('nextBtn').classList.add('hidden');
  }
  updateBookmarkButton();
  updateHeader();saveState();
+ if(keepWhiteboard&&whiteboardState.isOpen)refreshWhiteboardForCurrentQuestion();
 }
 function answeredCount(){return (state.answers||[]).filter(Boolean).length}
 function recalcCorrect(){state.correct=(state.answers||[]).filter(a=>a&&a.correct).length}
-function answer(choice){
+function answer(choice,keepWhiteboard=false){
  const q=getCurrentQuestion();if(state.answers[state.index])return;
  const correct=q.correct.includes(choice);
  state.answers[state.index]={q:q.number,sourceExamId:q.sourceExamId||state.examId,sourcePart:q.sourcePart||state.part,sourceTitle:q.sourceTitle||getExamRecord(state.examId)?.title,choice,correct,correctAnswer:q.correct.slice(),time:currentElapsedMs(),range:q.range||''};
  recalcCorrect();
- renderQuestion();
+ renderQuestion({keepWhiteboard});
  saveState();updateHeader();
- setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80);
+ if(!keepWhiteboard)setTimeout(()=>$('result').scrollIntoView({behavior:'smooth',block:'start'}),80);
 }
 function showExplanation(q,choice,correct,scroll=true){
  const rate=answeredCount()?Math.round(state.correct/answeredCount()*1000)/10:0,res=$('result');
  res.style.display='block';res.className='result '+(correct?'good':'bad');
  const rows=q.choices.map((c,i)=>{const n=i+1,isC=q.correct.includes(n),note=(q.choiceNotes&&q.choiceNotes[i])?q.choiceNotes[i]:(isC?'この選択肢が正答です。':'誤りポイント：正答は '+correctLabel(q)+' です。');return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml(note)}</td></tr>`}).join('');
  const img=(q.hasFigure&&q.image)?`<details><summary>図・表を再表示</summary><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" /></details>`:'';
- res.innerHTML=`<h3>${correct?'正解！':'不正解'}</h3><p><b>あなたの回答：</b>${choice}　<b>正答：</b>${correctLabel(q)}　<b>現在の正答率：</b>${rate}%</p><p><b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>要点解説：</b>${escapeHtml(q.tip||'正答表に基づいて判定します。')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>どこが違う？ / 解説ポイント</th></tr></thead><tbody>${rows}</tbody></table>${img}`;
+ res.innerHTML=`<h3>${correct?'正解！':'不正解'}</h3><p><b>あなたの回答：</b>${choice}　<b>正答：</b>${correctLabel(q)}　<b>現在の正答率：</b>${rate}%</p><p><b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><div class="whiteboard-open-result"><button class="ghost" type="button" onclick="openWhiteboard()">計算メモを確認する</button></div>${standardWarningHtml(q)}<p><b>要点解説：</b>${escapeHtml(q.tip||'正答表に基づいて判定します。')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>どこが違う？ / 解説ポイント</th></tr></thead><tbody>${rows}</tbody></table>${img}`;
 }
 function prevQuestion(){if(state.index<=0)return;state.index--;saveState();renderQuestion()}
 function nextQuestion(){
@@ -2670,9 +4043,9 @@ function scheduleCloudStateSave(snap,force=false){
 function saveState(){if(!state.examId||!state.part)return;ensureTimingFields(state);const snap=snapshotState();saveLocal(stateKey(state.examId,state.part),snap);scheduleCloudStateSave(snap);$('saveStateText').textContent='保存済み'}
 function saveHistory(){const k=historyKey(state.examId,state.part);const snap={...snapshotState(),attemptId:state.attemptId||makeAttemptId(),finished:true,completedAt:new Date().toISOString()};const hist=mergeHistory([snap],loadLocal(k,[])).slice(0,300);saveLocal(k,hist);scheduleCloudStateSave(snap,true);apiProgress('POST',{type:'attempt',examId:state.examId,part:state.part,data:snap})}
 async function resetPart(part){if(confirm(`${getExamRecord(currentExamId).title} ${partName(part)} の途中保存を削除しますか？`)){localStorage.removeItem(stateKey(currentExamId,part));await apiProgress('DELETE',{type:'state',examId:currentExamId,part});renderPartMenu()}}
-function showFinish(){pauseTimer();hideAll();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=sessionTitle();$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
+function showFinish(){pauseTimer();hideAll();resetWhiteboardSession();$('finishCard').classList.remove('hidden');const elapsed=state.elapsedMs||0;$('finalPart').textContent=sessionTitle();$('finalScore').textContent=`${state.correct} / ${state.order.length}`;$('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;$('finalTime').textContent=fmtTime(elapsed);renderWrongList()}
 function renderWrongList(){const pack=currentPack(), wrong=(state.answers||[]).map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>x.a&&!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabel(q))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small">${escapeHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>')}
-function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
+function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;resetWhiteboardSession();state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
 function historyStatsHtml(hist, pack){
  const base=hist.filter(h=>h && (h.mode||'all')==='all');
  const target=base.length?base:hist;
@@ -3150,6 +4523,79 @@ function devCurrentQuestion(){
  const i=Number($('devQuestionSelect')?.value||0);
  return devPack?.questions?.[i];
 }
+
+function devCurrentKindKey(){
+ const q=devCurrentQuestion();
+ const i=Number($('devQuestionSelect')?.value||0);
+ return randomKindKey(devExamId,devPart,q,i);
+}
+function devCurrentKindEntry(){
+ const key=devCurrentKindKey();
+ return randomKindMap?.items?.[key]||null;
+}
+function devRenderKindEditor(){
+ const el=$('devKindEditor');
+ if(!el)return;
+ const q=devCurrentQuestion();
+ if(!q){el.innerHTML='';return;}
+ const key=devCurrentKindKey();
+ const fromJson=randomQuestionKindIdsFromJson(q);
+ const explicit=fromJson.length?fromJson:normalizeKindIds(devCurrentKindEntry()?.categories||[]);
+ const fallback=randomKindIdsByKeyword(q);
+ const active=explicit.length?explicit:fallback;
+ const checks=RANDOM_KINDS.map(k=>`<label><input type="checkbox" class="dev-kind-check" value="${escapeHtml(k.id)}" ${active.includes(k.id)?'checked':''}> <span>${escapeHtml(k.label)}</span></label>`).join('');
+ const note=fromJson.length?'問題JSONの kindCategories を使用中':(explicit.length?'カテゴリマップを使用中':'明示カテゴリなし。キーワード自動判定を初期表示しています。');
+ el.innerHTML=`<h3>問題種類別カテゴリ</h3>
+  <p class="small">この設定は問題JSON内の <span class="code">kindCategories</span> に保存します。キー：<span class="code">${escapeHtml(key)}</span><br>${escapeHtml(note)}</p>
+  <div class="kind-check-grid">${checks}</div>
+  <div class="row" style="margin-top:8px">
+    <button class="secondary" onclick="devSaveCurrentKindCategory()">カテゴリを保存</button>
+    <button class="ghost" onclick="devResetCurrentKindCategory()">自動判定に戻す</button>
+    <button class="ghost" onclick="devCopyKindMapJson()">カテゴリマップコピー</button>
+    <button class="ghost" onclick="devExportKindMapJson()">カテゴリマップ保存</button>
+  </div>`;
+}
+function devSelectedKindCategories(){
+ return Array.from(document.querySelectorAll('.dev-kind-check:checked')).map(x=>x.value);
+}
+function devSaveCurrentKindCategory(){
+ const q=devCurrentQuestion();
+ if(!q)return;
+ const cats=normalizeKindIds(devSelectedKindCategories());
+ setQuestionKindIds(q,cats);
+ if(devPack&&Array.isArray(devPack.questions)){
+  const idx=Number($('devQuestionSelect')?.value||0);
+  if(devPack.questions[idx])setQuestionKindIds(devPack.questions[idx],cats);
+ }
+ devRenderKindEditor();
+ devRenderPreview();
+ renderRandomMenu();
+ const st=$('devStatus');
+ if(st)st.innerHTML=`<span class="status-ok">種類別カテゴリを問題JSONの kindCategories に反映しました。JSON保存・JSONコピー・PR作成に含まれます。</span>`;
+}
+function devResetCurrentKindCategory(){
+ const q=devCurrentQuestion();
+ const key=devCurrentKindKey();
+ if(q)delete q.kindCategories;
+ if(devPack&&Array.isArray(devPack.questions)){
+  const idx=Number($('devQuestionSelect')?.value||0);
+  if(devPack.questions[idx])delete devPack.questions[idx].kindCategories;
+ }
+ if(randomKindMap?.items)delete randomKindMap.items[key];
+ saveRandomKindMapLocal();
+ devRenderKindEditor();
+ devRenderPreview();
+ renderRandomMenu();
+ const st=$('devStatus');
+ if(st)st.innerHTML=`<span class="status-ok">問題JSONの kindCategories を削除し、自動判定に戻しました。</span>`;
+}
+function devCopyKindMapJson(){
+ const text=randomKindMapExportText();
+ navigator.clipboard?.writeText(text).then(()=>alert('種類別カテゴリJSONをコピーしました。')).catch(()=>alert('コピーできませんでした。'));
+}
+function devExportKindMapJson(){
+ downloadText('random_kind_map.json',randomKindMapExportText(),'application/json;charset=utf-8');
+}
 function devCurrentImageName(){
  const q=devReadForm();
  const raw=String(q.image||'').split('?')[0].split('#')[0];
@@ -3214,6 +4660,17 @@ function devRenderEditor(){
   <label class="pill"><input type="checkbox" id="devHasFigure" ${q.hasFigure?'checked':''}> 図表あり</label>
  </div>
  <div class="dev-field"><label>画像ファイル表記 / パス</label><input id="devImage" value="${escapeHtml(q.image||'')}" placeholder="Date/img/44/44_am_q01.png または data:image/... "></div>
+ <section class="dev-standard-warning" id="devStandardWarningPanel">
+  <h4>旧JIS・旧規格に関する注意</h4>
+  <label class="pill"><input type="checkbox" id="devLegacyJis" ${normalizeStandardWarning(q).legacyJis?'checked':''}> ユーザー画面に旧JIS・旧規格の注意を表示</label>
+  <div id="devLegacyJisDetails" class="${normalizeStandardWarning(q).legacyJis?'':'hidden'}">
+   <div class="row">
+    <label class="pill"><input type="checkbox" id="devLegacyJisReview" ${normalizeStandardWarning(q).reviewRequired?'checked':''}> 現行規格との照合が必要</label>
+   </div>
+   <div class="dev-field"><label>関連する旧JIS規格・旧表記（任意）</label><input id="devLegacyJisSource" value="${escapeHtml(normalizeStandardWarning(q).sourceStandard)}" placeholder="例：JIS T 0601-1 旧版、旧JIS表記など"></div>
+  </div>
+  <p class="small">旧JIS規格・旧安全規格・旧単位・旧表記が、正答や解説の判断に実際に関係する場合だけチェックしてください。試験回が古いだけではチェックしません。</p>
+ </section>
  <div class="dev-image-tools">
   <button class="ghost" type="button" onclick="devTriggerImageUpload()">画像を追加</button>
   <button class="ghost" type="button" onclick="devDownloadImage()">画像DL</button>
@@ -3232,10 +4689,14 @@ function devRenderEditor(){
  $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip">${escapeHtml(q.tip||'')}</textarea></div>${choices}`;
  devRenderPreview();
  ['devStem','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
- ['devNegative','devHasFigure'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
+ ['devNegative','devHasFigure','devLegacyJisReview'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
+ $('devLegacyJis')?.addEventListener('change',()=>{devToggleLegacyJisFields();devRenderPreview();});
+ $('devLegacyJisSource')?.addEventListener('input',devRenderPreview);
  (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
+ devToggleLegacyJisFields();
  devRefreshPrPaths();
  renderDevPrBatchList();
+ devRenderKindEditor();
  devClearGenericDevStatus();
 }
 function devReadForm(){
@@ -3243,7 +4704,10 @@ function devReadForm(){
  const correct=String($('devCorrect')?.value||'').split(/[,\s、/]+/).map(x=>Number(x)).filter(n=>n>=1&&n<=5);
  const choices=(q.choices||[]).map((_,i)=>$(`devChoice${i}`)?.value||'');
  const notes=(q.choices||[]).map((_,i)=>$(`devNote${i}`)?.value||'');
- return {...q,
+ const kindChecks=document.querySelectorAll('.dev-kind-check');
+ const kindCategories=kindChecks.length?normalizeKindIds(devSelectedKindCategories()):randomQuestionKindIdsFromJson(q);
+ const standardWarning=devStandardWarningFromForm(q);
+ const out={...q,
   stem:$('devStem')?.value||'',
   range:$('devRange')?.value||'',
   correct:correct.length?correct:q.correct,
@@ -3251,15 +4715,18 @@ function devReadForm(){
   hasFigure:Boolean($('devHasFigure')?.checked),
   image:$('devImage')?.value||'',
   tip:$('devTip')?.value||'',
-  choices,choiceNotes:notes};
+  choices,choiceNotes:notes,kindCategories};
+ if(standardWarning)out.standardWarning=standardWarning;
+ else delete out.standardWarning;
+ return out;
 }
 function devRenderPreview(){
  const q=devReadForm();
  const img=(q.hasFigure&&q.image)?`<img class="source-img" src="${escapeHtml(assetUrl(q.image))}" onerror="this.insertAdjacentHTML('afterend','<p class=&quot;status-warn&quot;>画像を読み込めません。パスを確認してください。</p>')">`:'<p class="small">図表なし</p>';
  const quizChoices=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return `<div class="choice-preview ${isC?'correct':''}"><b>${n}.</b> ${escapeHtml(c)} ${isC?'<span class="issue-badge high">正答</span>':''}</div>`}).join('');
  const rows=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return`<tr><th>${n}</th><td>${escapeHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td>${escapeHtml((q.choiceNotes||[])[i]||'')}</td></tr>`}).join('');
- if($('devQuizPreview'))$('devQuizPreview').innerHTML=`<h4>出題プレビュー</h4><div class="question-title">${escapeHtml(devExamId||'')} ${partName(devPart||'am')} / ${escapeHtml(q.range||'未設定')}</div><div class="stem">${escapeHtml(q.stem||'')}</div>${img}<div style="margin-top:10px">${quizChoices}</div>`;
- if($('devExplainPreview'))$('devExplainPreview').innerHTML=`<h4>解説プレビュー</h4><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p><p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p><p><b>要点解説：</b>${escapeHtml(q.tip||'')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
+ if($('devQuizPreview'))$('devQuizPreview').innerHTML=`<h4>出題プレビュー</h4><div class="question-title">${escapeHtml(devExamId||'')} ${partName(devPart||'am')} / ${escapeHtml(q.range||'未設定')}</div>${standardWarningHtml(q)}<div class="stem">${escapeHtml(q.stem||'')}</div>${img}<div style="margin-top:10px">${quizChoices}</div>`;
+ if($('devExplainPreview'))$('devExplainPreview').innerHTML=`<h4>解説プレビュー</h4><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p>${standardWarningHtml(q)}<p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p><p><b>要点解説：</b>${escapeHtml(q.tip||'')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 function devApplyChanges(autoAddToBatch=false){
  const i=Number($('devQuestionSelect').value||0);
@@ -4128,12 +5595,14 @@ function setupCeExamLink(){
 }
 async function init(){
  applyTheme(getStoredTheme());
+ initWhiteboard();
  setupCeExamLink();
  renderVersionInfo();
  await loadVersionFromMarkdown();
  $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/端末キャッシュ'; }
  try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }
+ await loadRandomKindMap();
  showMenu();
  populateViewerSelects();
  updateDbLastSync();

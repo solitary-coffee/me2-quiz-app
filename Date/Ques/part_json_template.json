@@ -34,7 +34,13 @@
         "選択肢5の正しい理由/違う箇所"
       ],
       "hasFigure": true,
-      "image": "Date/img/47/am_p3.jpg"
+      "image": "Date/img/47/am_p3.jpg",
+      "standardWarning": {
+        "legacyJis": false,
+        "message": "",
+        "sourceStandard": "",
+        "reviewRequired": false
+      }
     }
   ]
 }
