@@ -316,16 +316,21 @@
       ],
       "negative": false,
       "range": "医用工学：電気・電子・物理",
-      "tip": "正答は「5）1 lx ＝ 1 lm ／m2」。各選択肢が何を測るか・何を示すか・何に使うかも確認する。",
+      "tip": "要点：単位の基本関係は、J= W・s、C= A・s、Pa= N/m²、Wb= T・m²、lx= lm/m²。覚える：照度はlx、光束はlm、面積で割ってlxになる。",
       "choiceNotes": [
-        "誤りポイント：「W/s」が誤り。1 J = 1 W・s。 正しくは「1 lx ＝ 1 lm ／m2」。",
-        "誤りポイント：「A/s」が誤り。1 C = 1 A・s。 正しくは「1 lx ＝ 1 lm ／m2」。",
-        "誤りポイント：「Pa/m²」が誤り。1 Pa = 1 N/m²。 正しくは「1 lx ＝ 1 lm ／m2」。",
-        "誤りポイント：「T/m²」が誤り。1 Wb = 1 T・m²。 正しくは「1 lx ＝ 1 lm ／m2」。",
-        "正答。正しい。1 lx = 1 lm/m²。"
+        "誤りポイント：「W/s」が誤り。1 J = 1 W・s であり、仕事やエネルギーの単位である。したがって設問条件に合わない。",
+        "誤りポイント：「A/s」が誤り。1 C = 1 A・s であり、電気量の単位である。したがって設問条件に合わない。",
+        "誤りポイント：「Pa/m²」が誤り。1 Pa = 1 N/m² であり、圧力の単位である。したがって設問条件に合わない。",
+        "誤りポイント：「T/m²」が誤り。1 Wb = 1 T・m² であり、磁束の単位である。したがって設問条件に合わない。",
+        "正答。1 lx = 1 lm/m² である。照度は光束を面積で割った単位なので設問条件に合う。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am12",
