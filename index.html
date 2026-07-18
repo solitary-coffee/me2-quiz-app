@@ -1032,7 +1032,7 @@ html[data-theme="dark"] .whiteboard-canvas{
 }
 
 
-/* ホワイトボード v2.5.6: 問題確認つき・なめらか描画 */
+/* ホワイトボード: 問題確認つき・なめらか描画 */
 .whiteboard-dialog{
   width:min(1180px,100%);
 }
@@ -1156,7 +1156,7 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
 }
 
 
-/* ホワイトボード v2.5.7: さらに滑らかな描画と明確な問題移動 */
+/* ホワイトボード: さらに滑らかな描画と明確な問題移動 */
 .whiteboard-nav-button{
   white-space:nowrap;
 }
@@ -1174,10 +1174,69 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
   }
 }
 
+
+/* 開発者用：問題の要確認クラウドフラグ */
+.dev-review-control{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:38px;
+  padding:7px 10px;
+  border:1px solid #f59e0b;
+  border-radius:12px;
+  background:#fffbeb;
+  color:#92400e;
+  font-size:13px;
+  font-weight:800;
+}
+.dev-review-control label{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
+.dev-review-control input{
+  width:18px;
+  height:18px;
+  accent-color:#d97706;
+}
+.dev-review-control .dev-review-sync{
+  font-size:11px;
+  font-weight:700;
+  color:#a16207;
+}
+.dev-review-control.is-saving{
+  opacity:.72;
+}
+.dev-review-cloud-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-left:6px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#fef3c7;
+  color:#92400e;
+  font-size:11px;
+  font-weight:900;
+}
+html[data-theme="dark"] .dev-review-control{
+  border-color:#b45309;
+  background:#451a03;
+  color:#fde68a;
+}
+html[data-theme="dark"] .dev-review-control .dev-review-sync{
+  color:#fcd34d;
+}
+html[data-theme="dark"] .dev-review-cloud-badge{
+  background:#78350f;
+  color:#fde68a;
+}
+
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">v2.5.9</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
+<header><div class="header-inner"><h1>ME2種 過去問演習</h1><div class="top-actions"><span class="badge" id="userBadge">ログイン確認中</span><span class="badge" id="sourceBadge">サイト内確認中</span><span class="badge" id="partBadge">未開始</span><span class="badge" id="timerBadge">00:00</span><span class="badge" id="scoreBadge">0/0 正解</span><span class="badge" id="versionBadge">確認中</span><button class="ghost theme-toggle" id="themeToggle" onclick="toggleTheme()" type="button" aria-label="表示モードを切り替え">🌙 ダーク</button><span class="save-state" id="saveStateText"></span></div></div></header>
 <main>
 <section id="menuCard" class="card menu-classic">
   <h2>第2種ME技術実力検定試験の過去問演習</h2>
@@ -1344,7 +1403,7 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
 
   <div class="grid" id="examGrid"></div>
 </section>
-<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code">v2.5.9</span> / 更新日：2026-07-02</p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
+<section id="loginCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>ログイン情報</h2><p class="small">アプリ版：<span class="code" id="loginAppVersion">確認中</span> / 更新日：<span id="loginAppUpdated">確認中</span></p><div id="loginInfo" class="small"></div><div class="row" style="margin-top:12px"><button class="secondary" onclick="loadMe()">再確認</button></div></section>
 <section id="syncCard" class="card hidden">
   <div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div>
   <h2>DB同期</h2>
@@ -1506,11 +1565,12 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
   </section>
   <section class="dev-check-panel">
     <h3>文面チェック</h3>
-    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説が、日本語として不自然でないか、形式が揃っているかを一括チェックします。計算問題では公式・代入式・単位の記載も確認します。修正済みにチェックした項目は下へ移動します。</p>
+    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」も同じ一覧へ表示でき、「要確認のみ」で抽出できます。修正済みにチェックした項目は下へ移動します。</p>
     <div class="dev-check-grid">
       <div class="dev-field"><label>開始回</label><select id="checkFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="checkToExam"></select></div>
       <div class="dev-field"><label>対象</label><select id="checkPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
+      <div class="dev-field"><label>表示対象</label><select id="checkReviewMode"><option value="all">文面指摘＋要確認</option><option value="review">要確認のみ</option><option value="issues">文面指摘のみ</option></select></div>
       <div class="dev-field"><label>抽出レベル</label><select id="checkSeverity"><option value="all">すべて</option><option value="high">重要のみ</option><option value="warn">重要・注意</option><option value="mid">重要・注意・確認</option><option value="low">軽微まで</option></select></div>
     </div>
     <div class="row" style="margin-top:10px">
@@ -1524,7 +1584,7 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
     <div id="devCheckResults" class="dev-check-results"></div>
   </section>
 </section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><span id="devReviewControl" class="dev-review-control hidden"></span><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
 
 <div id="whiteboardModal" class="whiteboard-modal hidden" role="dialog" aria-modal="true" aria-labelledby="whiteboardTitle" onclick="if(event.target===this)closeWhiteboard()">
   <section class="whiteboard-dialog">
@@ -1592,517 +1652,13 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
 </footer>
 </main>
 <script>
-const APP_VERSION='v2.5.9';
-const APP_UPDATED_AT='2026-07-02';
 const CE_EXAM_SITE_URL='/ce/';
-const APP_UPDATE_NOTES=[
-  'ホワイトボード上部の問題移動ボタンを削除',
-  '問題移動は左下の「1問戻る」「進む」に統一'
-];
-const APP_VERSION_HISTORY=[
-  {
-    version:'v2.5.9',
-    date:'2026-07-02',
-    notes:[
-      'ホワイトボード上部の問題移動ボタンを削除',
-      '問題移動は左下の「1問戻る」「進む」に統一'
-    ]
-  },
-  {
-    version:'v2.5.8',
-    date:'2026-07-02',
-    notes:[
-      'ホワイトボードの描画に「1手戻す」と「1手進む」を追加',
-      '描画を戻した後に、取り消した線・消去・全消去を1操作ずつ復元可能に変更',
-      '描画操作ごとにボタンの有効・無効を自動更新'
-    ]
-  },
-  {
-    version:'v2.5.7',
-    date:'2026-07-02',
-    notes:[
-      'ホワイトボードの描画をさらに滑らかに改善',
-      'ホワイトボード上部に「1問戻る」「進む」を追加',
-      'ホワイトボードを閉じずに問題を切り替えられるように変更'
-    ]
-  },
-  {
-    version:'v2.5.6',
-    date:'2026-07-02',
-    notes:[
-      'ホワイトボードの描画を滑らかに改善',
-      'ホワイトボード展開中でも問題文・図表・選択肢を確認可能に変更',
-      'ホワイトボード内から回答・前の問題・進む操作に対応'
-    ]
-  },
-  {
-    version:'v2.5.5',
-    date:'2026-07-02',
-    notes:[
-      'ホワイトボードの板書を端末へ保存しない仕様に変更',
-      '解答中は問題ごとに一時保持し、「前の問題へ」で戻った場合だけ復元',
-      'メニューへ戻る・演習終了・ページ更新時には板書を破棄'
-    ]
-  },
-  {
-    version:'v2.5.4',
-    date:'2026-07-02',
-    notes:[
-      '出題画面に計算用ホワイトボードを追加',
-      'ペン・消しゴム・色・太さ変更・1手戻す・全消去に対応',
-      '問題ごとの板書を端末内に自動保存し、同じ問題を開いたときに復元'
-    ]
-  },
-  {
-    version:'v2.5.3',
-    date:'2026-07-01',
-    notes:[
-      '旧JIS・旧規格に関する注意表示に対応',
-      '問題JSONの standardWarning.legacyJis を読み込み、問題画面と解説に注意を表示',
-      '開発モードで旧JISフラグ・規格名・現行規格との照合要否をチェックボックス形式で編集可能に変更'
-    ]
-  },
-  {
-    version:'v2.5.2',
-    date:'2026-06-06',
-    notes:[
-      '種類別カテゴリを問題JSONの kindCategories に保存する方式へ変更',
-      '問題文・選択肢・解説は変更せず、カテゴリ情報のみを各問題へ追加',
-      '開発モードで問題ごとの種類別カテゴリを直接編集可能に変更',
-      'ランダム出題は kindCategories を最優先し、未設定時のみカテゴリマップ・キーワード判定を使用'
-    ]
-  },
-  {
-    version:'v2.5.1',
-    date:'2026-06-06',
-    notes:[
-      '現在の問題JSONから生成した種類別カテゴリマップを追加',
-      'ランダム出題の種類別判定をキーワード自動判定から明示マップ優先へ変更',
-      '開発モードで各問題の種類別カテゴリを編集・保存・コピーできる機能を追加',
-      '問題JSONの kindCategories で種類別カテゴリを管理'
-    ]
-  },
-  {
-    version:'v2.5.0',
-    date:'2026-06-06',
-    notes:[
-      'ランダム出題に種類別フィルタを追加',
-      '呼吸器・人工心肺・感染症・安全管理などで問題を抽出可能に変更',
-      '問題JSONを変更せず、既存データの語句から種類を自動判定する方式に対応'
-    ]
-  },
-  {
-    version:'v2.4.7',
-    date:'2026-06-06',
-    notes:[
-      'OGP画像の対応機種表記から「対応機種：」を削除',
-      'SNS共有時のリンクカード画像を更新'
-    ]
-  },
-  {
-    version:'v2.4.6',
-    date:'2026-06-06',
-    notes:[
-      'OGP画像の対応機種表記を「スマホ / iPad / PC など」に変更',
-      'SNS共有時のリンクカード画像を更新'
-    ]
-  },
-  {
-    version:'v2.4.5',
-    date:'2026-06-06',
-    notes:[
-      'トップ画面のログイン/登録・回数表示の右側にCE国家試験版リンクボタンを追加',
-      'CE国家試験版リンク先を定数で変更できるように追加',
-      'スマホ表示でもボタンが崩れにくいようにスタイルを調整'
-    ]
-  },
-  {
-    version:'v2.4.4',
-    date:'2026-06-06',
-    notes:[
-      'SNS共有時にサイト説明文が表示されるようにOGP/Twitter Cardメタタグを追加',
-      'リンクカード用のOGP画像 assets/ogp.png を追加',
-      '検索結果・ブラウザ向けdescriptionを整理'
-    ]
-  },
-  {
-    version:'v2.4.3',
-    date:'2026-06-06',
-    notes:[
-      '文面一括チェックの結果表示ID不一致を修正',
-      '戻るボタンの文言をメニューへへ統一',
-      '未使用の表記をログイン情報から削除'
-    ]
-  },
-  {
-    version:'v2.4.2',
-    date:'2026-06-06',
-    notes:[
-      '開発モード左側パネル内の不要な縦空白を削減',
-      'コミットメッセージ欄とGitHub一括PR欄が縦に伸びすぎる問題を修正',
-      '編集対象の試験回と午前午後欄を短くし、問題番号欄を広く調整'
-    ]
-  },
-  {
-    version:'v2.4.1',
-    date:'2026-06-06',
-    notes:[
-      '開発モードの編集対象を解説生成定義の下へ単独配置',
-      '問題操作ボタンを問題・解答・画像の設定枠の下へ移動',
-      '左側パネルを問題設定、コミットメッセージ、GitHub一括PRの順に整理',
-      'マージ後の最新データ取得ボタンをGitHub一括PRの折りたたみ内へ移動'
-    ]
-  },
-  {
-    version:'v2.4.0',
-    date:'2026-06-06',
-    notes:[
-      'PRマージ後にサイト内の最新問題データを再取得できる機能を追加',
-      'ブラウザ内の問題キャッシュをクリアしてDate/QuesとDate/imgを再読み込み',
-      'マージ済みの編集内容を一括PRリストから自動削除する処理を追加',
-      'Cloudflare再デプロイ後の最新データ確認をしやすく改善'
-    ]
-  },
-  {
-    version:'v2.3.5',
-    date:'2026-06-06',
-    notes:[
-      '各問題のコミットメッセージ入力欄を折りたたみ外へ移動',
-      'PR操作部を閉じた状態でも編集箇所を入力できるように変更',
-      '送信予定コミット一覧はPR操作部内に表示するように整理'
-    ]
-  },
-  {
-    version:'v2.3.4',
-    date:'2026-06-06',
-    notes:[
-      'PR操作部を折りたたんだ状態でも送信予定コミットメッセージを表示',
-      '展開時の一括PRリストの順番は現在の追加順を維持',
-      '一括PRリストが空の時の表示を整理'
-    ]
-  },
-  {
-    version:'v2.3.3',
-    date:'2026-06-06',
-    notes:[
-      '既存PR更新時にPR本文が二重化しないように修正',
-      '修正内容・送信ファイル・確認欄を統合して重複を削除',
-      '同じ項目は追加せず、編集箇所のみ追記されるように調整'
-    ]
-  },
-  {
-    version:'v2.3.2',
-    date:'2026-06-06',
-    notes:[
-      '開発モードで問題・回・午前午後を切り替えた時に古いステータスメッセージを消去',
-      '反映メッセージに対象問題を表示',
-      '一括PRリスト追加メッセージに対象問題を表示'
-    ]
-  },
-  {
-    version:'v2.3.1',
-    date:'2026-06-06',
-    notes:[
-      '「この問題に反映」で自動的に一括PRリストへ追加するように変更',
-      'PR操作部を折りたたみ式に変更',
-      '不用意なPR作成操作を防ぎやすい表示に調整'
-    ]
-  },
-  {
-    version:'v2.3.0',
-    date:'2026-06-06',
-    notes:[
-      '複数問題をまとめて1つのGitHub Pull Requestに送信できる機能を追加',
-      '回数や午前・午後が違う問題も同じ一括PRにまとめられるように変更',
-      '既存の問題編集PRがある場合は同じPRブランチへ追加コミットするように変更',
-      'コミットメッセージを「第〇回 午前・午後 第〇問：編集箇所」形式に整理'
-    ]
-  },
-  {
-    version:'v2.2.1',
-    date:'2026-06-06',
-    notes:[
-      'GitHub PR作成時の権限エラー表示を改善',
-      'ブランチ作成に必要なGitHubトークン権限の案内を追加',
-      'Cloudflare環境変数の確認メッセージを整理',
-      'Resource not accessible by personal access token の原因を特定しやすく修正'
-    ]
-  },
-  {
-    version:'v2.2.0',
-    date:'2026-06-06',
-    notes:[
-      '開発モードからGitHub Pull Requestを作成できる機能を追加',
-      '編集中の問題JSONをDate/QuesへPR送信可能に変更',
-      '追加・差し替え画像をDate/imgへPR送信可能に変更',
-      'GitHubトークンをブラウザに出さずCloudflare Functions側で処理'
-    ]
-  },
-  {
-    version:'v1.10.9',
-    date:'2026-06-04',
-    notes:[
-      'GitHubからの問題データ読み込みを廃止',
-      '問題JSON・画像をサイト内のDateフォルダから読み込む方式に変更',
-      '外部GitHub読み込み / Cloudflare GitHub Proxyへのフォールバックを停止',
-      '読み込み状態の表示をサイト内データ用に整理'
-    ]
-  },
-  {
-    version:'v1.10.8',
-    date:'2026-06-04',
-    notes:[
-      '開発モードの編集レイアウトを再配置',
-      '画像を追加・画像DL機能を編集対象枠に追加',
-      '文面チェックで問題全体の最高ステータスと内訳を表示',
-      '出題プレビューと解説プレビューを下部に分けて表示'
-    ]
-  },
-  {
-    version:'v1.10.7',
-    date:'2026-06-03',
-    notes:[
-      '開発モードの並びを編集・プレビュー後に文面チェックへ変更',
-      '文面チェックを重要・注意・確認・軽微の4段階に変更',
-      '抽出レベルを選択できるように変更',
-      '修正済みチェックを追加し、チェック済みは下に表示'
-    ]
-  },
-  {
-    version:'v1.10.6',
-    date:'2026-06-03',
-    notes:[
-      'サイト情報内の表示順を調整',
-      '開発者名・連絡先をバージョン情報より上に移動',
-      'サイト情報・更新履歴・連絡先の見やすさを調整'
-    ]
-  },
-  {
-    version:'v1.10.5',
-    date:'2026-06-03',
-    notes:[
-      '問題閲覧枠の表示崩れを修正',
-      '以前のviewer-card CSSとランダムカード風CSSの競合を解消',
-      '閲覧モードバッジと操作ボタンの配置を調整',
-      '問題確認・あとで見返すボタンの文字折れを軽減'
-    ]
-  },
-  {
-    version:'v1.10.4',
-    date:'2026-06-03',
-    notes:[
-      '問題閲覧枠をランダム出題と同じカード型へ調整',
-      '問題閲覧で午前・午後・両方を選択可能に変更',
-      'あとで見返すボタンを問題閲覧枠内に整理',
-      'ログイン横のあとで見返す重複ボタンを削除'
-    ]
-  },
-  {
-    version:'v1.10.3',
-    date:'2026-06-03',
-    notes:[
-      'トップ画面の配置を再調整',
-      '注意文を折りたたみ外へ移動',
-      'DB同期ボタンを読み込み状態欄へ移動',
-      '問題閲覧用の枠を追加'
-    ]
-  },
-  {
-    version:'v1.10.2',
-    date:'2026-06-03',
-    notes:[
-      'トップ画面を整理前に近いカード型へ調整',
-      'ボタンを削除',
-      'ランダム履歴をランダム出題内へ移動',
-      'トップのクイック操作を必要最低限に整理'
-    ]
-  },
-  {
-    version:'v1.10.1',
-    date:'2026-06-03',
-    notes:[
-      'トップ画面を整理',
-      'サイト情報・更新履歴を折りたたみ表示に変更',
-      'ランダム出題を折りたたみ表示に変更',
-      '主要操作をクイック操作としてまとめて表示'
-    ]
-  },
-  {
-    version:'v1.10.0',
-    date:'2026-06-03',
-    notes:[
-      'DB同期を双方向同期のみの操作に整理',
-      '双方向同期単独ボタンを非表示化',
-      '双方向同期単独ボタンを非表示化',
-      '同期処理は双方向同期ボタンで完結するように変更'
-    ]
-  },
-  {
-    version:'v1.9.9',
-    date:'2026-06-03',
-    notes:[
-      'async is not defined エラーを修正',
-      '共有リンク制を廃止',
-      'ログインアカウント内で双方向同期と双方向同期に変更',
-      'DB同期画面を整理'
-    ]
-  },
-  {
-    version:'v1.9.8',
-    date:'2026-06-03',
-    notes:[
-      'await構文エラーを修正',
-      'バージョン番号と変更点をCHANGELOG.mdから読み込む方式に変更',
-      'トップの現在バージョン・過去バージョン表示をCHANGELOG.md連動に変更',
-      'パスワード自動補完とPWA meta警告を軽減'
-    ]
-  },
-  {
-    version:'v1.9.7',
-    date:'2026-06-02',
-    notes:[
-      '文面チェックに公式・代入式チェックを追加',
-      '計算問題で公式の記載があるか確認可能に変更',
-      '正答解説に代入した式・計算過程・単位が含まれるかチェック',
-      'AI解説生成定義にも公式・代入式のルールを追加'
-    ]
-  },
-  {
-    version:'v1.9.6',
-    date:'2026-06-02',
-    notes:[
-      '開発モードに文面チェック機能を追加',
-      '試験回範囲と午前/午後を指定して一括チェック可能に変更',
-      '問題文・選択肢・正答・画像パス・各解説の異常をピックアップ',
-      'チェック結果から該当問題を開発モードで直接開けるように変更'
-    ]
-  },
-  {
-    version:'v1.9.5',
-    date:'2026-06-02',
-    notes:[
-      '各履歴から間違った問題だけを再演習できる機能を追加',
-      '通常履歴・ランダム履歴の両方に対応',
-      '履歴ごとに「この回の間違いだけ解く」ボタンを追加',
-      '再演習結果は別履歴として保存'
-    ]
-  },
-  {
-    version:'v1.9.4',
-    date:'2026-06-02',
-    notes:[
-      '開発者ログイン時に405が出る問題を修正',
-      'functions/api/dev-auth.jsを更新パッチに含めるよう修正',
-      'dev-auth APIにonRequestディスパッチを追加してPOST/GET処理を安定化',
-      'AI解説生成定義・開発者認証・見返し・ランダム履歴機能も同梱'
-    ]
-  },
-  {
-    version:'v1.9.3',
-    date:'2026-06-02',
-    notes:[
-      'AI解説生成の定義を追加',
-      '開発モードで解説生成定義を確認・編集可能に変更',
-      '正答・誤答・誤っているもの問題の解説形式を統一',
-      'センサ・薬剤・材料・装置などの説明ルールを追加'
-    ]
-  },
-  {
-    version:'v1.9.2',
-    date:'2026-06-02',
-    notes:[
-      '開発モードでAIによる解説再生成に対応',
-      '要点解説と各選択肢解説をAIでまとめて生成可能に変更',
-      'AI生成後も開発モード内で手修正してJSON保存・コピー可能',
-      'OpenAI APIキー未設定時に分かりやすく表示'
-    ]
-  },
-  {
-    version:'v1.9.1',
-    date:'2026-06-02',
-    notes:[
-      '開発モードの入口をトップから下部へ移動',
-      '開発モードをID・パスワード管理に変更',
-      'Cloudflare Functionsの開発者用ログインAPIを追加',
-      '前回追加した開発モード・前後移動・○×△メモ・見返し・ランダム履歴機能も同梱'
-    ]
-  },
-  {
-    version:'v1.9.0',
-    date:'2026-06-02',
-    notes:[
-      '開発モードを追加し、問題・解答・画像・解説を同時確認しながら編集可能に変更',
-      '編集した問題データをJSONとして保存・コピーできるように変更',
-      '問題中に前の問題へ戻れるように変更',
-      '各選択肢に○×△の消去法メモを追加',
-      'あとで見返す保存ボタンと見返しリストを追加',
-      'ランダム演習履歴をトップから確認可能に変更'
-    ]
-  },
-  {
-    version:'v1.8.3',
-    date:'2026-06-02',
-    notes:[
-      '開発者表記を「孤独のコーヒー」に統一',
-      'ユーザーID表記を削除',
-      '連絡先メールアドレスを変更'
-    ]
-  },
- {
-  version:'v1.8.2',
-  date:'2026-06-02',
-  notes:[
-   'トップに現在のバージョンと変更点を表示',
-   '「過去のバージョンはこちら」から履歴を確認できるように変更',
-   'ダークモード表記に統一'
-  ]
- },
- {
-  version:'v1.8.1',
-  date:'2026-06-02',
-  notes:[
-   '新規ログイン登録時の500エラーを修正',
-   '認証APIの安定性を改善',
-   'KV Binding未設定時のエラー表示を改善'
-  ]
- },
- {
-  version:'v1.8.0',
-  date:'2026-06-02',
-  notes:[
-   '保存用パスワードを8文字以上に変更',
-   'ログイン画面にパスワード強度表示を追加',
-   'アップデート情報とバージョン表示を追加'
-  ]
- },
- {
-  version:'v1.7.0',
-  date:'2026-06-02',
-  notes:[
-   '問題閲覧の詳細欄をダークモード対応',
-   'ランダム出題の範囲指定を6分野に変更',
-   'ランダム出題UIを改善'
-  ]
- },
- {
-  version:'v1.6.0',
-  date:'2026-06-02',
-  notes:[
-   'ランダム出題機能を追加',
-   '問題数を10問・20問・40問・60問などで指定可能に変更',
-   '試験回・午前/午後・範囲指定に対応'
-  ]
- },
- {
-  version:'v1.5.0',
-  date:'2026-06-02',
-  notes:[
-   '問題・回答閲覧機能を追加',
-   'DBアップロードと共有コード機能を追加',
-   '第42回〜第44回の選択肢解説を強化'
-  ]
- }
-];
+const versionState={
+  history:[],
+  current:null,
+  loading:true,
+  error:''
+};
 
 const EXPLANATION_DEFINITION=`# ME2種 AI解説生成の定義
 
@@ -2650,65 +2206,120 @@ let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,corr
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 
 async function fetchTextNoCache(path){
-  const r=await fetch(withAssetCacheBuster(path),{cache:'no-store'});
-  if(!r.ok)throw new Error(String(r.status));
-  return await r.text();
+  const url=new URL(withAssetCacheBuster(path),window.location.href);
+  url.searchParams.set('_ts',String(Date.now()));
+  const response=await fetch(url.toString(),{
+    cache:'no-store',
+    headers:{'cache-control':'no-cache'}
+  });
+  if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  return await response.text();
 }
-function parseChangelogMarkdown(md){
-  const lines=String(md||'').split(/\r?\n/);
+function parseChangelogMarkdown(markdown){
+  const lines=String(markdown||'').split(/\r?\n/);
   const history=[];
-  let cur=null;
+  let current=null;
+
   for(const line of lines){
-    const h=line.match(/^##\s+(.+?)\s*-\s*(\d{4}-\d{2}-\d{2})\s*$/);
-    if(h){
-      if(cur)history.push(cur);
-      cur={version:h[1].trim(),date:h[2].trim(),notes:[]};
+    const heading=line.match(/^##\s+(.+?)\s*[-–—]\s*(\d{4}-\d{2}-\d{2})\s*$/);
+    if(heading){
+      if(current)history.push(current);
+      current={
+        version:heading[1].trim(),
+        date:heading[2].trim(),
+        notes:[]
+      };
       continue;
     }
+
     const bullet=line.match(/^\s*[-*]\s+(.+?)\s*$/);
-    if(cur&&bullet)cur.notes.push(bullet[1].trim());
+    if(current&&bullet)current.notes.push(bullet[1].trim());
   }
-  if(cur)history.push(cur);
+
+  if(current)history.push(current);
   return history;
 }
-async function loadVersionFromMarkdown(){
-  try{
-    const md=await fetchTextNoCache('CHANGELOG.md');
-    const hist=parseChangelogMarkdown(md);
-    if(hist.length){
-      window.APP_VERSION_HISTORY_MD=hist;
-      window.APP_VERSION_MD=hist[0].version;
-      window.APP_UPDATED_AT_MD=hist[0].date;
-      window.APP_UPDATE_NOTES_MD=hist[0].notes;
-      const vb=$('versionBadge');
-      if(vb)vb.textContent=window.APP_VERSION_MD;
-      renderVersionInfo();
-      return true;
-    }
-  }catch(e){
-    console.warn('CHANGELOG.mdを読み込めませんでした。内蔵バージョン情報を使用します。',e);
-  }
-  return false;
-}
-
 function renderVersionInfo(){
-  const history=window.APP_VERSION_HISTORY_MD||APP_VERSION_HISTORY;
-  const current={
-    version:window.APP_VERSION_MD||APP_VERSION,
-    date:window.APP_UPDATED_AT_MD||APP_UPDATED_AT,
-    notes:window.APP_UPDATE_NOTES_MD||APP_UPDATE_NOTES
-  };
-  const title=$('currentVersionTitle'), date=$('currentVersionDate'), pill=$('currentVersionPill'), notes=$('currentVersionNotes'), list=$('versionHistoryList');
+  const badge=$('versionBadge');
+  const title=$('currentVersionTitle');
+  const date=$('currentVersionDate');
+  const pill=$('currentVersionPill');
+  const notes=$('currentVersionNotes');
+  const list=$('versionHistoryList');
+  const loginVersion=$('loginAppVersion');
+  const loginUpdated=$('loginAppUpdated');
+
+  if(versionState.loading){
+    if(badge)badge.textContent='確認中';
+    if(title)title.textContent='CHANGELOG.mdを読み込み中';
+    if(date)date.textContent='';
+    if(pill)pill.textContent='…';
+    if(notes)notes.innerHTML='';
+    if(list)list.innerHTML='';
+    if(loginVersion)loginVersion.textContent='確認中';
+    if(loginUpdated)loginUpdated.textContent='確認中';
+    return;
+  }
+
+  if(versionState.error||!versionState.current){
+    if(badge)badge.textContent='取得失敗';
+    if(title)title.textContent='バージョン情報を取得できません';
+    if(date)date.textContent='CHANGELOG.mdの配置・公開状態を確認してください。';
+    if(pill)pill.textContent='!';
+    if(notes)notes.innerHTML=versionState.error
+      ? `<li>${escapeHtml(versionState.error)}</li>`
+      : '';
+    if(list)list.innerHTML='';
+    if(loginVersion)loginVersion.textContent='取得失敗';
+    if(loginUpdated)loginUpdated.textContent='取得失敗';
+    return;
+  }
+
+  const current=versionState.current;
+  if(badge)badge.textContent=current.version;
   if(title)title.textContent=`${current.version} の変更点`;
-  if(date)date.textContent=`更新日：${current.date||APP_UPDATED_AT}`;
+  if(date)date.textContent=`更新日：${current.date}`;
   if(pill)pill.textContent=current.version;
-  if(notes)notes.innerHTML=(current.notes||[]).map(n=>`<li>${escapeHtml(n)}</li>`).join('');
+  if(loginVersion)loginVersion.textContent=current.version;
+  if(loginUpdated)loginUpdated.textContent=current.date;
+  if(notes)notes.innerHTML=(current.notes||[])
+    .map(note=>`<li>${escapeHtml(note)}</li>`)
+    .join('');
+
   if(list){
-    const past=(history||[]).filter(x=>x.version!==current.version);
-    list.innerHTML=past.map(v=>`<div class="version-history-item">
-      <h4>${escapeHtml(v.version)} <span class="small">/ ${escapeHtml(v.date||'')}</span></h4>
-      <ul>${(v.notes||[]).map(n=>`<li>${escapeHtml(n)}</li>`).join('')}</ul>
-    </div>`).join('');
+    list.innerHTML=versionState.history.slice(1).map(item=>`
+      <div class="version-history-item">
+        <h4>${escapeHtml(item.version)} <span class="small">/ ${escapeHtml(item.date||'')}</span></h4>
+        <ul>${(item.notes||[]).map(note=>`<li>${escapeHtml(note)}</li>`).join('')}</ul>
+      </div>
+    `).join('');
+  }
+}
+async function loadVersionFromMarkdown(){
+  versionState.loading=true;
+  versionState.error='';
+  renderVersionInfo();
+
+  try{
+    const markdown=await fetchTextNoCache('CHANGELOG.md');
+    const history=parseChangelogMarkdown(markdown);
+    if(!history.length){
+      throw new Error('CHANGELOG.mdに「## バージョン - YYYY-MM-DD」形式の履歴がありません。');
+    }
+
+    versionState.history=history;
+    versionState.current=history[0];
+    versionState.loading=false;
+    renderVersionInfo();
+    return true;
+  }catch(error){
+    versionState.history=[];
+    versionState.current=null;
+    versionState.loading=false;
+    versionState.error=String(error?.message||error);
+    console.warn('CHANGELOG.mdからバージョン情報を取得できませんでした。',error);
+    renderVersionInfo();
+    return false;
   }
 }
 
@@ -4002,6 +3613,7 @@ function renderQuestion(options={}){
   $('bar').style.width=`${(state.index+1)/state.order.length*100}%`;
  }
  updateBookmarkButton();
+ drawDevReviewControl(q);
  updateHeader();saveState();
  if(keepWhiteboard&&whiteboardState.isOpen)refreshWhiteboardForCurrentQuestion();
 }
@@ -4395,6 +4007,150 @@ function importProgress(input){const f=input.files?.[0];if(!f)return;const reade
 
 let devPack=null, devExamId=null, devPart='am';
 
+let devReviewFlags=Object.create(null);
+let devReviewFlagsLoaded=false;
+let devReviewFlagsLoading=null;
+let devReviewLastError='';
+
+function devReviewQuestionRef(q,examIdOverride='',partOverride=''){
+ const examId=String(examIdOverride||q?.sourceExamId||state?.examId||'').trim();
+ const part=String(partOverride||q?.sourcePart||state?.part||'').trim();
+ const number=Number(q?.number||0);
+ const questionId=String(q?.id||`${part||'q'}${String(number||0).padStart(2,'0')}`).trim();
+ return {
+  examId,
+  part,
+  questionId,
+  number,
+  key:`${examId}:${part}:${questionId}`,
+  sourceTitle:String(q?.sourceTitle||getExamRecord(examId)?.title||examId),
+  stem:String(q?.stem||''),
+  range:String(q?.range||'')
+ };
+}
+function hasDevSession(){
+ return Boolean(getDevAuth()?.sessionToken);
+}
+async function apiDevReview(method='GET',payload=null){
+ const opt={method,headers:{...devHeaders(),'cache-control':'no-store'}};
+ let url='/api/dev-review';
+ if(method==='GET'&&payload){
+  const params=new URLSearchParams();
+  Object.entries(payload).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')params.set(k,String(v))});
+  const query=params.toString();
+  if(query)url+='?'+query;
+ }else if(payload){
+  opt.headers['content-type']='application/json';
+  opt.body=JSON.stringify(payload);
+ }
+ const r=await fetchWithTimeout(url,opt,10000);
+ const data=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);
+ return data;
+}
+async function loadDevReviewFlags(force=false){
+ if(!hasDevSession()){
+  devReviewFlags=Object.create(null);
+  devReviewFlagsLoaded=false;
+  devReviewLastError='';
+  return devReviewFlags;
+ }
+ if(devReviewFlagsLoading&&!force)return devReviewFlagsLoading;
+ if(devReviewFlagsLoaded&&!force)return devReviewFlags;
+ devReviewFlagsLoading=(async()=>{
+  try{
+   const data=await apiDevReview('GET');
+   const next=Object.create(null);
+   (data.items||[]).forEach(item=>{
+    if(item?.key)next[String(item.key)]=item;
+   });
+   devReviewFlags=next;
+   devReviewFlagsLoaded=true;
+   devReviewLastError='';
+   return devReviewFlags;
+  }catch(e){
+   devReviewFlagsLoaded=true;
+   devReviewLastError=String(e.message||e);
+   throw e;
+  }finally{
+   devReviewFlagsLoading=null;
+  }
+ })();
+ return devReviewFlagsLoading;
+}
+function isDevReviewFlagged(q,examId='',part=''){
+ const ref=devReviewQuestionRef(q,examId,part);
+ return Boolean(devReviewFlags[ref.key]?.flagged);
+}
+function devReviewStatusText(){
+ if(devReviewLastError)return '同期失敗';
+ if(!devReviewFlagsLoaded)return 'クラウド確認中';
+ return 'Cloudflare同期';
+}
+function drawDevReviewControl(q){
+ const box=$('devReviewControl');
+ if(!box)return;
+ if(!hasDevSession()){
+  box.classList.add('hidden');
+  box.innerHTML='';
+  return;
+ }
+ const ref=devReviewQuestionRef(q);
+ const flagged=Boolean(devReviewFlags[ref.key]?.flagged);
+ box.classList.remove('hidden');
+ box.classList.remove('is-saving');
+ box.innerHTML=`<label><input id="devReviewCheckbox" type="checkbox" ${flagged?'checked':''} onchange="toggleCurrentDevReview(this.checked)"> 要確認</label><span class="dev-review-sync">${escapeHtml(devReviewStatusText())}</span>`;
+ if(!devReviewFlagsLoaded&&!devReviewFlagsLoading){
+  const expectedKey=ref.key;
+  loadDevReviewFlags().then(()=>{
+   const current=devReviewQuestionRef(getCurrentQuestion());
+   if(current.key===expectedKey)drawDevReviewControl(getCurrentQuestion());
+  }).catch(()=>{
+   const current=devReviewQuestionRef(getCurrentQuestion());
+   if(current.key===expectedKey)drawDevReviewControl(getCurrentQuestion());
+  });
+ }
+}
+async function saveDevReviewFlag(q,flagged,examId='',part=''){
+ const ref=devReviewQuestionRef(q,examId,part);
+ const data=await apiDevReview('POST',{
+  ...ref,
+  flagged:Boolean(flagged)
+ });
+ if(flagged){
+  devReviewFlags[ref.key]=data.item||{...ref,key:ref.key,flagged:true,updatedAt:new Date().toISOString()};
+ }else{
+  delete devReviewFlags[ref.key];
+ }
+ devReviewFlagsLoaded=true;
+ devReviewLastError='';
+ return data;
+}
+async function toggleCurrentDevReview(flagged){
+ const q=getCurrentQuestion();
+ if(!q)return;
+ const box=$('devReviewControl');
+ const checkbox=$('devReviewCheckbox');
+ if(box)box.classList.add('is-saving');
+ if(checkbox)checkbox.disabled=true;
+ try{
+  await saveDevReviewFlag(q,flagged);
+  drawDevReviewControl(q);
+ }catch(e){
+  devReviewLastError=String(e.message||e);
+  if(checkbox){
+   checkbox.checked=!flagged;
+   checkbox.disabled=false;
+  }
+  if(box){
+   box.classList.remove('is-saving');
+   box.innerHTML=`<label><input id="devReviewCheckbox" type="checkbox" ${!flagged?'checked':''} onchange="toggleCurrentDevReview(this.checked)"> 要確認</label><span class="dev-review-sync">保存失敗</span>`;
+  }
+  alert(`要確認をCloudflareへ保存できませんでした。\n${e.message||e}`);
+ }
+}
+
+
 function getDevAuth(){
   try{return JSON.parse(localStorage.getItem(DEV_AUTH_KEY)||'null')}catch(e){return null}
 }
@@ -4445,6 +4201,8 @@ async function loginDevMode(){
   try{
     const data=await apiDevAuth({action:'login',id,password});
     setDevAuth({sessionToken:data.sessionToken,expiresAt:data.expiresAt,id:data.id});
+    devReviewFlagsLoaded=false;
+    loadDevReviewFlags(true).catch(()=>null);
     devLoginStatus('ログインしました。開発モードを開きます。',true);
     setTimeout(showDevModeUnlocked,300);
   }catch(e){
@@ -4456,6 +4214,11 @@ async function loginDevMode(){
 async function logoutDevMode(){
   try{await apiDevAuth({action:'logout'});}catch(e){}
   clearDevAuth();
+  devReviewFlags=Object.create(null);
+  devReviewFlagsLoaded=false;
+  devReviewLastError='';
+  const reviewBox=$('devReviewControl');
+  if(reviewBox){reviewBox.classList.add('hidden');reviewBox.innerHTML='';}
   devLoginStatus('開発者ログアウトしました。',true);
 }
 function showDevMode(){
@@ -4469,6 +4232,7 @@ function showDevModeUnlocked(){
  exSel.innerHTML=(examsIndex.exams||[]).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
  if(currentExamId)exSel.value=currentExamId;
  checkExamOptions();
+ loadDevReviewFlags(true).catch(()=>null);
  devLoadExam();
  updateHeader();
 }
@@ -5251,6 +5015,7 @@ function devCopyJson(){
 
 let devCheckIssues=[];
 let devCheckLastFilter='all';
+let devCheckLastMode='all';
 function severityLabel(s){return s==='high'?'重要':s==='warn'?'注意':s==='mid'?'確認':'軽微'}
 function severityClass(s){return s==='high'?'high':s==='warn'?'warn':s==='mid'?'mid':'low'}
 function devIssueCounts(item){
@@ -5286,7 +5051,7 @@ function toggleDevIssueFixed(key,checked){
  const m=devFixedMap();
  if(checked)m[key]=new Date().toISOString();else delete m[key];
  saveDevFixedMap(m);
- renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter));
+ renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter,devCheckLastMode));
 }
 function sortDevIssues(list){
  return (list||[]).slice().sort((a,b)=>{
@@ -5301,16 +5066,33 @@ function sortDevIssues(list){
   return Number(a.index||0)-Number(b.index||0);
  });
 }
-function filterDevCheckIssues(list,min='all'){
+function filterDevCheckIssues(list,min='all',mode=null){
  devCheckLastFilter=min||'all';
- if(min==='all'||min==='low')return sortDevIssues(list);
- return sortDevIssues((list||[]).filter(x=>severityRank(x.severity)>=severityRank(min)));
+ devCheckLastMode=mode||$('checkReviewMode')?.value||devCheckLastMode||'all';
+ let filtered=(list||[]).slice();
+ if(devCheckLastMode==='review')filtered=filtered.filter(x=>x.manualReview);
+ else if(devCheckLastMode==='issues')filtered=filtered.filter(x=>Number(x.textIssueCount||0)>0);
+ if(min!=='all'&&min!=='low')filtered=filtered.filter(x=>severityRank(x.severity)>=severityRank(min));
+ return sortDevIssues(filtered);
 }
 
 function checkExamOptions(){
- const opts=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id)).map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
- ['checkFromExam','checkToExam'].forEach(id=>{const el=$(id);if(el&&!el.options.length)el.innerHTML=opts;});
- const to=$('checkToExam'); if(to&&to.options.length)to.selectedIndex=to.options.length-1;
+ const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
+ const opts=records.map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
+ const validIds=new Set(records.map(ex=>String(ex.id)));
+ const from=$('checkFromExam'),to=$('checkToExam');
+ const previousFrom=String(from?.value||'');
+ const previousTo=String(to?.value||'');
+ if(from){
+  from.innerHTML=opts;
+  if(previousFrom&&validIds.has(previousFrom))from.value=previousFrom;
+  else if(records.length)from.value=String(records[0].id);
+ }
+ if(to){
+  to.innerHTML=opts;
+  if(previousTo&&validIds.has(previousTo))to.value=previousTo;
+  else if(records.length)to.value=String(records[records.length-1].id);
+ }
 }
 function severityRank(s){return s==='high'?4:s==='warn'?3:s==='mid'?2:1}
 function addIssue(list,severity,field,msg){list.push({severity,field,msg});}
@@ -5438,24 +5220,43 @@ function selectedCheckExamIds(){
 function selectedCheckParts(){const m=$('checkPartMode')?.value||'both';return m==='both'?['am','pm']:[m];}
 async function runDevTextCheck(){
  checkExamOptions();
- const records=selectedCheckExamIds(), parts=selectedCheckParts(), min=$('checkSeverity')?.value||'all';
+ const records=selectedCheckExamIds();
+ const parts=selectedCheckParts();
+ const min=$('checkSeverity')?.value||'all';
+ const mode=$('checkReviewMode')?.value||'all';
  devCheckIssues=[];
- $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中…</span>';
+ $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 要確認データをCloudflareから同期しています。</span>';
  $('devCheckResults').innerHTML='';
+ try{await loadDevReviewFlags(true)}catch(e){
+  devReviewLastError=String(e.message||e);
+ }
  for(const ex of records){
   for(const part of parts){
    try{
     const pack=await getPart(ex.id,part);
     (pack.questions||[]).forEach((q,idx)=>{
-     const issue=checkOneQuestion(q,{examId:String(ex.id),part,title:ex.title,index:idx,number:q.number});
-     if(issue)devCheckIssues.push(issue);
+     const ctx={examId:String(ex.id),part,title:ex.title,index:idx,number:q.number};
+     const textIssue=checkOneQuestion(q,ctx);
+     const manualReview=isDevReviewFlagged(q,String(ex.id),part);
+     if(!textIssue&&!manualReview)return;
+     const item=textIssue||{...ctx,q,issues:[],severity:'mid'};
+     item.textIssueCount=(textIssue?.issues||[]).length;
+     item.manualReview=manualReview;
+     if(manualReview){
+      item.issues=[
+       {severity:'mid',field:'要確認（クラウド）',msg:'通常演習中に開発者が「要確認」として登録しています。',manualReview:true},
+       ...(item.issues||[])
+      ];
+      item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'mid';
+     }
+     devCheckIssues.push(item);
     });
    }catch(e){
-    devCheckIssues.push({examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]});
+    devCheckIssues.push({examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,textIssueCount:1,manualReview:false,issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]});
    }
   }
  }
- const filtered=filterDevCheckIssues(devCheckIssues,min);
+ const filtered=filterDevCheckIssues(devCheckIssues,min,mode);
  renderDevCheckResults(filtered);
 }
 function renderDevCheckResults(list){
@@ -5465,13 +5266,16 @@ function renderDevCheckResults(list){
  const mid=devCheckIssues.filter(x=>x.severity==='mid').length;
  const low=devCheckIssues.filter(x=>x.severity==='low').length;
  const fixed=devCheckIssues.filter(x=>isDevIssueFixed(x)).length;
+ const manual=devCheckIssues.filter(x=>x.manualReview).length;
  const sorted=sortDevIssues(list||[]);
- $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：指摘 ${total}件 / 修正済み ${fixed}件</span>`;
+ const syncNote=devReviewLastError?` / 要確認同期エラー：${escapeHtml(devReviewLastError)}`:'';
+ $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：対象 ${total}件 / 要確認 ${manual}件 / 修正済み ${fixed}件${syncNote}</span>`;
  const summary=`<div class="check-summary">
    <span class="issue-badge high">重要 ${high}</span>
    <span class="issue-badge warn">注意 ${warn}</span>
    <span class="issue-badge mid">確認 ${mid}</span>
    <span class="issue-badge low">軽微 ${low}</span>
+   <span class="dev-review-cloud-badge">要確認 ${manual}</span>
    <span class="issue-fixed-label">修正済み ${fixed}</span>
   </div>`;
  if(!sorted.length){$('devCheckResults').innerHTML=summary+'<p class="small">表示条件に一致する指摘はありません。</p>';return;}
@@ -5486,18 +5290,52 @@ function renderDevCheckResults(list){
     .map(i=>`<li><b>${escapeHtml(i.field)}</b>：${escapeHtml(i.msg)} <span class="issue-badge ${severityClass(i.severity)}">${severityLabel(i.severity)}</span></li>`).join('');
   const stem=item.q?.stem?`<p class="small"><b>問題文：</b>${escapeHtml(String(item.q.stem).slice(0,140))}${String(item.q.stem).length>140?'…':''}</p>`:'';
   return `<div class="dev-issue-card issue-${sevClass} ${checked?'issue-fixed':''}">
-    <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${sevClass}">${sevLabel}</span></h4>
+    <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${sevClass}">${sevLabel}</span>${item.manualReview?'<span class="dev-review-cloud-badge">要確認</span>':''}</h4>
     <div class="dev-issue-meta">範囲：${escapeHtml(item.q?.range||'未設定')} / 最高ステータス：${sevLabel} / 指摘数：${item.issues.length}</div>
     ${devIssueCountsHtml(item)}
     ${stem}
     <ul class="dev-issue-list">${lis}</ul>
     <div class="row" style="margin-top:10px">
       <button class="secondary" onclick="openDevIssue('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0})">この問題を開く</button>
+      <label class="dev-review-cloud-badge"><input type="checkbox" ${item.manualReview?'checked':''} onchange="toggleDevReviewFromCheck('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0},this.checked)"> 要確認</label>
       <label class="issue-fixed-label"><input type="checkbox" ${checked?'checked':''} onchange="toggleDevIssueFixed('${key}',this.checked)"> 修正済み</label>
     </div>
   </div>`;
  }).join('');
 }
+async function toggleDevReviewFromCheck(examId,part,index,checked){
+ let item=devCheckIssues.find(x=>String(x.examId)===String(examId)&&String(x.part)===String(part)&&Number(x.index)===Number(index));
+ try{
+  let q=item?.q;
+  if(!q){
+   const pack=await getPart(examId,part);
+   q=pack.questions?.[Number(index)];
+  }
+  if(!q)throw new Error('対象問題を読み込めません。');
+  await saveDevReviewFlag(q,checked,examId,part);
+  if(!item&&checked){
+   item={examId:String(examId),part,title:getExamRecord(examId)?.title||String(examId),index:Number(index),number:q.number,q,issues:[],severity:'mid',textIssueCount:0,manualReview:true};
+   devCheckIssues.push(item);
+  }
+  if(item){
+   item.manualReview=Boolean(checked);
+   item.issues=(item.issues||[]).filter(i=>!i.manualReview);
+   if(checked){
+    item.issues.unshift({severity:'mid',field:'要確認（クラウド）',msg:'通常演習中に開発者が「要確認」として登録しています。',manualReview:true});
+   }
+   if(!item.issues.length){
+    devCheckIssues=devCheckIssues.filter(x=>x!==item);
+   }else{
+    item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'low';
+   }
+  }
+  renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter,devCheckLastMode));
+ }catch(e){
+  alert(`要確認の更新に失敗しました。\n${e.message||e}`);
+  renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter,devCheckLastMode));
+ }
+}
+
 async function openDevIssue(examId,part,index){
  $('devExamSelect').value=examId;
  $('devPartSelect').value=part;
@@ -5508,7 +5346,7 @@ async function openDevIssue(examId,part,index){
 }
 function clearDevCheckFixed(){
  saveDevFixedMap({});
- renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter));
+ renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter,devCheckLastMode));
 }
 function copyDevCheckSummary(){
  const text=[($('devCheckSummary')?.innerText||''),($('devCheckResults')?.innerText||'')].join('\n').trim();
@@ -5518,8 +5356,8 @@ function copyDevCheckSummary(){
 function clearDevCheckResults(){devCheckIssues=[];$('devCheckSummary').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResults').innerHTML='';}
 function exportDevCheckCsv(){
  if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
- const rows=[['回','午前午後','問題番号','重要度','修正済み','項目','指摘内容','範囲','問題文']];
- devCheckIssues.forEach(item=>{item.issues.forEach(i=>rows.push([item.title||item.examId,partName(item.part),item.number,severityLabel(i.severity),isDevIssueFixed(item)?'修正済み':'未修正',i.field,i.msg,item.q?.range||'',item.q?.stem||'']));});
+ const rows=[['回','午前午後','問題番号','重要度','要確認','修正済み','項目','指摘内容','範囲','問題文']];
+ devCheckIssues.forEach(item=>{item.issues.forEach(i=>rows.push([item.title||item.examId,partName(item.part),item.number,severityLabel(i.severity),item.manualReview?'要確認':'',isDevIssueFixed(item)?'修正済み':'未修正',i.field,i.msg,item.q?.range||'',item.q?.stem||'']));});
  const csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');
  downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');
 }
@@ -5597,7 +5435,6 @@ async function init(){
  applyTheme(getStoredTheme());
  initWhiteboard();
  setupCeExamLink();
- renderVersionInfo();
  await loadVersionFromMarkdown();
  $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/端末キャッシュ'; }
