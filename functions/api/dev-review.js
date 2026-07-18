@@ -78,12 +78,32 @@ async function listAllReviews(kv) {
   let cursor = undefined;
 
   do {
-    const page = await kv.list({ prefix: REVIEW_PREFIX, limit: 1000, ...(cursor ? { cursor } : {}) });
+    const page = await kv.list({
+      prefix: REVIEW_PREFIX,
+      limit: 1000,
+      ...(cursor ? { cursor } : {}),
+      includeMetadata: true
+    });
     const keys = page.keys || [];
-    const values = await Promise.all(keys.map(entry => kv.get(entry.name, 'json')));
-    for (const value of values) {
-      if (value?.flagged) items.push(value);
+    const missing = [];
+    for (const entry of keys) {
+      // Prefer metadata (no subrequest). If absent, collect for fallback fetch.
+      if (entry.metadata && entry.metadata.flagged) {
+        items.push(entry.metadata);
+      } else {
+        missing.push(entry);
+      }
     }
+    // Fallback: fetch missing entries in small batches to avoid too many subrequests
+    const BATCH = 20;
+    for (let i = 0; i < missing.length; i += BATCH) {
+      const batch = missing.slice(i, i + BATCH);
+      const vals = await Promise.all(batch.map(e => kv.get(e.name, 'json')));
+      for (const v of vals) {
+        if (v?.flagged) items.push(v);
+      }
+    }
+
     cursor = page.list_complete ? undefined : page.cursor;
   } while (cursor);
 
@@ -154,8 +174,20 @@ async function handlePost(context) {
     updatedAt: new Date().toISOString(),
     updatedBy: String(session.id || 'developer')
   };
+  // Save lightweight metadata to avoid per-key subrequests when listing.
+  const metadata = {
+    key: item.key,
+    flagged: true,
+    examId: item.examId,
+    part: item.part,
+    questionId: item.questionId,
+    number: item.number,
+    sourceTitle: item.sourceTitle,
+    updatedAt: item.updatedAt,
+    updatedBy: item.updatedBy
+  };
 
-  await kv.put(storageKey, JSON.stringify(item));
+  await kv.put(storageKey, JSON.stringify(item), { metadata });
   return json({ ok: true, flagged: true, item });
 }
 
