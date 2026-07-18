@@ -1,6 +1,6 @@
 {
   "schemaVersion": "me2-quiz-index-v1",
-  "updatedAt": "2026-07-17",
+  "updatedAt": "2026-07-18",
   "exams": [
     {
       "id": "46",
@@ -56,7 +56,7 @@
         "pm": "Date/Ques/41_pm.json"
       }
     },
-      {
+    {
       "id": "40",
       "title": "第40回",
       "subtitle": "第2種ME技術実力検定試験",
@@ -92,7 +92,6 @@
         "pm": "Date/Ques/37_pm.json"
       }
     },
-
     {
       "id": "36",
       "title": "第36回",
@@ -109,6 +108,51 @@
       "parts": {
         "am": "Date/Ques/35_am.json",
         "pm": "Date/Ques/35_pm.json"
+      }
+    },
+    {
+      "id": "34",
+      "title": "第34回",
+      "subtitle": "第2種ME技術実力検定試験",
+      "parts": {
+        "am": "Date/Ques/34_am.json",
+        "pm": "Date/Ques/34_pm.json"
+      }
+    },
+    {
+      "id": "33",
+      "title": "第33回",
+      "subtitle": "第2種ME技術実力検定試験",
+      "parts": {
+        "am": "Date/Ques/33_am.json",
+        "pm": "Date/Ques/33_pm.json"
+      }
+    },
+    {
+      "id": "32",
+      "title": "第32回",
+      "subtitle": "第2種ME技術実力検定試験",
+      "parts": {
+        "am": "Date/Ques/32_am.json",
+        "pm": "Date/Ques/32_pm.json"
+      }
+    },
+    {
+      "id": "31",
+      "title": "第31回",
+      "subtitle": "第2種ME技術実力検定試験",
+      "parts": {
+        "am": "Date/Ques/31_am.json",
+        "pm": "Date/Ques/31_pm.json"
+      }
+    },
+    {
+      "id": "30",
+      "title": "第30回",
+      "subtitle": "第2種ME技術実力検定試験",
+      "parts": {
+        "am": "Date/Ques/30_am.json",
+        "pm": "Date/Ques/30_pm.json"
       }
     }
   ]
