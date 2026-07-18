@@ -4100,7 +4100,7 @@ function drawDevReviewControl(q){
  box.classList.remove('hidden');
  box.classList.remove('is-saving');
  box.innerHTML=`<label><input id="devReviewCheckbox" type="checkbox" ${flagged?'checked':''} onchange="toggleCurrentDevReview(this.checked)"> 要確認</label><span class="dev-review-sync">${escapeHtml(devReviewStatusText())}</span>`;
- if(!devReviewFlagsLoaded&&!devReviewFlagsLoading){
+ if(!devReviewFlagsLoaded&&!devReviewFlagsLoading&&!devReviewLastError){
   const expectedKey=ref.key;
   loadDevReviewFlags().then(()=>{
    const current=devReviewQuestionRef(getCurrentQuestion());

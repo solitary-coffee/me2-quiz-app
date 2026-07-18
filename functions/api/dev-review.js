@@ -87,9 +87,11 @@ async function listAllReviews(kv) {
     const keys = page.keys || [];
     const missing = [];
     for (const entry of keys) {
-      // Prefer metadata (no subrequest). If absent, collect for fallback fetch.
-      if (entry.metadata && entry.metadata.flagged) {
-        items.push(entry.metadata);
+      // Prefer metadata (no subrequest). If metadata exists, trust its flagged state.
+      if (entry.metadata) {
+        if (entry.metadata.flagged) {
+          items.push(entry.metadata);
+        }
       } else {
         missing.push(entry);
       }
@@ -167,7 +169,7 @@ async function handlePost(context) {
     examId,
     part,
     questionId,
-    number: Number(body.number || 0),
+    number: Number.isFinite(Number(body.number)) ? Number(body.number) : 0,
     sourceTitle: String(body.sourceTitle || ''),
     stem: String(body.stem || '').slice(0, 1000),
     range: String(body.range || '').slice(0, 300),
