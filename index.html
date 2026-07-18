@@ -2220,21 +2220,7 @@ function parseChangelogMarkdown(markdown){
   const history=[];
   let current=null;
 
-  for(const line of lines){
-    const heading=line.match(/^##\s+(.+?)\s*[-–—]\s*(\d{4}-\d{2}-\d{2})\s*$/);
-    if(heading){
-      if(current)history.push(current);
-      current={
-        version:heading[1].trim(),
-        date:heading[2].trim(),
-        notes:[]
-      };
-      continue;
-    }
-
-    const bullet=line.match(/^\s*[-*]\s+(.+?)\s*$/);
-    if(current&&bullet)current.notes.push(bullet[1].trim());
-  }
+  for(const line of lines){\n    if(line.startsWith('#')){\n      const heading=line.match(/^##\s+(.+?)\s*[-–—]\s*(\d{4}-\d{2}-\d{2})\s*$/);\n      if(heading){\n        if(current)history.push(current);\n        current={\n          version:heading[1].trim(),\n          date:heading[2].trim(),\n          notes:[]\n        };\n      }else{\n        if(current)history.push(current);\n        current=null;\n      }\n      continue;\n    }\n\n    const bullet=line.match(/^\s*[-*]\s+(.+?)\s*$/);\n    if(current&&bullet)current.notes.push(bullet[1].trim());\n  }
 
   if(current)history.push(current);
   return history;
@@ -5364,8 +5350,7 @@ function exportDevCheckCsv(){
  if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
  const rows=[['回','午前午後','問題番号','重要度','要確認','修正済み','項目','指摘内容','範囲','問題文']];
  devCheckIssues.forEach(item=>{item.issues.forEach(i=>rows.push([item.title||item.examId,partName(item.part),item.number,severityLabel(i.severity),item.manualReview?'要確認':'',isDevIssueFixed(item)?'修正済み':'未修正',i.field,i.msg,item.q?.range||'',item.q?.stem||'']));});
- const csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');
- downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');
+  const csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');\n  downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,'\\uFEFF'+csv,'text/csv;charset=utf-8');
 }
 
 
@@ -5441,7 +5426,7 @@ async function init(){
  applyTheme(getStoredTheme());
  initWhiteboard();
  setupCeExamLink();
- await loadVersionFromMarkdown();
+  loadVersionFromMarkdown();
  $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/端末キャッシュ'; }
  try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }
