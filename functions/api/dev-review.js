@@ -79,8 +79,9 @@ async function listAllReviews(kv) {
 
   do {
     const page = await kv.list({ prefix: REVIEW_PREFIX, limit: 1000, ...(cursor ? { cursor } : {}) });
-    for (const entry of page.keys || []) {
-      const value = await kv.get(entry.name, 'json');
+    const keys = page.keys || [];
+    const values = await Promise.all(keys.map(entry => kv.get(entry.name, 'json')));
+    for (const value of values) {
       if (value?.flagged) items.push(value);
     }
     cursor = page.list_complete ? undefined : page.cursor;

@@ -4069,7 +4069,7 @@ async function loadDevReviewFlags(force=false){
    devReviewLastError='';
    return devReviewFlags;
   }catch(e){
-   devReviewFlagsLoaded=true;
+   devReviewFlagsLoaded=false;
    devReviewLastError=String(e.message||e);
    throw e;
   }finally{
@@ -5245,7 +5245,53 @@ async function runDevTextCheck(){
      if(manualReview){
       item.issues=[
        {severity:'mid',field:'要確認（クラウド）',msg:'通常演習中に開発者が「要確認」として登録しています。',manualReview:true},
-       ...(item.issues||[])
+      async function runDevTextCheck(){
+       checkExamOptions();
+       const records=selectedCheckExamIds();
+       const parts=selectedCheckParts();
+       const min=$('checkSeverity')?.value||'all';
+       const mode=$('checkReviewMode')?.value||'all';
+       devCheckIssues=[];
+       $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 要確認データをCloudflareから同期しています。</span>';
+       $('devCheckResults').innerHTML='';
+       try{await loadDevReviewFlags(true)}catch(e){
+        devReviewLastError=String(e.message||e);
+       }
+
+       const tasks=[];
+       for(const ex of records){
+        for(const part of parts){
+         tasks.push((async()=>{
+          try{
+           const pack=await getPart(ex.id,part);
+           (pack.questions||[]).forEach((q,idx)=>{
+            const ctx={examId:String(ex.id),part,title:ex.title,index:idx,number:q.number};
+            const textIssue=checkOneQuestion(q,ctx);
+            const manualReview=isDevReviewFlagged(q,String(ex.id),part);
+            if(!textIssue&&!manualReview)return;
+            const item=textIssue||{...ctx,q,issues:[],severity:'mid'};
+            item.textIssueCount=(textIssue?.issues||[]).length;
+            item.manualReview=manualReview;
+            if(manualReview){
+             item.issues=[
+              {severity:'mid',field:'要確認（クラウド）',msg:'通常演習中に開発者が「要確認」として登録しています。',manualReview:true},
+              ...(item.issues||[])
+             ];
+             item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'mid';
+            }
+            devCheckIssues.push(item);
+           });
+          }catch(e){
+           devCheckIssues.push({examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,textIssueCount:1,manualReview:false,issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]});
+          }
+         })());
+        }
+       }
+       await Promise.all(tasks);
+
+       const filtered=filterDevCheckIssues(devCheckIssues,min,mode);
+       renderDevCheckResults(filtered);
+      }
       ];
       item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'mid';
      }
