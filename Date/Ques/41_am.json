@@ -909,7 +909,7 @@
         "誤りポイント：最大電力条件の計算が不足している。正しくはR=10Ωとして $P=\\frac{100^{2}}{4×10}$=250W"
       ],
       "hasFigure": true,
-      "image": "Date/img/39/39_am_q35.png",
+      "image": "Date/img/41/41_am_q30.jpg",
       "sourceImage": "Date/img/41/am_p13.jpg",
       "kindCategories": [
         "biometry_monitor"
@@ -1062,7 +1062,7 @@
         "誤りポイント：「$\\overline{A}\\oplus \\overline{B}$」が誤り。入力を否定したXORであり、NAND回路の出力を表す論理式ではない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/39/39_am_q35.png",
+      "image": "Date/img/41/41_am_q35.jpg",
       "sourceImage": "Date/img/41/am_p15.jpg",
       "kindCategories": [
         "biometry_monitor",
