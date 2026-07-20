@@ -97,6 +97,7 @@ window.MathJax = {
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+        
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--accent2:#eef2ff;--good:#16a34a;--bad:#dc2626;--warn:#f59e0b;--shadow:0 8px 24px rgba(0,0,0,.045)}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Noto Sans JP",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:max(18px,env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}.header-inner{max-width:1080px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}h1{font-size:18px;margin:0;line-height:1.35}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.badge,.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:13px;color:var(--muted)}main{max-width:1080px;margin:0 auto;padding:16px max(14px,env(safe-area-inset-right)) 76px max(14px,env(safe-area-inset-left))}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}.card h2{margin:0 0 10px;font-size:21px}.card h3{margin:0 0 8px;font-size:17px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.round-card,.part-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px;box-shadow:0 3px 12px rgba(0,0,0,.025)}.round-card{cursor:pointer}.round-card:hover{border-color:#93c5fd;background:#eff6ff}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button{border:0;border-radius:16px;padding:13px 16px;min-height:52px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff;font-size:16px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button.secondary{background:var(--accent2);color:#1d4ed8}button.ghost{background:#f3f4f6;color:#374151}button.danger{background:#fee2e2;color:#991b1b}button.warn{background:#fef3c7;color:#92400e}button:disabled{opacity:.7;cursor:not-allowed}.small{font-size:13px;color:var(--muted);line-height:1.65}.mobile-note,.filebox{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin:12px 0}.choice{width:100%;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);margin:10px 0;display:flex;align-items:flex-start;gap:12px;font-weight:750;line-height:1.55}.choice:hover{border-color:#93c5fd;background:#eff6ff}.choice.correct{border-color:#86efac;background:#f0fdf4;color:#166534}.choice.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}.choice .num{min-width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;color:#111827;font-size:18px}.choice.correct .num{background:#dcfce7;color:#166534}.choice.wrong .num{background:#fee2e2;color:#991b1b}.progressbar{width:100%;height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:10px}.progressbar>div{height:100%;width:0;background:var(--accent);transition:.25s}.question-title{font-size:14px;color:var(--muted);margin-bottom:8px;line-height:1.55}.stem{font-size:20px;line-height:1.75;white-space:pre-wrap;margin:10px 0 18px;word-break:break-word}.result{border-radius:16px;padding:14px;margin-top:14px;border:1px solid var(--line);background:#fafafa;display:none}.result.good{border-color:#86efac;background:#f0fdf4}.result.bad{border-color:#fecaca;background:#fef2f2}.explain-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}.explain-table th,.explain-table td{border-top:1px solid var(--line);padding:9px 6px;vertical-align:top;text-align:left}.source-img{width:100%;max-height:900px;object-fit:contain;border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:10px}.image-hint{font-size:13px;color:var(--muted);line-height:1.6;margin:6px 0 0}details{margin-top:12px}summary{cursor:pointer;color:#1d4ed8;font-weight:800;padding:8px 0}.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}.kpi div{background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:12px}.kpi b{display:block;font-size:20px;margin-top:2px}.wrong-item,.history-row{border-top:1px solid var(--line);padding:12px 0}
@@ -2550,7 +2551,16 @@ const GUEST_KEY = 'me2_guest_login';
 const SITE_AUTH_KEY = 'me2_site_auth';
 const BOOKMARK_KEY='me2_bookmarks_v1';
 const DEV_AUTH_KEY='me2_dev_auth';
-function safeAssetPath(path){return String(path||'').replace(/^\.\//,'').replace(/^\//,'')}
+function safeAssetPath(path){
+ const raw=String(path||'').trim();
+ if(/^data:/i.test(raw)){
+  return raw
+   .replace(/[?&]_me2v=[^#]*$/i,'')
+   .replace(/[\r\n\t ]+/g,'');
+ }
+ if(/^blob:/i.test(raw))return raw;
+ return raw.replace(/^\.\//,'').replace(/^\//,'');
+}
 function githubConfigured(){return false}
 function sourceLabel(mode){return {site_internal:'サイト内データ',local:'サイト内データ'}[mode]||'サイト内データ'}
 
@@ -2581,7 +2591,8 @@ function friendlyFetchError(e){
  return raw;
 }
 function withAssetCacheBuster(url){
- const raw=String(url||'');
+ const raw=String(url||'').trim();
+ if(!raw||/^(data:|blob:)/i.test(raw))return raw;
  if(!assetCacheBuster)return raw;
  const sep=raw.includes('?')?'&':'?';
  return `${raw}${sep}_me2v=${encodeURIComponent(assetCacheBuster)}`;
@@ -4517,29 +4528,168 @@ function devCopyKindMapJson(){
 function devExportKindMapJson(){
  downloadText('random_kind_map.json',randomKindMapExportText(),'application/json;charset=utf-8');
 }
+const DEV_IMAGE_MAX_BYTES=20*1024*1024;
+const DEV_IMAGE_ALLOWED_MIME=new Set([
+ 'image/png','image/jpeg','image/webp','image/gif','image/svg+xml'
+]);
+
 function devCurrentImageName(){
  const q=devReadForm();
  const raw=String(q.image||'').split('?')[0].split('#')[0];
- const name=raw.startsWith('data:')?'uploaded_question_image.png':(raw.split('/').pop()||`me2_${devExamId||'exam'}_${devPart||'part'}_q${(q.number||'image')}.png`);
+ const info=devDataUrlInfo(raw);
+ const name=info?`uploaded_question_image.${info.ext}`:(raw.split('/').pop()||`me2_${devExamId||'exam'}_${devPart||'part'}_q${(q.number||'image')}.png`);
  return name.replace(/[^a-zA-Z0-9._-]/g,'_');
 }
 function devTriggerImageUpload(){
  const input=$('devImageUpload');
  if(input){input.value='';input.click();}
 }
-function devUploadImage(input){
+function devBytesToBase64(bytes){
+ let binary='';
+ const chunk=0x8000;
+ for(let i=0;i<bytes.length;i+=chunk){
+  binary+=String.fromCharCode(...bytes.subarray(i,i+chunk));
+ }
+ return btoa(binary);
+}
+function devDetectedImageMime(bytes,claimed=''){
+ const b=bytes||new Uint8Array();
+ if(b.length>=8&&b[0]===0x89&&b[1]===0x50&&b[2]===0x4e&&b[3]===0x47&&b[4]===0x0d&&b[5]===0x0a&&b[6]===0x1a&&b[7]===0x0a)return'image/png';
+ if(b.length>=3&&b[0]===0xff&&b[1]===0xd8&&b[2]===0xff)return'image/jpeg';
+ if(b.length>=6&&String.fromCharCode(...b.subarray(0,6)).startsWith('GIF8'))return'image/gif';
+ if(b.length>=12&&String.fromCharCode(...b.subarray(0,4))==='RIFF'&&String.fromCharCode(...b.subarray(8,12))==='WEBP')return'image/webp';
+ const head=new TextDecoder().decode(b.subarray(0,Math.min(b.length,512))).replace(/^\uFEFF/,'').trimStart();
+ if(/^<\?xml[\s\S]*?<svg\b/i.test(head)||/^<svg\b/i.test(head))return'image/svg+xml';
+ return DEV_IMAGE_ALLOWED_MIME.has(String(claimed||'').toLowerCase())?String(claimed).toLowerCase():'';
+}
+function devImageExtension(mime){
+ return mime==='image/jpeg'?'jpg':
+  mime==='image/png'?'png':
+  mime==='image/webp'?'webp':
+  mime==='image/gif'?'gif':
+  mime==='image/svg+xml'?'svg':'png';
+}
+async function devDecodeImageInfo(blob){
+ if(blob.type==='image/svg+xml'){
+  const text=await blob.text();
+  if(!/<svg\b/i.test(text))throw new Error('SVG画像として認識できません。');
+ }
+ if('createImageBitmap'in window&&blob.type!=='image/svg+xml'){
+  const bitmap=await createImageBitmap(blob);
+  const result={width:bitmap.width,height:bitmap.height};
+  bitmap.close?.();
+  if(!result.width||!result.height)throw new Error('画像の縦横サイズを取得できません。');
+  return result;
+ }
+ return await new Promise((resolve,reject)=>{
+  const url=URL.createObjectURL(blob);
+  const img=new Image();
+  img.onload=()=>{
+   const result={width:img.naturalWidth,height:img.naturalHeight};
+   URL.revokeObjectURL(url);
+   result.width&&result.height?resolve(result):reject(new Error('画像の縦横サイズを取得できません。'));
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('画像をブラウザで展開できません。ファイルが破損している可能性があります。'));};
+  img.src=url;
+ });
+}
+function devFormatBytes(value){
+ const n=Number(value||0);
+ if(n<1024)return`${n} B`;
+ if(n<1024*1024)return`${(n/1024).toFixed(1)} KB`;
+ return`${(n/1024/1024).toFixed(2)} MB`;
+}
+async function devUploadImage(input){
  const f=input?.files?.[0];
  if(!f)return;
- if(!f.type.startsWith('image/')){alert('画像ファイルを選択してください。');return;}
- const reader=new FileReader();
- reader.onload=()=>{
-  if($('devImage'))$('devImage').value=String(reader.result||'');
+ try{
+  if(f.size<=0)throw new Error('画像ファイルが空です。');
+  if(f.size>DEV_IMAGE_MAX_BYTES)throw new Error(`画像サイズが大きすぎます。上限は${devFormatBytes(DEV_IMAGE_MAX_BYTES)}です。`);
+  const buffer=await f.arrayBuffer();
+  const bytes=new Uint8Array(buffer);
+  const mime=devDetectedImageMime(bytes,f.type);
+  if(!DEV_IMAGE_ALLOWED_MIME.has(mime)){
+   throw new Error('対応画像は PNG・JPEG・WebP・GIF・SVG です。拡張子だけを変更したファイルは使用できません。');
+  }
+  const blob=new Blob([bytes],{type:mime});
+  const dimensions=await devDecodeImageInfo(blob);
+  const base64=devBytesToBase64(bytes);
+  const dataUrl=`data:${mime};base64,${base64}`;
+  const parsed=devDataUrlInfo(dataUrl);
+  if(!parsed||parsed.sizeBytes!==bytes.length){
+   throw new Error('画像のBase64変換結果を検証できませんでした。');
+  }
+
+  const storageKey=devImageStorageKey(devCurrentPrKey());
+  await devStorePendingImage(storageKey,{
+   mime,
+   ext:devImageExtension(mime),
+   base64,
+   sizeBytes:bytes.length,
+   width:dimensions.width,
+   height:dimensions.height,
+   originalName:f.name||'uploaded-image',
+   updatedAt:new Date().toISOString()
+  });
+
+  if($('devImage'))$('devImage').value=dataUrl;
   if($('devHasFigure'))$('devHasFigure').checked=true;
-  $('devStatus').innerHTML='<span class="status-ok">画像を追加しました。この問題に反映後、JSON保存またはコピーしてください。</span>';
+  if($('devPrImagePath')){
+   const q=devReadForm();
+   $('devPrImagePath').value=devDefaultPrImagePath(q);
+  }
+  $('devStatus').innerHTML=
+   `<span class="status-ok">画像を検査して一時保存しました。`+
+   `${escapeHtml(f.name||'画像')} / ${dimensions.width}×${dimensions.height} / ${devFormatBytes(bytes.length)}。`+
+   `「この問題に反映」で一括PRリストへ保存してください。</span>`;
   devRenderPreview();
- };
- reader.onerror=()=>alert('画像を読み込めませんでした。');
- reader.readAsDataURL(f);
+  devRefreshPrPaths();
+ }catch(error){
+  if($('devImage'))$('devImage').value='';
+  if($('devHasFigure'))$('devHasFigure').checked=false;
+  $('devStatus').innerHTML=`<span class="status-warn">画像を追加できませんでした：${escapeHtml(error?.message||String(error))}<br>画像を開き直して保存し、再選択してください。</span>`;
+ }
+}
+async function devRepairCurrentImage(){
+ const input=$('devImage');
+ const raw=String(input?.value||'').trim();
+ if(!raw){alert('画像データまたは画像パスがありません。');return;}
+ if(!/^data:/i.test(raw)){
+  alert('現在は画像パスです。修復対象のData URLではありません。');
+  return;
+ }
+ const info=devDataUrlInfo(raw);
+ if(!info){
+  alert('画像Data URLを修復できません。元画像をもう一度選択してください。');
+  return;
+ }
+ try{
+  const normalized=`data:${info.mime};base64,${info.base64}`;
+  const binary=atob(info.base64);
+  const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+  const detected=devDetectedImageMime(bytes,info.mime);
+  if(!detected)throw new Error('画像形式を判定できません。');
+  const blob=new Blob([bytes],{type:detected});
+  const dimensions=await devDecodeImageInfo(blob);
+  const storageKey=devImageStorageKey(devCurrentPrKey());
+  await devStorePendingImage(storageKey,{
+   mime:detected,
+   ext:devImageExtension(detected),
+   base64:info.base64,
+   sizeBytes:bytes.length,
+   width:dimensions.width,
+   height:dimensions.height,
+   originalName:'repaired-image',
+   updatedAt:new Date().toISOString()
+  });
+  input.value=normalized;
+  if($('devHasFigure'))$('devHasFigure').checked=true;
+  devRenderPreview();
+  devRefreshPrPaths();
+  $('devStatus').innerHTML=`<span class="status-ok">画像Data URLを検査・正規化しました。${dimensions.width}×${dimensions.height} / ${devFormatBytes(bytes.length)}</span>`;
+ }catch(error){
+  alert(`画像を修復できません：${error?.message||error}\n元画像を再選択してください。`);
+ }
 }
 async function devDownloadImage(){
  const q=devReadForm();
@@ -4606,6 +4756,7 @@ function devRenderEditor(){
  <div class="dev-image-tools">
   <button class="ghost" type="button" onclick="devTriggerImageUpload()">画像を追加</button>
   <button class="ghost" type="button" onclick="devDownloadImage()">画像DL</button>
+  <button class="ghost" type="button" onclick="devRepairCurrentImage()">画像データを検査・修復</button>
   <input id="devImageUpload" type="file" accept="image/*" class="hidden" onchange="devUploadImage(this)">
  </div>
  <div class="dev-editor-actions">
@@ -4659,14 +4810,19 @@ function devReadForm(){
 }
 function devRenderPreview(){
  const q=devReadForm();
- const img=(q.hasFigure&&q.image)?`<img class="source-img" src="${escapeHtml(assetUrl(q.image))}" onerror="this.insertAdjacentHTML('afterend','<p class=&quot;status-warn&quot;>画像を読み込めません。パスを確認してください。</p>')">`:'<p class="small">図表なし</p>';
+ const imageRaw=String(q.image||'').trim();
+ const invalidInline=/^data:/i.test(imageRaw)&&!devDataUrlInfo(imageRaw);
+ const img=!q.hasFigure?'<p class="small">図表なし</p>':
+  !imageRaw?'<p class="status-warn">図表ありですが画像が設定されていません。</p>':
+  invalidInline?'<p class="status-warn">画像Data URLが破損しています。「画像データを検査・修復」または元画像の再選択を行ってください。</p>':
+  `<img class="source-img" src="${escapeHtml(assetUrl(imageRaw))}" onerror="this.onerror=null;this.hidden=true;if(!this.nextElementSibling||!this.nextElementSibling.classList.contains('status-warn'))this.insertAdjacentHTML('afterend','<p class=&quot;status-warn&quot;>画像を読み込めません。画像パスまたは画像データを確認してください。</p>')">`;
  const quizChoices=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return `<div class="choice-preview math-content ${isC?'correct':''}"><b>${n}.</b> ${mathTextHtml(c)} ${isC?'<span class="issue-badge high">正答</span>':''}</div>`;}).join('');
  const rows=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return `<tr><th>${n}</th><td class="math-content">${mathTextHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td class="math-content">${mathTextHtml((q.choiceNotes||[])[i]||'')}</td></tr>`;}).join('');
  if($('devQuizPreview'))$('devQuizPreview').innerHTML=`<h4>出題プレビュー</h4><div class="question-title">${escapeHtml(devExamId||'')} ${partName(devPart||'am')} / ${escapeHtml(q.range||'未設定')}</div>${standardWarningHtml(q)}<div class="stem math-content">${mathTextHtml(q.stem||'')}</div>${questionAnnotationHtml(q)}${img}<div style="margin-top:10px">${quizChoices}</div>`;
  if($('devExplainPreview'))$('devExplainPreview').innerHTML=`<h4>解説プレビュー</h4><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p>${standardWarningHtml(q)}${questionAnnotationHtml(q)}<p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p><p class="math-content"><b>要点解説：</b>${mathTextHtml(q.tip||'')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
  scheduleMathTypeset(document.querySelector('.dev-preview-section'));
 }
-function devApplyChanges(autoAddToBatch=false){
+async function devApplyChanges(autoAddToBatch=false){
  const i=Number($('devQuestionSelect').value||0);
  devPack.questions[i]=devReadForm();
  partsCache[`${devExamId}_${devPart}`]=devPack;
@@ -4674,7 +4830,7 @@ function devApplyChanges(autoAddToBatch=false){
  let msg=`${escapeHtml(target)} に反映しました。JSON保存またはコピーで出力できます。`;
  if(autoAddToBatch && typeof devAddCurrentToPrBatch==='function'){
   try{
-   devAddCurrentToPrBatch({silent:true});
+   await devAddCurrentToPrBatch({silent:true});
    msg=`${escapeHtml(target)} に反映し、一括PRリストへ自動追加・更新しました。`;
   }catch(e){
    msg=`${escapeHtml(target)} に反映しましたが、一括PRリストへの自動追加に失敗しました：${escapeHtml(e.message||e)}`;
@@ -4780,6 +4936,84 @@ function devRegenerateExplanationLocal(){
 }
 
 const DEV_PR_BATCH_KEY='me2_dev_pr_batch_v2';
+const DEV_IMAGE_DB_NAME='me2_dev_pending_images_v1';
+const DEV_IMAGE_STORE='images';
+let devImageDbPromise=null;
+
+function devImageStorageKey(itemKey){
+ return `pending-image:${String(itemKey||'unknown')}`;
+}
+function devOpenImageDb(){
+ if(devImageDbPromise)return devImageDbPromise;
+ devImageDbPromise=new Promise((resolve,reject)=>{
+  if(!('indexedDB'in window)){reject(new Error('このブラウザは画像の一時保存に対応していません。'));return;}
+  const request=indexedDB.open(DEV_IMAGE_DB_NAME,1);
+  request.onupgradeneeded=()=>{
+   const db=request.result;
+   if(!db.objectStoreNames.contains(DEV_IMAGE_STORE))db.createObjectStore(DEV_IMAGE_STORE,{keyPath:'key'});
+  };
+  request.onsuccess=()=>resolve(request.result);
+  request.onerror=()=>reject(request.error||new Error('画像保存領域を開けませんでした。'));
+ });
+ return devImageDbPromise;
+}
+async function devStorePendingImage(key,record){
+ const db=await devOpenImageDb();
+ return await new Promise((resolve,reject)=>{
+  const tx=db.transaction(DEV_IMAGE_STORE,'readwrite');
+  tx.objectStore(DEV_IMAGE_STORE).put({key,...record});
+  tx.oncomplete=()=>resolve(true);
+  tx.onerror=()=>reject(tx.error||new Error('画像を一時保存できませんでした。'));
+  tx.onabort=()=>reject(tx.error||new Error('画像の一時保存が中断されました。'));
+ });
+}
+async function devLoadPendingImage(key){
+ if(!key)return null;
+ try{
+  const db=await devOpenImageDb();
+  return await new Promise((resolve,reject)=>{
+   const tx=db.transaction(DEV_IMAGE_STORE,'readonly');
+   const request=tx.objectStore(DEV_IMAGE_STORE).get(key);
+   request.onsuccess=()=>resolve(request.result||null);
+   request.onerror=()=>reject(request.error||new Error('画像を読み込めませんでした。'));
+  });
+ }catch(_){
+  return null;
+ }
+}
+async function devDeletePendingImage(key){
+ if(!key)return;
+ try{
+  const db=await devOpenImageDb();
+  await new Promise((resolve,reject)=>{
+   const tx=db.transaction(DEV_IMAGE_STORE,'readwrite');
+   tx.objectStore(DEV_IMAGE_STORE).delete(key);
+   tx.oncomplete=()=>resolve();
+   tx.onerror=()=>reject(tx.error);
+  });
+ }catch(_){}
+}
+async function devEnsureBatchImagesStored(batch){
+ for(const item of batch?.items||[]){
+  const file=item?.imageFile;
+  if(!file||file.storageKey||!file.contentBase64)continue;
+  const normalized=devNormalizeBase64(file.contentBase64);
+  if(!normalized)continue;
+  const storageKey=devImageStorageKey(item.key);
+  await devStorePendingImage(storageKey,{
+   mime:file.mime||'image/png',
+   ext:file.ext||devImageExtension(file.mime||'image/png'),
+   base64:normalized,
+   sizeBytes:file.sizeBytes||Math.floor(normalized.length*3/4),
+   originalName:file.originalName||'migrated-image',
+   updatedAt:new Date().toISOString()
+  });
+  file.storageKey=storageKey;
+  file.sizeBytes=file.sizeBytes||Math.floor(normalized.length*3/4);
+  delete file.contentBase64;
+ }
+ return batch;
+}
 
 function devCurrentJsonPath(){
  const rec=getExamRecord(devExamId);
@@ -4790,12 +5024,33 @@ function devPad2(v){
  const n=Number(v||0);
  return Number.isFinite(n)&&n>0?String(n).padStart(2,'0'):String(v||'image');
 }
+function devNormalizeBase64(value){
+ let b64=String(value||'')
+  .replace(/[?&]_me2v=[^#]*$/i,'')
+  .replace(/\s+/g,'')
+  .replace(/-/g,'+')
+  .replace(/_/g,'/');
+ if(!b64||!/^[A-Za-z0-9+/]*={0,2}$/.test(b64))return'';
+ b64=b64.replace(/=+$/,'');
+ const remainder=b64.length%4;
+ if(remainder===1)return'';
+ if(remainder)b64+='='.repeat(4-remainder);
+ try{atob(b64)}catch(_){return'';}
+ return b64;
+}
 function devDataUrlInfo(dataUrl){
- const m=String(dataUrl||'').match(/^data:([^;,]+);base64,(.+)$/);
- if(!m)return null;
- const mime=m[1].toLowerCase();
- const ext=mime.includes('jpeg')?'jpg':mime.includes('png')?'png':mime.includes('webp')?'webp':mime.includes('gif')?'gif':'png';
- return {mime,ext,base64:m[2].replace(/\s+/g,'')};
+ const raw=String(dataUrl||'').trim().replace(/[?&]_me2v=[^#]*$/i,'');
+ const comma=raw.indexOf(',');
+ if(comma<0||!/^data:/i.test(raw))return null;
+ const meta=raw.slice(5,comma);
+ if(!/;base64(?:;|$)/i.test(meta))return null;
+ const mime=String(meta.split(';')[0]||'').toLowerCase();
+ if(!DEV_IMAGE_ALLOWED_MIME.has(mime))return null;
+ const base64=devNormalizeBase64(raw.slice(comma+1));
+ if(!base64)return null;
+ const padding=(base64.match(/=+$/)||[''])[0].length;
+ const sizeBytes=Math.floor(base64.length*3/4)-padding;
+ return {mime,ext:devImageExtension(mime),base64,sizeBytes};
 }
 function devDefaultPrImagePath(q){
  const info=devDataUrlInfo(q?.image);
@@ -4851,9 +5106,28 @@ function devPrBatch(){
  }catch(e){}
  return {items:[]};
 }
+function devCompactPrBatch(batch){
+ const compact=devClone({items:batch?.items||[]});
+ for(const item of compact.items){
+  const file=item?.imageFile;
+  if(file?.storageKey)delete file.contentBase64;
+  if(item?.question&&/^data:/i.test(String(item.question.image||''))){
+   item.question.image=item.imagePath||'';
+  }
+ }
+ return compact;
+}
 function saveDevPrBatch(batch){
- localStorage.setItem(DEV_PR_BATCH_KEY,JSON.stringify({items:batch.items||[]}));
- renderDevPrBatchList();
+ try{
+  const compact=devCompactPrBatch(batch);
+  localStorage.setItem(DEV_PR_BATCH_KEY,JSON.stringify(compact));
+  renderDevPrBatchList();
+ }catch(error){
+  if(error?.name==='QuotaExceededError'){
+   throw new Error('ブラウザの保存容量を超えました。画像は一時保存領域へ移行してから、もう一度「この問題に反映」を押してください。');
+  }
+  throw error;
+ }
 }
 function devPrItemKey(examId,part,index){
  return `${examId}__${part}__${Number(index)||0}`;
@@ -4984,7 +5258,7 @@ function devRefreshPrPaths(){
  if($('devPrBody') && !$('devPrBody').value && batch.items.length)$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
  renderDevPrBatchList();
 }
-function devPrepareCurrentBatchItem(){
+async function devPrepareCurrentBatchItem(){
  const currentIndex=Number($('devQuestionSelect')?.value||0);
  const q=devReadForm();
  const qForCommit=devClone(q);
@@ -4995,12 +5269,25 @@ function devPrepareCurrentBatchItem(){
  if(imageInfo){
   imagePath=safeAssetPath($('devPrImagePath')?.value || devDefaultPrImagePath(q));
   if(!imagePath.startsWith('Date/img/'))throw new Error('画像PR先パスは Date/img/ から始めてください。');
+  const currentKey=devPrItemKey(devExamId,devPart,currentIndex);
+  const storageKey=devImageStorageKey(currentKey);
+  await devStorePendingImage(storageKey,{
+   mime:imageInfo.mime,
+   ext:imageInfo.ext,
+   base64:imageInfo.base64,
+   sizeBytes:imageInfo.sizeBytes,
+   originalName:devCurrentImageName(),
+   updatedAt:new Date().toISOString()
+  });
   qForCommit.image=imagePath;
   qForCommit.hasFigure=true;
   imageFile={
    path:imagePath,
    encoding:'base64',
-   contentBase64:imageInfo.base64,
+   storageKey,
+   mime:imageInfo.mime,
+   ext:imageInfo.ext,
+   sizeBytes:imageInfo.sizeBytes,
    message:`${devQuestionLabel(devExamId,devPart,q)}：画像追加・差し替え`
   };
  }
@@ -5021,43 +5308,50 @@ function devPrepareCurrentBatchItem(){
   updatedAt:new Date().toISOString()
  };
 }
-function devAddCurrentToPrBatch(options={}){
+async function devAddCurrentToPrBatch(options={}){
  const silent=Boolean(options&&options.silent);
  try{
-  const item=devPrepareCurrentBatchItem();
+  const item=await devPrepareCurrentBatchItem();
   const batch=devPrBatch();
   const idx=batch.items.findIndex(x=>x.key===item.key);
   if(idx>=0)batch.items[idx]=item;else batch.items.push(item);
+  await devEnsureBatchImagesStored(batch);
   saveDevPrBatch(batch);
   if($('devPrTitle')&&!$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle();
   if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
-  if(!silent)devSetPrStatus(`対象：${escapeHtml(item.label)}<br>一括PRリストへ追加・更新しました。`,true);
+  if(!silent)devSetPrStatus(`対象：${escapeHtml(item.label)}<br>一括PRリストへ追加・更新しました。画像データはブラウザの専用保存領域へ保存されています。`,true);
   return item;
  }catch(e){
   if(!silent)devSetPrStatus(`一括PRリストへの追加に失敗しました：${escapeHtml(e.message||e)}`);
   throw e;
  }
 }
-function devRemoveCurrentFromPrBatch(){
+async function devRemoveCurrentFromPrBatch(){
  const key=devCurrentPrKey();
  const batch=devPrBatch();
+ const removed=batch.items.filter(x=>x.key===key);
  const before=batch.items.length;
  batch.items=batch.items.filter(x=>x.key!==key);
  saveDevPrBatch(batch);
+ await Promise.all(removed.map(x=>devDeletePendingImage(x?.imageFile?.storageKey)));
  if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
  devSetPrStatus(before===batch.items.length?`${escapeHtml(devCurrentTargetLabel())} は一括PRリストにありません。`:`${escapeHtml(devCurrentTargetLabel())} を一括PRリストから削除しました。`, before!==batch.items.length);
 }
-function devRemovePrBatchItem(key){
+async function devRemovePrBatchItem(key){
  const batch=devPrBatch();
+ const removed=batch.items.filter(x=>x.key===key);
  batch.items=batch.items.filter(x=>x.key!==key);
  saveDevPrBatch(batch);
+ await Promise.all(removed.map(x=>devDeletePendingImage(x?.imageFile?.storageKey)));
  if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
 }
-function devClearPrBatch(){
+async function devClearPrBatch(){
  if(!confirm('一括PRリストを全削除しますか？'))return;
+ const batch=devPrBatch();
  saveDevPrBatch({items:[]});
+ await Promise.all(batch.items.map(x=>devDeletePendingImage(x?.imageFile?.storageKey)));
  if($('devPrBody'))$('devPrBody').value='';
- devSetPrStatus('一括PRリストを削除しました。',true);
+ devSetPrStatus('一括PRリストと一時保存画像を削除しました。',true);
 }
 function devRenderPrItem(item){
  const img=item.imagePath?`<br>画像：<span class="code">${escapeHtml(item.imagePath)}</span>`:'';
@@ -5081,7 +5375,24 @@ async function devOpenBatchItem(key){
   $('devPartSelect').value=item.part;
   await devLoadPart();
  }
- $('devQuestionSelect').value=String(item.index);
+ const index=Number(item.index)||0;
+ if(devPack?.questions?.[index]){
+  const restored=devClone(item.question);
+  const stored=await devLoadPendingImage(item?.imageFile?.storageKey);
+  if(stored?.base64&&stored?.mime){
+   restored.image=`data:${stored.mime};base64,${stored.base64}`;
+   restored.hasFigure=true;
+  }else if(item?.imageFile?.contentBase64){
+   const normalized=devNormalizeBase64(item.imageFile.contentBase64);
+   if(normalized){
+    restored.image=`data:${item.imageFile.mime||'image/png'};base64,${normalized}`;
+    restored.hasFigure=true;
+   }
+  }
+  devPack.questions[index]=restored;
+  partsCache[`${devExamId}_${devPart}`]=devPack;
+ }
+ $('devQuestionSelect').value=String(index);
  devRenderEditor();
 }
 function devCommitMessagePreviewHtml(items){
@@ -5104,16 +5415,18 @@ function renderDevPrBatchList(){
   list.innerHTML=batch.items.length?batch.items.map(devRenderPrItem).join(''):'<p class="small">まだ一括PRリストに問題がありません。</p>';
  }
 }
-function devBuildBatchPayload(){
+async function devBuildBatchPayload(){
  let batch=devPrBatch();
- const currentKey=devCurrentPrKey();
  if(batch.items.length===0){
-  const current=devPrepareCurrentBatchItem();
+  const current=await devPrepareCurrentBatchItem();
   batch={items:[current]};
  }
+ await devEnsureBatchImagesStored(batch);
+ saveDevPrBatch(batch);
+
  const byJson=new Map();
- const files=[];
- batch.items.forEach(item=>{
+ const filesByPath=new Map();
+ for(const item of batch.items){
   if(!byJson.has(item.jsonPath)){
    byJson.set(item.jsonPath,{
     path:item.jsonPath,
@@ -5131,12 +5444,36 @@ function devBuildBatchPayload(){
    editSummary:item.editSummary,
    commitMessage:item.commitMessage
   });
-  if(item.imageFile)files.push(item.imageFile);
- });
+
+  if(item.imageFile){
+   let base64=devNormalizeBase64(item.imageFile.contentBase64||'');
+   let mime=item.imageFile.mime||'';
+   let sizeBytes=Number(item.imageFile.sizeBytes||0);
+   if(!base64&&item.imageFile.storageKey){
+    const stored=await devLoadPendingImage(item.imageFile.storageKey);
+    base64=devNormalizeBase64(stored?.base64||'');
+    mime=mime||stored?.mime||'';
+    sizeBytes=sizeBytes||Number(stored?.sizeBytes||0);
+   }
+   if(!base64){
+    throw new Error(`${item.label} の画像データが見つかりません。該当問題を「開く」で開き、元画像をもう一度選択して「この問題に反映」を押してください。`);
+   }
+   const dataInfo=devDataUrlInfo(`data:${mime||'image/png'};base64,${base64}`);
+   if(!dataInfo){
+    throw new Error(`${item.label} の画像データが破損しています。元画像をもう一度選択してください。`);
+   }
+   filesByPath.set(item.imageFile.path,{
+    ...item.imageFile,
+    mime:dataInfo.mime,
+    sizeBytes:sizeBytes||dataInfo.sizeBytes,
+    contentBase64:dataInfo.base64
+   });
+  }
+ }
  const title=String($('devPrTitle')?.value||devBuildPrDefaultTitle()).trim();
  const body=String($('devPrBody')?.value||devBuildPrDefaultBodyFromItems(batch.items)).trim();
  const draft=Boolean($('devPrDraft')?.checked);
- return {title,body,draft,items:batch.items,jsonUpdates:[...byJson.values()],files};
+ return {title,body,draft,items:batch.items,jsonUpdates:[...byJson.values()],files:[...filesByPath.values()]};
 }
 
 const DEV_PR_JOB_STORAGE_KEY='me2_github_pr_job_v2';
@@ -5225,8 +5562,8 @@ async function devCreateGitHubPr(){
  let total=0;
  let currentLabel='';
  try{
-  devAddCurrentToPrBatch({silent:true});
-  const payload=devBuildBatchPayload();
+  await devAddCurrentToPrBatch({silent:true});
+  const payload=await devBuildBatchPayload();
   if(!payload.title)throw new Error('PRタイトルを入力してください。');
   if(!payload.items.length)throw new Error('一括PRリストに問題がありません。');
 
