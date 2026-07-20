@@ -151,28 +151,82 @@ function explainGitHubError(context, method, path, message) {
   return `${method} ${path} failed: ${raw}`;
 }
 
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+class GitHubApiError extends Error {
+  constructor(message, status = 0, data = null) {
+    super(message);
+    this.name = 'GitHubApiError';
+    this.status = status;
+    this.data = data;
+  }
+}
+
+function githubRetryable(status, message) {
+  const text = String(message || '');
+  return (
+    status === 408 ||
+    status === 409 ||
+    status === 425 ||
+    status === 429 ||
+    status >= 500 ||
+    (status === 403 && /secondary rate limit|temporarily blocked|abuse detection/i.test(text))
+  );
+}
+
 async function gh(context, method, path, body = null) {
   const env = context.env || {};
-  const headers = {
-    'accept': 'application/vnd.github+json',
-    'authorization': `Bearer ${env.GITHUB_TOKEN}`,
-    'x-github-api-version': GITHUB_API_VERSION,
-    'user-agent': 'me2-quiz-app-cloudflare-pr'
-  };
-  const init = { method, headers };
-  if (body) {
-    headers['content-type'] = 'application/json';
-    init.body = JSON.stringify(body);
+  const maxAttempts = 3;
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const headers = {
+      'accept': 'application/vnd.github+json',
+      'authorization': `Bearer ${env.GITHUB_TOKEN}`,
+      'x-github-api-version': GITHUB_API_VERSION,
+      'user-agent': 'me2-quiz-app-cloudflare-pr'
+    };
+    const init = { method, headers };
+    if (body !== null && body !== undefined) {
+      headers['content-type'] = 'application/json';
+      init.body = JSON.stringify(body);
+    }
+
+    try {
+      const response = await fetch(`https://api.github.com${path}`, init);
+      const text = await response.text();
+      let data = {};
+      try { data = text ? JSON.parse(text) : {}; } catch (_) { data = { raw: text }; }
+
+      if (response.ok) return data;
+
+      const rawMessage = data?.message || data?.error || text || `GitHub API ${response.status}`;
+      const explained = explainGitHubError(context, method, path, rawMessage);
+      lastError = new GitHubApiError(explained, response.status, data);
+
+      if (attempt < maxAttempts && githubRetryable(response.status, rawMessage)) {
+        const retryAfter = Number(response.headers.get('retry-after') || 0);
+        const delay = retryAfter > 0
+          ? Math.min(15000, retryAfter * 1000)
+          : Math.min(8000, 1000 * Math.pow(2, attempt - 1));
+        await wait(delay);
+        continue;
+      }
+      throw lastError;
+    } catch (error) {
+      if (error instanceof GitHubApiError) throw error;
+      lastError = error;
+      if (attempt < maxAttempts) {
+        await wait(Math.min(8000, 1000 * Math.pow(2, attempt - 1)));
+        continue;
+      }
+      throw new Error(`${method} ${path} のGitHub通信に失敗しました：${error?.message || String(error)}`);
+    }
   }
-  const r = await fetch(`https://api.github.com${path}`, init);
-  const text = await r.text();
-  let data = {};
-  try { data = text ? JSON.parse(text) : {}; } catch (_) { data = { raw: text }; }
-  if (!r.ok) {
-    const msg = data?.message || data?.error || text || `GitHub API ${r.status}`;
-    throw new Error(explainGitHubError(context, method, path, msg));
-  }
-  return data;
+
+  throw lastError || new Error(`${method} ${path} failed`);
 }
 
 async function validateGitHubAccess(context, owner, repo, base) {
@@ -272,20 +326,38 @@ async function putFile(context, owner, repo, branch, file, committer) {
 
   if (!content) throw new Error(`ファイル内容が空です：${path}`);
 
-  const sha = await getExistingSha(context, owner, repo, path, branch);
+  let existing = null;
+  try {
+    existing = await getContent(context, owner, repo, path, branch);
+  } catch (error) {
+    const message = String(error?.message || error || '');
+    if (!/404|Not Found/i.test(message)) throw error;
+  }
+
+  if (existing?.content && cleanBase64(existing.content) === content) {
+    return { path, sha: existing.sha || null, commitSha: null, skipped: true };
+  }
+
   const body = {
     message: String(file.message || `Update ${path}`).slice(0, 160),
     content,
     branch
   };
-  if (sha) body.sha = sha;
+  if (existing?.sha) body.sha = existing.sha;
   if (committer.name && committer.email) {
     body.committer = committer;
     body.author = committer;
   }
 
-  const result = await gh(context, 'PUT', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${githubPath(path)}`, body);
-  return { path, sha: result?.content?.sha || null, commitSha: result?.commit?.sha || null };
+  try {
+    const result = await gh(context, 'PUT', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${githubPath(path)}`, body);
+    return { path, sha: result?.content?.sha || null, commitSha: result?.commit?.sha || null, skipped: false };
+  } catch (error) {
+    if (/content is identical|sha and content are unchanged|no changes/i.test(String(error?.message || error))) {
+      return { path, sha: existing?.sha || null, commitSha: null, skipped: true };
+    }
+    throw error;
+  }
 }
 
 async function putJsonUpdateGroup(context, owner, repo, branch, group, committer) {
@@ -315,9 +387,14 @@ async function putJsonUpdateGroup(context, owner, repo, branch, group, committer
     touched.push({ index: idx, number: update.number || pack.questions[idx]?.number, label: update.label, editSummary: update.editSummary });
   }
 
+  const nextJson = JSON.stringify(pack, null, 2);
+  if (raw.trim() === nextJson.trim()) {
+    return { path, sha: current.sha || null, commitSha: null, touched, skipped: true };
+  }
+
   const body = {
     message: compactCommitMessageFromUpdates(group),
-    content: base64FromUtf8(JSON.stringify(pack, null, 2)),
+    content: base64FromUtf8(nextJson),
     branch,
     sha: current.sha
   };
@@ -326,8 +403,15 @@ async function putJsonUpdateGroup(context, owner, repo, branch, group, committer
     body.author = committer;
   }
 
-  const result = await gh(context, 'PUT', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${githubPath(path)}`, body);
-  return { path, sha: result?.content?.sha || null, commitSha: result?.commit?.sha || null, touched };
+  try {
+    const result = await gh(context, 'PUT', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${githubPath(path)}`, body);
+    return { path, sha: result?.content?.sha || null, commitSha: result?.commit?.sha || null, touched, skipped: false };
+  } catch (error) {
+    if (/content is identical|sha and content are unchanged|no changes/i.test(String(error?.message || error))) {
+      return { path, sha: current.sha || null, commitSha: null, touched, skipped: true };
+    }
+    throw error;
+  }
 }
 
 async function findExistingEditPull(context, owner, repo, base) {
@@ -430,30 +514,59 @@ async function tryUpdateBranch(context, owner, repo, pullNumber) {
   }
 }
 
-async function handlePost(context) {
-  const verified = await verifyDevSession(context);
-  if (!verified.ok) return json({ error: verified.error }, { status: 401 });
 
-  const env = context.env || {};
-  requireEnv(env);
+const PR_JOB_PREFIX = 'githubprjob:';
+const PR_JOB_TTL_SECONDS = 60 * 60 * 2;
 
-  const body = await bodyJson(context.request);
-  const title = String(body.title || '[ME2問題編集] 複数問題を修正').trim().slice(0, 160);
-  const incomingBody = String(body.body || '').trim().slice(0, 6000);
-  const files = normalizeFiles(body.files);
-  const jsonUpdates = normalizeJsonUpdates(body.jsonUpdates);
-  const draft = body.draft !== false;
-  const reuseOpenPr = body.reuseOpenPr !== false;
-
-  if (!files.length && !jsonUpdates.length) return json({ error: '送信する更新がありません。' }, { status: 400 });
-
-  const owner = env.GITHUB_OWNER;
-  const repo = env.GITHUB_REPO;
-  const base = env.GITHUB_BRANCH || 'main';
-  const committer = {
+function prJobKey(jobId) {
+  return `${PR_JOB_PREFIX}${String(jobId || '').trim()}`;
+}
+function defaultCommitter(env) {
+  return {
     name: env.GITHUB_COMMITTER_NAME || 'ME2 Quiz App',
     email: env.GITHUB_COMMITTER_EMAIL || 'actions@users.noreply.github.com'
   };
+}
+async function savePrJob(context, job) {
+  const kv = context.env.ME2_PROGRESS;
+  job.updatedAt = new Date().toISOString();
+  await kv.put(prJobKey(job.id), JSON.stringify(job), { expirationTtl: PR_JOB_TTL_SECONDS });
+}
+async function loadPrJob(context, verified, jobId) {
+  const id = String(jobId || '').trim();
+  if (!id) throw new GitHubApiError('PR送信ジョブIDがありません。もう一度PR作成を開始してください。', 400);
+  const job = await context.env.ME2_PROGRESS.get(prJobKey(id), 'json');
+  if (!job) throw new GitHubApiError('PR送信の再開情報が期限切れです。もう一度PR作成を開始してください。', 410);
+  if (String(job.devId || '') !== String(verified.session?.id || '')) {
+    throw new GitHubApiError('このPR送信ジョブを操作する権限がありません。', 403);
+  }
+  if (job.owner !== context.env.GITHUB_OWNER || job.repo !== context.env.GITHUB_REPO) {
+    throw new GitHubApiError('GitHub接続先が変更されたため、このPR送信ジョブは再利用できません。', 409);
+  }
+  return job;
+}
+function publicJob(job) {
+  return {
+    ok: true,
+    jobId: job.id,
+    reused: Boolean(job.reused),
+    branch: job.branch,
+    base: job.base,
+    pullRequestNumber: job.pullNumber || null,
+    pullRequestUrl: job.pullUrl || null,
+    finalized: Boolean(job.finalized),
+    files: job.files || []
+  };
+}
+async function startPrJob(context, verified, body) {
+  const env = context.env || {};
+  const owner = env.GITHUB_OWNER;
+  const repo = env.GITHUB_REPO;
+  const base = env.GITHUB_BRANCH || 'main';
+  const title = String(body.title || '[ME2問題編集] 複数問題を修正').trim().slice(0, 160);
+  const prBody = String(body.body || '').trim().slice(0, 6000);
+  const draft = body.draft !== false;
+  const reuseOpenPr = body.reuseOpenPr !== false;
 
   await validateGitHubAccess(context, owner, repo, base);
 
@@ -469,39 +582,175 @@ async function handlePost(context) {
     branch = await createBranch(context, owner, repo, base, title);
   }
 
-  const committed = [];
+  const job = {
+    id: crypto.randomUUID(),
+    devId: verified.session?.id || '',
+    owner,
+    repo,
+    base,
+    branch,
+    reused,
+    title,
+    body: prBody,
+    draft,
+    pullNumber: pull?.number || null,
+    pullUrl: pull?.html_url || null,
+    pullApiUrl: pull?.url || null,
+    pullTitle: pull?.title || '',
+    pullBody: pull?.body || '',
+    files: [],
+    createdAt: new Date().toISOString(),
+    finalized: false
+  };
+  await savePrJob(context, job);
+  return publicJob(job);
+}
+async function resumePrJob(context, verified, body) {
+  const job = await loadPrJob(context, verified, body.jobId);
+  return publicJob(job);
+}
+async function commitJsonForJob(context, verified, body) {
+  const job = await loadPrJob(context, verified, body.jobId);
+  if (job.finalized) return { ...publicJob(job), skipped: true, reason: 'finalized' };
+  const groups = normalizeJsonUpdates([body.group]);
+  if (!groups.length) throw new GitHubApiError('送信するJSON更新がありません。', 400);
+  const result = await putJsonUpdateGroup(
+    context, job.owner, job.repo, job.branch, groups[0], defaultCommitter(context.env || {})
+  );
+  job.files = [...(job.files || []).filter(x => x.path !== result.path), result];
+  await savePrJob(context, job);
+  return { ...publicJob(job), ...result };
+}
+async function commitFileForJob(context, verified, body) {
+  const job = await loadPrJob(context, verified, body.jobId);
+  if (job.finalized) return { ...publicJob(job), skipped: true, reason: 'finalized' };
+  const files = normalizeFiles([body.file]);
+  if (!files.length) throw new GitHubApiError('送信する画像ファイルがありません。', 400);
+  const result = await putFile(
+    context, job.owner, job.repo, job.branch, files[0], defaultCommitter(context.env || {})
+  );
+  job.files = [...(job.files || []).filter(x => x.path !== result.path), result];
+  await savePrJob(context, job);
+  return { ...publicJob(job), ...result };
+}
+async function ensurePrForJob(context, verified, body) {
+  const job = await loadPrJob(context, verified, body.jobId);
+  if (job.pullNumber) return publicJob(job);
+
+  const existing = await findExistingEditPull(context, job.owner, job.repo, job.base);
+  if (existing && existing.head?.ref === job.branch) {
+    job.pullNumber = existing.number;
+    job.pullUrl = existing.html_url;
+    job.pullApiUrl = existing.url;
+    job.pullTitle = existing.title;
+    job.pullBody = existing.body || '';
+    job.reused = true;
+    await savePrJob(context, job);
+    return publicJob(job);
+  }
+
+  const prBody = mergePrBody('', job.body || '');
+  const pull = await gh(context, 'POST', `/repos/${encodeURIComponent(job.owner)}/${encodeURIComponent(job.repo)}/pulls`, {
+    title: job.title,
+    head: job.branch,
+    base: job.base,
+    body: prBody,
+    draft: job.draft,
+    maintainer_can_modify: true
+  });
+  job.pullNumber = pull.number;
+  job.pullUrl = pull.html_url;
+  job.pullApiUrl = pull.url;
+  job.pullTitle = pull.title;
+  job.pullBody = pull.body || prBody;
+  await savePrJob(context, job);
+  return publicJob(job);
+}
+async function finalizePrJob(context, verified, body) {
+  const job = await loadPrJob(context, verified, body.jobId);
+  if (job.finalized) return publicJob(job);
+
+  if (body.title) job.title = String(body.title).trim().slice(0, 160);
+  if (body.body !== undefined) job.body = String(body.body || '').trim().slice(0, 6000);
+  if (body.draft !== undefined) job.draft = body.draft !== false;
+
+  if (!job.pullNumber) {
+    await ensurePrForJob(context, verified, { jobId: job.id });
+  }
+
+  const refreshed = await loadPrJob(context, verified, job.id);
+  const pull = await patchPull(
+    context,
+    refreshed.owner,
+    refreshed.repo,
+    refreshed.pullNumber,
+    refreshed.pullTitle?.includes('[ME2問題編集]') ? refreshed.pullTitle : refreshed.title,
+    mergePrBody(refreshed.pullBody || '', refreshed.body || '')
+  );
+
+  refreshed.pullNumber = pull.number;
+  refreshed.pullUrl = pull.html_url;
+  refreshed.pullApiUrl = pull.url;
+  refreshed.pullTitle = pull.title;
+  refreshed.pullBody = pull.body || refreshed.pullBody;
+  refreshed.finalized = true;
+  refreshed.finalizedAt = new Date().toISOString();
+  await savePrJob(context, refreshed);
+  return publicJob(refreshed);
+}
+
+async function legacyPost(context, verified, body) {
+  const started = await startPrJob(context, verified, body);
+  const jobId = started.jobId;
+  const jsonUpdates = normalizeJsonUpdates(body.jsonUpdates);
+  const files = normalizeFiles(body.files);
+  if (!jsonUpdates.length && !files.length) {
+    throw new GitHubApiError('送信する更新がありません。', 400);
+  }
+  let ensured = Boolean(started.pullRequestNumber);
   for (const group of jsonUpdates) {
-    committed.push(await putJsonUpdateGroup(context, owner, repo, branch, group, committer));
+    const result = await commitJsonForJob(context, verified, { jobId, group });
+    if (!ensured && !result.skipped) {
+      await ensurePrForJob(context, verified, { jobId });
+      ensured = true;
+    }
   }
   for (const file of files) {
-    committed.push(await putFile(context, owner, repo, branch, file, committer));
+    const result = await commitFileForJob(context, verified, { jobId, file });
+    if (!ensured && !result.skipped) {
+      await ensurePrForJob(context, verified, { jobId });
+      ensured = true;
+    }
   }
+  return finalizePrJob(context, verified, { jobId, title: body.title, body: body.body, draft: body.draft });
+}
 
-  const prBody = mergePrBody('', incomingBody || '');
+async function handlePost(context) {
+  const verified = await verifyDevSession(context);
+  if (!verified.ok) return json({ error: verified.error }, { status: 401 });
 
-  if (pull) {
-    pull = await patchPull(context, owner, repo, pull.number, pull.title.includes('[ME2問題編集]') ? pull.title : title, mergePrBody(pull.body || '', prBody));
-  } else {
-    pull = await gh(context, 'POST', `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls`, {
-      title,
-      head: branch,
-      base,
-      body: prBody,
-      draft,
-      maintainer_can_modify: true
-    });
+  requireEnv(context.env || {});
+  const body = await bodyJson(context.request);
+  const action = String(body.action || 'legacy').trim().toLowerCase();
+
+  try {
+    let result;
+    if (action === 'start') result = await startPrJob(context, verified, body);
+    else if (action === 'resume') result = await resumePrJob(context, verified, body);
+    else if (action === 'commit-json') result = await commitJsonForJob(context, verified, body);
+    else if (action === 'commit-file') result = await commitFileForJob(context, verified, body);
+    else if (action === 'ensure-pr') result = await ensurePrForJob(context, verified, body);
+    else if (action === 'finalize') result = await finalizePrJob(context, verified, body);
+    else result = await legacyPost(context, verified, body);
+    return json(result);
+  } catch (error) {
+    const status = Number(error?.status || 500);
+    return json({
+      error: error?.message || String(error),
+      action,
+      retryable: githubRetryable(status, error?.message || '')
+    }, { status: status >= 400 && status <= 599 ? status : 500 });
   }
-
-  return json({
-    ok: true,
-    reused,
-    branch,
-    base,
-    files: committed,
-    pullRequestNumber: pull.number,
-    pullRequestUrl: pull.html_url,
-    apiUrl: pull.url
-  });
 }
 
 async function handleGet(context) {
