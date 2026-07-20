@@ -1757,7 +1757,7 @@
         "\\frac{3}{4}"
       ],
       "sourceImage": "Date/img/42/pm_p50.jpg",
-      "image": "Date/img/39/39_am_q35.png",
+      "image": "Date/img/42/42_pm_q58.jpg",
       "correct": [
         4
       ],
@@ -1773,7 +1773,10 @@
       ],
       "hasFigure": true,
       "explanationLevel": "phrase_point_with_choice_role_v3",
-      "kindCategories": []
+      "kindCategories": [
+        "imaging",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm59",
