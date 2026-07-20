@@ -956,7 +956,7 @@
         "誤りポイント：電流が過大。正しくは、コンデンサは瞬時に電圧を持てないため、初期電流は図の抵抗で制限され4 mAである。"
       ],
       "hasFigure": true,
-      "image": "Date/img/39/39_am_q27.png",
+      "image": "Date/img/39/39_am_q28.png",
       "sourceImage": "Date/img/39/39_am_q28_p13.png",
       "kindCategories": [
         "medical_electronics"
@@ -1059,7 +1059,7 @@
         "正答。2種類の導体または半導体に温度差を与えると起電力が発生する現象はゼーベック効果である。熱電対の原理として温度測定に用いる。"
       ],
       "hasFigure": true,
-      "image": "Date/img/39/39_am_q27.png",
+      "image": "Date/img/39/39_am_q31.png",
       "sourceImage": "Date/img/39/39_am_q31_p14.png",
       "kindCategories": [
         "medical_electronics"
@@ -1127,7 +1127,7 @@
         "誤りポイント：「-400」が誤り。正しくは「-60 dB」。dB値はそのまま単純に10倍や10分の1にはならず、対数表示として扱う。"
       ],
       "hasFigure": true,
-      "image": "Date/img/39/39_am_q27.png",
+      "image": "Date/img/39/39_am_q33.png",
       "sourceImage": "Date/img/39/39_am_q33_p15.png",
       "kindCategories": [
         "medical_electronics"
