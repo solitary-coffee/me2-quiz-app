@@ -1268,6 +1268,18 @@ html[data-theme="dark"] .dev-review-cloud-badge{
 html[data-theme="dark"] .question-annotation{border-color:#b45309;border-left-color:#f59e0b;background:#451a03;color:#fde68a}
 html[data-theme="dark"] .question-annotation strong{color:#fcd34d}
 
+
+/* 日本語環境でバックスラッシュが円記号に見える問題への対策 */
+.latex-input{
+  font-family:Consolas,"Liberation Mono","Courier New",monospace!important;
+  font-variant-ligatures:none;
+  letter-spacing:0;
+}
+.latex-toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.latex-toolbar button{min-height:34px;width:auto;padding:5px 9px;border-radius:9px;font:700 12px/1.2 Consolas,"Liberation Mono","Courier New",monospace}
+.latex-backslash-note{margin:7px 0 10px;padding:8px 10px;border:1px solid #bfdbfe;border-radius:10px;background:#eff6ff;color:#1e3a8a;font-size:12px;line-height:1.6}
+html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;border-color:#1d4ed8}
+
 </style>
 </head>
 <body>
@@ -1514,7 +1526,7 @@ html[data-theme="dark"] .question-annotation strong{color:#fcd34d}
   <details class="dev-definition-box">
     <summary>解説生成定義を確認・編集</summary>
     <p class="small">AI再生成時にこの定義を一緒に送信します。ここを変えると、生成される解説の形式を統一・調整できます。</p>
-    <textarea id="devExplanationDefinition"></textarea>
+    <textarea id="devExplanationDefinition" class="latex-input" data-latex-input="true"></textarea>
     <div class="row" style="margin-top:8px">
       <button class="ghost" onclick="resetExplanationDefinition()">定義を初期値に戻す</button>
       <button class="ghost" onclick="copyExplanationDefinition()">定義をコピー</button>
@@ -2247,6 +2259,72 @@ let randomKindMap={schemaVersion:1,kinds:RANDOM_KINDS,items:{}};
 let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 
+/*
+ * 日本語キーボード・日本語フォントでは、U+005Cのバックスラッシュが
+ * 円記号に見える場合があります。またIMEによって実際の円記号
+ * U+00A5 / U+FFE5 が入力される場合もあるため、LaTeX欄では自動変換します。
+ */
+function normalizeLatexBackslashes(value){
+ return String(value??'').replace(/[\u00A5\uFFE5]/g,'\\');
+}
+function normalizeLatexInputElement(el){
+ if(!el)return false;
+ const before=String(el.value??'');
+ const after=normalizeLatexBackslashes(before);
+ if(before===after)return false;
+ const start=typeof el.selectionStart==='number'?el.selectionStart:null;
+ const end=typeof el.selectionEnd==='number'?el.selectionEnd:null;
+ el.value=after;
+ if(start!==null&&end!==null){try{el.setSelectionRange(start,end)}catch(_){}}
+ return true;
+}
+function devInsertLatex(targetId,kind){
+ const el=$(targetId);
+ if(!el)return;
+ const templates={
+  inline:{text:'\\(  \\)',caret:3},
+  display:{text:'\\[\n\n\\]',caret:3},
+  frac:{text:'\\frac{}{}',caret:6},
+  sqrt:{text:'\\sqrt{}',caret:6},
+  sub:{text:'_{}',caret:2},
+  sup:{text:'^{}',caret:2},
+  times:{text:'\\times ',caret:7},
+  unit:{text:'\\,\\mathrm{}',caret:11},
+  land:{text:'\\land ',caret:6},
+  lor:{text:'\\lor ',caret:5},
+  neg:{text:'\\neg ',caret:5},
+  implies:{text:'\\Rightarrow ',caret:12}
+ };
+ const item=templates[kind];
+ if(!item)return;
+ el.focus();
+ const start=typeof el.selectionStart==='number'?el.selectionStart:el.value.length;
+ const end=typeof el.selectionEnd==='number'?el.selectionEnd:start;
+ const value=normalizeLatexBackslashes(el.value);
+ el.value=value.slice(0,start)+item.text+value.slice(end);
+ const next=start+item.caret;
+ try{el.setSelectionRange(next,next)}catch(_){}
+ el.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function devLatexToolbarHtml(targetId){
+ return `<div class="latex-toolbar" aria-label="LaTeX入力補助">
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','inline')">&#92;( &#92;)</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','display')">&#92;[ &#92;]</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','frac')">分数</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sqrt')">平方根</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sub')">下付き</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sup')">上付き</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','land')">AND</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','lor')">OR</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','neg')">NOT</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','implies')">⇒</button>
+ </div>`;
+}
+document.addEventListener('input',event=>{
+ const el=event.target;
+ if(el instanceof HTMLTextAreaElement&&el.matches('[data-latex-input="true"]'))normalizeLatexInputElement(el);
+},true);
+
 function hasExplicitMathDelimiter(text){
  return /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/.test(String(text||''));
 }
@@ -2256,7 +2334,7 @@ function looksLikeStandaloneLatex(text){
  return /\\(?:d?frac|tfrac|sqrt|sum|prod|int|lim|log|ln|sin|cos|tan|land|lor|neg|Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leq?|geq?|neq|approx|equiv|times|cdot|pm|mp|infty|overline|underline|mathrm|mathbf|mathit|text)\b|[_^]\{/.test(value);
 }
 function mathTextHtml(value){
- const source=String(value??'');
+ const source=normalizeLatexBackslashes(value);
  const prepared=!hasExplicitMathDelimiter(source)&&looksLikeStandaloneLatex(source)?`\\(${source.trim()}\\)`:source;
  return escapeHtml(prepared).replace(/\r?\n/g,'<br>');
 }
@@ -4474,12 +4552,13 @@ function devRenderEditor(){
  }
  const choices=(q.choices||[]).map((c,i)=>`<div class="dev-choice-editor">
   <h4>選択肢 ${i+1}</h4>
-  <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}">${escapeHtml(c)}</textarea></div>
-  <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}">${escapeHtml((q.choiceNotes||[])[i]||'')}</textarea></div>
+  <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(c))}</textarea>${devLatexToolbarHtml(`devChoice${i}`)}</div>
+  <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes((q.choiceNotes||[])[i]||''))}</textarea>${devLatexToolbarHtml(`devNote${i}`)}</div>
  </div>`).join('');
  $('devEditorBasic').innerHTML=`<h3>問題・解答・画像の設定</h3>
- <div class="dev-field"><label>問題文</label><textarea id="devStem">${escapeHtml(q.stem||'')}</textarea></div>
- <div class="dev-field"><label>問題文の注釈（任意）</label><textarea id="devAnnotation" placeholder="例：表記バグがあるため、正しい問題文は画像を参照してください。">${escapeHtml(questionAnnotation(q))}</textarea></div>
+ <div class="dev-field"><label>問題文</label><textarea id="devStem" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.stem||''))}</textarea>${devLatexToolbarHtml('devStem')}</div>
+ <div class="dev-field"><label>問題文の注釈（任意）</label><textarea id="devAnnotation" class="latex-input" data-latex-input="true" placeholder="例：表記バグがあるため、正しい問題文は画像を参照してください。">${escapeHtml(normalizeLatexBackslashes(questionAnnotation(q)))}</textarea>${devLatexToolbarHtml('devAnnotation')}</div>
+ <div class="latex-backslash-note"><b>日本語環境の入力について：</b>「¥」または「￥」に見えても、LaTeX入力欄では自動的にバックスラッシュ「&#92;」へ変換します。入力補助ボタンから記法を挿入することもできます。</div>
  <details class="dev-latex-help">
   <summary>LaTeX・分数・論理式の入力方法</summary>
   <p class="small">文章中の数式は <span class="code">\( ... \)</span>、独立した数式は <span class="code">\[ ... \]</span> で囲みます。開発画面ではバックスラッシュを1個入力してください。JSON保存時は自動的にエスケープされます。</p>
@@ -4522,7 +4601,7 @@ function devRenderEditor(){
    <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
   </div>
  </div>`;
- $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip">${escapeHtml(q.tip||'')}</textarea></div>${choices}`;
+ $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.tip||''))}</textarea>${devLatexToolbarHtml('devTip')}</div>${choices}`;
  devRenderPreview();
  ['devStem','devAnnotation','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
  ['devNegative','devHasFigure','devLegacyJisReview'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
@@ -4538,21 +4617,21 @@ function devRenderEditor(){
 function devReadForm(){
  const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
  const correct=String($('devCorrect')?.value||'').split(/[,\s、/]+/).map(x=>Number(x)).filter(n=>n>=1&&n<=5);
- const choices=(q.choices||[]).map((_,i)=>$(`devChoice${i}`)?.value||'');
- const notes=(q.choices||[]).map((_,i)=>$(`devNote${i}`)?.value||'');
+ const choices=(q.choices||[]).map((_,i)=>normalizeLatexBackslashes($(`devChoice${i}`)?.value||''));
+ const notes=(q.choices||[]).map((_,i)=>normalizeLatexBackslashes($(`devNote${i}`)?.value||''));
  const kindChecks=document.querySelectorAll('.dev-kind-check');
  const kindCategories=kindChecks.length?normalizeKindIds(devSelectedKindCategories()):randomQuestionKindIdsFromJson(q);
  const standardWarning=devStandardWarningFromForm(q);
- const annotation=String($('devAnnotation')?.value||'').trim();
+ const annotation=normalizeLatexBackslashes($('devAnnotation')?.value||'').trim();
  const out={...q,
-  stem:$('devStem')?.value||'',
+  stem:normalizeLatexBackslashes($('devStem')?.value||''),
   annotation,
   range:$('devRange')?.value||'',
   correct:correct.length?correct:q.correct,
   negative:Boolean($('devNegative')?.checked),
   hasFigure:Boolean($('devHasFigure')?.checked),
   image:$('devImage')?.value||'',
-  tip:$('devTip')?.value||'',
+  tip:normalizeLatexBackslashes($('devTip')?.value||''),
   choices,choiceNotes:notes,kindCategories};
  delete out.questionAnnotation;
  delete out.questionNote;
