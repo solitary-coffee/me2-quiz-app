@@ -116,7 +116,7 @@
       "part": "am",
       "number": 4,
       "page": 4,
-      "stem": "交感神経の興奮で神経末端から分泌るされるのはどれか。",
+      "stem": "交感神経の興奮で神経末端から分泌されるのはどれか。",
       "choices": [
         "グルタミン酸",
         "ノルアドレナリン",
@@ -141,7 +141,7 @@
       "image": "",
       "sourceImage": "",
       "kindCategories": [
-        "basic_med"
+        "basic_medicine"
       ],
       "needsReview": false
     },
@@ -152,30 +152,30 @@
       "page": 4,
       "stem": "健康成人の動脈血血液ガス値で基準範囲にないのはどれか。",
       "choices": [
-        "選択肢1(図を参照)",
-        "選択肢2(図を参照)",
-        "選択肢3(図を参照)",
-        "選択肢4(図を参照)",
-        "選択肢5(図を参照)"
+        "Pao₂:98 Torr",
+        "Paco₂:40 Torr",
+        "pH:7.40",
+        "HCO₃: 15 mEq/L",
+        "BE(Base Excess) : 0 mEq/L"
       ],
       "correct": [
         4
       ],
       "negative": true,
       "range": "基礎医学：人体の構造と機能",
-      "tip": "要点：選択肢4「選択肢4(図を参照)」が誤りです。",
+      "tip": "要点：動脈血ガスの基準は、PaO2約80〜100 Torr、PaCO2約35〜45 Torr、pH 7.35〜7.45、HCO3−約22〜26 mEq/L、BEは約0 mEq/L。覚える：HCO3− 15 mEq/Lは低すぎて基準範囲外。",
       "choiceNotes": [
-        "誤り。要点解説参照。",
-        "誤り。要点解説参照。",
-        "誤り。要点解説参照。",
-        "誤り。要点解説参照。",
-        "誤り。要点解説参照。"
+        "この選択肢は誤りではない。PaO2 98 Torrは動脈血酸素分圧で、健康成人の基準範囲内である。",
+        "この選択肢は誤りではない。PaCO2 40 Torrは動脈血二酸化炭素分圧で、基準範囲内である。",
+        "この選択肢は誤りではない。pH 7.40は動脈血の水素イオン濃度を示し、基準範囲内である。",
+        "正答。誤りポイント：「HCO3− 15 mEq/L」が誤り。正しくは約22〜26 mEq/Lで、15 mEq/Lは低値で基準範囲外。",
+        "この選択肢は誤りではない。BE 0 mEq/Lは塩基過剰の指標で、ほぼ基準範囲内である。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/38/38_am_q05_p04.png",
       "sourceImage": "Date/img/38/38_am_q05_p04.png",
       "kindCategories": [
-        "basic_med"
+        "basic_medicine"
       ],
       "needsReview": true
     },
