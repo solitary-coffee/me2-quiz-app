@@ -97,9 +97,74 @@ function utf8FromBase64(b64) {
 }
 
 function cleanBase64(input) {
-  const raw = String(input || '').trim();
-  const m = raw.match(/^data:[^;,]+;base64,(.+)$/);
-  return (m ? m[1] : raw).replace(/\s+/g, '');
+  const raw = String(input || '').trim().replace(/[?&]_me2v=[^#]*$/i, '');
+  const comma = /^data:/i.test(raw) ? raw.indexOf(',') : -1;
+  let value = comma >= 0 ? raw.slice(comma + 1) : raw;
+  value = value.replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/').replace(/=+$/, '');
+  if (!value || !/^[A-Za-z0-9+/]+$/.test(value)) return '';
+  const remainder = value.length % 4;
+  if (remainder === 1) return '';
+  if (remainder) value += '='.repeat(4 - remainder);
+  try { atob(value); } catch (_) { return ''; }
+  return value;
+}
+
+function decodedBase64Size(base64) {
+  const value = String(base64 || '');
+  const padding = (value.match(/=+$/) || [''])[0].length;
+  return Math.max(0, Math.floor(value.length * 3 / 4) - padding);
+}
+
+function base64PrefixBytes(base64, maxBytes = 1024) {
+  const chars = Math.min(String(base64 || '').length, Math.ceil(maxBytes / 3) * 4);
+  const binary = atob(String(base64 || '').slice(0, chars));
+  return Uint8Array.from(binary, c => c.charCodeAt(0));
+}
+
+function detectedImageMime(base64) {
+  const b = base64PrefixBytes(base64, 1024);
+  if (b.length >= 8 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47 &&
+      b[4] === 0x0d && b[5] === 0x0a && b[6] === 0x1a && b[7] === 0x0a) return 'image/png';
+  if (b.length >= 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  if (b.length >= 6 && new TextDecoder().decode(b.slice(0, 6)).startsWith('GIF8')) return 'image/gif';
+  if (b.length >= 12 && new TextDecoder().decode(b.slice(0, 4)) === 'RIFF' &&
+      new TextDecoder().decode(b.slice(8, 12)) === 'WEBP') return 'image/webp';
+  const text = new TextDecoder().decode(b).replace(/^\uFEFF/, '').trimStart();
+  if (/^<svg\b/i.test(text) || /^<\?xml[\s\S]*?<svg\b/i.test(text)) return 'image/svg+xml';
+  return '';
+}
+
+function imageExtensionMime(path) {
+  const ext = String(path || '').split('?')[0].split('#')[0].split('.').pop().toLowerCase();
+  return {
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+    gif: 'image/gif',
+    svg: 'image/svg+xml'
+  }[ext] || '';
+}
+
+function validateImageUpload(path, base64, declaredMime = '') {
+  if (!base64) throw new GitHubApiError(`画像データが空または不正なBase64です：${path}`, 400);
+  const size = decodedBase64Size(base64);
+  const max = 20 * 1024 * 1024;
+  if (!size) throw new GitHubApiError(`画像データが空です：${path}`, 400);
+  if (size > max) throw new GitHubApiError(`画像サイズが20MBを超えています：${path}`, 413);
+
+  const detected = detectedImageMime(base64);
+  if (!detected) throw new GitHubApiError(`画像形式を判定できません。PNG・JPEG・WebP・GIF・SVGを使用してください：${path}`, 400);
+
+  const extensionMime = imageExtensionMime(path);
+  if (!extensionMime) throw new GitHubApiError(`画像パスの拡張子が不正です：${path}`, 400);
+  if (extensionMime !== detected) {
+    throw new GitHubApiError(`画像の実形式（${detected}）と拡張子（${extensionMime}）が一致しません：${path}`, 400);
+  }
+  if (declaredMime && String(declaredMime).toLowerCase() !== detected) {
+    throw new GitHubApiError(`画像MIME（${declaredMime}）と実形式（${detected}）が一致しません：${path}`, 400);
+  }
+  return { mime: detected, sizeBytes: size };
 }
 
 function explainGitHubError(context, method, path, message) {
@@ -279,6 +344,8 @@ function normalizeFiles(files) {
     encoding: String(f.encoding || 'utf-8'),
     content: f.content,
     contentBase64: f.contentBase64,
+    mime: String(f.mime || ''),
+    sizeBytes: Number(f.sizeBytes || 0),
     message: f.message
   }));
 }
@@ -324,7 +391,8 @@ async function putFile(context, owner, repo, branch, file, committer) {
     content = base64FromUtf8(file.content || '');
   }
 
-  if (!content) throw new Error(`ファイル内容が空です：${path}`);
+  if (!content) throw new GitHubApiError(`ファイル内容が空または不正です：${path}`, 400);
+  if (path.startsWith('Date/img/')) validateImageUpload(path, content, file.mime || '');
 
   let existing = null;
   try {
