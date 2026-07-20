@@ -12,8 +12,8 @@
       "part": "am",
       "number": 1,
       "page": 3,
-      "stem": "分数・論理式はLaTeXを使用できます。例：\\( I=\\frac{V}{R} \\)、\\( \\neg A \\lor B \\)",
-      "annotation": "任意の注釈。例：表記バグがあるため、正しい問題文は画像を参照してください。",
+      "stem": "オームの法則は \\( I=\\frac{V}{R} \\) で表される。正しいものはどれか。",
+      "annotation": "表記バグがあるため、正しい問題文は画像を参照してください。",
       "choices": [
         "選択肢1",
         "選択肢2",
@@ -35,13 +35,7 @@
         "選択肢5の正しい理由/違う箇所"
       ],
       "hasFigure": true,
-      "image": "Date/img/47/am_p3.jpg",
-      "standardWarning": {
-        "legacyJis": false,
-        "message": "",
-        "sourceStandard": "",
-        "reviewRequired": false
-      }
+      "image": "Date/img/47/am_p3.jpg"
     }
   ]
 }

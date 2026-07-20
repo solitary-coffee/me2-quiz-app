@@ -67,10 +67,12 @@ const DEFAULT_EXPLANATION_DEFINITION = `# ME2種 AI解説生成の定義
 - JSONのみで返す。
 
 ## 10. 数式・分数・論理式の表記
-- 分数、平方根、添字、上付き、論理式はLaTeXで記載する。
-- 文章中の数式は \( ... \)、独立した数式は \[ ... \] で囲む。
-- 例：\( I=\frac{V}{R} \)、\( Z=\sqrt{R^2+X^2} \)、\( \neg A \lor B \)。
-- JSONとして出力する際は、バックスラッシュを正しくエスケープする。`;
+- 分数、平方根、添字、上付き、ギリシャ文字、論理式はLaTeXで記載する。
+- 文章中の数式は \\( ... \\)、独立した数式は \\[ ... \\] で囲む。
+- 例：\\( I=\\frac{V}{R} \\)、\\( Z=\\sqrt{R^2+X^2} \\)。
+- 論理式の例：\\( \\neg A \\lor B \\)、\\( A \\land B \\)、\\( A \\Rightarrow B \\)。
+- 単位は必要に応じて \\mathrm{} を使う。例：\\( R=100\\,\\mathrm{\\Omega} \\)。
+- JSONとして返す際は、バックスラッシュを正しくエスケープする。`;
 
 function json(data, init = {}) {
   return new Response(JSON.stringify(data), { status: init.status || 200, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...(init.headers || {}) } });
