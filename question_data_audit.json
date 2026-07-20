@@ -1,0 +1,93 @@
+{
+  "generatedAt": "2026-07-20",
+  "totalQuestionFiles": 14,
+  "totalQuestions": 840,
+  "expectedQuestions": 840,
+  "errors": [],
+  "files": [
+    {
+      "file": "40_am.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "a21db580057f7704d6315615761900f1b0cffcef1e56b52bbef887b874aaeb8d"
+    },
+    {
+      "file": "40_pm.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "04438bacdd266066a4780c36c3915fbce8920c96cf0ab178c0dcc44819c65364"
+    },
+    {
+      "file": "41_am.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "bdc99e0e4cc9b1b9aeb87acc4c6526a31eec87feecffb4f8c75f63ea618078b9"
+    },
+    {
+      "file": "41_pm.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "711fced652b5d3f410d75486da47b8537bb546c70cc79113ee2dcb802d8675fa"
+    },
+    {
+      "file": "42_am.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "1e23bf6a16b2612170b29901aeab399734fe710fda7b07faf78b8ef0f412b777"
+    },
+    {
+      "file": "42_pm.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "f7da97246223388f9ac922cd9cdce859fd6d5cba756f7e60590acd50259a69a7"
+    },
+    {
+      "file": "43_am.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "46bb22ef880c481674247d72a394a66274572e795d1396a25d6ada371af3bc2e"
+    },
+    {
+      "file": "43_pm.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "03d94520f740e145cff85f25966cabf8b70218fe7e242ce9cc9dbe4b420e069e"
+    },
+    {
+      "file": "44_am.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "9c1b125072146c985b12587dc64b89e66580a12a6c0aef2a2394ebd0c9fc4173"
+    },
+    {
+      "file": "44_pm.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "0aa974ce3453d5ec53df6805bbcd2fbd7437363c356ec11f3d7c4065ebe237e9"
+    },
+    {
+      "file": "45_am.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "1c559a1a9ff714b62ac534d0366ae086ed6757fa1e2818cbbd31ad8de4853503"
+    },
+    {
+      "file": "45_pm.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "2fcc2ace84d655b455cb126b86ca457693c50226e6fd8da98741d43c8a5c42be"
+    },
+    {
+      "file": "46_am.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "ef6928957129f258a38ad74db177e9ca54af08887d76bd59458106f3754313d8"
+    },
+    {
+      "file": "46_pm.json",
+      "questions": 60,
+      "missing_numbers": [],
+      "sha256": "1d23b6af9bbf413b7b9b6dcb2c3e11a2de973b558fa7595afe8c70f8c18c575c"
+    }
+  ]
+}

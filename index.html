@@ -2,9 +2,9 @@
 <html lang="ja" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="UTF-8" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-title" content="ME2種演習" />
 <meta name="keywords" content="ME2種, 第2種ME技術実力検定試験, 過去問, 臨床工学技士, ME技術, 医療機器, 試験対策" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -1192,6 +1192,94 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
   }
 }
 
+
+/* 開発者用：問題の要確認クラウドフラグ */
+.dev-review-control{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:38px;
+  padding:7px 10px;
+  border:1px solid #f59e0b;
+  border-radius:12px;
+  background:#fffbeb;
+  color:#92400e;
+  font-size:13px;
+  font-weight:800;
+}
+.dev-review-control label{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+}
+.dev-review-control input{
+  width:18px;
+  height:18px;
+  accent-color:#d97706;
+}
+.dev-review-control .dev-review-sync{
+  font-size:11px;
+  font-weight:700;
+  color:#a16207;
+}
+.dev-review-control.is-saving{
+  opacity:.72;
+}
+.dev-review-cloud-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-left:6px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#fef3c7;
+  color:#92400e;
+  font-size:11px;
+  font-weight:900;
+}
+html[data-theme="dark"] .dev-review-control{
+  border-color:#b45309;
+  background:#451a03;
+  color:#fde68a;
+}
+html[data-theme="dark"] .dev-review-control .dev-review-sync{
+  color:#fcd34d;
+}
+html[data-theme="dark"] .dev-review-cloud-badge{
+  background:#78350f;
+  color:#fde68a;
+}
+
+
+/* LaTeX・数式表示 */
+.math-content{min-width:0;overflow-wrap:anywhere}
+.math-content mjx-container{max-width:100%;color:inherit}
+.math-content mjx-container[display="true"]{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.35rem 0;margin:.45rem 0;-webkit-overflow-scrolling:touch}
+.choice .choice-math,.whiteboard-preview-choice .choice-math{min-width:0;flex:1 1 auto}
+.explain-table td mjx-container{font-size:1.03em}
+@media(max-width:640px){.math-content mjx-container[display="true"]{font-size:.95em}}
+.question-annotation{margin:10px 0 12px;padding:10px 12px;border:1px solid #f59e0b;border-left:5px solid #f59e0b;border-radius:12px;background:#fffbeb;color:#78350f;line-height:1.7}
+.question-annotation strong{display:block;margin-bottom:3px;color:#92400e}
+.question-annotation .annotation-body{white-space:normal}
+.dev-latex-help{margin:8px 0 12px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--bg)}
+.dev-latex-help summary{cursor:pointer;font-weight:800}
+.dev-latex-example{display:block;margin:5px 0;padding:6px 8px;border-radius:8px;background:var(--card);border:1px solid var(--line);overflow-wrap:anywhere}
+html[data-theme="dark"] .question-annotation{border-color:#b45309;border-left-color:#f59e0b;background:#451a03;color:#fde68a}
+html[data-theme="dark"] .question-annotation strong{color:#fcd34d}
+
+
+/* 日本語環境でバックスラッシュが円記号に見える問題への対策 */
+.latex-input{
+  font-family:Consolas,"Liberation Mono","Courier New",monospace!important;
+  font-variant-ligatures:none;
+  letter-spacing:0;
+}
+.latex-toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 10px}
+.latex-toolbar button{min-height:34px;width:auto;padding:5px 9px;border-radius:9px;font:700 12px/1.2 Consolas,"Liberation Mono","Courier New",monospace}
+.latex-backslash-note{margin:7px 0 10px;padding:8px 10px;border:1px solid #bfdbfe;border-radius:10px;background:#eff6ff;color:#1e3a8a;font-size:12px;line-height:1.6}
+html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;border-color:#1d4ed8}
+
 </style>
 </head>
 <body>
@@ -1411,12 +1499,12 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
     開発モードは、問題データ・画像パス・解説を編集できるため、開発者IDとパスワードで保護しています。
   </p>
   <div class="form-grid">
-    <div class="form-card">
+    <form class="form-card" id="devLoginForm" autocomplete="on" onsubmit="event.preventDefault();loginDevMode();">
       <h3>開発モードに入る</h3>
-      <div class="field"><label for="devLoginId">開発者ID</label><input id="devLoginId" autocomplete="username" placeholder="開発者ID"></div>
-      <div class="field"><label for="devLoginPassword">開発者パスワード</label><input id="devLoginPassword" name="devLoginPassword" type="password" autocomplete="current-password" placeholder="8文字以上"></div>
-      <button class="secondary" onclick="loginDevMode()">開発モードへ入る</button>
-    </div>
+      <div class="field"><label for="devLoginId">開発者ID</label><input id="devLoginId" name="devLoginId" autocomplete="username" placeholder="開発者ID" required></div>
+      <div class="field"><label for="devLoginPassword">開発者パスワード</label><input id="devLoginPassword" name="devLoginPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8文字以上" required></div>
+      <button class="secondary" type="submit">開発モードへ入る</button>
+    </form>
     <div class="form-card">
       <h3>設定について</h3>
       <p class="small">
@@ -1438,7 +1526,7 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
   <details class="dev-definition-box">
     <summary>解説生成定義を確認・編集</summary>
     <p class="small">AI再生成時にこの定義を一緒に送信します。ここを変えると、生成される解説の形式を統一・調整できます。</p>
-    <textarea id="devExplanationDefinition"></textarea>
+    <textarea id="devExplanationDefinition" class="latex-input" data-latex-input="true"></textarea>
     <div class="row" style="margin-top:8px">
       <button class="ghost" onclick="resetExplanationDefinition()">定義を初期値に戻す</button>
       <button class="ghost" onclick="copyExplanationDefinition()">定義をコピー</button>
@@ -1543,7 +1631,7 @@ html[data-theme="dark"] .whiteboard-preview-choice.wrong{
     <div id="devCheckResults" class="dev-check-results"></div>
   </section>
 </section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem" id="stem"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem math-content" id="stem"></div><div id="questionAnnotation"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><span id="devReviewControl" class="dev-review-control hidden"></span><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
 
 <div id="whiteboardModal" class="whiteboard-modal hidden" role="dialog" aria-modal="true" aria-labelledby="whiteboardTitle" onclick="if(event.target===this)closeWhiteboard()">
   <section class="whiteboard-dialog">
@@ -2171,6 +2259,72 @@ let randomKindMap={schemaVersion:1,kinds:RANDOM_KINDS,items:{}};
 let state={examId:null,part:null,mode:'all',attemptId:null,order:[],index:0,correct:0,answers:[],startedAt:null,elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};
 function escapeHtml(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 
+/*
+ * 日本語キーボード・日本語フォントでは、U+005Cのバックスラッシュが
+ * 円記号に見える場合があります。またIMEによって実際の円記号
+ * U+00A5 / U+FFE5 が入力される場合もあるため、LaTeX欄では自動変換します。
+ */
+function normalizeLatexBackslashes(value){
+ return String(value??'').replace(/[\u00A5\uFFE5]/g,'\\');
+}
+function normalizeLatexInputElement(el){
+ if(!el)return false;
+ const before=String(el.value??'');
+ const after=normalizeLatexBackslashes(before);
+ if(before===after)return false;
+ const start=typeof el.selectionStart==='number'?el.selectionStart:null;
+ const end=typeof el.selectionEnd==='number'?el.selectionEnd:null;
+ el.value=after;
+ if(start!==null&&end!==null){try{el.setSelectionRange(start,end)}catch(_){}}
+ return true;
+}
+function devInsertLatex(targetId,kind){
+ const el=$(targetId);
+ if(!el)return;
+ const templates={
+  inline:{text:'\\(  \\)',caret:3},
+  display:{text:'\\[\n\n\\]',caret:3},
+  frac:{text:'\\frac{}{}',caret:6},
+  sqrt:{text:'\\sqrt{}',caret:6},
+  sub:{text:'_{}',caret:2},
+  sup:{text:'^{}',caret:2},
+  times:{text:'\\times ',caret:7},
+  unit:{text:'\\,\\mathrm{}',caret:11},
+  land:{text:'\\land ',caret:6},
+  lor:{text:'\\lor ',caret:5},
+  neg:{text:'\\neg ',caret:5},
+  implies:{text:'\\Rightarrow ',caret:12}
+ };
+ const item=templates[kind];
+ if(!item)return;
+ el.focus();
+ const start=typeof el.selectionStart==='number'?el.selectionStart:el.value.length;
+ const end=typeof el.selectionEnd==='number'?el.selectionEnd:start;
+ const value=normalizeLatexBackslashes(el.value);
+ el.value=value.slice(0,start)+item.text+value.slice(end);
+ const next=start+item.caret;
+ try{el.setSelectionRange(next,next)}catch(_){}
+ el.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function devLatexToolbarHtml(targetId){
+ return `<div class="latex-toolbar" aria-label="LaTeX入力補助">
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','inline')">&#92;( &#92;)</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','display')">&#92;[ &#92;]</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','frac')">分数</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sqrt')">平方根</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sub')">下付き</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sup')">上付き</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','land')">AND</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','lor')">OR</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','neg')">NOT</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','implies')">⇒</button>
+ </div>`;
+}
+document.addEventListener('input',event=>{
+ const el=event.target;
+ if(el instanceof HTMLTextAreaElement&&el.matches('[data-latex-input="true"]'))normalizeLatexInputElement(el);
+},true);
+
 function hasExplicitMathDelimiter(text){
  return /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|\\\([\s\S]+?\\\)|\\\[[\s\S]+?\\\])/.test(String(text||''));
 }
@@ -2180,7 +2334,7 @@ function looksLikeStandaloneLatex(text){
  return /\\(?:d?frac|tfrac|sqrt|sum|prod|int|lim|log|ln|sin|cos|tan|land|lor|neg|Rightarrow|Leftarrow|Leftrightarrow|rightarrow|leftarrow|leq?|geq?|neq|approx|equiv|times|cdot|pm|mp|infty|overline|underline|mathrm|mathbf|mathit|text)\b|[_^]\{/.test(value);
 }
 function mathTextHtml(value){
- const source=String(value??'');
+ const source=normalizeLatexBackslashes(value);
  const prepared=!hasExplicitMathDelimiter(source)&&looksLikeStandaloneLatex(source)?`\\(${source.trim()}\\)`:source;
  return escapeHtml(prepared).replace(/\r?\n/g,'<br>');
 }
@@ -2227,24 +2381,39 @@ async function fetchTextNoCache(path){
   return await response.text();
 }
 function parseChangelogMarkdown(markdown){
-  const lines=String(markdown||'').split(/\r?\n/);
+  const source=String(markdown??'').replace(/^\uFEFF/,'');
+  const lines=source.split(/\r?\n/);
   const history=[];
-  let current=null;
+  let entry=null;
 
-  for(const line of lines){
-    const h=line.match(/^##\s+(.+?)\s*-\s*(\d{4}-\d{2}-\d{2})\s*$/);
-    if(h){
-      if(cur)history.push(cur);
-      cur={version:h[1].trim(),date:h[2].trim(),notes:[]};
+  const finishEntry=()=>{
+    if(!entry)return;
+    entry.notes=Array.isArray(entry.notes)?entry.notes.filter(Boolean):[];
+    history.push(entry);
+    entry=null;
+  };
+
+  for(const rawLine of lines){
+    const line=String(rawLine||'').trimEnd();
+    const heading=line.match(/^##\s+(.+?)\s*(?:-|–|—)\s*(\d{4}-\d{2}-\d{2})\s*$/);
+    if(heading){
+      finishEntry();
+      entry={
+        version:String(heading[1]||'').trim(),
+        date:String(heading[2]||'').trim(),
+        notes:[]
+      };
       continue;
     }
 
     const bullet=line.match(/^\s*[-*]\s+(.+?)\s*$/);
-    if(current&&bullet)current.notes.push(bullet[1].trim());
+    if(entry&&bullet){
+      entry.notes.push(String(bullet[1]||'').trim());
+    }
   }
 
-  if(current)history.push(current);
-  return history;
+  finishEntry();
+  return history.filter(item=>item.version&&item.date);
 }
 function renderVersionInfo(){
   const badge=$('versionBadge');
@@ -3978,6 +4147,150 @@ function importProgress(input){const f=input.files?.[0];if(!f)return;const reade
 
 let devPack=null, devExamId=null, devPart='am';
 
+let devReviewFlags=Object.create(null);
+let devReviewFlagsLoaded=false;
+let devReviewFlagsLoading=null;
+let devReviewLastError='';
+
+function devReviewQuestionRef(q,examIdOverride='',partOverride=''){
+ const examId=String(examIdOverride||q?.sourceExamId||state?.examId||'').trim();
+ const part=String(partOverride||q?.sourcePart||state?.part||'').trim();
+ const number=Number(q?.number||0);
+ const questionId=String(q?.id||`${part||'q'}${String(number||0).padStart(2,'0')}`).trim();
+ return {
+  examId,
+  part,
+  questionId,
+  number,
+  key:`${examId}:${part}:${questionId}`,
+  sourceTitle:String(q?.sourceTitle||getExamRecord(examId)?.title||examId),
+  stem:String(q?.stem||''),
+  range:String(q?.range||'')
+ };
+}
+function hasDevSession(){
+ return Boolean(getDevAuth()?.sessionToken);
+}
+async function apiDevReview(method='GET',payload=null){
+ const opt={method,headers:{...devHeaders(),'cache-control':'no-store'}};
+ let url='/api/dev-review';
+ if(method==='GET'&&payload){
+  const params=new URLSearchParams();
+  Object.entries(payload).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')params.set(k,String(v))});
+  const query=params.toString();
+  if(query)url+='?'+query;
+ }else if(payload){
+  opt.headers['content-type']='application/json';
+  opt.body=JSON.stringify(payload);
+ }
+ const r=await fetchWithTimeout(url,opt,10000);
+ const data=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);
+ return data;
+}
+async function loadDevReviewFlags(force=false){
+ if(!hasDevSession()){
+  devReviewFlags=Object.create(null);
+  devReviewFlagsLoaded=false;
+  devReviewLastError='';
+  return devReviewFlags;
+ }
+ if(devReviewFlagsLoading&&!force)return devReviewFlagsLoading;
+ if(devReviewFlagsLoaded&&!force)return devReviewFlags;
+ devReviewFlagsLoading=(async()=>{
+  try{
+   const data=await apiDevReview('GET');
+   const next=Object.create(null);
+   (data.items||[]).forEach(item=>{
+    if(item?.key)next[String(item.key)]=item;
+   });
+   devReviewFlags=next;
+   devReviewFlagsLoaded=true;
+   devReviewLastError='';
+   return devReviewFlags;
+  }catch(e){
+   devReviewFlagsLoaded=true;
+   devReviewLastError=String(e.message||e);
+   throw e;
+  }finally{
+   devReviewFlagsLoading=null;
+  }
+ })();
+ return devReviewFlagsLoading;
+}
+function isDevReviewFlagged(q,examId='',part=''){
+ const ref=devReviewQuestionRef(q,examId,part);
+ return Boolean(devReviewFlags[ref.key]?.flagged);
+}
+function devReviewStatusText(){
+ if(devReviewLastError)return '同期失敗';
+ if(!devReviewFlagsLoaded)return 'クラウド確認中';
+ return 'Cloudflare同期';
+}
+function drawDevReviewControl(q){
+ const box=$('devReviewControl');
+ if(!box)return;
+ if(!hasDevSession()){
+  box.classList.add('hidden');
+  box.innerHTML='';
+  return;
+ }
+ const ref=devReviewQuestionRef(q);
+ const flagged=Boolean(devReviewFlags[ref.key]?.flagged);
+ box.classList.remove('hidden');
+ box.classList.remove('is-saving');
+ box.innerHTML=`<label><input id="devReviewCheckbox" type="checkbox" ${flagged?'checked':''} onchange="toggleCurrentDevReview(this.checked)"> 要確認</label><span class="dev-review-sync">${escapeHtml(devReviewStatusText())}</span>`;
+ if(!devReviewFlagsLoaded&&!devReviewFlagsLoading){
+  const expectedKey=ref.key;
+  loadDevReviewFlags().then(()=>{
+   const current=devReviewQuestionRef(getCurrentQuestion());
+   if(current.key===expectedKey)drawDevReviewControl(getCurrentQuestion());
+  }).catch(()=>{
+   const current=devReviewQuestionRef(getCurrentQuestion());
+   if(current.key===expectedKey)drawDevReviewControl(getCurrentQuestion());
+  });
+ }
+}
+async function saveDevReviewFlag(q,flagged,examId='',part=''){
+ const ref=devReviewQuestionRef(q,examId,part);
+ const data=await apiDevReview('POST',{
+  ...ref,
+  flagged:Boolean(flagged)
+ });
+ if(flagged){
+  devReviewFlags[ref.key]=data.item||{...ref,key:ref.key,flagged:true,updatedAt:new Date().toISOString()};
+ }else{
+  delete devReviewFlags[ref.key];
+ }
+ devReviewFlagsLoaded=true;
+ devReviewLastError='';
+ return data;
+}
+async function toggleCurrentDevReview(flagged){
+ const q=getCurrentQuestion();
+ if(!q)return;
+ const box=$('devReviewControl');
+ const checkbox=$('devReviewCheckbox');
+ if(box)box.classList.add('is-saving');
+ if(checkbox)checkbox.disabled=true;
+ try{
+  await saveDevReviewFlag(q,flagged);
+  drawDevReviewControl(q);
+ }catch(e){
+  devReviewLastError=String(e.message||e);
+  if(checkbox){
+   checkbox.checked=!flagged;
+   checkbox.disabled=false;
+  }
+  if(box){
+   box.classList.remove('is-saving');
+   box.innerHTML=`<label><input id="devReviewCheckbox" type="checkbox" ${!flagged?'checked':''} onchange="toggleCurrentDevReview(this.checked)"> 要確認</label><span class="dev-review-sync">保存失敗</span>`;
+  }
+  alert(`要確認をCloudflareへ保存できませんでした。\n${e.message||e}`);
+ }
+}
+
+
 function getDevAuth(){
   try{return JSON.parse(localStorage.getItem(DEV_AUTH_KEY)||'null')}catch(e){return null}
 }
@@ -4239,12 +4552,13 @@ function devRenderEditor(){
  }
  const choices=(q.choices||[]).map((c,i)=>`<div class="dev-choice-editor">
   <h4>選択肢 ${i+1}</h4>
-  <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}">${escapeHtml(c)}</textarea></div>
-  <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}">${escapeHtml((q.choiceNotes||[])[i]||'')}</textarea></div>
+  <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(c))}</textarea>${devLatexToolbarHtml(`devChoice${i}`)}</div>
+  <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes((q.choiceNotes||[])[i]||''))}</textarea>${devLatexToolbarHtml(`devNote${i}`)}</div>
  </div>`).join('');
  $('devEditorBasic').innerHTML=`<h3>問題・解答・画像の設定</h3>
- <div class="dev-field"><label>問題文</label><textarea id="devStem">${escapeHtml(q.stem||'')}</textarea></div>
- <div class="dev-field"><label>問題文の注釈（任意）</label><textarea id="devAnnotation" placeholder="例：表記バグがあるため、正しい問題文は画像を参照してください。">${escapeHtml(questionAnnotation(q))}</textarea></div>
+ <div class="dev-field"><label>問題文</label><textarea id="devStem" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.stem||''))}</textarea>${devLatexToolbarHtml('devStem')}</div>
+ <div class="dev-field"><label>問題文の注釈（任意）</label><textarea id="devAnnotation" class="latex-input" data-latex-input="true" placeholder="例：表記バグがあるため、正しい問題文は画像を参照してください。">${escapeHtml(normalizeLatexBackslashes(questionAnnotation(q)))}</textarea>${devLatexToolbarHtml('devAnnotation')}</div>
+ <div class="latex-backslash-note"><b>日本語環境の入力について：</b>「¥」または「￥」に見えても、LaTeX入力欄では自動的にバックスラッシュ「&#92;」へ変換します。入力補助ボタンから記法を挿入することもできます。</div>
  <details class="dev-latex-help">
   <summary>LaTeX・分数・論理式の入力方法</summary>
   <p class="small">文章中の数式は <span class="code">\( ... \)</span>、独立した数式は <span class="code">\[ ... \]</span> で囲みます。開発画面ではバックスラッシュを1個入力してください。JSON保存時は自動的にエスケープされます。</p>
@@ -4287,7 +4601,7 @@ function devRenderEditor(){
    <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
   </div>
  </div>`;
- $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip">${escapeHtml(q.tip||'')}</textarea></div>${choices}`;
+ $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.tip||''))}</textarea>${devLatexToolbarHtml('devTip')}</div>${choices}`;
  devRenderPreview();
  ['devStem','devAnnotation','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
  ['devNegative','devHasFigure','devLegacyJisReview'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
@@ -4303,21 +4617,21 @@ function devRenderEditor(){
 function devReadForm(){
  const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
  const correct=String($('devCorrect')?.value||'').split(/[,\s、/]+/).map(x=>Number(x)).filter(n=>n>=1&&n<=5);
- const choices=(q.choices||[]).map((_,i)=>$(`devChoice${i}`)?.value||'');
- const notes=(q.choices||[]).map((_,i)=>$(`devNote${i}`)?.value||'');
+ const choices=(q.choices||[]).map((_,i)=>normalizeLatexBackslashes($(`devChoice${i}`)?.value||''));
+ const notes=(q.choices||[]).map((_,i)=>normalizeLatexBackslashes($(`devNote${i}`)?.value||''));
  const kindChecks=document.querySelectorAll('.dev-kind-check');
  const kindCategories=kindChecks.length?normalizeKindIds(devSelectedKindCategories()):randomQuestionKindIdsFromJson(q);
  const standardWarning=devStandardWarningFromForm(q);
- const annotation=String($('devAnnotation')?.value||'').trim();
+ const annotation=normalizeLatexBackslashes($('devAnnotation')?.value||'').trim();
  const out={...q,
-  stem:$('devStem')?.value||'',
+  stem:normalizeLatexBackslashes($('devStem')?.value||''),
   annotation,
   range:$('devRange')?.value||'',
   correct:correct.length?correct:q.correct,
   negative:Boolean($('devNegative')?.checked),
   hasFigure:Boolean($('devHasFigure')?.checked),
   image:$('devImage')?.value||'',
-  tip:$('devTip')?.value||'',
+  tip:normalizeLatexBackslashes($('devTip')?.value||''),
   choices,choiceNotes:notes,kindCategories};
  delete out.questionAnnotation;
  delete out.questionNote;
@@ -5074,20 +5388,36 @@ async function runDevTextCheck(){
  devCheckIssues=[];
  $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 要確認データをCloudflareから同期しています。</span>';
  $('devCheckResults').innerHTML='';
+ try{await loadDevReviewFlags(true)}catch(e){
+  devReviewLastError=String(e.message||e);
+ }
  for(const ex of records){
   for(const part of parts){
    try{
     const pack=await getPart(ex.id,part);
     (pack.questions||[]).forEach((q,idx)=>{
-     const issue=checkOneQuestion(q,{examId:String(ex.id),part,title:ex.title,index:idx,number:q.number});
-     if(issue)devCheckIssues.push(issue);
+     const ctx={examId:String(ex.id),part,title:ex.title,index:idx,number:q.number};
+     const textIssue=checkOneQuestion(q,ctx);
+     const manualReview=isDevReviewFlagged(q,String(ex.id),part);
+     if(!textIssue&&!manualReview)return;
+     const item=textIssue||{...ctx,q,issues:[],severity:'mid'};
+     item.textIssueCount=(textIssue?.issues||[]).length;
+     item.manualReview=manualReview;
+     if(manualReview){
+      item.issues=[
+       {severity:'mid',field:'要確認（クラウド）',msg:'通常演習中に開発者が「要確認」として登録しています。',manualReview:true},
+       ...(item.issues||[])
+      ];
+      item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'mid';
+     }
+     devCheckIssues.push(item);
     });
    }catch(e){
-    devCheckIssues.push({examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]});
+    devCheckIssues.push({examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,textIssueCount:1,manualReview:false,issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]});
    }
   }
  }
- const filtered=filterDevCheckIssues(devCheckIssues,min);
+ const filtered=filterDevCheckIssues(devCheckIssues,min,mode);
  renderDevCheckResults(filtered);
 }
 function renderDevCheckResults(list){
@@ -5187,8 +5517,8 @@ function copyDevCheckSummary(){
 function clearDevCheckResults(){devCheckIssues=[];$('devCheckSummary').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResults').innerHTML='';}
 function exportDevCheckCsv(){
  if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
- const rows=[['回','午前午後','問題番号','重要度','修正済み','項目','指摘内容','範囲','問題文']];
- devCheckIssues.forEach(item=>{item.issues.forEach(i=>rows.push([item.title||item.examId,partName(item.part),item.number,severityLabel(i.severity),isDevIssueFixed(item)?'修正済み':'未修正',i.field,i.msg,item.q?.range||'',item.q?.stem||'']));});
+ const rows=[['回','午前午後','問題番号','重要度','要確認','修正済み','項目','指摘内容','範囲','問題文']];
+ devCheckIssues.forEach(item=>{item.issues.forEach(i=>rows.push([item.title||item.examId,partName(item.part),item.number,severityLabel(i.severity),item.manualReview?'要確認':'',isDevIssueFixed(item)?'修正済み':'未修正',i.field,i.msg,item.q?.range||'',item.q?.stem||'']));});
  const csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');
  downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');
 }
@@ -5267,8 +5597,7 @@ async function init(){
  applyTheme(getStoredTheme());
  initWhiteboard();
  setupCeExamLink();
- renderVersionInfo();
- await loadVersionFromMarkdown();
+ await loadVersionFromMarkdown().catch(()=>false);
  $('loadMode').innerHTML='<span class="status-warn">読み込み中…</span>';
  try { await loadMe(); } catch(e) { me={authenticated:false,email:null,name:null,local:true}; $('userBadge').textContent='未ログイン/端末キャッシュ'; }
  try { await loadIndex(); } catch(e) { $('loadMode').innerHTML=`<span class="status-warn">読み込み失敗：${escapeHtml(friendlyFetchError(e))}</span>`; examsIndex={exams:[]}; }

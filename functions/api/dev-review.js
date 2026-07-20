@@ -78,34 +78,11 @@ async function listAllReviews(kv) {
   let cursor = undefined;
 
   do {
-    const page = await kv.list({
-      prefix: REVIEW_PREFIX,
-      limit: 1000,
-      ...(cursor ? { cursor } : {}),
-      includeMetadata: true
-    });
-    const keys = page.keys || [];
-    const missing = [];
-    for (const entry of keys) {
-      // Prefer metadata (no subrequest). If metadata exists, trust its flagged state.
-      if (entry.metadata) {
-        if (entry.metadata.flagged) {
-          items.push(entry.metadata);
-        }
-      } else {
-        missing.push(entry);
-      }
+    const page = await kv.list({ prefix: REVIEW_PREFIX, limit: 1000, ...(cursor ? { cursor } : {}) });
+    for (const entry of page.keys || []) {
+      const value = await kv.get(entry.name, 'json');
+      if (value?.flagged) items.push(value);
     }
-    // Fallback: fetch missing entries in small batches to avoid too many subrequests
-    const BATCH = 20;
-    for (let i = 0; i < missing.length; i += BATCH) {
-      const batch = missing.slice(i, i + BATCH);
-      const vals = await Promise.all(batch.map(e => kv.get(e.name, 'json')));
-      for (const v of vals) {
-        if (v?.flagged) items.push(v);
-      }
-    }
-
     cursor = page.list_complete ? undefined : page.cursor;
   } while (cursor);
 
@@ -169,27 +146,15 @@ async function handlePost(context) {
     examId,
     part,
     questionId,
-    number: Number.isFinite(Number(body.number)) ? Number(body.number) : 0,
+    number: Number(body.number || 0),
     sourceTitle: String(body.sourceTitle || ''),
     stem: String(body.stem || '').slice(0, 1000),
     range: String(body.range || '').slice(0, 300),
     updatedAt: new Date().toISOString(),
     updatedBy: String(session.id || 'developer')
   };
-  // Save lightweight metadata to avoid per-key subrequests when listing.
-  const metadata = {
-    key: item.key,
-    flagged: true,
-    examId: item.examId,
-    part: item.part,
-    questionId: item.questionId,
-    number: item.number,
-    sourceTitle: item.sourceTitle,
-    updatedAt: item.updatedAt,
-    updatedBy: item.updatedBy
-  };
 
-  await kv.put(storageKey, JSON.stringify(item), { metadata });
+  await kv.put(storageKey, JSON.stringify(item));
   return json({ ok: true, flagged: true, item });
 }
 
