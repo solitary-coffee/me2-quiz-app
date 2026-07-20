@@ -1591,7 +1591,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
           <div class="dev-pr-summary small" id="devPrBatchSummary">一括PRリスト：0件</div>
           <div id="devPrBatchList" class="dev-pr-list"></div>
           <div class="dev-pr-actions">
-            <button onclick="devCreateGitHubPr()">一括PRを作成 / 既存PRへ更新</button>
+            <button id="devCreatePrBtn" onclick="devCreateGitHubPr()">一括PRを作成 / 既存PRへ更新</button>
             <button class="danger" onclick="devClearPrBatch()">一括PRリストを全削除</button>
           </div>
           <div id="devPrStatus" class="dev-pr-status">まだPRは作成していません。</div>
@@ -2555,13 +2555,30 @@ function githubConfigured(){return false}
 function sourceLabel(mode){return {site_internal:'サイト内データ',local:'サイト内データ'}[mode]||'サイト内データ'}
 
 function fetchWithTimeout(url, options={}, ms=2500){
- const ctrl = new AbortController();
- const timer = setTimeout(()=>ctrl.abort(), ms);
- return fetch(url, {...options, signal: ctrl.signal}).finally(()=>clearTimeout(timer));
+ if(!Number.isFinite(Number(ms))||Number(ms)<=0)return fetch(url,options);
+ const ctrl=new AbortController();
+ let timedOut=false;
+ const timer=setTimeout(()=>{
+  timedOut=true;
+  try{ctrl.abort()}catch(_){}
+ },Number(ms));
+ return fetch(url,{...options,signal:ctrl.signal})
+  .catch(error=>{
+   if(timedOut){
+    const timeoutError=new Error(`通信が${Math.round(Number(ms)/1000)}秒を超えたためタイムアウトしました。`);
+    timeoutError.name='TimeoutError';
+    timeoutError.cause=error;
+    throw timeoutError;
+   }
+   throw error;
+  })
+  .finally(()=>clearTimeout(timer));
 }
 function friendlyFetchError(e){
- if(e && (e.name === 'AbortError' || String(e.message||'').includes('aborted'))) return 'タイムアウト';
- return e?.message || String(e);
+ const raw=String(e?.message||e||'');
+ if(e?.name==='TimeoutError')return raw;
+ if(e?.name==='AbortError'||/aborted|signal is aborted/i.test(raw))return '通信が中断されました。';
+ return raw;
 }
 function withAssetCacheBuster(url){
  const raw=String(url||'');
@@ -5121,39 +5138,224 @@ function devBuildBatchPayload(){
  const draft=Boolean($('devPrDraft')?.checked);
  return {title,body,draft,items:batch.items,jsonUpdates:[...byJson.values()],files};
 }
+
+const DEV_PR_JOB_STORAGE_KEY='me2_github_pr_job_v2';
+
+function devPrPayloadFingerprint(payload){
+ const itemPart=(payload.items||[]).map(item=>[
+  item.key,item.updatedAt,item.jsonPath,item.imagePath,item.editSummary,
+  JSON.stringify(item.question||{}).length
+ ].join('|')).join('||');
+ return [
+  payload.title||'',
+  payload.body||'',
+  payload.draft?'1':'0',
+  itemPart
+ ].join('###');
+}
+function devLoadSavedPrJob(fingerprint){
+ try{
+  const saved=JSON.parse(localStorage.getItem(DEV_PR_JOB_STORAGE_KEY)||'null');
+  if(!saved||saved.fingerprint!==fingerprint||!saved.jobId)return null;
+  if(Date.now()-Number(saved.savedAt||0)>90*60*1000){
+   localStorage.removeItem(DEV_PR_JOB_STORAGE_KEY);
+   return null;
+  }
+  return saved;
+ }catch(_){
+  return null;
+ }
+}
+function devSavePrJob(job){
+ try{localStorage.setItem(DEV_PR_JOB_STORAGE_KEY,JSON.stringify({...job,savedAt:Date.now()}))}catch(_){}
+}
+function devClearSavedPrJob(){
+ try{localStorage.removeItem(DEV_PR_JOB_STORAGE_KEY)}catch(_){}
+}
+function devPrRetryableError(error){
+ const status=Number(error?.status||0);
+ const raw=String(error?.message||error||'');
+ return (
+  error?.name==='TimeoutError'||
+  error?.name==='AbortError'||
+  /aborted|signal is aborted|network|failed to fetch|timeout|タイムアウト|通信が中断/i.test(raw)||
+  status===408||status===409||status===425||status===429||status>=500
+ );
+}
+function devPrSleep(ms){
+ return new Promise(resolve=>setTimeout(resolve,ms));
+}
+async function devGithubPrRequest(payload,{attempts=3,timeout=120000}={}){
+ let lastError=null;
+ for(let attempt=1;attempt<=attempts;attempt++){
+  try{
+   const response=await fetchWithTimeout('/api/github-pr',{
+    method:'POST',
+    headers:{'content-type':'application/json',...devHeaders()},
+    body:JSON.stringify(payload)
+   },timeout);
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok){
+    const error=new Error(data.error||`HTTP ${response.status}`);
+    error.status=response.status;
+    error.data=data;
+    throw error;
+   }
+   return data;
+  }catch(error){
+   lastError=error;
+   if(attempt>=attempts||!devPrRetryableError(error))break;
+   const wait=Math.min(7000,1000*Math.pow(2,attempt-1));
+   devSetPrStatus(`GitHub通信が一時的に失敗しました。${attempt}/${attempts}回目。${Math.round(wait/1000)}秒後に再試行します…<br><span class="small">${escapeHtml(friendlyFetchError(error))}</span>`);
+   await devPrSleep(wait);
+  }
+ }
+ throw lastError||new Error('GitHub通信に失敗しました。');
+}
+function devPrCredentialHint(error){
+ const raw=String(error?.message||error||'');
+ return /Bad credentials|Resource not accessible|GITHUB_TOKEN|GITHUB_OWNER|GITHUB_REPO|権限不足|トークン|認証/i.test(raw);
+}
 async function devCreateGitHubPr(){
+ const createButton=$('devCreatePrBtn');
+ if(createButton?.disabled)return;
+ if(createButton)createButton.disabled=true;
+
+ let completed=0;
+ let total=0;
+ let currentLabel='';
  try{
   devAddCurrentToPrBatch({silent:true});
   const payload=devBuildBatchPayload();
   if(!payload.title)throw new Error('PRタイトルを入力してください。');
   if(!payload.items.length)throw new Error('一括PRリストに問題がありません。');
-  devSetPrStatus('一括PRを作成 / 既存PRへ追加中です…');
-  const r=await fetchWithTimeout('/api/github-pr',{
-   method:'POST',
-   headers:{'content-type':'application/json',...devHeaders()},
-   body:JSON.stringify({
+
+  const fingerprint=devPrPayloadFingerprint(payload);
+  let savedJob=devLoadSavedPrJob(fingerprint);
+  let job=null;
+
+  if(savedJob){
+   devSetPrStatus(`前回中断したPR送信を再開します。<br>ブランチ：<span class="code">${escapeHtml(savedJob.branch||'確認中')}</span>`);
+   try{
+    job=await devGithubPrRequest({
+     action:'resume',
+     jobId:savedJob.jobId
+    },{attempts:2,timeout:60000});
+   }catch(error){
+    if(Number(error?.status)===404||Number(error?.status)===410){
+     devClearSavedPrJob();
+     savedJob=null;
+    }else{
+     throw error;
+    }
+   }
+  }
+
+  if(!job){
+   devSetPrStatus('GitHub接続を確認し、PR送信用ブランチを準備しています…');
+   job=await devGithubPrRequest({
+    action:'start',
     title:payload.title,
     body:payload.body,
     draft:payload.draft,
-    reuseOpenPr:true,
-    marker:'ME2_QUESTION_EDIT_PR',
-    jsonUpdates:payload.jsonUpdates,
-    files:payload.files
-   })
-  },60000);
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(data.error||String(r.status));
+    reuseOpenPr:true
+   },{attempts:3,timeout:120000});
+   devSavePrJob({
+    fingerprint,
+    jobId:job.jobId,
+    branch:job.branch,
+    pullRequestNumber:job.pullRequestNumber||null
+   });
+  }
+
+  const units=[
+   ...payload.jsonUpdates.map((group,index)=>({
+    type:'json',
+    label:`JSON ${index+1}/${payload.jsonUpdates.length}：${group.path}`,
+    group
+   })),
+   ...payload.files.map((file,index)=>({
+    type:'file',
+    label:`画像 ${index+1}/${payload.files.length}：${file.path}`,
+    file
+   }))
+  ];
+  total=units.length;
+
+  if(!total)throw new Error('送信する更新がありません。');
+
+  let pullEnsured=Boolean(job.pullRequestNumber);
+  for(let index=0;index<units.length;index++){
+   const unit=units[index];
+   currentLabel=unit.label;
+   const percent=Math.round((completed/total)*100);
+   devSetPrStatus(
+    `GitHubへ分割送信中：${completed}/${total}件（${percent}%）<br>`+
+    `<span class="code">${escapeHtml(unit.label)}</span><br>`+
+    '<span class="small">一度に長時間処理せず、ファイル単位で安全に送信しています。</span>'
+   );
+
+   const result=await devGithubPrRequest(
+    unit.type==='json'
+     ? {action:'commit-json',jobId:job.jobId,group:unit.group}
+     : {action:'commit-file',jobId:job.jobId,file:unit.file},
+    {attempts:3,timeout:120000}
+   );
+   completed++;
+
+   if(!pullEnsured&&!result.skipped){
+    const ensured=await devGithubPrRequest({
+     action:'ensure-pr',
+     jobId:job.jobId
+    },{attempts:3,timeout:120000});
+    pullEnsured=Boolean(ensured.pullRequestNumber);
+    devSavePrJob({
+     fingerprint,
+     jobId:job.jobId,
+     branch:job.branch,
+     pullRequestNumber:ensured.pullRequestNumber||null
+    });
+   }
+  }
+
+  devSetPrStatus(`送信内容の反映を確認し、PR情報を更新しています…（${completed}/${total}件）`);
+  const data=await devGithubPrRequest({
+   action:'finalize',
+   jobId:job.jobId,
+   title:payload.title,
+   body:payload.body,
+   draft:payload.draft
+  },{attempts:3,timeout:120000});
+
   payload.items.forEach(devApplyQuestionToLocal);
   if(payload.items.some(x=>x.key===devCurrentPrKey())){
    const current=payload.items.find(x=>x.key===devCurrentPrKey());
    if($('devImage'))$('devImage').value=current?.question?.image||'';
   }
   devRenderEditor();
-  const fileList=(data.files||[]).map(f=>`<li><span class="code">${escapeHtml(f.path||f)}</span></li>`).join('');
-  const prAction=data.reused?'既存PRへ追加コミットしました':'PRを作成しました';
-  devSetPrStatus(`${prAction}。<br><a href="${escapeHtml(data.pullRequestUrl||data.url||'#')}" target="_blank" rel="noopener">GitHubでPRを開く</a><br>ブランチ：<span class="code">${escapeHtml(data.branch||'')}</span><ul>${fileList}</ul>`,true);
- }catch(e){
-  devSetPrStatus(`PR作成に失敗しました：${escapeHtml(e.message||e)}<br>Cloudflareの GITHUB_TOKEN / GITHUB_OWNER / GITHUB_REPO / GITHUB_BRANCH と、GitHubトークンの Contents・Pull requests 権限を確認してください。`);
+  devClearSavedPrJob();
+
+  const fileList=(data.files||[]).map(f=>{
+   const suffix=f.skipped?'（変更済みのため再コミット省略）':'';
+   return `<li><span class="code">${escapeHtml(f.path||f)}</span>${suffix}</li>`;
+  }).join('');
+  const prAction=data.reused?'既存PRへ追加・更新しました':'PRを作成しました';
+  devSetPrStatus(
+   `${prAction}。<br>`+
+   `<a href="${escapeHtml(data.pullRequestUrl||data.url||'#')}" target="_blank" rel="noopener">GitHubでPRを開く</a><br>`+
+   `ブランチ：<span class="code">${escapeHtml(data.branch||job.branch||'')}</span><br>`+
+   `処理：${completed}/${total}件<ul>${fileList}</ul>`,
+   true
+  );
+ }catch(error){
+  const message=friendlyFetchError(error);
+  const progress=total?`<br>完了済み：${completed}/${total}件${currentLabel?`<br>停止位置：<span class="code">${escapeHtml(currentLabel)}</span>`:''}`:'';
+  const hint=devPrCredentialHint(error)
+   ? '<br>Cloudflareの GITHUB_TOKEN / GITHUB_OWNER / GITHUB_REPO / GITHUB_BRANCH と、GitHubトークンの Contents・Pull requests 権限も確認してください。'
+   : '<br>一括PRリストと再開情報は保持しています。同じボタンをもう一度押すと、完了済み内容を重複させず再開します。';
+  devSetPrStatus(`PR作成に失敗しました：${escapeHtml(message)}${progress}${hint}`);
+ }finally{
+  if(createButton)createButton.disabled=false;
  }
 }
 
