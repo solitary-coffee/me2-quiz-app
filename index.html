@@ -1763,7 +1763,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
 
   <section class="dev-check-panel">
     <h3>文面チェック</h3>
-    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」「画像変更」「AI再生成」「確認済み」も同じ一覧へ表示・抽出できます。確認済み問題は自動再生成・PR反映・画像変更から保護されます。修正済みにチェックした項目は下へ移動します。</p>
+    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」「画像変更」「AI再生成」「確認済み」も同じ一覧へ表示・抽出できます。確認済み問題はAI再生成・画像の自動変更から保護されます。手動編集とPR作成は可能で、既に確認済みの問題を変更するPRには注意表記が付きます。修正済みにチェックした項目は下へ移動します。</p>
     <div class="dev-check-grid">
       <div class="dev-field"><label>開始回</label><select id="checkFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="checkToExam"></select></div>
@@ -4401,12 +4401,13 @@ let devReviewFlagsLoading=null;
 let devReviewLastError='';
 let devReviewFlagsLoadedAt=0;
 let devReviewQuestionFetchedAt=Object.create(null);
+let devConfirmedBaseline=Object.create(null);
 
 const DEV_WORK_FLAG_TYPES={
  review:{label:'要確認',field:'要確認（クラウド）',severity:'mid',message:'通常演習中に開発者が「要確認」として登録しています。',className:'review'},
  imageChange:{label:'画像変更',field:'画像変更（クラウド）',severity:'warn',message:'問題画像の追加・差し替え・修正が必要として登録されています。',className:'image'},
  aiRegenerate:{label:'AI再生成',field:'AI再生成（クラウド）',severity:'mid',message:'AIによる要点解説・各選択肢解説の再生成が必要として登録されています。',className:'ai'},
- confirmed:{label:'確認済み',field:'確認済み（クラウド）',severity:'low',message:'最終確認済みとして登録されています。自動再生成・PR反映・画像変更の対象外です。',className:'confirmed'}
+ confirmed:{label:'確認済み',field:'確認済み（クラウド）',severity:'low',message:'最終確認済みとして登録されています。AI再生成・画像の自動変更は保護されますが、手動編集とPR作成は可能です。既に確認済みの問題を変更するPRには注意表記が付きます。',className:'confirmed'}
 };
 
 function normalizeDevWorkFlags(item){
@@ -4581,6 +4582,27 @@ function isDevReviewFlagged(q,examId='',part=''){
 function isDevQuestionConfirmed(q,examId='',part=''){
  return isDevQuestionFlagged(q,examId,part,'confirmed');
 }
+
+function devRememberConfirmedBaseline(q,confirmed,examId=devExamId,part=devPart){
+ const ref=devReviewQuestionRef(q,examId,part);
+ if(typeof devConfirmedBaseline[ref.key]!=='boolean')devConfirmedBaseline[ref.key]=Boolean(confirmed);
+ return devConfirmedBaseline[ref.key];
+}
+function devConfirmedStatusForPr(q,examId=devExamId,part=devPart){
+ const ref=devReviewQuestionRef(q,examId,part);
+ const flags=devQuestionWorkFlags(q,examId,part);
+ const baseline=typeof devConfirmedBaseline[ref.key]==='boolean'
+  ?devConfirmedBaseline[ref.key]
+  :null;
+ return {
+  confirmedBeforeEdit:baseline,
+  confirmedAtPr:Boolean(flags.confirmed)
+ };
+}
+function devActionAllowsConfirmedPr(action){
+ return ['問題内容を反映','一括PRリストへ追加'].includes(String(action||''));
+}
+
 async function devAssertQuestionMutable(q,action='変更',examId=devExamId,part=devPart){
  const ref=devReviewQuestionRef(q,examId,part);
  const knownAt=Math.max(
@@ -4593,14 +4615,16 @@ async function devAssertQuestionMutable(q,action='変更',examId=devExamId,part=
   }
  }catch(error){
   if(!knownAt){
-   throw new Error(`確認済み保護を確認できないため「${action}」を中止しました。現在の問題だけを再確認しましたが通信に失敗しました。少し待って再実行してください。詳細：${error?.message||error}`);
+   throw new Error(`確認済み状態を確認できないため「${action}」を中止しました。現在の問題だけを再確認しましたが通信に失敗しました。少し待って再実行してください。詳細：${error?.message||error}`);
   }
   devReviewLastError=String(error?.message||error);
  }
- if(isDevQuestionConfirmed(q,examId,part)){
-  throw new Error(`この問題は「確認済み」です。${action}する場合は、先に確認済みフラグをOFFにしてください。修正済みチェックとは別の保護状態です。`);
+ const confirmed=isDevQuestionConfirmed(q,examId,part);
+ devRememberConfirmedBaseline(q,confirmed,examId,part);
+ if(confirmed&&!devActionAllowsConfirmedPr(action)){
+  throw new Error(`この問題は「確認済み」です。${action}は保護されています。手動で問題内容を編集してPRへ反映することはできますが、AI再生成・画像切り取り・画像リセットを行う場合は、先に確認済みフラグをOFFにしてください。`);
  }
- return true;
+ return {confirmed,confirmedPrAllowed:confirmed&&devActionAllowsConfirmedPr(action)};
 }
 
 function devReviewStatusText(){
@@ -5336,6 +5360,7 @@ async function devRefreshEditorQuestionFlags(force=false){
  if(!q)return;
  try{
   await loadDevQuestionFlags(q,force,devExamId,devPart);
+  devRememberConfirmedBaseline(q,isDevQuestionConfirmed(q,devExamId,devPart),devExamId,devPart);
  }catch(error){
   devReviewLastError=String(error?.message||error);
  }finally{
@@ -5345,12 +5370,17 @@ async function devRefreshEditorQuestionFlags(force=false){
 async function toggleDevEditorFlag(flagType,checked){
  const q=devCurrentQuestion();
  if(!q)return;
+ const beforeFlags=devQuestionWorkFlags(q,devExamId,devPart);
+ devRememberConfirmedBaseline(q,beforeFlags.confirmed,devExamId,devPart);
  const inputs=[...document.querySelectorAll('.dev-editor-flag-checkbox')];
  inputs.forEach(input=>input.disabled=true);
  try{
   await saveDevQuestionFlag(q,flagType,checked,devExamId,devPart);
   devSyncEditorFlagControls(q);
-  if($('devStatus'))$('devStatus').innerHTML=`<span class="status-ok">${escapeHtml(DEV_WORK_FLAG_TYPES[flagType]?.label||flagType)}を${checked?'ON':'OFF'}にしました。問題欄のフラグをCloudflareへ同期しました。</span>`;
+  const extra=flagType==='confirmed'&&checked
+   ?' この問題を今回の最終確認で確認済みにした場合もPR作成できます。編集開始時から確認済みだった問題を変更するPRには注意表記が付きます。'
+   :'';
+  if($('devStatus'))$('devStatus').innerHTML=`<span class="status-ok">${escapeHtml(DEV_WORK_FLAG_TYPES[flagType]?.label||flagType)}を${checked?'ON':'OFF'}にしました。問題欄のフラグをCloudflareへ同期しました。${escapeHtml(extra)}</span>`;
  }catch(error){
   devReviewLastError=String(error?.message||error);
   devSyncEditorFlagControls(q);
@@ -5373,7 +5403,7 @@ function devRenderEditor(){
  </div>`).join('');
  $('devEditorBasic').innerHTML=`<h3>問題・解答・画像の設定</h3>
  ${devEditorFlagBarHtml(editorFlags,'problem')}
- <div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み保護中：内容変更・AI再生成・画像切り取り・PR反映は行いません。変更する場合は確認済みフラグをOFFにしてください。修正済みとは別の状態です。</div>
+ <div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み：AI再生成・画像切り取り・画像リセットは保護中です。手動編集とPR作成は可能です。編集開始時から確認済みだった問題を変更するPRには「確認済み問題の変更」と表記します。修正済みとは別の状態です。</div>
  <div class="dev-field"><label>問題文</label><textarea id="devStem" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.stem||''))}</textarea>${devLatexToolbarHtml('devStem')}</div>
  <div class="dev-field"><label>問題文の注釈（任意）</label><textarea id="devAnnotation" class="latex-input" data-latex-input="true" placeholder="例：表記バグがあるため、正しい問題文は画像を参照してください。">${escapeHtml(normalizeLatexBackslashes(questionAnnotation(q)))}</textarea>${devLatexToolbarHtml('devAnnotation')}</div>
  <div class="latex-backslash-note"><b>日本語環境の入力について：</b>「¥」または「￥」に見えても、LaTeX入力欄では自動的にバックスラッシュ「&#92;」へ変換します。入力補助ボタンから記法を挿入することもできます。</div>
@@ -5850,6 +5880,65 @@ function devQuestionLabel(examId=devExamId,part=devPart,q={}){
  const title=rec?.title || String(examId||'');
  return `${title} ${partName(part||'am')} 第${q?.number||'?'}問`;
 }
+
+function devPrConfirmationGroups(items){
+ const existing=[];
+ const newly=[];
+ for(const item of items||[]){
+  const before=item.confirmedBeforeEdit;
+  const now=Boolean(item.confirmedAtPr);
+  if(before===true){
+   existing.push(item);
+  }else if(before===false&&now){
+   newly.push(item);
+  }else if(before===null&&now){
+   existing.push({...item,confirmationUnknown:true});
+  }
+ }
+ return {existing,newly};
+}
+function devPrConfirmationSections(items){
+ const groups=devPrConfirmationGroups(items);
+ const lines=[];
+ if(groups.existing.length){
+  lines.push('## 確認済み問題の変更','');
+  groups.existing.forEach(item=>lines.push(`- ⚠️ ${item.label}：${item.confirmationUnknown?'編集開始時の状態を特定できませんが、PR作成時点で確認済みです':'編集開始時から確認済みの問題を変更します'}`));
+  lines.push('');
+ }
+ if(groups.newly.length){
+  lines.push('## 確認済みへの移行','');
+  groups.newly.forEach(item=>lines.push(`- ✅ ${item.label}：今回の最終確認で確認済みフラグをONにしました`));
+  lines.push('');
+ }
+ return lines;
+}
+function devEnsurePrConfirmationNotation(body,items){
+ let text=String(body||'').trim();
+ const sections=devPrConfirmationSections(items);
+ if(!sections.length)return text;
+ const missing=[];
+ const groups=devPrConfirmationGroups(items);
+ if(groups.existing.length&&!/^## 確認済み問題の変更$/m.test(text)){
+  missing.push('## 確認済み問題の変更','',...groups.existing.map(item=>`- ⚠️ ${item.label}：${item.confirmationUnknown?'編集開始時の状態を特定できませんが、PR作成時点で確認済みです':'編集開始時から確認済みの問題を変更します'}`),'');
+ }
+ if(groups.newly.length&&!/^## 確認済みへの移行$/m.test(text)){
+  missing.push('## 確認済みへの移行','',...groups.newly.map(item=>`- ✅ ${item.label}：今回の最終確認で確認済みフラグをONにしました`),'');
+ }
+ if(!missing.length)return text;
+ const confirmationIndex=text.search(/^## 確認\s*$/m);
+ if(confirmationIndex>=0){
+  return `${text.slice(0,confirmationIndex).trimEnd()}\n\n${missing.join('\n').trim()}\n\n${text.slice(confirmationIndex).trimStart()}`.trim();
+ }
+ return `${text}\n\n${missing.join('\n').trim()}`.trim();
+}
+function devMarkPrConfirmationBaseline(items){
+ for(const item of items||[]){
+  const q=item.question||item.questionPatch||{number:item.number};
+  const ref=devReviewQuestionRef(q,item.examId,item.part);
+  devConfirmedBaseline[ref.key]=Boolean(item.confirmedAtPr);
+ }
+}
+
 function devBuildPrDefaultTitle(){
  return '[ME2問題編集] 複数問題を修正';
 }
@@ -5864,6 +5953,7 @@ function devBuildPrDefaultBodyFromItems(items){
   ...[...new Set(arr.map(item=>item.jsonPath))].map(p=>`- \`${p}\``),
   ...arr.filter(item=>item.imagePath).map(item=>`- \`${item.imagePath}\``),
   '',
+  ...devPrConfirmationSections(arr),
   '## 確認',
   '- [ ] 問題文・選択肢を確認',
   '- [ ] 正答を確認',
@@ -6082,6 +6172,7 @@ async function devPrepareCurrentBatchItem(){
   };
  }
  const editSummary=String($('devPrEditSummary')?.value||'問題内容・解説を修正').trim()||'問題内容・解説を修正';
+ const confirmation=devConfirmedStatusForPr(devCurrentQuestion(),devExamId,devPart);
  return {
   key:devPrItemKey(devExamId,devPart,currentIndex),
   examId:devExamId,
@@ -6095,6 +6186,8 @@ async function devPrepareCurrentBatchItem(){
   question:qForCommit,
   imagePath,
   imageFile,
+  confirmedBeforeEdit:confirmation.confirmedBeforeEdit,
+  confirmedAtPr:confirmation.confirmedAtPr,
   updatedAt:new Date().toISOString()
  };
 }
@@ -6109,7 +6202,14 @@ async function devAddCurrentToPrBatch(options={}){
   saveDevPrBatch(batch);
   if($('devPrTitle')&&!$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle();
   if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
-  if(!silent)devSetPrStatus(`対象：${escapeHtml(item.label)}<br>一括PRリストへ追加・更新しました。画像データはブラウザの専用保存領域へ保存されています。`,true);
+  if(!silent){
+   const confirmation=item.confirmedBeforeEdit===true
+    ?'<br>⚠️ 編集開始時から確認済みの問題です。PR本文へ「確認済み問題の変更」と表記します。'
+    :item.confirmedBeforeEdit===false&&item.confirmedAtPr
+     ?'<br>✅ 今回の最終確認で確認済みに設定した問題です。PR作成できます。'
+     :'';
+   devSetPrStatus(`対象：${escapeHtml(item.label)}<br>一括PRリストへ追加・更新しました。画像データはブラウザの専用保存領域へ保存されています。${confirmation}`,true);
+  }
   return item;
  }catch(e){
   if(!silent)devSetPrStatus(`一括PRリストへの追加に失敗しました：${escapeHtml(e.message||e)}`);
@@ -6145,9 +6245,17 @@ async function devClearPrBatch(){
 }
 function devRenderPrItem(item){
  const img=item.imagePath?`<br>画像：<span class="code">${escapeHtml(item.imagePath)}</span>`:'';
+ const confirmation=item.confirmedBeforeEdit===true
+  ?'<div class="dev-confirmed-protection">⚠️ 編集開始時から確認済みの問題です。変更PRには注意表記を付けます。</div>'
+  :item.confirmedBeforeEdit===false&&item.confirmedAtPr
+   ?'<div class="status-ok">✅ 今回の最終確認で確認済みに設定しました。PR作成できます。</div>'
+   :item.confirmedBeforeEdit===null&&item.confirmedAtPr
+    ?'<div class="status-warn">⚠️ PR作成時点で確認済みです。変更PRとして注意表記します。</div>'
+    :'';
  return `<div class="dev-pr-item">
   <h4>${escapeHtml(item.label)}</h4>
   <p class="small">編集箇所：${escapeHtml(item.editSummary||'編集')}<br>JSON：<span class="code">${escapeHtml(item.jsonPath)}</span>${img}</p>
+  ${confirmation}
   <div class="dev-pr-actions" style="margin-top:8px">
     <button class="ghost" type="button" onclick="devOpenBatchItem('${escapeHtml(item.key)}')">開く</button>
     <button class="danger" type="button" onclick="devRemovePrBatchItem('${escapeHtml(item.key)}')">削除</button>
@@ -6201,7 +6309,10 @@ function renderDevPrBatchList(){
  if(summary){
   const jsonCount=new Set(batch.items.map(x=>x.jsonPath)).size;
   const imageCount=batch.items.filter(x=>x.imagePath).length;
-  summary.innerHTML=`一括PRリスト：<b>${batch.items.length}</b>問 / JSON <b>${jsonCount}</b>件 / 画像 <b>${imageCount}</b>件`;
+  const groups=devPrConfirmationGroups(batch.items);
+  const confirmedText=groups.existing.length?` / 確認済み変更 <b>${groups.existing.length}</b>件`:'';
+  const newlyText=groups.newly.length?` / 確認済みへ移行 <b>${groups.newly.length}</b>件`:'';
+  summary.innerHTML=`一括PRリスト：<b>${batch.items.length}</b>問 / JSON <b>${jsonCount}</b>件 / 画像 <b>${imageCount}</b>件${confirmedText}${newlyText}`;
  }
  if(list){
   list.innerHTML=batch.items.length?batch.items.map(devRenderPrItem).join(''):'<p class="small">まだ一括PRリストに問題がありません。</p>';
@@ -6214,13 +6325,16 @@ async function devBuildBatchPayload(){
   batch={items:[current]};
  }
  const batchScopes=[...new Map(batch.items.map(item=>[`${item.examId}:${item.part}`,{examId:String(item.examId),part:String(item.part)}])).values()];
- try{await loadDevReviewFlagsForScopes(batchScopes,true)}catch(error){throw new Error(`確認済み保護を確認できないためPR作成を中止しました：${error?.message||error}`)}
+ try{await loadDevReviewFlagsForScopes(batchScopes,true)}catch(error){throw new Error(`確認済み状態を確認できないためPR作成を中止しました：${error?.message||error}`)}
  for(const item of batch.items){
   const pack=await getPart(item.examId,item.part);
-  const q=pack?.questions?.[Number(item.index)||0];
-  if(q&&isDevQuestionConfirmed(q,item.examId,item.part)){
-   throw new Error(`${item.label} は「確認済み」のためPRへ送信しません。確認済みフラグをOFFにするか、一括PRリストから削除してください。`);
+  const q=pack?.questions?.[Number(item.index)||0]||item.question||{number:item.number};
+  const ref=devReviewQuestionRef(q,item.examId,item.part);
+  const now=isDevQuestionConfirmed(q,item.examId,item.part);
+  if(typeof item.confirmedBeforeEdit!=='boolean'){
+   item.confirmedBeforeEdit=typeof devConfirmedBaseline[ref.key]==='boolean'?devConfirmedBaseline[ref.key]:(now?null:false);
   }
+  item.confirmedAtPr=Boolean(now);
  }
  await devEnsureBatchImagesStored(batch);
  saveDevPrBatch(batch);
@@ -6244,7 +6358,9 @@ async function devBuildBatchPayload(){
    questionPatch:item.questionPatch||null,
    label:item.label,
    editSummary:item.editSummary,
-   commitMessage:item.commitMessage
+   commitMessage:item.commitMessage,
+   confirmedBeforeEdit:typeof item.confirmedBeforeEdit==='boolean'?item.confirmedBeforeEdit:null,
+   confirmedAtPr:Boolean(item.confirmedAtPr)
   });
 
   if(item.imageFile){
@@ -6273,7 +6389,9 @@ async function devBuildBatchPayload(){
   }
  }
  const title=String($('devPrTitle')?.value||devBuildPrDefaultTitle()).trim();
- const body=String($('devPrBody')?.value||devBuildPrDefaultBodyFromItems(batch.items)).trim();
+ const bodyBase=String($('devPrBody')?.value||devBuildPrDefaultBodyFromItems(batch.items)).trim();
+ const body=devEnsurePrConfirmationNotation(bodyBase,batch.items);
+ if($('devPrBody'))$('devPrBody').value=body;
  const draft=Boolean($('devPrDraft')?.checked);
  return {title,body,draft,items:batch.items,jsonUpdates:[...byJson.values()],files:[...filesByPath.values()]};
 }
@@ -6367,6 +6485,12 @@ async function devCreateGitHubPr(){
  try{
   await devAddCurrentToPrBatch({silent:true});
   const payload=await devBuildBatchPayload();
+  const confirmedGroups=devPrConfirmationGroups(payload.items);
+  if(confirmedGroups.existing.length){
+   const labels=confirmedGroups.existing.map(item=>`・${item.label}`).join('\n');
+   const proceed=confirm(`編集開始時から確認済みの問題を ${confirmedGroups.existing.length}件 変更PRとして送信します。\nPR本文には「確認済み問題の変更」と明記します。\n\n${labels}\n\nこのままPR作成を続けますか？`);
+   if(!proceed)return;
+  }
   if(!payload.title)throw new Error('PRタイトルを入力してください。');
   if(!payload.items.length)throw new Error('一括PRリストに問題がありません。');
 
@@ -6468,6 +6592,7 @@ async function devCreateGitHubPr(){
   },{attempts:3,timeout:120000});
 
   payload.items.forEach(devApplyQuestionToLocal);
+  devMarkPrConfirmationBaseline(payload.items);
   if(payload.items.some(x=>x.key===devCurrentPrKey())){
    const current=payload.items.find(x=>x.key===devCurrentPrKey());
    if($('devImage'))$('devImage').value=current?.question?.image||'';
@@ -6846,7 +6971,7 @@ function renderDevCheckResults(list){
   const checked=isDevIssueFixed(item);
   const lis=(item.issues||[]).slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity)).map(i=>`<li><b>${escapeHtml(i.field)}</b>：${escapeHtml(i.msg)} <span class="issue-badge ${severityClass(i.severity)}">${severityLabel(i.severity)}</span></li>`).join('');
   const stem=item.q?.stem?`<p class="small"><b>問題文：</b>${escapeHtml(String(item.q.stem).slice(0,140))}${String(item.q.stem).length>140?'…':''}</p>`:'';
-  const protectedNote=item.confirmed?'<div class="dev-confirmed-protection">確認済み保護中：自動再生成・PR反映・画像変更は行いません。修正済みチェックとは独立しています。</div>':'';
+  const protectedNote=item.confirmed?'<div class="dev-confirmed-protection">確認済み：AI再生成・画像の自動変更は保護中です。手動編集とPR作成は可能で、既に確認済みの問題を変更する場合はPRへ注意表記します。修正済みチェックとは独立しています。</div>':'';
   return `<div class="dev-issue-card issue-${sevClass} ${checked?'issue-fixed':''}">
     <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${sevClass}">${sevLabel}</span></h4>
     ${devWorkFlagBadges(item)}${protectedNote}

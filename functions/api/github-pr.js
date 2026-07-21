@@ -381,7 +381,9 @@ function normalizeJsonUpdates(jsonUpdates) {
       questionPatch: u.questionPatch && typeof u.questionPatch === 'object' ? u.questionPatch : null,
       label: String(u.label || ''),
       editSummary: String(u.editSummary || '編集'),
-      commitMessage: String(u.commitMessage || '')
+      commitMessage: String(u.commitMessage || ''),
+      confirmedBeforeEdit: typeof u.confirmedBeforeEdit === 'boolean' ? u.confirmedBeforeEdit : null,
+      confirmedAtPr: Boolean(u.confirmedAtPr)
     })).filter(u => u.question || u.questionPatch) : []
   })).filter(g => g.updates.length);
 }
@@ -470,9 +472,7 @@ async function putJsonUpdateGroup(context, owner, repo, branch, group, committer
     }
 
     const currentQuestion = pack.questions[idx];
-    if (await questionIsConfirmed(context, group.examId, group.part, currentQuestion)) {
-      throw new GitHubApiError(`${path} の第${currentQuestion?.number || update.number || '?'}問は「確認済み」のため変更できません。確認済みフラグをOFFにしてから再実行してください。`, 409);
-    }
+    const confirmedAtCommit = await questionIsConfirmed(context, group.examId, group.part, currentQuestion);
 
     if (update.question) {
       pack.questions[idx] = update.question;
@@ -486,7 +486,14 @@ async function putJsonUpdateGroup(context, owner, repo, branch, group, committer
       index: idx,
       number: update.number || pack.questions[idx]?.number,
       label: update.label,
-      editSummary: update.editSummary
+      editSummary: update.editSummary,
+      confirmedBeforeEdit: update.confirmedBeforeEdit,
+      confirmedAtCommit,
+      confirmationStatus: update.confirmedBeforeEdit === true
+        ? 'existing_confirmed_change'
+        : confirmedAtCommit
+          ? (update.confirmedBeforeEdit === false ? 'newly_confirmed' : 'confirmed_unknown')
+          : 'unconfirmed'
     });
   }
 
@@ -539,15 +546,57 @@ function normalizePrLine(line) {
   return String(line || '').replace(/\s+/g, ' ').trim();
 }
 
+
+function normalizeConfirmationAnnotation(item) {
+  const status = String(item?.confirmationStatus || '');
+  if (!['existing_confirmed_change', 'newly_confirmed', 'confirmed_unknown'].includes(status)) return null;
+  return {
+    key: `${item?.path || ''}:${item?.number || ''}:${status}`,
+    label: String(item?.label || `第${item?.number || '?'}問`),
+    number: item?.number,
+    status
+  };
+}
+function mergeConfirmationAnnotations(current, additions) {
+  const map = new Map();
+  for (const raw of [...(current || []), ...(additions || [])]) {
+    const item = normalizeConfirmationAnnotation(raw);
+    if (item) map.set(item.key, item);
+  }
+  return [...map.values()];
+}
+function appendConfirmationSections(body, annotations) {
+  const items = mergeConfirmationAnnotations([], annotations);
+  if (!items.length) return String(body || '').trim();
+  let text = String(body || '').trim();
+  const existing = items.filter(x => x.status !== 'newly_confirmed');
+  const newly = items.filter(x => x.status === 'newly_confirmed');
+  const blocks = [];
+  if (existing.length && !/^## 確認済み問題の変更$/m.test(text)) {
+    blocks.push('## 確認済み問題の変更', '', ...existing.map(item => `- ⚠️ ${item.label}：${item.status === 'confirmed_unknown' ? 'PR送信時点で確認済みの問題を変更' : '編集開始時から確認済みの問題を変更'}`), '');
+  }
+  if (newly.length && !/^## 確認済みへの移行$/m.test(text)) {
+    blocks.push('## 確認済みへの移行', '', ...newly.map(item => `- ✅ ${item.label}：今回の最終確認で確認済みフラグをON`), '');
+  }
+  if (!blocks.length) return text;
+  const index = text.search(/^## 確認\s*$/m);
+  if (index >= 0) {
+    return `${text.slice(0, index).trimEnd()}\n\n${blocks.join('\n').trim()}\n\n${text.slice(index).trimStart()}`.slice(0, 6000);
+  }
+  return `${text}\n\n${blocks.join('\n').trim()}`.trim().slice(0, 6000);
+}
+
 function parsePrSections(body) {
   const text = String(body || '').replace(PR_MARKER, '').replace(/---+/g, '\n').trim();
-  const sections = { fixes: [], files: [], checks: [] };
+  const sections = { fixes: [], files: [], confirmedChanges: [], confirmedTransitions: [], checks: [] };
   let current = '';
   for (const rawLine of text.split(/\r?\n/)) {
     const line = rawLine.trim();
     if (!line) continue;
     if (/^#+\s*修正内容/.test(line)) { current = 'fixes'; continue; }
     if (/^#+\s*送信ファイル/.test(line)) { current = 'files'; continue; }
+    if (/^#+\s*確認済み問題の変更/.test(line)) { current = 'confirmedChanges'; continue; }
+    if (/^#+\s*確認済みへの移行/.test(line)) { current = 'confirmedTransitions'; continue; }
     if (/^#+\s*確認/.test(line)) { current = 'checks'; continue; }
     if (/^#+\s*/.test(line)) { current = ''; continue; }
     if (!current) continue;
@@ -577,10 +626,14 @@ function mergePrBody(oldBody, newBody) {
 
   const fixes = [];
   const files = [];
+  const confirmedChanges = [];
+  const confirmedTransitions = [];
   const checks = [];
 
   [...oldSections.fixes, ...newSections.fixes].forEach(line => uniquePush(fixes, line));
   [...oldSections.files, ...newSections.files].forEach(line => uniquePush(files, line));
+  [...oldSections.confirmedChanges, ...newSections.confirmedChanges].forEach(line => uniquePush(confirmedChanges, line));
+  [...oldSections.confirmedTransitions, ...newSections.confirmedTransitions].forEach(line => uniquePush(confirmedTransitions, line));
 
   const defaultChecks = [
     '- [ ] 問題文・選択肢を確認',
@@ -600,6 +653,8 @@ function mergePrBody(oldBody, newBody) {
     '',
     ...(files.length ? files : ['- 送信ファイルなし']),
     '',
+    ...(confirmedChanges.length ? ['## 確認済み問題の変更', '', ...confirmedChanges, ''] : []),
+    ...(confirmedTransitions.length ? ['## 確認済みへの移行', '', ...confirmedTransitions, ''] : []),
     '## 確認',
     '',
     ...checks
@@ -658,7 +713,9 @@ function publicJob(job) {
     pullRequestNumber: job.pullNumber || null,
     pullRequestUrl: job.pullUrl || null,
     finalized: Boolean(job.finalized),
-    files: job.files || []
+    files: job.files || [],
+    confirmationAnnotations: job.confirmationAnnotations || [],
+    confirmedChangeCount: (job.confirmationAnnotations || []).filter(x => x.status !== 'newly_confirmed').length
   };
 }
 async function startPrJob(context, verified, body) {
@@ -702,6 +759,7 @@ async function startPrJob(context, verified, body) {
     pullTitle: pull?.title || '',
     pullBody: pull?.body || '',
     files: [],
+    confirmationAnnotations: [],
     createdAt: new Date().toISOString(),
     finalized: false
   };
@@ -720,6 +778,9 @@ async function commitJsonForJob(context, verified, body) {
   const result = await putJsonUpdateGroup(
     context, job.owner, job.repo, job.branch, groups[0], defaultCommitter(context.env || {})
   );
+  const annotations = (result.touched || []).map(item => normalizeConfirmationAnnotation({ ...item, path: result.path })).filter(Boolean);
+  job.confirmationAnnotations = mergeConfirmationAnnotations(job.confirmationAnnotations || [], annotations);
+  job.body = appendConfirmationSections(job.body || '', job.confirmationAnnotations);
   job.files = [...(job.files || []).filter(x => x.path !== result.path), result];
   await savePrJob(context, job);
   return { ...publicJob(job), ...result };
@@ -752,7 +813,8 @@ async function ensurePrForJob(context, verified, body) {
     return publicJob(job);
   }
 
-  const prBody = mergePrBody('', job.body || '');
+  const annotatedBody = appendConfirmationSections(job.body || '', job.confirmationAnnotations || []);
+  const prBody = mergePrBody('', annotatedBody);
   const pull = await gh(context, 'POST', `/repos/${encodeURIComponent(job.owner)}/${encodeURIComponent(job.repo)}/pulls`, {
     title: job.title,
     head: job.branch,
@@ -775,6 +837,7 @@ async function finalizePrJob(context, verified, body) {
 
   if (body.title) job.title = String(body.title).trim().slice(0, 160);
   if (body.body !== undefined) job.body = String(body.body || '').trim().slice(0, 6000);
+  job.body = appendConfirmationSections(job.body || '', job.confirmationAnnotations || []);
   if (body.draft !== undefined) job.draft = body.draft !== false;
 
   if (!job.pullNumber) {
@@ -782,6 +845,7 @@ async function finalizePrJob(context, verified, body) {
   }
 
   const refreshed = await loadPrJob(context, verified, job.id);
+  refreshed.body = appendConfirmationSections(refreshed.body || '', refreshed.confirmationAnnotations || []);
   const pull = await patchPull(
     context,
     refreshed.owner,
