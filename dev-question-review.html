@@ -85,7 +85,7 @@ html[data-theme="dark"] .annotation{background:#451a03;color:#fde68a}
   <header class="head">
     <section class="card">
       <h1>問題確認</h1>
-      <div class="small">確認専用画面です。問題内容は編集せず、作業フラグのON・OFFと従来の編集画面への移動だけを行います。</div>
+      <div class="small">確認専用画面です。問題内容は編集せず、作業フラグのON・OFFと従来の編集画面への移動だけを行います。認証・フラグ同期に失敗した場合でも、問題本文は読み取り専用で表示します。</div>
       <div class="controls">
         <div class="field"><label>開始回</label><select id="fromExam"></select></div>
         <div class="field"><label>終了回</label><select id="toExam"></select></div>
@@ -142,6 +142,10 @@ window.addEventListener('storage',event=>{
 });
 
 const AUTH_KEY='me2_dev_auth';
+const REVIEW_BOOTSTRAP_KEY='me2_dev_question_review_bootstrap_v2';
+let developerSessionAvailable=false;
+let flagSyncAvailable=false;
+let startupWarnings=[];
 const FLAG_TYPES={
  review:{label:'要確認',className:'review'},
  imageChange:{label:'画像変更',className:'image'},
@@ -154,6 +158,48 @@ let currentPage=1;
 
 const $=id=>document.getElementById(id);
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+
+function readReviewBootstrap(){
+ try{
+  const value=JSON.parse(localStorage.getItem(REVIEW_BOOTSTRAP_KEY)||'null');
+  if(!value||Number(value.version)!==2)return null;
+  return value;
+ }catch(_){return null}
+}
+function validExamsIndex(value){
+ return Boolean(value&&Array.isArray(value.exams)&&value.exams.length);
+}
+function setSelectOptions(select,records,selectedValue='',fallback='first'){
+ if(!select)return;
+ const previous=String(selectedValue||select.value||'');
+ select.innerHTML=records.map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title||ex.id)}</option>`).join('');
+ if(records.some(ex=>String(ex.id)===previous))select.value=previous;
+ else if(records.length)select.value=String(fallback==='last'?records[records.length-1].id:records[0].id);
+}
+function applyFilterValues(filters={}){
+ if(['am','pm','both'].includes(String(filters.part||'')))$('partMode').value=String(filters.part);
+ if(['all','flags','review','image','ai','none'].includes(String(filters.flag||'')))$('flagMode').value=String(filters.flag);
+ if(Number(filters.qFrom)>0)$('qFrom').value=String(Number(filters.qFrom));
+ if(Number(filters.qTo)>0)$('qTo').value=String(Number(filters.qTo));
+}
+function updateFlagUiAvailability(){
+ const flagSelect=$('flagMode');
+ if(flagSelect){
+  for(const option of flagSelect.options){
+   option.disabled=!flagSyncAvailable&&option.value!=='all';
+  }
+  if(!flagSyncAvailable&&flagSelect.value!=='all')flagSelect.value='all';
+ }
+ document.querySelectorAll('.flag-controls input').forEach(input=>input.disabled=!flagSyncAvailable);
+}
+function appendWarning(message){
+ const text=String(message||'').trim();
+ if(text&&!startupWarnings.includes(text))startupWarnings.push(text);
+}
+function statusWithWarnings(base){
+ return startupWarnings.length?`${base}\n\n注意：\n- ${startupWarnings.join('\n- ')}`:base;
+}
+
 function getAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch(_){return null}}
 function headers(){const auth=getAuth();return auth?.sessionToken?{'X-ME2-Dev-Session':auth.sessionToken}:{}}
 function examNumber(id){const m=String(id||'').match(/\d+/);return m?Number(m[0]):0}
@@ -235,29 +281,36 @@ async function loadPartPack(exam,part){
 }
 async function verifyDeveloper(){
  const auth=getAuth();
- if(!auth?.sessionToken)throw new Error('開発者ログイン情報がありません。元の画面で開発者ログインしてください。');
- const response=await fetch('/api/dev-auth',{headers:headers(),cache:'no-store'});
+ if(!auth?.sessionToken)throw new Error('開発者ログイン情報がありません。');
+ const response=await fetch('/api/dev-auth',{headers:headers(),cache:'no-store',credentials:'same-origin'});
  const data=await response.json().catch(()=>({}));
  if(!response.ok||!data.ok)throw new Error(data.error||'開発者セッションが無効または期限切れです。');
+ developerSessionAvailable=true;
+ return true;
 }
 async function loadFlags(){
  const data=await fetchJson('/api/dev-review',{headers:headers()});
  const next=Object.create(null);
  for(const item of data.items||[])if(item?.key)next[String(item.key)]={...item,flags:normalizeFlags(item)};
  flagItems=next;
+ flagSyncAvailable=true;
+ updateFlagUiAvailability();
+ return next;
 }
-function fillExamOptions(){
+function fillExamOptions(preferred={}){
  const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
- const html=records.map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title||ex.id)}</option>`).join('');
- $('fromExam').innerHTML=html;$('toExam').innerHTML=html;
+ if(!records.length)return;
  const params=new URLSearchParams(location.search);
- const from=params.get('from'),to=params.get('to');
- $('fromExam').value=records.some(x=>String(x.id)===from)?from:String(records[0]?.id||'');
- $('toExam').value=records.some(x=>String(x.id)===to)?to:String(records[records.length-1]?.id||'');
- if(['am','pm','both'].includes(params.get('part'))) $('partMode').value=params.get('part');
- if(['all','flags','review','image','ai','none'].includes(params.get('flag'))) $('flagMode').value=params.get('flag');
- if(Number(params.get('qFrom'))>0)$('qFrom').value=String(Number(params.get('qFrom')));
- if(Number(params.get('qTo'))>0)$('qTo').value=String(Number(params.get('qTo')));
+ const from=String(params.get('from')||preferred.from||$('fromExam')?.value||'');
+ const to=String(params.get('to')||preferred.to||$('toExam')?.value||'');
+ setSelectOptions($('fromExam'),records,from,'first');
+ setSelectOptions($('toExam'),records,to,'last');
+ applyFilterValues({
+  part:params.get('part')||preferred.part,
+  flag:params.get('flag')||preferred.flag,
+  qFrom:params.get('qFrom')||preferred.qFrom,
+  qTo:params.get('qTo')||preferred.qTo
+ });
 }
 function selectedExams(){
  const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
@@ -277,11 +330,17 @@ function matchesFlag(flags,mode){
 }
 async function runReview(){
  try{
-  setStatus('問題データを読み込み、抽出しています。');
+  if(!validExamsIndex(examsIndex))throw new Error('試験一覧がまだ読み込まれていません。');
+  setStatus(statusWithWarnings('問題データを読み込み、抽出しています。'));
   currentPage=1;
   const qFrom=Math.max(1,Number($('qFrom').value||1));
   const qTo=Math.max(qFrom,Number($('qTo').value||999));
-  const mode=$('flagMode').value;
+  let mode=$('flagMode').value;
+  if(!flagSyncAvailable&&mode!=='all'){
+   appendWarning('作業フラグを同期できないため、抽出条件を「範囲内の全問題」に変更しました。');
+   mode='all';
+   $('flagMode').value='all';
+  }
   const results=[];
   const loadErrors=[];
   let loadedParts=0;
@@ -307,22 +366,31 @@ async function runReview(){
 
   allResults=results;
   render();
+  updateFlagUiAvailability();
+  let message=`抽出完了：${results.length}問（${loadedParts}区分を読み込み）`;
   if(loadErrors.length){
-   setStatus(`抽出完了：${results.length}問。${loadedParts}区分を読み込み、${loadErrors.length}区分で失敗しました。\n${loadErrors.join('\n')}`);
-  }else{
-   setStatus(`抽出完了：${results.length}問（${loadedParts}区分を読み込み）`);
+   message=`抽出完了：${results.length}問。${loadedParts}区分を読み込み、${loadErrors.length}区分で失敗しました。\n${loadErrors.join('\n')}`;
   }
+  setStatus(statusWithWarnings(message));
  }catch(error){
-  setStatus(`読み込みに失敗しました：${error?.message||error}`);
+  setStatus(statusWithWarnings(`読み込みに失敗しました：${error?.message||error}`));
   $('results').innerHTML='<div class="card empty">問題を表示できませんでした。表示されたパスとHTTPエラーを確認してください。</div>';
  }
 }
 async function reloadFlagsAndReview(){
  try{
-  setStatus('作業フラグをCloudflareから再同期しています。');
+  setStatus('開発者セッションと作業フラグを再同期しています。');
+  await verifyDeveloper();
   await loadFlags();
+  startupWarnings=startupWarnings.filter(message=>!message.includes('作業フラグ')&&!message.includes('開発者セッション'));
   await runReview();
- }catch(error){setStatus(`フラグ同期に失敗しました：${error?.message||error}`)}
+ }catch(error){
+  developerSessionAvailable=false;
+  flagSyncAvailable=false;
+  appendWarning(`作業フラグを同期できません：${error?.message||error}`);
+  updateFlagUiAvailability();
+  await runReview();
+ }
 }
 function renderSummary(){
  const counts={review:0,imageChange:0,aiRegenerate:0,any:0};
@@ -365,7 +433,7 @@ function renderCard(item){
   </div>`;
  }).join('');
  const flagControls=Object.entries(FLAG_TYPES).map(([type,config])=>
-  `<label class="flag flag-${config.className}"><input type="checkbox" ${item.flags[type]?'checked':''} onchange="toggleFlag('${escapeHtml(item.examId)}','${item.part}',${item.index},'${type}',this.checked,this)"> ${config.label}</label>`
+  `<label class="flag flag-${config.className}"><input type="checkbox" ${item.flags[type]?'checked':''} ${flagSyncAvailable?'':'disabled'} onchange="toggleFlag('${escapeHtml(item.examId)}','${item.part}',${item.index},'${type}',this.checked,this)"> ${config.label}</label>`
  ).join('');
  return `<article class="question-card" data-key="${escapeHtml(flagKey(item.examId,item.part,q))}">
   <div class="question-head">
@@ -397,6 +465,11 @@ function changePage(page){
  currentPage=page;render();scrollTo({top:0,behavior:'smooth'});
 }
 async function toggleFlag(examId,part,index,type,checked,input){
+ if(!flagSyncAvailable){
+  input.checked=!checked;
+  setStatus(statusWithWarnings('作業フラグは現在読み取り専用です。「フラグを再同期」を押してください。'));
+  return;
+ }
  const item=allResults.find(x=>x.examId===String(examId)&&x.part===part&&x.index===Number(index));
  if(!item)return;
  input.disabled=true;
@@ -423,11 +496,11 @@ async function toggleFlag(examId,part,index,type,checked,input){
   }else{
    renderSummary();
   }
-  setStatus(`${item.title} ${partName(part)} 第${item.number}問：${FLAG_TYPES[type].label}を${checked?'ON':'OFF'}にしました。`);
+  setStatus(statusWithWarnings(`${item.title} ${partName(part)} 第${item.number}問：${FLAG_TYPES[type].label}を${checked?'ON':'OFF'}にしました。`));
  }catch(error){
   input.checked=!checked;
-  setStatus(`フラグを更新できませんでした：${error?.message||error}`);
- }finally{input.disabled=false}
+  setStatus(statusWithWarnings(`フラグを更新できませんでした：${error?.message||error}`));
+ }finally{input.disabled=!flagSyncAvailable}
 }
 function openEditor(examId,part,index){
  const payload={type:'ME2_OPEN_DEV_EDITOR',examId,part,index:Number(index)||0};
@@ -441,22 +514,60 @@ function openEditor(examId,part,index){
 }
 async function init(){
  applyTheme(getStoredTheme());
- try{
-  setStatus('開発者セッションを確認しています。');
-  await verifyDeveloper();
-  setStatus('試験一覧を読み込んでいます。');
-  examsIndex=await loadExamsIndex();
-  if(!Array.isArray(examsIndex.exams)||!examsIndex.exams.length){
-   throw new Error('exams_index.jsonに試験情報がありません。');
-  }
-  await loadFlags();
-  fillExamOptions();
-  $('pageSize').addEventListener('change',()=>{currentPage=1;render()});
-  await runReview();
- }catch(error){
-  setStatus(`問題確認を開始できません：${error?.message||error}`);
-  $('results').innerHTML='<div class="card empty">元の画面で開発者ログインを確認してください。試験一覧または問題JSONの読み込みエラーの場合は、上のエラーに表示されたパスを確認してください。</div>';
+ const bootstrap=readReviewBootstrap();
+ const preferred=bootstrap?.filters||{};
+ if(bootstrap?.theme==='dark'||bootstrap?.theme==='light')applyTheme(bootstrap.theme);
+
+ // 最初にメイン画面から渡された試験一覧を描画する。
+ // 認証APIやフラグAPIが失敗しても、プルダウンを空にしない。
+ if(validExamsIndex(bootstrap?.examsIndex)){
+  examsIndex=bootstrap.examsIndex;
+  fillExamOptions(preferred);
+  setStatus('メイン画面から試験一覧を引き継ぎました。最新データを確認しています。');
  }
+
+ try{
+  const latest=await loadExamsIndex();
+  if(validExamsIndex(latest)){
+   const current={
+    from:$('fromExam')?.value||preferred.from,
+    to:$('toExam')?.value||preferred.to,
+    part:$('partMode')?.value||preferred.part,
+    flag:$('flagMode')?.value||preferred.flag,
+    qFrom:$('qFrom')?.value||preferred.qFrom,
+    qTo:$('qTo')?.value||preferred.qTo
+   };
+   examsIndex=latest;
+   fillExamOptions(current);
+  }
+ }catch(error){
+  if(!validExamsIndex(examsIndex)){
+   setStatus(`問題確認を開始できません：試験一覧を読み込めません。\n${error?.message||error}`);
+   $('results').innerHTML='<div class="card empty">試験一覧を読み込めませんでした。元の開発モードから問題確認を開き直してください。</div>';
+   return;
+  }
+  appendWarning(`最新の試験一覧を取得できなかったため、メイン画面から引き継いだ一覧を使用しています：${error?.message||error}`);
+ }
+
+ if(!validExamsIndex(examsIndex)){
+  setStatus('問題確認を開始できません：試験一覧に問題回が登録されていません。');
+  return;
+ }
+ fillExamOptions(preferred);
+ $('pageSize').addEventListener('change',()=>{currentPage=1;render()});
+
+ // 認証・フラグ同期は問題データ表示の必須条件にしない。
+ try{
+  await verifyDeveloper();
+  await loadFlags();
+ }catch(error){
+  developerSessionAvailable=false;
+  flagSyncAvailable=false;
+  appendWarning(`作業フラグを同期できないため、フラグ操作は一時的に読み取り専用です：${error?.message||error}`);
+  updateFlagUiAvailability();
+ }
+
+ await runReview();
 }
 init();
 </script>

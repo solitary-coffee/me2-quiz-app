@@ -6718,14 +6718,26 @@ function setupCeExamLink(){
 }
 
 function openDevQuestionReviewWindow(){
- const params=new URLSearchParams({
+ const filters={
   from:String($('questionReviewFromExam')?.value||''),
   to:String($('questionReviewToExam')?.value||''),
   part:String($('questionReviewPartMode')?.value||'both'),
   flag:String($('questionReviewFlagMode')?.value||'all'),
   qFrom:String(Math.max(1,Number($('questionReviewNumberFrom')?.value||1))),
   qTo:String(Math.max(1,Number($('questionReviewNumberTo')?.value||60)))
- });
+ };
+ const params=new URLSearchParams(filters);
+ try{
+  localStorage.setItem('me2_dev_question_review_bootstrap_v2',JSON.stringify({
+   version:2,
+   savedAt:new Date().toISOString(),
+   theme:document.documentElement.getAttribute('data-theme')||(localStorage.getItem(THEME_KEY)||'light'),
+   filters,
+   examsIndex:examsIndex&&Array.isArray(examsIndex.exams)?examsIndex:null
+  }));
+ }catch(error){
+  console.warn('問題確認の初期データを保存できませんでした。',error);
+ }
  const url=`dev-question-review.html?${params.toString()}`;
  const opened=window.open(url,'me2QuestionReviewWindow','popup=yes,width=1500,height=980,resizable=yes,scrollbars=yes');
  if(!opened){
