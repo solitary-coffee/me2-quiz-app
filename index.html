@@ -97,7 +97,6 @@ window.MathJax = {
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;--accent2:#eef2ff;--good:#16a34a;--bad:#dc2626;--warn:#f59e0b;--shadow:0 8px 24px rgba(0,0,0,.045)}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic","Noto Sans JP",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:max(18px,env(safe-area-inset-bottom))}header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}.header-inner{max-width:1080px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 12px max(14px,env(safe-area-inset-left));display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}h1{font-size:18px;margin:0;line-height:1.35}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.badge,.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:13px;color:var(--muted)}main{max-width:1080px;margin:0 auto;padding:16px max(14px,env(safe-area-inset-right)) 76px max(14px,env(safe-area-inset-left))}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}.card h2{margin:0 0 10px;font-size:21px}.card h3{margin:0 0 8px;font-size:17px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.round-card,.part-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:16px;box-shadow:0 3px 12px rgba(0,0,0,.025)}.round-card{cursor:pointer}.round-card:hover{border-color:#93c5fd;background:#eff6ff}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}button{border:0;border-radius:16px;padding:13px 16px;min-height:52px;font-weight:800;cursor:pointer;background:var(--accent);color:#fff;font-size:16px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button.secondary{background:var(--accent2);color:#1d4ed8}button.ghost{background:#f3f4f6;color:#374151}button.danger{background:#fee2e2;color:#991b1b}button.warn{background:#fef3c7;color:#92400e}button:disabled{opacity:.7;cursor:not-allowed}.small{font-size:13px;color:var(--muted);line-height:1.65}.mobile-note,.filebox{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:16px;padding:12px;margin:12px 0}.choice{width:100%;text-align:left;background:#fff;color:var(--ink);border:1px solid var(--line);margin:10px 0;display:flex;align-items:flex-start;gap:12px;font-weight:750;line-height:1.55}.choice:hover{border-color:#93c5fd;background:#eff6ff}.choice.correct{border-color:#86efac;background:#f0fdf4;color:#166534}.choice.wrong{border-color:#fecaca;background:#fef2f2;color:#991b1b}.choice .num{min-width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:#f3f4f6;color:#111827;font-size:18px}.choice.correct .num{background:#dcfce7;color:#166534}.choice.wrong .num{background:#fee2e2;color:#991b1b}.progressbar{width:100%;height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:10px}.progressbar>div{height:100%;width:0;background:var(--accent);transition:.25s}.question-title{font-size:14px;color:var(--muted);margin-bottom:8px;line-height:1.55}.stem{font-size:20px;line-height:1.75;white-space:pre-wrap;margin:10px 0 18px;word-break:break-word}.result{border-radius:16px;padding:14px;margin-top:14px;border:1px solid var(--line);background:#fafafa;display:none}.result.good{border-color:#86efac;background:#f0fdf4}.result.bad{border-color:#fecaca;background:#fef2f2}.explain-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}.explain-table th,.explain-table td{border-top:1px solid var(--line);padding:9px 6px;vertical-align:top;text-align:left}.source-img{width:100%;max-height:900px;object-fit:contain;border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:10px}.image-hint{font-size:13px;color:var(--muted);line-height:1.6;margin:6px 0 0}details{margin-top:12px}summary{cursor:pointer;color:#1d4ed8;font-weight:800;padding:8px 0}.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}.kpi div{background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:12px}.kpi b{display:block;font-size:20px;margin-top:2px}.wrong-item,.history-row{border-top:1px solid var(--line);padding:12px 0}
@@ -1253,6 +1252,75 @@ html[data-theme="dark"] .dev-review-cloud-badge{
 }
 
 
+
+/* 開発者用：3種類の問題作業フラグ */
+.dev-review-control{flex-wrap:wrap}
+.dev-work-flag{
+ display:inline-flex;
+ align-items:center;
+ gap:5px;
+ padding:3px 7px;
+ border-radius:999px;
+ font-size:12px;
+ font-weight:900;
+ border:1px solid transparent;
+}
+.dev-work-flag-review{background:#fef3c7;color:#92400e;border-color:#f59e0b}
+.dev-work-flag-image{background:#dbeafe;color:#1e40af;border-color:#60a5fa}
+.dev-work-flag-ai{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
+.dev-work-flag input{width:16px;height:16px}
+.dev-work-badges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+html[data-theme="dark"] .dev-work-flag-review{background:#78350f;color:#fde68a;border-color:#b45309}
+html[data-theme="dark"] .dev-work-flag-image{background:#172554;color:#bfdbfe;border-color:#2563eb}
+html[data-theme="dark"] .dev-work-flag-ai{background:#3b0764;color:#e9d5ff;border-color:#9333ea}
+
+.dev-bulk-ai-panel{
+ border:1px solid var(--line);
+ border-radius:18px;
+ background:var(--card);
+ padding:16px;
+ margin-top:16px;
+}
+.dev-bulk-ai-panel h3{margin-top:0}
+.dev-bulk-ai-options{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.dev-bulk-ai-progress{width:100%;height:18px;margin-top:10px}
+.dev-bulk-ai-log{
+ max-height:320px;
+ overflow:auto;
+ border:1px solid var(--line);
+ border-radius:12px;
+ padding:10px;
+ margin-top:10px;
+ background:var(--bg);
+ font-family:Consolas,"Liberation Mono","Courier New",monospace;
+ font-size:12px;
+ white-space:pre-wrap;
+}
+html[data-theme="dark"] .dev-bulk-ai-panel{background:#111827;border-color:#334155}
+html[data-theme="dark"] .dev-bulk-ai-log{background:#0f172a;border-color:#334155}
+
+
+/* 開発者用：問題確認ウィンドウ */
+.dev-question-review-launch{
+ border:1px solid var(--line);
+ border-radius:18px;
+ background:var(--card);
+ padding:16px;
+ margin-top:16px;
+}
+.dev-question-review-launch h3{margin-top:0}
+.dev-question-review-note{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ align-items:center;
+ margin-top:10px;
+}
+html[data-theme="dark"] .dev-question-review-launch{
+ background:#111827;
+ border-color:#334155;
+}
+
 /* LaTeX・数式表示 */
 .math-content{min-width:0;overflow-wrap:anywhere}
 .math-content mjx-container{max-width:100%;color:inherit}
@@ -1527,6 +1595,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
   <details class="dev-definition-box">
     <summary>解説生成定義を確認・編集</summary>
     <p class="small">AI再生成時にこの定義を一緒に送信します。ここを変えると、生成される解説の形式を統一・調整できます。</p>
+    <p class="small"><b>LaTeX：</b>問題文・選択肢・注釈・要点解説・各選択肢解説で使用できます。文章中は <span class="code">\( ... \)</span>、独立した式は <span class="code">\[ ... \]</span>、入力欄ではバックスラッシュ1個、JSONを直接編集するときは2個です。</p>
     <textarea id="devExplanationDefinition" class="latex-input" data-latex-input="true"></textarea>
     <div class="row" style="margin-top:8px">
       <button class="ghost" onclick="resetExplanationDefinition()">定義を初期値に戻す</button>
@@ -1611,14 +1680,35 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
       <div id="devExplainPreview" class="dev-preview"></div>
     </div>
   </section>
+
+  <section class="dev-question-review-launch">
+    <h3>問題確認</h3>
+    <p class="small">
+      問題文・注釈・画像・各選択肢・正答・要点解説・選択肢別解説を、編集画面とは別の確認専用ウィンドウで一覧表示します。
+      確認ウィンドウでは「要確認」「画像変更」「AI再生成」のON・OFFだけを変更でき、編集は従来の開発モード画面で行います。
+    </p>
+    <div class="dev-check-grid">
+      <div class="dev-field"><label>開始回</label><select id="questionReviewFromExam"></select></div>
+      <div class="dev-field"><label>終了回</label><select id="questionReviewToExam"></select></div>
+      <div class="dev-field"><label>午前・午後</label><select id="questionReviewPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
+      <div class="dev-field"><label>抽出条件</label><select id="questionReviewFlagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="none">フラグなし</option></select></div>
+      <div class="dev-field"><label>開始問題番号</label><input id="questionReviewNumberFrom" type="number" min="1" max="999" value="1"></div>
+      <div class="dev-field"><label>終了問題番号</label><input id="questionReviewNumberTo" type="number" min="1" max="999" value="60"></div>
+    </div>
+    <div class="dev-question-review-note">
+      <button class="secondary" type="button" onclick="openDevQuestionReviewWindow()">問題確認を新規ウィンドウで開く</button>
+      <span class="small">確認専用画面から「従来の編集画面で開く」を押すと、この開発モードへ戻って対象問題を開きます。</span>
+    </div>
+  </section>
+
   <section class="dev-check-panel">
     <h3>文面チェック</h3>
-    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」も同じ一覧へ表示でき、「要確認のみ」で抽出できます。修正済みにチェックした項目は下へ移動します。</p>
+    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」「画像変更」「AI再生成」も同じ一覧へ表示・抽出できます。修正済みにチェックした項目は下へ移動します。</p>
     <div class="dev-check-grid">
       <div class="dev-field"><label>開始回</label><select id="checkFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="checkToExam"></select></div>
       <div class="dev-field"><label>対象</label><select id="checkPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
-      <div class="dev-field"><label>表示対象</label><select id="checkReviewMode"><option value="all">文面指摘＋要確認</option><option value="review">要確認のみ</option><option value="issues">文面指摘のみ</option></select></div>
+      <div class="dev-field"><label>表示対象</label><select id="checkReviewMode"><option value="all">文面指摘＋すべての作業フラグ</option><option value="flags">作業フラグ付きのみ</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="issues">文面指摘のみ</option></select></div>
       <div class="dev-field"><label>抽出レベル</label><select id="checkSeverity"><option value="all">すべて</option><option value="high">重要のみ</option><option value="warn">重要・注意</option><option value="mid">重要・注意・確認</option><option value="low">軽微まで</option></select></div>
     </div>
     <div class="row" style="margin-top:10px">
@@ -1630,6 +1720,33 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
     </div>
     <div id="devCheckSummary" class="small" style="margin-top:10px"></div>
     <div id="devCheckResults" class="dev-check-results"></div>
+  </section>
+
+  <section class="dev-bulk-ai-panel">
+    <h3>AI解説の一括再生成</h3>
+    <p class="small">
+      指定した試験回・午前午後の範囲から、AI再生成フラグ付き問題だけ、または範囲内の全問題を順番に再生成します。
+      生成結果は要点解説と各選択肢解説だけへ反映します。大量実行はOpenAI APIの利用料金と処理時間が増えるため、先に対象件数を確認してください。
+    </p>
+    <div class="dev-check-grid">
+      <div class="dev-field"><label>開始回</label><select id="bulkAiFromExam" onchange="devPreviewBulkAiTargets(false)"></select></div>
+      <div class="dev-field"><label>終了回</label><select id="bulkAiToExam" onchange="devPreviewBulkAiTargets(false)"></select></div>
+      <div class="dev-field"><label>対象</label><select id="bulkAiPartMode" onchange="devPreviewBulkAiTargets(false)"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
+      <div class="dev-field"><label>再生成対象</label><select id="bulkAiScope" onchange="devPreviewBulkAiTargets(false)"><option value="flagged">AI再生成フラグ付きのみ</option><option value="all">指定範囲の全問題</option></select></div>
+    </div>
+    <div class="dev-bulk-ai-options">
+      <label class="pill"><input type="checkbox" id="bulkAiAddToPr" checked> 成功した問題を一括PRリストへ追加</label>
+      <label class="pill"><input type="checkbox" id="bulkAiClearFlag" checked> 成功後にAI再生成フラグを解除</label>
+      <label class="pill"><input type="checkbox" id="bulkAiContinueErrors" checked> 失敗した問題があっても続行</label>
+    </div>
+    <div class="row">
+      <button class="ghost" type="button" onclick="devPreviewBulkAiTargets(true)">対象件数を確認</button>
+      <button class="secondary" id="bulkAiStartBtn" type="button" onclick="devRunBulkAiRegeneration()">一括再生成を開始</button>
+      <button class="danger" id="bulkAiCancelBtn" type="button" onclick="devCancelBulkAiRegeneration()" disabled>停止</button>
+    </div>
+    <progress id="bulkAiProgress" class="dev-bulk-ai-progress" value="0" max="1"></progress>
+    <div id="bulkAiStatus" class="dev-status">対象範囲を指定し、「対象件数を確認」を押してください。</div>
+    <div id="bulkAiLog" class="dev-bulk-ai-log">まだ実行していません。</div>
   </section>
 </section>
 <section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem math-content" id="stem"></div><div id="questionAnnotation"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><span id="devReviewControl" class="dev-review-control hidden"></span><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
@@ -1709,7 +1826,7 @@ const versionState={
   error:''
 };
 
-const EXPLANATION_DEFINITION=`# ME2種 AI解説生成の定義
+const EXPLANATION_DEFINITION=String.raw`# ME2種 AI解説生成の定義
 
 ## 1. 共通ルール
 - 解説は暗記用として短く、同じ構成で生成する。
@@ -1719,18 +1836,23 @@ const EXPLANATION_DEFINITION=`# ME2種 AI解説生成の定義
 - 医療・安全に関係する内容は、一般的なME2種学習範囲として説明する。
 - 1つの選択肢解説は原則2〜4文まで。
 - 文字化け・不要な記号・孤立した数字は入れない。
+- 選択肢本文はchoices側に表示されるため、choiceNotes内で選択肢全文を引用して重複させない。
+- 「この設問について正しくは、〜」のように、設問全体の正答を各選択肢解説で繰り返さない。
+- 「この記述は設問の基礎事項と一致する。」などの抽象的な定型文だけで終わらせない。
 
 ## 2. 正しいものを選ぶ問題
 ### 正答選択肢
-「正答。〜は〜である。」
+- 「正答。理由：〜。」を基本とし、正しい理由を具体的に記載する。
 ### 誤答選択肢
-「誤りポイント：「誤っている語句・考え方」が誤り。正しくは「〜」」
+- 誤っている語句・数値・単位・方向・因果関係を具体的に示す。
+- 正しい語句・数値・単位・方向を提示する。
+- 単に「誤り」「不正解」「内容が異なる」だけで終わらせない。
 
 ## 3. 誤っているものを選ぶ問題
 ### 選ぶべき誤りの選択肢
-「正答。誤りポイント：「誤っている語句・考え方」が誤り。正しくは「〜」。」
+- 「正答。誤りポイント：〜。正しくは〜。」を基本とする。
 ### 誤りではない選択肢
-「この選択肢は誤りではない。」
+- 「この選択肢は誤りではない。」に続けて、正しい理由を具体的に記載する。
 
 ## 4. センサ・トランスデューサ・計測機器
 - 何を測定するかを書く。
@@ -1748,40 +1870,67 @@ const EXPLANATION_DEFINITION=`# ME2種 AI解説生成の定義
 - 何に有効か、何に不向きかを書く。
 - 装置や部品は、役割・接続先・使用場面を書く。
 
-
 ## 6. 計算・公式問題
 - 使用した公式をすべて必ず書く。
 - 代入した式を必ず書く。
 - 計算結果には単位を付ける。
 - 誤答選択肢では、公式・代入・計算・単位のどこが違うかを書く。
 例：
-「正答。公式：V=IR。代入：V=2×50=100V。したがって設問条件に合う。」
-「誤りポイント：代入式が誤り。正しくは I=V/R=100/50=2A。」
+- 「正答。公式：\( V=IR \)。代入：\( V=2\times50=100\,\mathrm{V} \)。したがって設問条件に合う。」
+- 「誤りポイント：代入式が誤り。正しくは \( I=\frac{V}{R}=\frac{100}{50}=2\,\mathrm{A} \)。」
 
 ## 7. 要点解説 tip
 以下の形を基本にする。
 「要点：〜。覚える：〜。」
 - 重要語句・数値・分類を含める。
 - 長くしすぎない。
-計算問題の場合は使用公式や重要なポイントを含める。
-例：
-「要点：電圧はオームの法則で求められ、電流と抵抗の積。覚える：V=IR 単位はV（ボルト）。」
+- 計算問題では、使用公式・代入・単位を含める。
+
 ## 8. choiceNotesの統一書式
-各選択肢の解説は、次のどれかの書き出しに統一する。
+各選択肢の解説は、次の書き出しを基本にする。
 - 正答。
 - 誤りポイント：
 - この選択肢は誤りではない。
+- choiceNotesはchoicesと同じ数にする。
+- 図だけで示される、OCR崩れ、記号欠落などで安全に特定できない場合に限り「誤り。要点解説参照。」を使用できる。
 
-## 9. 出力条件
+## 9. サイト内でのLaTeX使用方法
+- このサイトはMathJaxでLaTeXを表示できる。
+- 問題文stem、選択肢choices、問題注釈annotation、要点解説tip、各選択肢解説choiceNotesで使用できる。
+- 文章中の数式は必ず \( ... \) で囲む。
+- 独立した数式は必ず \[ ... \] で囲む。
+- 開発モードの入力欄ではバックスラッシュを1個で入力する。
+- 開発モードでは、円記号の「¥」「￥」が入力された場合もバックスラッシュへ正規化される。
+- JSONファイルを直接編集する場合は、JSONの仕様によりバックスラッシュを2個にする。
+- HTMLタグで数式を表現しない。
+- 数式では必要に応じて単位を \mathrm{} で表し、数値と単位の間は \, を使用する。
+
+### よく使う記法
+- 分数：\( \frac{a}{b} \)
+- 平方根：\( \sqrt{R^2+X^2} \)
+- 下付き：\( V_{\mathrm{rms}} \)、\( PaCO_2 \)
+- 上付き：\( 10^{-3} \)
+- 掛け算：\( 3.0\times10^8 \)
+- 単位：\( 100\,\mathrm{V} \)、\( 2\,\mathrm{A} \)
+- ギリシャ文字：\( \alpha \)、\( \beta \)、\( \Delta \)、\( \Omega \)
+- 比較：\( \leq \)、\( \geq \)、\( \neq \)、\( \approx \)
+- 論理否定：\( \neg A \)
+- AND：\( A\land B \)
+- OR：\( A\lor B \)
+- 含意：\( A\Rightarrow B \)
+- 同値：\( A\Leftrightarrow B \)
+- 和集合・共通部分：\( A\cup B \)、\( A\cap B \)
+
+### JSONへ直接記載する例
+- 画面上で表示させたい内容：電流は \( I=\frac{V}{R} \) で求める。
+- JSON文字列内：「電流は \\( I=\\frac{V}{R} \\) で求める。」
+- AIはJSONを返すため、応答JSONではバックスラッシュをJSONとして正しくエスケープする。
+
+## 10. 出力条件
 - tipは1つ。
 - choiceNotesは選択肢数と同じ数。
-- JSONのみで返す。
-
-## 10. 数式・分数・論理式の表記
-- 分数、平方根、添字、上付き、論理式はLaTeXで記載する。
-- 文章中の数式は \( ... \)、独立した数式は \[ ... \] で囲む。
-- 例：\( I=\frac{V}{R} \)、\( Z=\sqrt{R^2+X^2} \)、\( \neg A \lor B \)。
-- JSONとして出力する際は、バックスラッシュを正しくエスケープする。`;
+- tipとchoiceNotes以外の問題データを変更しない。
+- JSONのみで返す。`;
 
 const APP_CONFIG = {
  // 問題JSON・画像はすべてサイト内の Date フォルダから読み込みます。
@@ -4180,6 +4329,20 @@ let devReviewFlagsLoaded=false;
 let devReviewFlagsLoading=null;
 let devReviewLastError='';
 
+const DEV_WORK_FLAG_TYPES={
+ review:{label:'要確認',field:'要確認（クラウド）',severity:'mid',message:'通常演習中に開発者が「要確認」として登録しています。',className:'review'},
+ imageChange:{label:'画像変更',field:'画像変更（クラウド）',severity:'warn',message:'問題画像の追加・差し替え・修正が必要として登録されています。',className:'image'},
+ aiRegenerate:{label:'AI再生成',field:'AI再生成（クラウド）',severity:'mid',message:'AIによる要点解説・各選択肢解説の再生成が必要として登録されています。',className:'ai'}
+};
+
+function normalizeDevWorkFlags(item){
+ const flags=item?.flags||{};
+ return {
+  review:Boolean(flags.review ?? item?.review ?? item?.flagged),
+  imageChange:Boolean(flags.imageChange ?? item?.imageChange),
+  aiRegenerate:Boolean(flags.aiRegenerate ?? item?.aiRegenerate)
+ };
+}
 function devReviewQuestionRef(q,examIdOverride='',partOverride=''){
  const examId=String(examIdOverride||q?.sourceExamId||state?.examId||'').trim();
  const part=String(partOverride||q?.sourcePart||state?.part||'').trim();
@@ -4211,7 +4374,7 @@ async function apiDevReview(method='GET',payload=null){
   opt.headers['content-type']='application/json';
   opt.body=JSON.stringify(payload);
  }
- const r=await fetchWithTimeout(url,opt,10000);
+ const r=await fetchWithTimeout(url,opt,15000);
  const data=await r.json().catch(()=>({}));
  if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);
  return data;
@@ -4230,7 +4393,7 @@ async function loadDevReviewFlags(force=false){
    const data=await apiDevReview('GET');
    const next=Object.create(null);
    (data.items||[]).forEach(item=>{
-    if(item?.key)next[String(item.key)]=item;
+    if(item?.key)next[String(item.key)]={...item,flags:normalizeDevWorkFlags(item)};
    });
    devReviewFlags=next;
    devReviewFlagsLoaded=true;
@@ -4246,14 +4409,27 @@ async function loadDevReviewFlags(force=false){
  })();
  return devReviewFlagsLoading;
 }
-function isDevReviewFlagged(q,examId='',part=''){
+function devQuestionWorkFlags(q,examId='',part=''){
  const ref=devReviewQuestionRef(q,examId,part);
- return Boolean(devReviewFlags[ref.key]?.flagged);
+ return normalizeDevWorkFlags(devReviewFlags[ref.key]);
+}
+function isDevQuestionFlagged(q,examId='',part='',flagType='review'){
+ return Boolean(devQuestionWorkFlags(q,examId,part)[flagType]);
+}
+function isDevReviewFlagged(q,examId='',part=''){
+ return isDevQuestionFlagged(q,examId,part,'review');
 }
 function devReviewStatusText(){
  if(devReviewLastError)return '同期失敗';
  if(!devReviewFlagsLoaded)return 'クラウド確認中';
  return 'Cloudflare同期';
+}
+function devFlagCheckboxHtml(flagType,flags,context='quiz'){
+ const config=DEV_WORK_FLAG_TYPES[flagType];
+ const checked=Boolean(flags?.[flagType]);
+ const id=context==='quiz'?`devFlagCheckbox_${flagType}`:'';
+ const idAttr=id?` id="${id}"`:'';
+ return `<label class="dev-work-flag dev-work-flag-${config.className}"><input${idAttr} type="checkbox" ${checked?'checked':''} onchange="toggleCurrentDevFlag('${flagType}',this.checked)"> ${config.label}</label>`;
 }
 function drawDevReviewControl(q){
  const box=$('devReviewControl');
@@ -4264,10 +4440,10 @@ function drawDevReviewControl(q){
   return;
  }
  const ref=devReviewQuestionRef(q);
- const flagged=Boolean(devReviewFlags[ref.key]?.flagged);
+ const flags=devQuestionWorkFlags(q);
  box.classList.remove('hidden');
  box.classList.remove('is-saving');
- box.innerHTML=`<label><input id="devReviewCheckbox" type="checkbox" ${flagged?'checked':''} onchange="toggleCurrentDevReview(this.checked)"> 要確認</label><span class="dev-review-sync">${escapeHtml(devReviewStatusText())}</span>`;
+ box.innerHTML=`${Object.keys(DEV_WORK_FLAG_TYPES).map(type=>devFlagCheckboxHtml(type,flags)).join('')}<span class="dev-review-sync">${escapeHtml(devReviewStatusText())}</span>`;
  if(!devReviewFlagsLoaded&&!devReviewFlagsLoading){
   const expectedKey=ref.key;
   loadDevReviewFlags().then(()=>{
@@ -4279,14 +4455,16 @@ function drawDevReviewControl(q){
   });
  }
 }
-async function saveDevReviewFlag(q,flagged,examId='',part=''){
+async function saveDevQuestionFlag(q,flagType,flagged,examId='',part=''){
+ if(!DEV_WORK_FLAG_TYPES[flagType])throw new Error(`未対応のフラグです：${flagType}`);
  const ref=devReviewQuestionRef(q,examId,part);
  const data=await apiDevReview('POST',{
   ...ref,
+  flagType,
   flagged:Boolean(flagged)
  });
- if(flagged){
-  devReviewFlags[ref.key]=data.item||{...ref,key:ref.key,flagged:true,updatedAt:new Date().toISOString()};
+ if(data.item){
+  devReviewFlags[ref.key]={...data.item,flags:normalizeDevWorkFlags(data.item)};
  }else{
   delete devReviewFlags[ref.key];
  }
@@ -4294,28 +4472,27 @@ async function saveDevReviewFlag(q,flagged,examId='',part=''){
  devReviewLastError='';
  return data;
 }
-async function toggleCurrentDevReview(flagged){
+async function saveDevReviewFlag(q,flagged,examId='',part=''){
+ return saveDevQuestionFlag(q,'review',flagged,examId,part);
+}
+async function toggleCurrentDevFlag(flagType,flagged){
  const q=getCurrentQuestion();
  if(!q)return;
  const box=$('devReviewControl');
- const checkbox=$('devReviewCheckbox');
+ const inputs=box?.querySelectorAll('input')||[];
  if(box)box.classList.add('is-saving');
- if(checkbox)checkbox.disabled=true;
+ inputs.forEach(input=>input.disabled=true);
  try{
-  await saveDevReviewFlag(q,flagged);
+  await saveDevQuestionFlag(q,flagType,flagged);
   drawDevReviewControl(q);
  }catch(e){
   devReviewLastError=String(e.message||e);
-  if(checkbox){
-   checkbox.checked=!flagged;
-   checkbox.disabled=false;
-  }
-  if(box){
-   box.classList.remove('is-saving');
-   box.innerHTML=`<label><input id="devReviewCheckbox" type="checkbox" ${!flagged?'checked':''} onchange="toggleCurrentDevReview(this.checked)"> 要確認</label><span class="dev-review-sync">保存失敗</span>`;
-  }
-  alert(`要確認をCloudflareへ保存できませんでした。\n${e.message||e}`);
+  drawDevReviewControl(q);
+  alert(`${DEV_WORK_FLAG_TYPES[flagType]?.label||'作業フラグ'}をCloudflareへ保存できませんでした。\n${e.message||e}`);
  }
+}
+async function toggleCurrentDevReview(flagged){
+ return toggleCurrentDevFlag('review',flagged);
 }
 
 
@@ -4392,7 +4569,7 @@ async function logoutDevMode(){
 function showDevMode(){
   openDevModeGate();
 }
-function showDevModeUnlocked(){
+async function showDevModeUnlocked(){
  if(state&&state.timerRunning){pauseTimer();saveState()}
  hideAll();$('devModeCard').classList.remove('hidden');
  const def=$('devExplanationDefinition'); if(def&&!def.value)def.value=getExplanationDefinition();
@@ -4401,7 +4578,7 @@ function showDevModeUnlocked(){
  if(currentExamId)exSel.value=currentExamId;
  checkExamOptions();
  loadDevReviewFlags(true).catch(()=>null);
- devLoadExam();
+ await devLoadExam();
  updateHeader();
 }
 async function devLoadExam(){
@@ -4882,41 +5059,70 @@ function copyExplanationDefinition(){
   const text=$('devExplanationDefinition')?.value||getExplanationDefinition();
   navigator.clipboard?.writeText(text).then(()=>$('devStatus').innerHTML='<span class="status-ok">解説生成定義をコピーしました。</span>').catch(()=>{$('devStatus').textContent='コピーできませんでした。'});
 }
+function devAiQuestionPayload(q){
+ return {
+  number:q.number,
+  range:q.range||'',
+  stem:q.stem||'',
+  annotation:questionAnnotation(q),
+  choices:q.choices||[],
+  correct:q.correct||[],
+  negative:!!q.negative,
+  hasFigure:!!q.hasFigure,
+  image:q.image||'',
+  tip:q.tip||'',
+  choiceNotes:q.choiceNotes||[]
+ };
+}
+function devAiRetryable(error){
+ const status=Number(error?.status||0);
+ const message=String(error?.message||error||'');
+ return error?.name==='TimeoutError'||/timeout|タイムアウト|failed to fetch|network|通信が中断/i.test(message)||status===408||status===409||status===429||status>=500;
+}
+async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={}){
+ let lastError=null;
+ for(let attempt=1;attempt<=attempts;attempt++){
+  try{
+   const response=await fetchWithTimeout('/api/ai-explain',{
+    method:'POST',
+    headers:{'content-type':'application/json',...devHeaders()},
+    body:JSON.stringify({definition,question:devAiQuestionPayload(q)})
+   },timeout);
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok){
+    const error=new Error(data.error||`HTTP ${response.status}`);
+    error.status=response.status;
+    throw error;
+   }
+   if(!data.tip||!Array.isArray(data.choiceNotes))throw new Error('AI応答の形式が不正です。');
+   return {
+    tip:normalizeLatexBackslashes(String(data.tip||'')),
+    choiceNotes:data.choiceNotes.map(x=>normalizeLatexBackslashes(String(x||''))).slice(0,(q.choices||[]).length)
+   };
+  }catch(error){
+   lastError=error;
+   if(attempt>=attempts||!devAiRetryable(error))break;
+   await new Promise(resolve=>setTimeout(resolve,1000*attempt));
+  }
+ }
+ throw lastError||new Error('AI再生成に失敗しました。');
+}
+
 async function devRegenerateExplanation(){
- let q=devReadForm();
- q=devEnsureChoiceNotes(q);
+ let q=devEnsureChoiceNotes(devReadForm());
  $('devStatus').innerHTML='<span class="status-warn">AIで解説を再生成中です…</span>';
  try{
   const definition=$('devExplanationDefinition')?.value||getExplanationDefinition();
   setExplanationDefinition(definition);
-  const r=await fetchWithTimeout('/api/ai-explain',{
-   method:'POST',
-   headers:{'content-type':'application/json',...devHeaders()},
-   body:JSON.stringify({
-    definition,
-    question:{
-     number:q.number,
-     range:q.range||'',
-     stem:q.stem||'',
-     annotation:questionAnnotation(q),
-     choices:q.choices||[],
-     correct:q.correct||[],
-     negative:!!q.negative,
-     hasFigure:!!q.hasFigure,
-     image:q.image||'',
-     tip:q.tip||'',
-     choiceNotes:q.choiceNotes||[]
-    }
-   })
-  },30000);
-  const data=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(data.error||String(r.status));
-  if(!data.tip||!Array.isArray(data.choiceNotes))throw new Error('AI応答の形式が不正です。');
-  q.tip=String(data.tip||'');
-  q.choiceNotes=data.choiceNotes.map(x=>String(x||'')).slice(0,q.choices.length);
+  const result=await devRequestAiExplanation(q,definition,{attempts:2,timeout:60000});
+  q.tip=result.tip;
+  q.choiceNotes=result.choiceNotes;
   q=devEnsureChoiceNotes(q);
   devApplyExplanation(q);
-  $('devStatus').innerHTML='<span class="status-ok">AIで解説を再生成しました。内容を確認して、必要なら手修正してください。</span>';
+  if(isDevQuestionFlagged(q,devExamId,devPart,'aiRegenerate')){
+   try{await saveDevQuestionFlag(q,'aiRegenerate',false,devExamId,devPart)}catch(_){}
+  }
+  $('devStatus').innerHTML='<span class="status-ok">AIで解説を再生成しました。AI再生成フラグが設定されていた場合は解除を試みました。内容を確認し、「この問題に反映」で一括PRリストへ追加してください。</span>';
  }catch(e){
   $('devStatus').innerHTML=`<span class="status-warn">AI再生成に失敗しました：${escapeHtml(e.message||e)}<br>必要に応じて「ローカル簡易生成」を使ってください。</span>`;
  }
@@ -5138,13 +5344,14 @@ function devCurrentPrKey(){
 function devApplyQuestionToLocal(item){
  if(!item)return;
  const key=`${item.examId}_${item.part}`;
- const pack=partsCache[key];
- if(pack&&Array.isArray(pack.questions)){
-  pack.questions[Number(item.index)||0]=devClone(item.question);
- }
- if(item.examId===devExamId&&item.part===devPart&&devPack&&Array.isArray(devPack.questions)){
-  devPack.questions[Number(item.index)||0]=devClone(item.question);
- }
+ const applyToPack=pack=>{
+  if(!pack||!Array.isArray(pack.questions))return;
+  const index=Number(item.index)||0;
+  if(item.question)pack.questions[index]=devClone(item.question);
+  else if(item.questionPatch)pack.questions[index]={...pack.questions[index],...devClone(item.questionPatch)};
+ };
+ applyToPack(partsCache[key]);
+ if(item.examId===devExamId&&item.part===devPart)applyToPack(devPack);
 }
 
 function devComparableQuestion(q){
@@ -5377,7 +5584,9 @@ async function devOpenBatchItem(key){
  }
  const index=Number(item.index)||0;
  if(devPack?.questions?.[index]){
-  const restored=devClone(item.question);
+  const restored=item.question
+   ? devClone(item.question)
+   : {...devClone(devPack.questions[index]),...devClone(item.questionPatch||{})};
   const stored=await devLoadPendingImage(item?.imageFile?.storageKey);
   if(stored?.base64&&stored?.mime){
    restored.image=`data:${stored.mime};base64,${stored.base64}`;
@@ -5439,7 +5648,8 @@ async function devBuildBatchPayload(){
   byJson.get(item.jsonPath).updates.push({
    index:item.index,
    number:item.number,
-   question:item.question,
+   question:item.question||null,
+   questionPatch:item.questionPatch||null,
    label:item.label,
    editSummary:item.editSummary,
    commitMessage:item.commitMessage
@@ -5481,7 +5691,8 @@ const DEV_PR_JOB_STORAGE_KEY='me2_github_pr_job_v2';
 function devPrPayloadFingerprint(payload){
  const itemPart=(payload.items||[]).map(item=>[
   item.key,item.updatedAt,item.jsonPath,item.imagePath,item.editSummary,
-  JSON.stringify(item.question||{}).length
+  JSON.stringify(item.question||{}).length,
+  JSON.stringify(item.questionPatch||{}).length
  ].join('|')).join('||');
  return [
   payload.title||'',
@@ -5768,7 +5979,10 @@ function filterDevCheckIssues(list,min='all',mode=null){
  devCheckLastFilter=min||'all';
  devCheckLastMode=mode||$('checkReviewMode')?.value||devCheckLastMode||'all';
  let filtered=(list||[]).slice();
- if(devCheckLastMode==='review')filtered=filtered.filter(x=>x.manualReview);
+ if(devCheckLastMode==='flags')filtered=filtered.filter(x=>x.manualReview||x.imageChange||x.aiRegenerate);
+ else if(devCheckLastMode==='review')filtered=filtered.filter(x=>x.manualReview);
+ else if(devCheckLastMode==='image')filtered=filtered.filter(x=>x.imageChange);
+ else if(devCheckLastMode==='ai')filtered=filtered.filter(x=>x.aiRegenerate);
  else if(devCheckLastMode==='issues')filtered=filtered.filter(x=>Number(x.textIssueCount||0)>0);
  if(min!=='all'&&min!=='low')filtered=filtered.filter(x=>severityRank(x.severity)>=severityRank(min));
  return sortDevIssues(filtered);
@@ -5778,19 +5992,25 @@ function checkExamOptions(){
  const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
  const opts=records.map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title)}</option>`).join('');
  const validIds=new Set(records.map(ex=>String(ex.id)));
- const from=$('checkFromExam'),to=$('checkToExam');
- const previousFrom=String(from?.value||'');
- const previousTo=String(to?.value||'');
- if(from){
-  from.innerHTML=opts;
-  if(previousFrom&&validIds.has(previousFrom))from.value=previousFrom;
-  else if(records.length)from.value=String(records[0].id);
- }
- if(to){
-  to.innerHTML=opts;
-  if(previousTo&&validIds.has(previousTo))to.value=previousTo;
-  else if(records.length)to.value=String(records[records.length-1].id);
- }
+
+ const fillPair=(fromId,toId)=>{
+  const from=$(fromId),to=$(toId);
+  const previousFrom=String(from?.value||'');
+  const previousTo=String(to?.value||'');
+  if(from){
+   from.innerHTML=opts;
+   if(previousFrom&&validIds.has(previousFrom))from.value=previousFrom;
+   else if(records.length)from.value=String(records[0].id);
+  }
+  if(to){
+   to.innerHTML=opts;
+   if(previousTo&&validIds.has(previousTo))to.value=previousTo;
+   else if(records.length)to.value=String(records[records.length-1].id);
+  }
+ };
+ fillPair('checkFromExam','checkToExam');
+ fillPair('bulkAiFromExam','bulkAiToExam');
+ fillPair('questionReviewFromExam','questionReviewToExam');
 }
 function severityRank(s){return s==='high'?4:s==='warn'?3:s==='mid'?2:1}
 function addIssue(list,severity,field,msg){list.push({severity,field,msg});}
@@ -5918,6 +6138,46 @@ function selectedCheckExamIds(){
  return records.filter(ex=>examNumber(ex.id)>=lo&&examNumber(ex.id)<=hi);
 }
 function selectedCheckParts(){const m=$('checkPartMode')?.value||'both';return m==='both'?['am','pm']:[m];}
+function devWorkFlagIssue(flagType){
+ const config=DEV_WORK_FLAG_TYPES[flagType];
+ return {
+  severity:config.severity,
+  field:config.field,
+  msg:config.message,
+  workFlag:flagType,
+  manualReview:flagType==='review'
+ };
+}
+function devAttachWorkFlags(item,flags){
+ item.workFlags={...flags};
+ item.manualReview=Boolean(flags.review);
+ item.imageChange=Boolean(flags.imageChange);
+ item.aiRegenerate=Boolean(flags.aiRegenerate);
+ item.issues=(item.issues||[]).filter(issue=>!issue.workFlag);
+ for(const type of Object.keys(DEV_WORK_FLAG_TYPES)){
+  if(flags[type])item.issues.unshift(devWorkFlagIssue(type));
+ }
+ item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'low';
+ return item;
+}
+function devWorkFlagBadges(item){
+ const flags=item?.workFlags||{
+  review:Boolean(item?.manualReview),
+  imageChange:Boolean(item?.imageChange),
+  aiRegenerate:Boolean(item?.aiRegenerate)
+ };
+ const entries=Object.entries(DEV_WORK_FLAG_TYPES).filter(([type])=>flags[type]);
+ if(!entries.length)return'';
+ return `<div class="dev-work-badges">${entries.map(([type,cfg])=>`<span class="dev-work-flag dev-work-flag-${cfg.className}">${cfg.label}</span>`).join('')}</div>`;
+}
+function devCheckFlagControls(item){
+ if(!item?.q)return'';
+ const flags=item.workFlags||{};
+ return Object.entries(DEV_WORK_FLAG_TYPES).map(([type,cfg])=>
+  `<label class="dev-work-flag dev-work-flag-${cfg.className}"><input type="checkbox" ${flags[type]?'checked':''} onchange="toggleDevFlagFromCheck('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0},'${type}',this.checked)"> ${cfg.label}</label>`
+ ).join('');
+}
+
 async function runDevTextCheck(){
  checkExamOptions();
  const records=selectedCheckExamIds();
@@ -5925,7 +6185,7 @@ async function runDevTextCheck(){
  const min=$('checkSeverity')?.value||'all';
  const mode=$('checkReviewMode')?.value||'all';
  devCheckIssues=[];
- $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 要確認データをCloudflareから同期しています。</span>';
+ $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 3種類の作業フラグをCloudflareから同期しています。</span>';
  $('devCheckResults').innerHTML='';
  try{await loadDevReviewFlags(true)}catch(e){
   devReviewLastError=String(e.message||e);
@@ -5937,22 +6197,20 @@ async function runDevTextCheck(){
     (pack.questions||[]).forEach((q,idx)=>{
      const ctx={examId:String(ex.id),part,title:ex.title,index:idx,number:q.number};
      const textIssue=checkOneQuestion(q,ctx);
-     const manualReview=isDevReviewFlagged(q,String(ex.id),part);
-     if(!textIssue&&!manualReview)return;
+     const flags=devQuestionWorkFlags(q,String(ex.id),part);
+     const anyFlag=Object.values(flags).some(Boolean);
+     if(!textIssue&&!anyFlag)return;
      const item=textIssue||{...ctx,q,issues:[],severity:'mid'};
      item.textIssueCount=(textIssue?.issues||[]).length;
-     item.manualReview=manualReview;
-     if(manualReview){
-      item.issues=[
-       {severity:'mid',field:'要確認（クラウド）',msg:'通常演習中に開発者が「要確認」として登録しています。',manualReview:true},
-       ...(item.issues||[])
-      ];
-      item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'mid';
-     }
+     devAttachWorkFlags(item,flags);
      devCheckIssues.push(item);
     });
    }catch(e){
-    devCheckIssues.push({examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,textIssueCount:1,manualReview:false,issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]});
+    devCheckIssues.push({
+     examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,
+     textIssueCount:1,manualReview:false,imageChange:false,aiRegenerate:false,workFlags:{review:false,imageChange:false,aiRegenerate:false},
+     issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]
+    });
    }
   }
  }
@@ -5967,18 +6225,22 @@ function renderDevCheckResults(list){
  const low=devCheckIssues.filter(x=>x.severity==='low').length;
  const fixed=devCheckIssues.filter(x=>isDevIssueFixed(x)).length;
  const manual=devCheckIssues.filter(x=>x.manualReview).length;
+ const image=devCheckIssues.filter(x=>x.imageChange).length;
+ const ai=devCheckIssues.filter(x=>x.aiRegenerate).length;
  const sorted=sortDevIssues(list||[]);
- const syncNote=devReviewLastError?` / 要確認同期エラー：${escapeHtml(devReviewLastError)}`:'';
- $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：対象 ${total}件 / 要確認 ${manual}件 / 修正済み ${fixed}件${syncNote}</span>`;
+ const syncNote=devReviewLastError?` / 作業フラグ同期エラー：${escapeHtml(devReviewLastError)}`:'';
+ $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：対象 ${total}件 / 要確認 ${manual}件 / 画像変更 ${image}件 / AI再生成 ${ai}件 / 修正済み ${fixed}件${syncNote}</span>`;
  const summary=`<div class="check-summary">
    <span class="issue-badge high">重要 ${high}</span>
    <span class="issue-badge warn">注意 ${warn}</span>
    <span class="issue-badge mid">確認 ${mid}</span>
    <span class="issue-badge low">軽微 ${low}</span>
-   <span class="dev-review-cloud-badge">要確認 ${manual}</span>
+   <span class="dev-work-flag dev-work-flag-review">要確認 ${manual}</span>
+   <span class="dev-work-flag dev-work-flag-image">画像変更 ${image}</span>
+   <span class="dev-work-flag dev-work-flag-ai">AI再生成 ${ai}</span>
    <span class="issue-fixed-label">修正済み ${fixed}</span>
   </div>`;
- if(!sorted.length){$('devCheckResults').innerHTML=summary+'<p class="small">表示条件に一致する指摘はありません。</p>';return;}
+ if(!sorted.length){$('devCheckResults').innerHTML=summary+'<p class="small">表示条件に一致する指摘・作業フラグはありません。</p>';return;}
  $('devCheckResults').innerHTML=summary+sorted.map(item=>{
   const sevClass=severityClass(item.severity);
   const sevLabel=severityLabel(item.severity);
@@ -5990,20 +6252,21 @@ function renderDevCheckResults(list){
     .map(i=>`<li><b>${escapeHtml(i.field)}</b>：${escapeHtml(i.msg)} <span class="issue-badge ${severityClass(i.severity)}">${severityLabel(i.severity)}</span></li>`).join('');
   const stem=item.q?.stem?`<p class="small"><b>問題文：</b>${escapeHtml(String(item.q.stem).slice(0,140))}${String(item.q.stem).length>140?'…':''}</p>`:'';
   return `<div class="dev-issue-card issue-${sevClass} ${checked?'issue-fixed':''}">
-    <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${sevClass}">${sevLabel}</span>${item.manualReview?'<span class="dev-review-cloud-badge">要確認</span>':''}</h4>
-    <div class="dev-issue-meta">範囲：${escapeHtml(item.q?.range||'未設定')} / 最高ステータス：${sevLabel} / 指摘数：${item.issues.length}</div>
+    <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${sevClass}">${sevLabel}</span></h4>
+    ${devWorkFlagBadges(item)}
+    <div class="dev-issue-meta">範囲：${escapeHtml(item.q?.range||'未設定')} / 最高ステータス：${sevLabel} / 指摘・フラグ数：${item.issues.length}</div>
     ${devIssueCountsHtml(item)}
     ${stem}
     <ul class="dev-issue-list">${lis}</ul>
     <div class="row" style="margin-top:10px">
-      <button class="secondary" onclick="openDevIssue('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0})">この問題を開く</button>
-      <label class="dev-review-cloud-badge"><input type="checkbox" ${item.manualReview?'checked':''} onchange="toggleDevReviewFromCheck('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0},this.checked)"> 要確認</label>
+      ${item.q?`<button class="secondary" onclick="openDevIssue('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0})">この問題を開く</button>`:''}
+      ${devCheckFlagControls(item)}
       <label class="issue-fixed-label"><input type="checkbox" ${checked?'checked':''} onchange="toggleDevIssueFixed('${key}',this.checked)"> 修正済み</label>
     </div>
   </div>`;
  }).join('');
 }
-async function toggleDevReviewFromCheck(examId,part,index,checked){
+async function toggleDevFlagFromCheck(examId,part,index,flagType,checked){
  let item=devCheckIssues.find(x=>String(x.examId)===String(examId)&&String(x.part)===String(part)&&Number(x.index)===Number(index));
  try{
   let q=item?.q;
@@ -6012,28 +6275,30 @@ async function toggleDevReviewFromCheck(examId,part,index,checked){
    q=pack.questions?.[Number(index)];
   }
   if(!q)throw new Error('対象問題を読み込めません。');
-  await saveDevReviewFlag(q,checked,examId,part);
-  if(!item&&checked){
-   item={examId:String(examId),part,title:getExamRecord(examId)?.title||String(examId),index:Number(index),number:q.number,q,issues:[],severity:'mid',textIssueCount:0,manualReview:true};
+  await saveDevQuestionFlag(q,flagType,checked,examId,part);
+  const flags=devQuestionWorkFlags(q,examId,part);
+
+  if(!item&&Object.values(flags).some(Boolean)){
+   item={
+    examId:String(examId),part,title:getExamRecord(examId)?.title||String(examId),
+    index:Number(index),number:q.number,q,issues:[],severity:'mid',textIssueCount:0
+   };
    devCheckIssues.push(item);
   }
   if(item){
-   item.manualReview=Boolean(checked);
-   item.issues=(item.issues||[]).filter(i=>!i.manualReview);
-   if(checked){
-    item.issues.unshift({severity:'mid',field:'要確認（クラウド）',msg:'通常演習中に開発者が「要確認」として登録しています。',manualReview:true});
-   }
+   devAttachWorkFlags(item,flags);
    if(!item.issues.length){
     devCheckIssues=devCheckIssues.filter(x=>x!==item);
-   }else{
-    item.severity=item.issues.slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))[0]?.severity||'low';
    }
   }
   renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter,devCheckLastMode));
  }catch(e){
-  alert(`要確認の更新に失敗しました。\n${e.message||e}`);
+  alert(`${DEV_WORK_FLAG_TYPES[flagType]?.label||'作業フラグ'}の更新に失敗しました。\n${e.message||e}`);
   renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter,devCheckLastMode));
  }
+}
+async function toggleDevReviewFromCheck(examId,part,index,checked){
+ return toggleDevFlagFromCheck(examId,part,index,'review',checked);
 }
 
 async function openDevIssue(examId,part,index){
@@ -6056,12 +6321,236 @@ function copyDevCheckSummary(){
 function clearDevCheckResults(){devCheckIssues=[];$('devCheckSummary').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResults').innerHTML='';}
 function exportDevCheckCsv(){
  if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
- const rows=[['回','午前午後','問題番号','重要度','要確認','修正済み','項目','指摘内容','範囲','問題文']];
- devCheckIssues.forEach(item=>{item.issues.forEach(i=>rows.push([item.title||item.examId,partName(item.part),item.number,severityLabel(i.severity),item.manualReview?'要確認':'',isDevIssueFixed(item)?'修正済み':'未修正',i.field,i.msg,item.q?.range||'',item.q?.stem||'']));});
+ const rows=[['回','午前午後','問題番号','重要度','要確認','画像変更','AI再生成','修正済み','項目','指摘内容','範囲','問題文']];
+ devCheckIssues.forEach(item=>{
+  item.issues.forEach(i=>rows.push([
+   item.title||item.examId,
+   partName(item.part),
+   item.number,
+   severityLabel(i.severity),
+   item.manualReview?'要確認':'',
+   item.imageChange?'画像変更':'',
+   item.aiRegenerate?'AI再生成':'',
+   isDevIssueFixed(item)?'修正済み':'未修正',
+   i.field,i.msg,item.q?.range||'',item.q?.stem||''
+  ]));
+ });
  const csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');
  downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');
 }
 
+
+let devBulkAiRunning=false;
+let devBulkAiCancelRequested=false;
+
+function selectedBulkAiExamIds(){
+ const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
+ const from=examNumber($('bulkAiFromExam')?.value||records[0]?.id);
+ const to=examNumber($('bulkAiToExam')?.value||records[records.length-1]?.id);
+ const lo=Math.min(from,to),hi=Math.max(from,to);
+ return records.filter(ex=>examNumber(ex.id)>=lo&&examNumber(ex.id)<=hi);
+}
+function selectedBulkAiParts(){
+ const mode=$('bulkAiPartMode')?.value||'both';
+ return mode==='both'?['am','pm']:[mode];
+}
+function devSetBulkAiControls(running){
+ devBulkAiRunning=Boolean(running);
+ if($('bulkAiStartBtn'))$('bulkAiStartBtn').disabled=running;
+ if($('bulkAiCancelBtn'))$('bulkAiCancelBtn').disabled=!running;
+ ['bulkAiFromExam','bulkAiToExam','bulkAiPartMode','bulkAiScope'].forEach(id=>{if($(id))$(id).disabled=running});
+}
+function devBulkAiLog(message,reset=false){
+ const el=$('bulkAiLog');
+ if(!el)return;
+ const line=`[${new Date().toLocaleTimeString('ja-JP')}] ${message}`;
+ el.textContent=reset?line:`${el.textContent&&el.textContent!=='まだ実行していません。'?el.textContent+'\n':''}${line}`;
+ el.scrollTop=el.scrollHeight;
+}
+async function devCollectBulkAiTargets(){
+ checkExamOptions();
+ const records=selectedBulkAiExamIds();
+ const parts=selectedBulkAiParts();
+ const scope=$('bulkAiScope')?.value||'flagged';
+ if(scope==='flagged'){
+  try{await loadDevReviewFlags(true)}catch(e){throw new Error(`AI再生成フラグを同期できません：${e.message||e}`)}
+ }
+ const targets=[];
+ for(const ex of records){
+  for(const part of parts){
+   const pack=await getPart(ex.id,part);
+   (pack.questions||[]).forEach((q,index)=>{
+    if(scope==='flagged'&&!isDevQuestionFlagged(q,String(ex.id),part,'aiRegenerate'))return;
+    targets.push({
+     examId:String(ex.id),
+     title:ex.title||String(ex.id),
+     part,
+     index,
+     number:q.number||index+1,
+     q,
+     pack
+    });
+   });
+  }
+ }
+ return targets;
+}
+async function devPreviewBulkAiTargets(showLog=true){
+ if(devBulkAiRunning)return;
+ const status=$('bulkAiStatus');
+ if(status)status.innerHTML='<span class="status-warn">対象件数を確認中です…</span>';
+ try{
+  const targets=await devCollectBulkAiTargets();
+  const scope=$('bulkAiScope')?.value==='all'?'指定範囲の全問題':'AI再生成フラグ付き';
+  if(status)status.innerHTML=`<span class="status-ok">対象：${targets.length}問（${scope}）</span>`;
+  if(showLog)devBulkAiLog(`対象件数：${targets.length}問（${scope}）`,true);
+  return targets;
+ }catch(e){
+  if(status)status.innerHTML=`<span class="status-warn">対象件数を確認できません：${escapeHtml(e.message||e)}</span>`;
+  if(showLog)devBulkAiLog(`対象確認エラー：${e.message||e}`,true);
+  return [];
+ }
+}
+function devBulkAiEditSummary(existing=''){
+ const values=String(existing||'').split(/[・,、]/).map(x=>x.trim()).filter(Boolean);
+ if(!values.includes('AI解説再生成'))values.push('AI解説再生成');
+ return values.join('・')||'AI解説再生成';
+}
+function devUpsertBulkAiBatchItem(batch,target,q){
+ const key=devPrItemKey(target.examId,target.part,target.index);
+ const patch={tip:String(q.tip||''),choiceNotes:(q.choiceNotes||[]).map(String)};
+ const idx=batch.items.findIndex(item=>item.key===key);
+ if(idx>=0){
+  const item=batch.items[idx];
+  if(item.question){
+   item.question={...item.question,...patch};
+  }else{
+   item.questionPatch={...(item.questionPatch||{}),...patch};
+  }
+  item.editSummary=devBulkAiEditSummary(item.editSummary);
+  item.commitMessage=`${item.label}：${item.editSummary}`;
+  item.updatedAt=new Date().toISOString();
+ }else{
+  const label=`${target.title} ${partName(target.part)} 第${target.number}問`;
+  batch.items.push({
+   key,
+   examId:target.examId,
+   part:target.part,
+   index:target.index,
+   number:target.number,
+   label,
+   jsonPath:`Date/Ques/${target.examId}_${target.part}.json`,
+   editSummary:'AI解説再生成',
+   commitMessage:`${label}：AI解説再生成`,
+   questionPatch:patch,
+   imagePath:'',
+   imageFile:null,
+   updatedAt:new Date().toISOString()
+  });
+ }
+}
+function devCancelBulkAiRegeneration(){
+ if(!devBulkAiRunning)return;
+ devBulkAiCancelRequested=true;
+ if($('bulkAiStatus'))$('bulkAiStatus').innerHTML='<span class="status-warn">停止要求を受け付けました。現在の1問が終了した後に停止します。</span>';
+ devBulkAiLog('停止要求を受け付けました。');
+}
+async function devRunBulkAiRegeneration(){
+ if(devBulkAiRunning)return;
+ const targets=await devPreviewBulkAiTargets(false);
+ if(!targets.length){
+  alert('一括再生成の対象問題がありません。範囲またはAI再生成フラグを確認してください。');
+  return;
+ }
+
+ const addToPr=Boolean($('bulkAiAddToPr')?.checked);
+ const clearFlag=Boolean($('bulkAiClearFlag')?.checked);
+ const continueErrors=Boolean($('bulkAiContinueErrors')?.checked);
+ const scopeLabel=$('bulkAiScope')?.value==='all'?'指定範囲の全問題':'AI再生成フラグ付き問題';
+ const warning=[
+  `${scopeLabel} ${targets.length}問をAIで再生成します。`,
+  'OpenAI APIの利用料金が発生し、問題数によっては長時間かかります。',
+  addToPr?'成功した問題は一括PRリストへ追加します。':'成功した内容は現在のブラウザ内だけへ反映します。',
+  clearFlag?'成功した問題のAI再生成フラグを解除します。':'AI再生成フラグは維持します。',
+  '',
+  '開始しますか？'
+ ].join('\n');
+ if(!confirm(warning))return;
+
+ const definition=$('devExplanationDefinition')?.value||getExplanationDefinition();
+ setExplanationDefinition(definition);
+ devBulkAiCancelRequested=false;
+ devSetBulkAiControls(true);
+ devBulkAiLog(`一括再生成開始：${targets.length}問`,true);
+
+ const progress=$('bulkAiProgress');
+ if(progress){progress.max=Math.max(1,targets.length);progress.value=0}
+ let success=0,failed=0,processed=0;
+ const failures=[];
+ let batch=devPrBatch();
+
+ try{
+  for(const target of targets){
+   if(devBulkAiCancelRequested)break;
+   const label=`${target.title} ${partName(target.part)} 第${target.number}問`;
+   if($('bulkAiStatus'))$('bulkAiStatus').innerHTML=`<span class="status-warn">AI再生成中：${processed+1}/${targets.length}　${escapeHtml(label)}</span>`;
+   try{
+    const source=devEnsureChoiceNotes(devClone(target.q));
+    const result=await devRequestAiExplanation(source,definition,{attempts:3,timeout:90000});
+    const updated=devEnsureChoiceNotes({...source,tip:result.tip,choiceNotes:result.choiceNotes});
+    target.pack.questions[target.index]=updated;
+    partsCache[`${target.examId}_${target.part}`]=target.pack;
+    if(String(devExamId)===target.examId&&devPart===target.part&&devPack){
+     devPack.questions[target.index]=updated;
+    }
+
+    if(addToPr){
+     devUpsertBulkAiBatchItem(batch,target,updated);
+     saveDevPrBatch(batch);
+    }
+
+    if(clearFlag&&isDevQuestionFlagged(updated,target.examId,target.part,'aiRegenerate')){
+     await saveDevQuestionFlag(updated,'aiRegenerate',false,target.examId,target.part);
+    }
+
+    success++;
+    devBulkAiLog(`成功 ${processed+1}/${targets.length}：${label}`);
+   }catch(error){
+    failed++;
+    failures.push({label,error:String(error?.message||error)});
+    devBulkAiLog(`失敗 ${processed+1}/${targets.length}：${label} / ${error?.message||error}`);
+    if(!continueErrors)throw error;
+   }finally{
+    processed++;
+    if(progress)progress.value=processed;
+   }
+
+   if(devBulkAiCancelRequested)break;
+   await new Promise(resolve=>setTimeout(resolve,350));
+  }
+
+  if(addToPr){
+   saveDevPrBatch(batch);
+   if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
+  }
+  renderDevPrBatchList();
+  if(devPack)devRenderEditor();
+
+  const stopped=devBulkAiCancelRequested;
+  const message=`${stopped?'停止しました':'完了しました'}：成功 ${success}問 / 失敗 ${failed}問 / 処理 ${processed}/${targets.length}問`;
+  if($('bulkAiStatus'))$('bulkAiStatus').innerHTML=`<span class="${failed?'status-warn':'status-ok'}">${escapeHtml(message)}${addToPr?'。成功分は一括PRリストへ追加済みです。':''}</span>`;
+  devBulkAiLog(message);
+  if(failures.length){
+   devBulkAiLog('失敗一覧：\n'+failures.map(x=>`- ${x.label}: ${x.error}`).join('\n'));
+  }
+ }catch(error){
+  if($('bulkAiStatus'))$('bulkAiStatus').innerHTML=`<span class="status-warn">一括再生成を中断しました：${escapeHtml(error?.message||error)}<br>成功済みの内容と一括PRリストは保持されています。</span>`;
+  devBulkAiLog(`中断：${error?.message||error}`);
+ }finally{
+  devSetBulkAiControls(false);
+  devBulkAiCancelRequested=false;
+ }
+}
 
 function fmtLocalDateTime(ts){
  if(!ts)return '未同期';
@@ -6132,6 +6621,61 @@ function setupCeExamLink(){
  if(!a)return;
  a.href=CE_EXAM_SITE_URL || '/ce/';
 }
+
+function openDevQuestionReviewWindow(){
+ const params=new URLSearchParams({
+  from:String($('questionReviewFromExam')?.value||''),
+  to:String($('questionReviewToExam')?.value||''),
+  part:String($('questionReviewPartMode')?.value||'both'),
+  flag:String($('questionReviewFlagMode')?.value||'all'),
+  qFrom:String(Math.max(1,Number($('questionReviewNumberFrom')?.value||1))),
+  qTo:String(Math.max(1,Number($('questionReviewNumberTo')?.value||60)))
+ });
+ const url=`dev-question-review.html?${params.toString()}`;
+ const opened=window.open(url,'me2QuestionReviewWindow','popup=yes,width=1500,height=980,resizable=yes,scrollbars=yes');
+ if(!opened){
+  alert('問題確認ウィンドウを開けませんでした。ブラウザのポップアップを許可してください。');
+  return;
+ }
+ opened.focus();
+}
+async function openDevEditorTarget(examId,part,index){
+ const ok=await verifyDevMode();
+ if(!ok){
+  openDevModeGate();
+  alert('開発者セッションが期限切れです。再ログイン後、問題確認ウィンドウからもう一度「従来の編集画面で開く」を押してください。');
+  return false;
+ }
+ await showDevModeUnlocked();
+ await openDevIssue(String(examId),String(part),Number(index)||0);
+ window.focus();
+ return true;
+}
+window.addEventListener('message',event=>{
+ if(event.origin!==window.location.origin)return;
+ const data=event.data||{};
+ if(data.type!=='ME2_OPEN_DEV_EDITOR')return;
+ openDevEditorTarget(data.examId,data.part,data.index).catch(error=>{
+  alert(`編集画面を開けませんでした。\n${error?.message||error}`);
+ });
+});
+async function maybeOpenDevEditorQuery(){
+ const params=new URLSearchParams(window.location.search);
+ const examId=params.get('devEditExam');
+ const part=params.get('devEditPart');
+ const index=params.get('devEditIndex');
+ if(!examId||!['am','pm'].includes(String(part))||index===null)return false;
+ const opened=await openDevEditorTarget(examId,part,Number(index)||0);
+ if(opened){
+  params.delete('devEditExam');
+  params.delete('devEditPart');
+  params.delete('devEditIndex');
+  const next=params.toString();
+  history.replaceState(null,'',`${location.pathname}${next?'?'+next:''}${location.hash||''}`);
+ }
+ return opened;
+}
+
 async function init(){
  applyTheme(getStoredTheme());
  initWhiteboard();
@@ -6144,7 +6688,8 @@ async function init(){
  showMenu();
  populateViewerSelects();
  updateDbLastSync();
- await maybeOpenSharedLink();
+ const openedDevEditor=await maybeOpenDevEditorQuery().catch(()=>false);
+ if(!openedDevEditor)await maybeOpenSharedLink();
  // 進行状況のクラウド確認は画面表示後に実行。ここで止まってもメニュー表示を妨げない。
  apiProgress('GET').catch(()=>null);
 }

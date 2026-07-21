@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>問題確認 | ME2 Quiz App</title>
+<script>
+window.MathJax={
+ tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']],processEscapes:true},
+ options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+:root{
+ --bg:#f3f6fb;--card:#fff;--text:#172033;--muted:#64748b;--line:#d8e0ea;
+ --primary:#2563eb;--primaryText:#fff;--good:#166534;--warn:#92400e;--danger:#991b1b;
+ --correct:#dcfce7;--correctLine:#22c55e;--shadow:0 10px 28px rgba(15,23,42,.08);
+}
+@media(prefers-color-scheme:dark){
+ :root{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--primary:#60a5fa;--primaryText:#082f49;--correct:#052e16;--correctLine:#22c55e;--shadow:none}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.65}
+button,select,input{font:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:9px 13px;font-weight:800;background:var(--primary);color:var(--primaryText)}
+button.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.wrap{max-width:1500px;margin:auto;padding:18px}
+.head{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(9px);padding:10px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+h1,h2,h3{line-height:1.3}
+h1{font-size:24px;margin:0 0 4px}
+.small{font-size:13px;color:var(--muted)}
+.controls{display:grid;grid-template-columns:repeat(6,minmax(145px,1fr));gap:10px;margin-top:12px}
+.field label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px}
+.field select,.field input{width:100%;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.status{padding:10px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);margin-top:10px}
+.summary{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.chip,.flag{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid var(--line)}
+.flag-review{background:#fef3c7;color:#92400e;border-color:#f59e0b}
+.flag-image{background:#dbeafe;color:#1e40af;border-color:#60a5fa}
+.flag-ai{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
+@media(prefers-color-scheme:dark){
+ .flag-review{background:#78350f;color:#fde68a}.flag-image{background:#172554;color:#bfdbfe}.flag-ai{background:#3b0764;color:#e9d5ff}
+}
+.results{display:grid;gap:18px}
+.question-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.question-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.question-head h2{font-size:19px;margin:0}
+.flag-controls{display:flex;gap:7px;flex-wrap:wrap}
+.flag input{width:17px;height:17px}
+.stem{font-size:18px;font-weight:800;margin:16px 0 10px}
+.annotation{border-left:5px solid #f59e0b;background:#fffbeb;color:#78350f;padding:10px 12px;border-radius:8px;margin:10px 0}
+@media(prefers-color-scheme:dark){.annotation{background:#451a03;color:#fde68a}}
+.image-box{margin:12px 0}
+.image-box img{display:block;max-width:100%;max-height:720px;object-fit:contain;margin:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+.image-error{color:var(--danger);font-weight:800}
+.choice{border:1px solid var(--line);border-radius:12px;padding:12px;margin:9px 0}
+.choice.correct{background:var(--correct);border-color:var(--correctLine)}
+.choice-title{display:flex;gap:8px;align-items:flex-start;font-weight:700}
+.choice-number{min-width:28px;height:28px;display:inline-grid;place-items:center;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.correct-mark{color:var(--good);font-size:12px;font-weight:900}
+.note{margin:8px 0 0 36px;padding-top:8px;border-top:1px dashed var(--line);font-size:14px}
+.tip{margin-top:14px;padding:12px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.pagination{display:flex;justify-content:center;align-items:center;gap:8px;margin:18px 0}
+.empty{text-align:center;padding:38px;color:var(--muted)}
+.code{font-family:Consolas,"Courier New",monospace;font-size:12px}
+@media(max-width:1000px){.controls{grid-template-columns:repeat(3,minmax(130px,1fr))}}
+@media(max-width:650px){.wrap{padding:10px}.controls{grid-template-columns:1fr 1fr}.question-card{padding:13px}.stem{font-size:16px}}
+@media print{
+ .head,.actions,.pagination,.flag-controls,.edit-button{display:none!important}
+ body{background:#fff;color:#000}.wrap{max-width:none}.question-card{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="head">
+    <section class="card">
+      <h1>問題確認</h1>
+      <div class="small">確認専用画面です。問題内容は編集せず、作業フラグのON・OFFと従来の編集画面への移動だけを行います。</div>
+      <div class="controls">
+        <div class="field"><label>開始回</label><select id="fromExam"></select></div>
+        <div class="field"><label>終了回</label><select id="toExam"></select></div>
+        <div class="field"><label>午前・午後</label><select id="partMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
+        <div class="field"><label>抽出条件</label><select id="flagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="none">フラグなし</option></select></div>
+        <div class="field"><label>開始問題番号</label><input id="qFrom" type="number" min="1" max="999" value="1"></div>
+        <div class="field"><label>終了問題番号</label><input id="qTo" type="number" min="1" max="999" value="60"></div>
+        <div class="field"><label>1ページの表示数</label><select id="pageSize"><option value="10">10問</option><option value="20" selected>20問</option><option value="50">50問</option><option value="100">100問</option></select></div>
+      </div>
+      <div class="actions">
+        <button onclick="runReview()">抽出・表示</button>
+        <button class="ghost" onclick="reloadFlagsAndReview()">フラグを再同期</button>
+        <button class="ghost" onclick="window.print()">印刷</button>
+        <button class="ghost" onclick="window.close()">閉じる</button>
+      </div>
+      <div id="status" class="status">読み込み中です。</div>
+      <div id="summary" class="summary"></div>
+    </section>
+  </header>
+
+  <main id="results" class="results"></main>
+  <nav id="pagination" class="pagination"></nav>
+</div>
+
+<script>
+const AUTH_KEY='me2_dev_auth';
+const FLAG_TYPES={
+ review:{label:'要確認',className:'review'},
+ imageChange:{label:'画像変更',className:'image'},
+ aiRegenerate:{label:'AI再生成',className:'ai'}
+};
+let examsIndex={exams:[]};
+let flagItems=Object.create(null);
+let allResults=[];
+let currentPage=1;
+
+const $=id=>document.getElementById(id);
+const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+function getAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch(_){return null}}
+function headers(){const auth=getAuth();return auth?.sessionToken?{'X-ME2-Dev-Session':auth.sessionToken}:{}}
+function examNumber(id){const m=String(id||'').match(/\d+/);return m?Number(m[0]):0}
+function partName(part){return part==='am'?'午前':'午後'}
+function questionAnnotation(q){
+ for(const value of [q?.annotation,q?.questionAnnotation,q?.questionNote]){
+  const text=String(value??'').trim();if(text)return text;
+ }
+ return '';
+}
+function normalizeLatex(value){return String(value??'').replace(/[¥￥]/g,'\\')}
+function mathHtml(value){return escapeHtml(normalizeLatex(value)).replace(/\r?\n/g,'<br>')}
+function assetUrl(path){
+ const raw=String(path||'').trim();
+ if(!raw)return'';
+ if(/^(data:|blob:|https?:)/i.test(raw))return raw;
+ return raw.replace(/^\.\//,'').replace(/^\//,'');
+}
+function flagKey(examId,part,q){return `${examId}:${part}:${String(q.id||`${part}${String(q.number||0).padStart(2,'0')}`)}`}
+function normalizeFlags(item){
+ const flags=item?.flags||{};
+ return{
+  review:Boolean(flags.review??item?.review??item?.flagged),
+  imageChange:Boolean(flags.imageChange??item?.imageChange),
+  aiRegenerate:Boolean(flags.aiRegenerate??item?.aiRegenerate)
+ };
+}
+function flagsFor(examId,part,q){return normalizeFlags(flagItems[flagKey(examId,part,q)])}
+function anyFlag(flags){return Object.values(flags).some(Boolean)}
+function setStatus(message,kind=''){const el=$('status');el.textContent=message;el.dataset.kind=kind}
+async function fetchJson(path,options={}){
+ const response=await fetch(path,{cache:'no-store',...options});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+ return data;
+}
+async function verifyDeveloper(){
+ const auth=getAuth();
+ if(!auth?.sessionToken)throw new Error('開発者ログイン情報がありません。元の画面で開発者ログインしてください。');
+ const response=await fetch('/api/dev-auth',{headers:headers(),cache:'no-store'});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok||!data.ok)throw new Error(data.error||'開発者セッションが無効または期限切れです。');
+}
+async function loadFlags(){
+ const data=await fetchJson('/api/dev-review',{headers:headers()});
+ const next=Object.create(null);
+ for(const item of data.items||[])if(item?.key)next[String(item.key)]={...item,flags:normalizeFlags(item)};
+ flagItems=next;
+}
+function fillExamOptions(){
+ const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
+ const html=records.map(ex=>`<option value="${escapeHtml(ex.id)}">${escapeHtml(ex.title||ex.id)}</option>`).join('');
+ $('fromExam').innerHTML=html;$('toExam').innerHTML=html;
+ const params=new URLSearchParams(location.search);
+ const from=params.get('from'),to=params.get('to');
+ $('fromExam').value=records.some(x=>String(x.id)===from)?from:String(records[0]?.id||'');
+ $('toExam').value=records.some(x=>String(x.id)===to)?to:String(records[records.length-1]?.id||'');
+ if(['am','pm','both'].includes(params.get('part'))) $('partMode').value=params.get('part');
+ if(['all','flags','review','image','ai','none'].includes(params.get('flag'))) $('flagMode').value=params.get('flag');
+ if(Number(params.get('qFrom'))>0)$('qFrom').value=String(Number(params.get('qFrom')));
+ if(Number(params.get('qTo'))>0)$('qTo').value=String(Number(params.get('qTo')));
+}
+function selectedExams(){
+ const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
+ const a=examNumber($('fromExam').value),b=examNumber($('toExam').value);
+ const lo=Math.min(a,b),hi=Math.max(a,b);
+ return records.filter(ex=>examNumber(ex.id)>=lo&&examNumber(ex.id)<=hi);
+}
+function selectedParts(){return $('partMode').value==='both'?['am','pm']:[$('partMode').value]}
+function matchesFlag(flags,mode){
+ if(mode==='all')return true;
+ if(mode==='flags')return anyFlag(flags);
+ if(mode==='review')return flags.review;
+ if(mode==='image')return flags.imageChange;
+ if(mode==='ai')return flags.aiRegenerate;
+ if(mode==='none')return !anyFlag(flags);
+ return true;
+}
+async function runReview(){
+ try{
+  setStatus('問題データを読み込み、抽出しています。');
+  currentPage=1;
+  const qFrom=Math.max(1,Number($('qFrom').value||1));
+  const qTo=Math.max(qFrom,Number($('qTo').value||999));
+  const mode=$('flagMode').value;
+  const results=[];
+  for(const ex of selectedExams()){
+   for(const part of selectedParts()){
+    const path=ex.parts?.[part];
+    if(!path)continue;
+    const pack=await fetchJson(path);
+    (pack.questions||[]).forEach((q,index)=>{
+     const number=Number(q.number||index+1);
+     if(number<qFrom||number>qTo)return;
+     const flags=flagsFor(String(ex.id),part,q);
+     if(!matchesFlag(flags,mode))return;
+     results.push({examId:String(ex.id),title:ex.title||String(ex.id),part,index,number,q,flags});
+    });
+   }
+  }
+  allResults=results;
+  render();
+  setStatus(`抽出完了：${results.length}問`);
+ }catch(error){
+  setStatus(`読み込みに失敗しました：${error?.message||error}`);
+  $('results').innerHTML='<div class="card empty">問題を表示できませんでした。</div>';
+ }
+}
+async function reloadFlagsAndReview(){
+ try{
+  setStatus('作業フラグをCloudflareから再同期しています。');
+  await loadFlags();
+  await runReview();
+ }catch(error){setStatus(`フラグ同期に失敗しました：${error?.message||error}`)}
+}
+function renderSummary(){
+ const counts={review:0,imageChange:0,aiRegenerate:0,any:0};
+ allResults.forEach(item=>{
+  if(anyFlag(item.flags))counts.any++;
+  for(const type of Object.keys(FLAG_TYPES))if(item.flags[type])counts[type]++;
+ });
+ $('summary').innerHTML=[
+  `<span class="chip">抽出 ${allResults.length}問</span>`,
+  `<span class="flag flag-review">要確認 ${counts.review}</span>`,
+  `<span class="flag flag-image">画像変更 ${counts.imageChange}</span>`,
+  `<span class="flag flag-ai">AI再生成 ${counts.aiRegenerate}</span>`,
+  `<span class="chip">いずれかのフラグ ${counts.any}</span>`
+ ].join('');
+}
+function render(){
+ renderSummary();
+ const size=Number($('pageSize').value||20);
+ const pages=Math.max(1,Math.ceil(allResults.length/size));
+ currentPage=Math.min(Math.max(1,currentPage),pages);
+ const pageItems=allResults.slice((currentPage-1)*size,currentPage*size);
+ $('results').innerHTML=pageItems.length?pageItems.map(renderCard).join(''):'<div class="card empty">条件に一致する問題はありません。</div>';
+ renderPagination(pages);
+ if(window.MathJax?.typesetPromise){
+  window.MathJax.typesetClear?.([$('results')]);
+  window.MathJax.typesetPromise([$('results')]).catch(console.warn);
+ }
+}
+function renderCard(item){
+ const q=item.q;
+ const annotation=questionAnnotation(q);
+ const image=q.hasFigure&&q.image?`<div class="image-box"><img src="${escapeHtml(assetUrl(q.image))}" alt="${escapeHtml(item.title)} ${partName(item.part)} 第${item.number}問の図表" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div class="image-error" hidden>画像を読み込めません：<span class="code">${escapeHtml(q.image)}</span></div></div>`:'';
+ const choices=(q.choices||[]).map((choice,index)=>{
+  const number=index+1;
+  const correct=(q.correct||[]).includes(number);
+  const note=String(q.choiceNotes?.[index]||'').trim();
+  return `<div class="choice ${correct?'correct':''}">
+   <div class="choice-title"><span class="choice-number">${number}</span><div>${mathHtml(choice)} ${correct?'<span class="correct-mark">正答</span>':''}</div></div>
+   <div class="note"><b>選択肢解説：</b>${note?mathHtml(note):'<span class="small">未設定</span>'}</div>
+  </div>`;
+ }).join('');
+ const flagControls=Object.entries(FLAG_TYPES).map(([type,config])=>
+  `<label class="flag flag-${config.className}"><input type="checkbox" ${item.flags[type]?'checked':''} onchange="toggleFlag('${escapeHtml(item.examId)}','${item.part}',${item.index},'${type}',this.checked,this)"> ${config.label}</label>`
+ ).join('');
+ return `<article class="question-card" data-key="${escapeHtml(flagKey(item.examId,item.part,q))}">
+  <div class="question-head">
+   <div>
+    <h2>${escapeHtml(item.title)} ${partName(item.part)} 第${item.number}問</h2>
+    <div class="small">範囲：${escapeHtml(q.range||'未設定')} / 形式：${q.negative?'誤っているものを選ぶ':'正しいものを選ぶ'} / JSON位置：${item.index+1}</div>
+   </div>
+   <div class="flag-controls">${flagControls}</div>
+  </div>
+  <div class="stem">${mathHtml(q.stem||'')}</div>
+  ${annotation?`<aside class="annotation"><b>注釈：</b>${mathHtml(annotation)}</aside>`:''}
+  ${image}
+  <section>${choices}</section>
+  <div class="tip"><b>要点解説：</b>${q.tip?mathHtml(q.tip):'<span class="small">未設定</span>'}</div>
+  <div class="actions edit-button">
+   <button class="ghost" onclick="openEditor('${escapeHtml(item.examId)}','${item.part}',${item.index})">従来の編集画面で開く</button>
+   ${q.image?`<a class="small code" href="${escapeHtml(assetUrl(q.image))}" target="_blank" rel="noopener">画像だけを開く</a>`:''}
+  </div>
+ </article>`;
+}
+function renderPagination(pages){
+ if(allResults.length===0){$('pagination').innerHTML='';return}
+ $('pagination').innerHTML=`
+  <button class="ghost" ${currentPage<=1?'disabled':''} onclick="changePage(${currentPage-1})">前へ</button>
+  <span class="chip">${currentPage} / ${pages}ページ</span>
+  <button class="ghost" ${currentPage>=pages?'disabled':''} onclick="changePage(${currentPage+1})">次へ</button>`;
+}
+function changePage(page){
+ currentPage=page;render();scrollTo({top:0,behavior:'smooth'});
+}
+async function toggleFlag(examId,part,index,type,checked,input){
+ const item=allResults.find(x=>x.examId===String(examId)&&x.part===part&&x.index===Number(index));
+ if(!item)return;
+ input.disabled=true;
+ try{
+  const q=item.q;
+  const questionId=String(q.id||`${part}${String(q.number||0).padStart(2,'0')}`);
+  const response=await fetchJson('/api/dev-review',{
+   method:'POST',
+   headers:{'content-type':'application/json',...headers()},
+   body:JSON.stringify({
+    examId,part,questionId,number:q.number,
+    sourceTitle:item.title,stem:q.stem||'',range:q.range||'',
+    flagType:type,flagged:Boolean(checked)
+   })
+  });
+  const key=flagKey(examId,part,q);
+  if(response.item)flagItems[key]={...response.item,flags:normalizeFlags(response.item)};
+  else delete flagItems[key];
+  item.flags=normalizeFlags(flagItems[key]);
+  const mode=$('flagMode').value;
+  if(!matchesFlag(item.flags,mode)){
+   allResults=allResults.filter(x=>x!==item);
+   render();
+  }else{
+   renderSummary();
+  }
+  setStatus(`${item.title} ${partName(part)} 第${item.number}問：${FLAG_TYPES[type].label}を${checked?'ON':'OFF'}にしました。`);
+ }catch(error){
+  input.checked=!checked;
+  setStatus(`フラグを更新できませんでした：${error?.message||error}`);
+ }finally{input.disabled=false}
+}
+function openEditor(examId,part,index){
+ const payload={type:'ME2_OPEN_DEV_EDITOR',examId,part,index:Number(index)||0};
+ if(window.opener&&!window.opener.closed){
+  window.opener.postMessage(payload,location.origin);
+  window.opener.focus();
+  return;
+ }
+ const params=new URLSearchParams({devEditExam:examId,devEditPart:part,devEditIndex:String(index)});
+ window.open(`./?${params.toString()}`,'_blank','noopener');
+}
+async function init(){
+ try{
+  setStatus('開発者セッションを確認しています。');
+  await verifyDeveloper();
+  examsIndex=await fetchJson('Date/Ques/exams_index.json');
+  await loadFlags();
+  fillExamOptions();
+  $('pageSize').addEventListener('change',()=>{currentPage=1;render()});
+  await runReview();
+ }catch(error){
+  setStatus(`問題確認を開始できません：${error?.message||error}`);
+  $('results').innerHTML='<div class="card empty">元の画面で開発者ログインを行ってから、もう一度問題確認を開いてください。</div>';
+ }
+}
+init();
+</script>
+</body>
+</html>
