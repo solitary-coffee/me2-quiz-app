@@ -5210,6 +5210,82 @@ async function devApplyImageCrop(){
  }
 }
 
+
+async function devFetchDefaultQuestionForImageReset(){
+ const currentIndex=Number($('devQuestionSelect')?.value||0);
+ const current=devCurrentQuestion();
+ const path=devCurrentJsonPath();
+ const url=withAssetCacheBuster(safeAssetPath(path));
+ const response=await fetchWithTimeout(url,{cache:'no-store'},20000);
+ if(!response.ok)throw new Error(`HTTP ${response.status} / ${path}`);
+ const pack=await response.json();
+ if(!Array.isArray(pack?.questions))throw new Error(`${path} にquestions配列がありません。`);
+ let original=pack.questions[currentIndex];
+ if(!original&&current?.number!==undefined){
+  original=pack.questions.find(item=>String(item?.number)===String(current.number));
+ }
+ if(!original)throw new Error('デプロイ済みJSONから現在の問題を特定できませんでした。');
+ return original;
+}
+async function devResetImageToDefault(){
+ const current=devCurrentQuestion();
+ if(!current){alert('現在の問題を取得できません。');return;}
+ try{
+  await devAssertQuestionMutable(current,'画像をデフォルトへ戻す',devExamId,devPart);
+ }catch(error){
+  if($('devStatus'))$('devStatus').innerHTML=`<span class="status-warn">${escapeHtml(error?.message||error)}</span>`;
+  return;
+ }
+ if(!confirm('画像をデプロイ済み問題JSONの状態へ戻しますか？\n追加・切り取り・修復した一時画像は削除されます。問題文や選択肢など、画像以外の編集中内容は保持します。'))return;
+
+ const imageInput=$('devImage');
+ const figureInput=$('devHasFigure');
+ const fallbackImage=String(imageInput?.dataset.defaultImage??current.image??'');
+ const fallbackHasFigure=String(figureInput?.dataset.defaultHasFigure??String(Boolean(current.hasFigure)))==='true';
+ let original=null;
+ let source='編集画面を開いた時点の画像';
+ let warning='';
+ try{
+  original=await devFetchDefaultQuestionForImageReset();
+  source='デプロイ済み問題JSON';
+ }catch(error){
+  warning=` デプロイ済みJSONの再取得に失敗したため、${source}を使用しました。詳細：${error?.message||error}`;
+ }
+ const defaultImage=String(original?.image??fallbackImage);
+ const defaultHasFigure=original?Boolean(original.hasFigure):fallbackHasFigure;
+ const currentKey=devCurrentPrKey();
+ const storageKey=devImageStorageKey(currentKey);
+
+ const batch=devPrBatch();
+ const batchIndex=batch.items.findIndex(item=>item.key===currentKey);
+ const oldBatchStorageKey=batchIndex>=0?batch.items[batchIndex]?.imageFile?.storageKey:'';
+ await devDeletePendingImage(storageKey);
+ if(oldBatchStorageKey&&oldBatchStorageKey!==storageKey)await devDeletePendingImage(oldBatchStorageKey);
+
+ if(imageInput)imageInput.value=defaultImage;
+ if(figureInput)figureInput.checked=defaultHasFigure;
+ if($('devPrImagePath'))$('devPrImagePath').value='';
+ if($('devImageUpload'))$('devImageUpload').value='';
+
+ if(batchIndex>=0){
+  const item=batch.items[batchIndex];
+  item.imagePath='';
+  item.imageFile=null;
+  if(item.question){
+   item.question.image=defaultImage;
+   item.question.hasFigure=defaultHasFigure;
+  }
+  item.updatedAt=new Date().toISOString();
+  saveDevPrBatch(batch);
+  if($('devPrBody'))$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
+ }
+
+ devCloseImageCropper();
+ devRenderPreview();
+ devRefreshPrPaths();
+ if($('devStatus'))$('devStatus').innerHTML=`<span class="status-ok">画像を${escapeHtml(source)}へ戻しました。追加・切り取り画像の一時保存と、現在の一括PR項目に残っていた画像ファイルを解除しました。画像変更フラグは自動変更していません。${escapeHtml(warning)}</span>`;
+}
+
 async function devDownloadImage(){
  const q=devReadForm();
  if(!q.image){alert('画像パスが空です。');return;}
@@ -5232,9 +5308,8 @@ async function devDownloadImage(){
 }
 
 function devEditorFlagBarHtml(flags,context='problem',compact=false){
- const label=context==='problem'?'問題フラグ':'問題フラグ（全選択肢で共通）';
  return `<div class="dev-editor-flag-bar ${compact?'compact':''}" data-flag-context="${escapeHtml(context)}">
-  <span class="dev-editor-flag-title">${label}</span>
+  <span class="dev-editor-flag-title">問題フラグ</span>
   ${Object.entries(DEV_WORK_FLAG_TYPES).map(([type,cfg])=>`<label class="dev-work-flag dev-work-flag-${cfg.className}"><input class="dev-editor-flag-checkbox" data-flag-type="${type}" type="checkbox" ${flags[type]?'checked':''} onchange="toggleDevEditorFlag('${type}',this.checked)"> ${cfg.label}</label>`).join('')}
   <span class="dev-editor-flag-sync">${devReviewLastError?'同期注意':'Cloudflare同期'}</span>
  </div>`;
@@ -5275,7 +5350,7 @@ async function toggleDevEditorFlag(flagType,checked){
  try{
   await saveDevQuestionFlag(q,flagType,checked,devExamId,devPart);
   devSyncEditorFlagControls(q);
-  if($('devStatus'))$('devStatus').innerHTML=`<span class="status-ok">${escapeHtml(DEV_WORK_FLAG_TYPES[flagType]?.label||flagType)}を${checked?'ON':'OFF'}にしました。問題欄と各選択肢欄のチェックは同期しています。</span>`;
+  if($('devStatus'))$('devStatus').innerHTML=`<span class="status-ok">${escapeHtml(DEV_WORK_FLAG_TYPES[flagType]?.label||flagType)}を${checked?'ON':'OFF'}にしました。問題欄のフラグをCloudflareへ同期しました。</span>`;
  }catch(error){
   devReviewLastError=String(error?.message||error);
   devSyncEditorFlagControls(q);
@@ -5292,8 +5367,8 @@ function devRenderEditor(){
  const editorFlags=devQuestionWorkFlags(q,devExamId,devPart);
  const choices=(q.choices||[]).map((c,i)=>`<div class="dev-choice-editor">
   <h4>選択肢 ${i+1}</h4>
-  ${devEditorFlagBarHtml(editorFlags,'choice-'+(i+1),true)}
-  <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(c))}</textarea>${devLatexToolbarHtml(`devChoice${i}`)}</div>
+  <div class="dev-field"><label>選択肢本文</label>
+   <textarea id="devChoice${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(c))}</textarea>${devLatexToolbarHtml(`devChoice${i}`)}</div>
   <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes((q.choiceNotes||[])[i]||''))}</textarea>${devLatexToolbarHtml(`devNote${i}`)}</div>
  </div>`).join('');
  $('devEditorBasic').innerHTML=`<h3>問題・解答・画像の設定</h3>
@@ -5315,9 +5390,9 @@ function devRenderEditor(){
  <div class="dev-field"><label>正答（例：1 または 2,4）</label><input id="devCorrect" value="${escapeHtml((q.correct||[]).join(','))}"></div>
  <div class="row">
   <label class="pill"><input type="checkbox" id="devNegative" ${q.negative?'checked':''}> 誤っているものを選ぶ問題</label>
-  <label class="pill"><input type="checkbox" id="devHasFigure" ${q.hasFigure?'checked':''}> 図表あり</label>
+  <label class="pill"><input type="checkbox" id="devHasFigure" data-default-has-figure="${q.hasFigure?'true':'false'}" ${q.hasFigure?'checked':''}> 図表あり</label>
  </div>
- <div class="dev-field"><label>画像ファイル表記 / パス</label><input id="devImage" value="${escapeHtml(q.image||'')}" placeholder="Date/img/44/44_am_q01.png または data:image/... "></div>
+ <div class="dev-field"><label>画像ファイル表記 / パス</label><input id="devImage" data-default-image="${escapeHtml(q.image||'')}" value="${escapeHtml(q.image||'')}" placeholder="Date/img/44/44_am_q01.png または data:image/... "></div>
  <section class="dev-standard-warning" id="devStandardWarningPanel">
   <h4>旧JIS・旧規格に関する注意</h4>
   <label class="pill"><input type="checkbox" id="devLegacyJis" ${normalizeStandardWarning(q).legacyJis?'checked':''}> ユーザー画面に旧JIS・旧規格の注意を表示</label>
@@ -5332,6 +5407,7 @@ function devRenderEditor(){
  <div class="dev-image-tools">
   <button class="ghost" type="button" onclick="devTriggerImageUpload()">画像を追加</button>
   <button class="ghost" type="button" onclick="devDownloadImage()">画像DL</button>
+  <button class="ghost" type="button" onclick="devResetImageToDefault()">画像をデフォルトに戻す</button>
   <button class="ghost" type="button" onclick="devOpenImageCropper()">画像を切り取る</button>
   <button class="ghost" type="button" onclick="devRepairCurrentImage()">画像データを検査・修復</button>
   <input id="devImageUpload" type="file" accept="image/*" class="hidden" onchange="devUploadImage(this)">
@@ -5346,8 +5422,7 @@ function devRenderEditor(){
    <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
   </div>
  </div>`;
- $('devEditorAdvanced').innerHTML=`${devEditorFlagBarHtml(editorFlags,'explanations')}
- <div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み保護中：選択肢・解説の変更は反映されません。先に確認済みフラグをOFFにしてください。</div>
+ $('devEditorAdvanced').innerHTML=`<div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み保護中：選択肢・解説の変更は反映されません。先に確認済みフラグをOFFにしてください。</div>
  <div class="dev-field"><label>要点解説</label><textarea id="devTip" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.tip||''))}</textarea>${devLatexToolbarHtml('devTip')}</div>${choices}`;
  devRenderPreview();
  ['devStem','devAnnotation','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
