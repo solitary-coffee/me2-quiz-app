@@ -370,7 +370,10 @@
         "誤りポイント：「4」ではなく、正しくは「2」。図の抵抗網を直並列で整理すると、AB間の合成抵抗は2Ωになります。",
         "誤りポイント：「6」ではなく、正しくは「2」。図の抵抗網を直並列で整理すると、AB間の合成抵抗は2Ωになります。"
       ],
-      "image": "Date/img/46/46_am_q29.jpg"
+      "image": "Date/img/46/46_pm_q13.png",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm14",
@@ -399,7 +402,10 @@
         "誤りポイント：「2.3」ではなく、正しくは「0.17」。端子電圧V=E−rIなので、V-Iグラフの傾きの絶対値が内部抵抗です。",
         "誤りポイント：「3.7」ではなく、正しくは「0.17」。端子電圧V=E−rIなので、V-Iグラフの傾きの絶対値が内部抵抗です。"
       ],
-      "image": "Date/img/46/46_am_q29.jpg"
+      "image": "Date/img/46/46_pm_q14.png",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm15",
@@ -412,7 +418,7 @@
         "0.63",
         "3.7",
         "6.3",
-        "10 図1 電池 図2 1.4 1.3 0 0 0.4 1.0 E V V ［V］ R I r I ［A］ 10 V S 20 kΩ Vc 1 μF"
+        "10"
       ],
       "hasFigure": true,
       "correct": [
@@ -428,7 +434,10 @@
         "正答。公式：Vc=E(1-e^{-t/RC})。代入：RC=20kΩ×1μF=20ms、t=20ms、E=10V。計算：Vc=10(1-e^{-1})≈10(1-1/2.7)≈6.3V。",
         "誤りポイント：「10」が誤り。正しくは「6.3」。公式：Vc=E(1-e^{-t/RC})。代入：RC=20kΩ×1μF=20ms、t=20ms、E=10V。計算：Vc=10(1-e^{-1})≈10(1-1/2.7)≈6.3V。"
       ],
-      "image": "Date/img/46/pm_p7.jpg"
+      "image": "Date/img/46/46_pm_q15.png",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm16",
@@ -457,7 +466,10 @@
         "誤りポイント：「PWM（pulse-width modulation）」ではなく、正しくは「FM（frequency modulation）」。図では搬送波の振幅ではなく周波数が変化しているためFMです。",
         "誤りポイント：「PCM（pulse-code modulation）」ではなく、正しくは「FM（frequency modulation）」。図では搬送波の振幅ではなく周波数が変化しているためFMです。"
       ],
-      "image": "Date/img/46/46_am_q29.jpg"
+      "image": "Date/img/46/46_pm_q16.png",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm17",
@@ -570,7 +582,10 @@
         "誤りポイント：浮力は引く量ではない。球の重さは天井側で支えられるので、はかりの値には加えない。正しくは「箱と水の重さ ＋ 球に働く浮力の大きさ」。",
         "誤りポイント：浮力も球の重さも差し引かない。水が球から受ける反作用で、はかりの値は増加する。正しくは「箱と水の重さ ＋ 球に働く浮力の大きさ」。"
       ],
-      "image": "Date/img/46/46_am_q29.jpg"
+      "image": "Date/img/46/46_pm_q20.png",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm21",
@@ -684,7 +699,12 @@
         "正答。圧力トランスデューサが低い位置にあるほど液柱圧が加わり、表示圧は大きくなります。",
         "誤りポイント：「どの配置でも同じ」ではなく、正しくは「D」。圧力トランスデューサが低い位置にあるほど液柱圧が加わり、表示圧は大きくなります。"
       ],
-      "image": "Date/img/46/46_am_q29.jpg"
+      "image": "Date/img/46/46_pm_q24.png",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm25",
@@ -1539,7 +1559,11 @@
         "誤りポイント：「D（保護接地線のみ）」ではなく、正しくは「A（100 V 側のみ）」。保護接地線は通常、消費電流の測定対象ではありません。",
         "誤りポイント：「E（0 V 側のみ）」ではなく、正しくは「A（100 V 側のみ）」。消費電流は片側の電源線だけをクランプして測定します。"
       ],
-      "image": "Date/img/46/pm_p20.jpg"
+      "image": "Date/img/46/46_pm_q54.png",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm55",
@@ -1652,7 +1676,10 @@
         "正答。アラーム状態を表すJIS図記号は図4である。",
         "誤りポイント：「図の5」が誤り。正しくは「図の4」。図5はアラーム状態の記号ではない。"
       ],
-      "image": "Date/img/46/pm_p22.jpg"
+      "image": "Date/img/46/46_pm_q58.png",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm59",
@@ -1710,7 +1737,10 @@
         "誤りポイント：「D：コード」ではなく、正しくは「E：本体と接続するプラグ」。フールプルーフは誤接続防止の考え方で、プラグ形状などに取り入れられています。",
         "正答。フールプルーフは誤接続防止の考え方で、プラグ形状などに取り入れられています。"
       ],
-      "image": "Date/img/46/pm_p23.jpg"
+      "image": "Date/img/46/46_pm_q60.png",
+      "kindCategories": [
+        "safety"
+      ]
     }
   ]
 }
