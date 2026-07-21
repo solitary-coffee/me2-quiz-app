@@ -1,5 +1,5 @@
 const REVIEW_PREFIX = 'devreview:';
-const FLAG_TYPES = ['review', 'imageChange', 'aiRegenerate', 'confirmed'];
+const FLAG_TYPES = ['review', 'imageChange', 'aiRegenerate', 'fixed', 'confirmed'];
 
 function json(data, init = {}) {
   return new Response(JSON.stringify(data), {
@@ -56,6 +56,7 @@ function normalizeFlags(item) {
     review: Boolean(flags.review ?? item?.review ?? item?.flagged),
     imageChange: Boolean(flags.imageChange ?? item?.imageChange),
     aiRegenerate: Boolean(flags.aiRegenerate ?? item?.aiRegenerate),
+    fixed: Boolean(flags.fixed ?? item?.fixed),
     confirmed: Boolean(flags.confirmed ?? item?.confirmed)
   };
 }
@@ -73,6 +74,7 @@ function normalizeStoredItem(item) {
     review: flags.review,
     imageChange: flags.imageChange,
     aiRegenerate: flags.aiRegenerate,
+    fixed: flags.fixed,
     confirmed: flags.confirmed,
     flags
   };

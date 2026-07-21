@@ -1253,7 +1253,7 @@ html[data-theme="dark"] .dev-review-cloud-badge{
 
 
 
-/* 開発者用：3種類の問題作業フラグ */
+/* 開発者用：5種類の問題作業フラグ */
 .dev-review-control{flex-wrap:wrap}
 .dev-work-flag{
  display:inline-flex;
@@ -1268,12 +1268,14 @@ html[data-theme="dark"] .dev-review-cloud-badge{
 .dev-work-flag-review{background:#fef3c7;color:#92400e;border-color:#f59e0b}
 .dev-work-flag-image{background:#dbeafe;color:#1e40af;border-color:#60a5fa}
 .dev-work-flag-ai{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
+.dev-work-flag-fixed{background:#e0f2fe;color:#075985;border-color:#38bdf8}
 .dev-work-flag-confirmed{background:#dcfce7;color:#166534;border-color:#22c55e}
 .dev-work-flag input{width:16px;height:16px}
 .dev-work-badges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
 html[data-theme="dark"] .dev-work-flag-review{background:#78350f;color:#fde68a;border-color:#b45309}
 html[data-theme="dark"] .dev-work-flag-image{background:#172554;color:#bfdbfe;border-color:#2563eb}
 html[data-theme="dark"] .dev-work-flag-ai{background:#3b0764;color:#e9d5ff;border-color:#9333ea}
+html[data-theme="dark"] .dev-work-flag-fixed{background:#0c4a6e;color:#bae6fd;border-color:#0284c7}
 html[data-theme="dark"] .dev-work-flag-confirmed{background:#052e16;color:#bbf7d0;border-color:#22c55e}
 
 .dev-bulk-ai-panel{
@@ -1751,7 +1753,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
       <div class="dev-field"><label>開始回</label><select id="questionReviewFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="questionReviewToExam"></select></div>
       <div class="dev-field"><label>午前・午後</label><select id="questionReviewPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
-      <div class="dev-field"><label>抽出条件</label><select id="questionReviewFlagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="none">フラグなし</option></select></div>
+      <div class="dev-field"><label>抽出条件</label><select id="questionReviewFlagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="fixed">修正済みのみ</option><option value="unfixed">未修正のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="none">フラグなし</option></select></div>
       <div class="dev-field"><label>開始問題番号</label><input id="questionReviewNumberFrom" type="number" min="1" max="999" value="1"></div>
       <div class="dev-field"><label>終了問題番号</label><input id="questionReviewNumberTo" type="number" min="1" max="999" value="60"></div>
     </div>
@@ -1763,12 +1765,12 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
 
   <section class="dev-check-panel">
     <h3>文面チェック</h3>
-    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」「画像変更」「AI再生成」「確認済み」も同じ一覧へ表示・抽出できます。確認済み問題はAI再生成・画像の自動変更から保護されます。手動編集とPR作成は可能で、既に確認済みの問題を変更するPRには注意表記が付きます。修正済みにチェックした項目は下へ移動します。</p>
+    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中や編集画面でクラウドへ登録した「要確認」「画像変更」「AI再生成」「修正済み」「確認済み」も同じ一覧へ表示・抽出できます。修正済みは修正作業の完了状態、確認済みは最終確認状態として別々に扱います。確認済み問題はAI再生成・画像の自動変更から保護されます。手動編集とPR作成は可能で、既に確認済みの問題を変更するPRには注意表記が付きます。</p>
     <div class="dev-check-grid">
       <div class="dev-field"><label>開始回</label><select id="checkFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="checkToExam"></select></div>
       <div class="dev-field"><label>対象</label><select id="checkPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
-      <div class="dev-field"><label>表示対象</label><select id="checkReviewMode"><option value="all">文面指摘＋すべての作業フラグ</option><option value="flags">作業フラグ付きのみ</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="issues">文面指摘のみ</option></select></div>
+      <div class="dev-field"><label>表示対象</label><select id="checkReviewMode"><option value="all">文面指摘＋すべての作業フラグ</option><option value="flags">作業フラグ付きのみ</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="fixed">修正済みのみ</option><option value="unfixed">未修正のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="issues">文面指摘のみ</option></select></div>
       <div class="dev-field"><label>抽出レベル</label><select id="checkSeverity"><option value="all">すべて</option><option value="high">重要のみ</option><option value="warn">重要・注意</option><option value="mid">重要・注意・確認</option><option value="low">軽微まで</option></select></div>
     </div>
     <div class="row" style="margin-top:10px">
@@ -1776,7 +1778,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
       <button class="ghost" onclick="copyDevCheckSummary()">結果コピー</button>
       <button class="ghost" onclick="exportDevCheckCsv()">CSV保存</button>
       <button class="ghost" onclick="clearDevCheckResults()">結果クリア</button>
-      <button class="ghost" onclick="clearDevCheckFixed()">修正済みチェックをリセット</button>
+      <button class="ghost" onclick="clearDevCheckFixed()">旧ブラウザ内の修正済み記録をリセット</button>
     </div>
     <div id="devCheckSummary" class="small" style="margin-top:10px"></div>
     <div id="devCheckResults" class="dev-check-results"></div>
@@ -4407,6 +4409,7 @@ const DEV_WORK_FLAG_TYPES={
  review:{label:'要確認',field:'要確認（クラウド）',severity:'mid',message:'通常演習中に開発者が「要確認」として登録しています。',className:'review'},
  imageChange:{label:'画像変更',field:'画像変更（クラウド）',severity:'warn',message:'問題画像の追加・差し替え・修正が必要として登録されています。',className:'image'},
  aiRegenerate:{label:'AI再生成',field:'AI再生成（クラウド）',severity:'mid',message:'AIによる要点解説・各選択肢解説の再生成が必要として登録されています。',className:'ai'},
+ fixed:{label:'修正済み',field:'修正済み（クラウド）',severity:'low',message:'問題の修正作業が完了した状態として登録されています。最終確認を示す「確認済み」とは別の状態です。',className:'fixed'},
  confirmed:{label:'確認済み',field:'確認済み（クラウド）',severity:'low',message:'最終確認済みとして登録されています。AI再生成・画像の自動変更は保護されますが、手動編集とPR作成は可能です。既に確認済みの問題を変更するPRには注意表記が付きます。',className:'confirmed'}
 };
 
@@ -4416,6 +4419,7 @@ function normalizeDevWorkFlags(item){
   review:Boolean(flags.review ?? item?.review ?? item?.flagged),
   imageChange:Boolean(flags.imageChange ?? item?.imageChange),
   aiRegenerate:Boolean(flags.aiRegenerate ?? item?.aiRegenerate),
+  fixed:Boolean(flags.fixed ?? item?.fixed),
   confirmed:Boolean(flags.confirmed ?? item?.confirmed)
  };
 }
@@ -6672,7 +6676,7 @@ function devIssueKey(item){
  const raw=[item.examId,item.part,item.index,item.number,(item.issues||[]).map(i=>`${i.severity}:${i.field}:${i.msg}`).join('|')].join('::');
  return 'issue_'+hashTextForIssue(raw);
 }
-function isDevIssueFixed(item){return Boolean(devFixedMap()[devIssueKey(item)])}
+function isDevIssueFixed(item){return Boolean(item?.fixed||item?.workFlags?.fixed||devFixedMap()[devIssueKey(item)])}
 function toggleDevIssueFixed(key,checked){
  const m=devFixedMap();
  if(checked)m[key]=new Date().toISOString();else delete m[key];
@@ -6696,10 +6700,12 @@ function filterDevCheckIssues(list,min='all',mode=null){
  devCheckLastFilter=min||'all';
  devCheckLastMode=mode||$('checkReviewMode')?.value||devCheckLastMode||'all';
  let filtered=(list||[]).slice();
- if(devCheckLastMode==='flags')filtered=filtered.filter(x=>x.manualReview||x.imageChange||x.aiRegenerate||x.confirmed);
+ if(devCheckLastMode==='flags')filtered=filtered.filter(x=>x.manualReview||x.imageChange||x.aiRegenerate||x.fixed||x.confirmed);
  else if(devCheckLastMode==='review')filtered=filtered.filter(x=>x.manualReview);
  else if(devCheckLastMode==='image')filtered=filtered.filter(x=>x.imageChange);
  else if(devCheckLastMode==='ai')filtered=filtered.filter(x=>x.aiRegenerate);
+ else if(devCheckLastMode==='fixed')filtered=filtered.filter(x=>isDevIssueFixed(x));
+ else if(devCheckLastMode==='unfixed')filtered=filtered.filter(x=>!isDevIssueFixed(x));
  else if(devCheckLastMode==='confirmed')filtered=filtered.filter(x=>x.confirmed);
  else if(devCheckLastMode==='unconfirmed')filtered=filtered.filter(x=>!x.confirmed);
  else if(devCheckLastMode==='issues')filtered=filtered.filter(x=>Number(x.textIssueCount||0)>0);
@@ -6872,6 +6878,7 @@ function devAttachWorkFlags(item,flags){
  item.manualReview=Boolean(flags.review);
  item.imageChange=Boolean(flags.imageChange);
  item.aiRegenerate=Boolean(flags.aiRegenerate);
+ item.fixed=Boolean(flags.fixed);
  item.confirmed=Boolean(flags.confirmed);
  item.issues=(item.issues||[]).filter(issue=>!issue.workFlag);
  for(const type of Object.keys(DEV_WORK_FLAG_TYPES)){
@@ -6885,6 +6892,7 @@ function devWorkFlagBadges(item){
   review:Boolean(item?.manualReview),
   imageChange:Boolean(item?.imageChange),
   aiRegenerate:Boolean(item?.aiRegenerate),
+  fixed:Boolean(item?.fixed),
   confirmed:Boolean(item?.confirmed)
  };
  const entries=Object.entries(DEV_WORK_FLAG_TYPES).filter(([type])=>flags[type]);
@@ -6906,7 +6914,7 @@ async function runDevTextCheck(){
  const min=$('checkSeverity')?.value||'all';
  const mode=$('checkReviewMode')?.value||'all';
  devCheckIssues=[];
- $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 4種類の作業フラグをCloudflareから同期しています。</span>';
+ $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 5種類の作業フラグをCloudflareから同期しています。</span>';
  $('devCheckResults').innerHTML='';
  try{await loadDevReviewFlagsForScopes(devScopeList(records,parts),true)}catch(e){
   devReviewLastError=String(e.message||e);
@@ -6929,7 +6937,7 @@ async function runDevTextCheck(){
    }catch(e){
     devCheckIssues.push({
      examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,
-     textIssueCount:1,manualReview:false,imageChange:false,aiRegenerate:false,confirmed:false,workFlags:{review:false,imageChange:false,aiRegenerate:false,confirmed:false},
+     textIssueCount:1,manualReview:false,imageChange:false,aiRegenerate:false,fixed:false,confirmed:false,workFlags:{review:false,imageChange:false,aiRegenerate:false,fixed:false,confirmed:false},
      issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]
     });
    }
@@ -6960,8 +6968,8 @@ function renderDevCheckResults(list){
    <span class="dev-work-flag dev-work-flag-review">要確認 ${manual}</span>
    <span class="dev-work-flag dev-work-flag-image">画像変更 ${image}</span>
    <span class="dev-work-flag dev-work-flag-ai">AI再生成 ${ai}</span>
+   <span class="dev-work-flag dev-work-flag-fixed">修正済み ${fixed}</span>
    <span class="dev-work-flag dev-work-flag-confirmed">確認済み ${confirmed}</span>
-   <span class="issue-fixed-label">修正済み ${fixed}</span>
   </div>`;
  if(!sorted.length){$('devCheckResults').innerHTML=summary+'<p class="small">表示条件に一致する指摘・作業フラグはありません。</p>';return;}
  $('devCheckResults').innerHTML=summary+sorted.map(item=>{
@@ -6981,7 +6989,6 @@ function renderDevCheckResults(list){
     <div class="row" style="margin-top:10px">
       ${item.q?`<button class="secondary" onclick="openDevIssue('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0})">この問題を開く</button>`:''}
       ${devCheckFlagControls(item)}
-      <label class="issue-fixed-label"><input type="checkbox" ${checked?'checked':''} onchange="toggleDevIssueFixed('${key}',this.checked)"> 修正済み</label>
     </div>
   </div>`;
  }).join('');
@@ -7032,6 +7039,7 @@ async function openDevIssue(examId,part,index){
 function clearDevCheckFixed(){
  saveDevFixedMap({});
  renderDevCheckResults(filterDevCheckIssues(devCheckIssues,devCheckLastFilter,devCheckLastMode));
+ alert('旧バージョンでブラウザ内だけに保存されていた修正済み記録を消去しました。Cloudflare同期の修正済みフラグは変更していません。');
 }
 function copyDevCheckSummary(){
  const text=[($('devCheckSummary')?.innerText||''),($('devCheckResults')?.innerText||'')].join('\n').trim();

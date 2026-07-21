@@ -48,10 +48,12 @@ h1{font-size:24px;margin:0 0 4px}
 .flag-review{background:#fef3c7;color:#92400e;border-color:#f59e0b}
 .flag-image{background:#dbeafe;color:#1e40af;border-color:#60a5fa}
 .flag-ai{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
+.flag-fixed{background:#e0f2fe;color:#075985;border-color:#38bdf8}
 .flag-confirmed{background:#dcfce7;color:#166534;border-color:#22c55e}
 html[data-theme="dark"] .flag-review{background:#78350f;color:#fde68a}
 html[data-theme="dark"] .flag-image{background:#172554;color:#bfdbfe}
 html[data-theme="dark"] .flag-ai{background:#3b0764;color:#e9d5ff}
+html[data-theme="dark"] .flag-fixed{background:#0c4a6e;color:#bae6fd}
 html[data-theme="dark"] .flag-confirmed{background:#052e16;color:#bbf7d0}
 
 .review-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
@@ -97,7 +99,7 @@ html[data-theme="dark"] .annotation{background:#451a03;color:#fde68a}
   <header class="head">
     <section class="card">
       <div class="review-title-row">
-       <div><h1>問題確認</h1><div class="small">確認専用画面です。問題内容は編集せず、作業フラグのON・OFFと従来の編集画面への移動だけを行います。確認済みは自動変更から保護され、修正済みとは別に扱います。</div></div>
+       <div><h1>問題確認</h1><div class="small">確認専用画面です。問題内容は編集せず、作業フラグのON・OFFと従来の編集画面への移動だけを行います。修正済みは修正作業の完了、確認済みは最終確認として別々に扱います。確認済みは自動変更から保護されます。</div></div>
        <button class="ghost" id="settingsToggle" type="button" onclick="toggleReviewSettings()">条件を折りたたむ</button>
       </div>
       <div id="reviewSettings">
@@ -105,7 +107,7 @@ html[data-theme="dark"] .annotation{background:#451a03;color:#fde68a}
         <div class="field"><label>開始回</label><select id="fromExam"></select></div>
         <div class="field"><label>終了回</label><select id="toExam"></select></div>
         <div class="field"><label>午前・午後</label><select id="partMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
-        <div class="field"><label>抽出条件</label><select id="flagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="none">フラグなし</option></select></div>
+        <div class="field"><label>抽出条件</label><select id="flagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="fixed">修正済みのみ</option><option value="unfixed">未修正のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="none">フラグなし</option></select></div>
         <div class="field"><label>開始問題番号</label><input id="qFrom" type="number" min="1" max="999" value="1"></div>
         <div class="field"><label>終了問題番号</label><input id="qTo" type="number" min="1" max="999" value="60"></div>
         <div class="field"><label>1ページの表示数</label><select id="pageSize"><option value="10">10問</option><option value="20" selected>20問</option><option value="50">50問</option><option value="100">100問</option></select></div>
@@ -166,6 +168,7 @@ const FLAG_TYPES={
  review:{label:'要確認',className:'review'},
  imageChange:{label:'画像変更',className:'image'},
  aiRegenerate:{label:'AI再生成',className:'ai'},
+ fixed:{label:'修正済み',className:'fixed'},
  confirmed:{label:'確認済み',className:'confirmed'}
 };
 let examsIndex={exams:[]};
@@ -195,7 +198,7 @@ function setSelectOptions(select,records,selectedValue='',fallback='first'){
 }
 function applyFilterValues(filters={}){
  if(['am','pm','both'].includes(String(filters.part||'')))$('partMode').value=String(filters.part);
- if(['all','flags','review','image','ai','confirmed','unconfirmed','none'].includes(String(filters.flag||'')))$('flagMode').value=String(filters.flag);
+ if(['all','flags','review','image','ai','fixed','unfixed','confirmed','unconfirmed','none'].includes(String(filters.flag||'')))$('flagMode').value=String(filters.flag);
  if(Number(filters.qFrom)>0)$('qFrom').value=String(Number(filters.qFrom));
  if(Number(filters.qTo)>0)$('qTo').value=String(Number(filters.qTo));
 }
@@ -242,6 +245,7 @@ function normalizeFlags(item){
   review:Boolean(flags.review??item?.review??item?.flagged),
   imageChange:Boolean(flags.imageChange??item?.imageChange),
   aiRegenerate:Boolean(flags.aiRegenerate??item?.aiRegenerate),
+  fixed:Boolean(flags.fixed??item?.fixed),
   confirmed:Boolean(flags.confirmed??item?.confirmed)
  };
 }
@@ -375,6 +379,8 @@ function matchesFlag(flags,mode){
  if(mode==='review')return flags.review;
  if(mode==='image')return flags.imageChange;
  if(mode==='ai')return flags.aiRegenerate;
+ if(mode==='fixed')return flags.fixed;
+ if(mode==='unfixed')return !flags.fixed;
  if(mode==='confirmed')return flags.confirmed;
  if(mode==='unconfirmed')return !flags.confirmed;
  if(mode==='none')return !anyFlag(flags);
@@ -446,7 +452,7 @@ async function reloadFlagsAndReview(){
  }
 }
 function renderSummary(){
- const counts={review:0,imageChange:0,aiRegenerate:0,confirmed:0,any:0};
+ const counts={review:0,imageChange:0,aiRegenerate:0,fixed:0,confirmed:0,any:0};
  allResults.forEach(item=>{
   if(anyFlag(item.flags))counts.any++;
   for(const type of Object.keys(FLAG_TYPES))if(item.flags[type])counts[type]++;
@@ -456,6 +462,7 @@ function renderSummary(){
   `<span class="flag flag-review">要確認 ${counts.review}</span>`,
   `<span class="flag flag-image">画像変更 ${counts.imageChange}</span>`,
   `<span class="flag flag-ai">AI再生成 ${counts.aiRegenerate}</span>`,
+  `<span class="flag flag-fixed">修正済み ${counts.fixed}</span>`,
   `<span class="flag flag-confirmed">確認済み ${counts.confirmed}</span>`,
   `<span class="chip">いずれかのフラグ ${counts.any}</span>`
  ].join('');
