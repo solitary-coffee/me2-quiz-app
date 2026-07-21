@@ -307,9 +307,28 @@ async function verifyDeveloper(){
  return true;
 }
 async function loadFlags(){
- const data=await fetchJson('/api/dev-review',{headers:headers()});
+ const scopes=[];
+ if(examsIndex?.exams?.length&&$('fromExam')?.value&&$('toExam')?.value){
+  for(const ex of selectedExams())for(const part of selectedParts())scopes.push({examId:String(ex.id),part});
+ }
  const next=Object.create(null);
- for(const item of data.items||[])if(item?.key)next[String(item.key)]={...item,flags:normalizeFlags(item)};
+
+ if(scopes.length){
+  let cursor=0;
+  const worker=async()=>{
+   while(cursor<scopes.length){
+    const scope=scopes[cursor++];
+    const params=new URLSearchParams(scope);
+    const data=await fetchJson(`/api/dev-review?${params.toString()}`,{headers:headers()});
+    for(const item of data.items||[])if(item?.key)next[String(item.key)]={...item,flags:normalizeFlags(item)};
+   }
+  };
+  await Promise.all(Array.from({length:Math.min(3,scopes.length)},()=>worker()));
+ }else{
+  const data=await fetchJson('/api/dev-review',{headers:headers()});
+  for(const item of data.items||[])if(item?.key)next[String(item.key)]={...item,flags:normalizeFlags(item)};
+ }
+
  flagItems=next;
  flagSyncAvailable=true;
  updateFlagUiAvailability();

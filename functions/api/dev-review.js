@@ -78,6 +78,23 @@ function normalizeStoredItem(item) {
   };
 }
 
+function reviewMetadata(item) {
+  const normalized = normalizeStoredItem(item);
+  if (!normalized) return null;
+  return {
+    key: normalized.key,
+    examId: normalized.examId,
+    part: normalized.part,
+    questionId: normalized.questionId,
+    number: normalized.number,
+    sourceTitle: normalized.sourceTitle,
+    flags: normalized.flags,
+    updatedAt: normalized.updatedAt,
+    updatedBy: normalized.updatedBy
+  };
+}
+
+
 async function requireDeveloper(context) {
   const kv = context.env?.ME2_PROGRESS;
   if (!kv) {
@@ -102,16 +119,32 @@ async function requireDeveloper(context) {
   return { kv, session };
 }
 
-async function listAllReviews(kv) {
+async function listAllReviews(kv, prefix = REVIEW_PREFIX) {
   const items = [];
   let cursor = undefined;
 
   do {
-    const page = await kv.list({ prefix: REVIEW_PREFIX, limit: 1000, ...(cursor ? { cursor } : {}) });
+    const page = await kv.list({ prefix, limit: 1000, ...(cursor ? { cursor } : {}) });
+    const needsValue = [];
+
     for (const entry of page.keys || []) {
-      const value = normalizeStoredItem(await kv.get(entry.name, 'json'));
-      if (value && hasAnyFlag(value.flags)) items.push(value);
+      const fromMetadata = normalizeStoredItem(entry.metadata);
+      if (fromMetadata && hasAnyFlag(fromMetadata.flags)) {
+        items.push(fromMetadata);
+      } else {
+        needsValue.push(entry.name);
+      }
     }
+
+    for (let i = 0; i < needsValue.length; i += 20) {
+      const names = needsValue.slice(i, i + 20);
+      const values = await Promise.all(names.map(name => kv.get(name, 'json')));
+      for (const raw of values) {
+        const value = normalizeStoredItem(raw);
+        if (value && hasAnyFlag(value.flags)) items.push(value);
+      }
+    }
+
     cursor = page.list_complete ? undefined : page.cursor;
   } while (cursor);
 
@@ -141,8 +174,15 @@ async function handleGet(context) {
     return json({ ok: true, item: item && hasAnyFlag(item.flags) ? item : null });
   }
 
-  const items = await listAllReviews(kv);
-  return json({ ok: true, items, count: items.length });
+  let prefix = REVIEW_PREFIX;
+  if (examId && part) {
+    prefix = `${REVIEW_PREFIX}${safeComponent(examId)}:${part}:`;
+  } else if (examId) {
+    prefix = `${REVIEW_PREFIX}${safeComponent(examId)}:`;
+  }
+
+  const items = await listAllReviews(kv, prefix);
+  return json({ ok: true, items, count: items.length, scoped: prefix !== REVIEW_PREFIX });
 }
 
 async function handlePost(context) {
@@ -197,7 +237,7 @@ async function handlePost(context) {
     updatedBy: String(session.id || 'developer')
   });
 
-  await kv.put(storageKey, JSON.stringify(item));
+  await kv.put(storageKey, JSON.stringify(item), { metadata: reviewMetadata(item) });
   return json({ ok: true, flags, item });
 }
 

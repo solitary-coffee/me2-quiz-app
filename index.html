@@ -1342,6 +1342,45 @@ html[data-theme="dark"] .dev-question-review-launch{
 html[data-theme="dark"] .dev-confirmed-protection{background:#052e16;color:#bbf7d0}
 @media(max-width:720px){.dev-image-crop-fields{grid-template-columns:1fr 1fr}.dev-image-crop-dialog{padding:10px}}
 
+
+/* 開発モード編集欄：問題単位の作業フラグ */
+.dev-editor-flag-bar{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ gap:7px;
+ padding:10px;
+ margin:8px 0 12px;
+ border:1px solid var(--line);
+ border-radius:12px;
+ background:var(--soft);
+}
+.dev-editor-flag-bar.compact{
+ padding:7px 8px;
+ margin:6px 0 9px;
+}
+.dev-editor-flag-title{
+ font-size:12px;
+ font-weight:900;
+ color:var(--muted);
+ margin-right:2px;
+}
+.dev-editor-flag-sync{
+ font-size:11px;
+ color:var(--muted);
+ margin-left:auto;
+}
+.dev-editor-confirmed-note{
+ margin:8px 0 12px;
+}
+.dev-choice-editor .dev-editor-flag-bar{
+ background:transparent;
+}
+html[data-theme="dark"] .dev-editor-flag-bar{
+ background:#0f172a;
+ border-color:#334155;
+}
+
 /* LaTeX・数式表示 */
 .math-content{min-width:0;overflow-wrap:anywhere}
 .math-content mjx-container{max-width:100%;color:inherit}
@@ -4360,6 +4399,8 @@ let devReviewFlags=Object.create(null);
 let devReviewFlagsLoaded=false;
 let devReviewFlagsLoading=null;
 let devReviewLastError='';
+let devReviewFlagsLoadedAt=0;
+let devReviewQuestionFetchedAt=Object.create(null);
 
 const DEV_WORK_FLAG_TYPES={
  review:{label:'要確認',field:'要確認（クラウド）',severity:'mid',message:'通常演習中に開発者が「要確認」として登録しています。',className:'review'},
@@ -4396,7 +4437,7 @@ function devReviewQuestionRef(q,examIdOverride='',partOverride=''){
 function hasDevSession(){
  return Boolean(getDevAuth()?.sessionToken);
 }
-async function apiDevReview(method='GET',payload=null){
+async function apiDevReview(method='GET',payload=null,requestOptions={}){
  const opt={method,headers:{...devHeaders(),'cache-control':'no-store'}};
  let url='/api/dev-review';
  if(method==='GET'&&payload){
@@ -4408,15 +4449,38 @@ async function apiDevReview(method='GET',payload=null){
   opt.headers['content-type']='application/json';
   opt.body=JSON.stringify(payload);
  }
- const r=await fetchWithTimeout(url,opt,15000);
- const data=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(data.error||`HTTP ${r.status}`);
- return data;
+
+ const isFullList=method==='GET'&&!payload;
+ const isScopedList=method==='GET'&&payload&&!payload.questionId;
+ const timeout=Number(requestOptions.timeout)||(isFullList?60000:isScopedList?45000:30000);
+ const attempts=Math.max(1,Number(requestOptions.attempts)||(method==='GET'?2:1));
+ let lastError=null;
+
+ for(let attempt=1;attempt<=attempts;attempt++){
+  try{
+   const r=await fetchWithTimeout(url,opt,timeout);
+   const data=await r.json().catch(()=>({}));
+   if(!r.ok){
+    const error=new Error(data.error||`HTTP ${r.status}`);
+    error.status=r.status;
+    throw error;
+   }
+   return data;
+  }catch(error){
+   lastError=error;
+   const status=Number(error?.status||0);
+   const retryable=error?.name==='TimeoutError'||/timeout|タイムアウト|failed to fetch|network|通信/i.test(String(error?.message||error))||status===408||status===429||status>=500;
+   if(attempt>=attempts||!retryable)break;
+   await new Promise(resolve=>setTimeout(resolve,700*attempt));
+  }
+ }
+ throw lastError||new Error('作業フラグAPIへ接続できませんでした。');
 }
 async function loadDevReviewFlags(force=false){
  if(!hasDevSession()){
   devReviewFlags=Object.create(null);
   devReviewFlagsLoaded=false;
+  devReviewFlagsLoadedAt=0;
   devReviewLastError='';
   return devReviewFlags;
  }
@@ -4424,13 +4488,14 @@ async function loadDevReviewFlags(force=false){
  if(devReviewFlagsLoaded&&!force)return devReviewFlags;
  devReviewFlagsLoading=(async()=>{
   try{
-   const data=await apiDevReview('GET');
+   const data=await apiDevReview('GET',null,{timeout:60000,attempts:2});
    const next=Object.create(null);
    (data.items||[]).forEach(item=>{
     if(item?.key)next[String(item.key)]={...item,flags:normalizeDevWorkFlags(item)};
    });
    devReviewFlags=next;
    devReviewFlagsLoaded=true;
+   devReviewFlagsLoadedAt=Date.now();
    devReviewLastError='';
    return devReviewFlags;
   }catch(e){
@@ -4443,6 +4508,65 @@ async function loadDevReviewFlags(force=false){
  })();
  return devReviewFlagsLoading;
 }
+
+async function loadDevQuestionFlags(q,force=false,examId='',part=''){
+ if(!hasDevSession())return normalizeDevWorkFlags(null);
+ const ref=devReviewQuestionRef(q,examId,part);
+ const fetchedAt=Number(devReviewQuestionFetchedAt[ref.key]||0);
+ if(!force&&fetchedAt&&Date.now()-fetchedAt<120000){
+  return devQuestionWorkFlags(q,examId,part);
+ }
+ const data=await apiDevReview('GET',{
+  examId:ref.examId,
+  part:ref.part,
+  questionId:ref.questionId
+ },{timeout:30000,attempts:2});
+ if(data.item){
+  devReviewFlags[ref.key]={...data.item,flags:normalizeDevWorkFlags(data.item)};
+ }else{
+  delete devReviewFlags[ref.key];
+ }
+ devReviewQuestionFetchedAt[ref.key]=Date.now();
+ devReviewLastError='';
+ return devQuestionWorkFlags(q,examId,part);
+}
+async function loadDevReviewFlagsForScopes(scopes,force=true){
+ if(!hasDevSession())return devReviewFlags;
+ const unique=[];
+ const seen=new Set();
+ for(const scope of scopes||[]){
+  const examId=String(scope?.examId||'').trim();
+  const part=String(scope?.part||'').trim();
+  if(!examId||!['am','pm'].includes(part))continue;
+  const key=`${examId}:${part}`;
+  if(!seen.has(key)){seen.add(key);unique.push({examId,part})}
+ }
+ if(!unique.length)return devReviewFlags;
+
+ let cursor=0;
+ const worker=async()=>{
+  while(cursor<unique.length){
+   const current=unique[cursor++];
+   const prefix=`${current.examId}:${current.part}:`;
+   const data=await apiDevReview('GET',current,{timeout:45000,attempts:2});
+   Object.keys(devReviewFlags).forEach(key=>{if(key.startsWith(prefix))delete devReviewFlags[key]});
+   (data.items||[]).forEach(item=>{
+    if(item?.key)devReviewFlags[String(item.key)]={...item,flags:normalizeDevWorkFlags(item)};
+   });
+  }
+ };
+ await Promise.all(Array.from({length:Math.min(3,unique.length)},()=>worker()));
+ devReviewFlagsLoaded=true;
+ devReviewFlagsLoadedAt=Date.now();
+ devReviewLastError='';
+ return devReviewFlags;
+}
+function devScopeList(records,parts){
+ const scopes=[];
+ for(const ex of records||[])for(const part of parts||[])scopes.push({examId:String(ex.id),part});
+ return scopes;
+}
+
 function devQuestionWorkFlags(q,examId='',part=''){
  const ref=devReviewQuestionRef(q,examId,part);
  return normalizeDevWorkFlags(devReviewFlags[ref.key]);
@@ -4458,10 +4582,20 @@ function isDevQuestionConfirmed(q,examId='',part=''){
  return isDevQuestionFlagged(q,examId,part,'confirmed');
 }
 async function devAssertQuestionMutable(q,action='変更',examId=devExamId,part=devPart){
+ const ref=devReviewQuestionRef(q,examId,part);
+ const knownAt=Math.max(
+  Number(devReviewQuestionFetchedAt[ref.key]||0),
+  Number(devReviewFlagsLoadedAt||0)
+ );
  try{
-  await loadDevReviewFlags(true);
+  if(!knownAt||Date.now()-knownAt>120000){
+   await loadDevQuestionFlags(q,true,examId,part);
+  }
  }catch(error){
-  throw new Error(`確認済み保護を確認できないため「${action}」を中止しました。作業フラグを再同期してください。詳細：${error?.message||error}`);
+  if(!knownAt){
+   throw new Error(`確認済み保護を確認できないため「${action}」を中止しました。現在の問題だけを再確認しましたが通信に失敗しました。少し待って再実行してください。詳細：${error?.message||error}`);
+  }
+  devReviewLastError=String(error?.message||error);
  }
  if(isDevQuestionConfirmed(q,examId,part)){
   throw new Error(`この問題は「確認済み」です。${action}する場合は、先に確認済みフラグをOFFにしてください。修正済みチェックとは別の保護状態です。`);
@@ -4512,12 +4646,13 @@ async function saveDevQuestionFlag(q,flagType,flagged,examId='',part=''){
   ...ref,
   flagType,
   flagged:Boolean(flagged)
- });
+ },{timeout:30000,attempts:1});
  if(data.item){
   devReviewFlags[ref.key]={...data.item,flags:normalizeDevWorkFlags(data.item)};
  }else{
   delete devReviewFlags[ref.key];
  }
+ devReviewQuestionFetchedAt[ref.key]=Date.now();
  devReviewFlagsLoaded=true;
  devReviewLastError='';
  return data;
@@ -5095,18 +5230,75 @@ async function devDownloadImage(){
   alert('画像をDLできませんでした。画像パスまたは配置を確認してください。');
  }
 }
+
+function devEditorFlagBarHtml(flags,context='problem',compact=false){
+ const label=context==='problem'?'問題フラグ':'問題フラグ（全選択肢で共通）';
+ return `<div class="dev-editor-flag-bar ${compact?'compact':''}" data-flag-context="${escapeHtml(context)}">
+  <span class="dev-editor-flag-title">${label}</span>
+  ${Object.entries(DEV_WORK_FLAG_TYPES).map(([type,cfg])=>`<label class="dev-work-flag dev-work-flag-${cfg.className}"><input class="dev-editor-flag-checkbox" data-flag-type="${type}" type="checkbox" ${flags[type]?'checked':''} onchange="toggleDevEditorFlag('${type}',this.checked)"> ${cfg.label}</label>`).join('')}
+  <span class="dev-editor-flag-sync">${devReviewLastError?'同期注意':'Cloudflare同期'}</span>
+ </div>`;
+}
+function devSyncEditorFlagControls(q=devCurrentQuestion()){
+ if(!q)return;
+ const flags=devQuestionWorkFlags(q,devExamId,devPart);
+ document.querySelectorAll('.dev-editor-flag-checkbox').forEach(input=>{
+  const type=input.dataset.flagType;
+  input.checked=Boolean(flags[type]);
+  input.disabled=false;
+ });
+ const ref=devReviewQuestionRef(q,devExamId,devPart);
+ const synced=Boolean(devReviewQuestionFetchedAt[ref.key]||devReviewFlagsLoadedAt);
+ document.querySelectorAll('.dev-editor-flag-sync').forEach(el=>{
+  el.textContent=devReviewLastError?'同期注意':synced?'Cloudflare同期':'確認中';
+ });
+ document.querySelectorAll('.dev-editor-confirmed-note').forEach(el=>{
+  el.classList.toggle('hidden',!flags.confirmed);
+ });
+}
+async function devRefreshEditorQuestionFlags(force=false){
+ const q=devCurrentQuestion();
+ if(!q)return;
+ try{
+  await loadDevQuestionFlags(q,force,devExamId,devPart);
+ }catch(error){
+  devReviewLastError=String(error?.message||error);
+ }finally{
+  devSyncEditorFlagControls(q);
+ }
+}
+async function toggleDevEditorFlag(flagType,checked){
+ const q=devCurrentQuestion();
+ if(!q)return;
+ const inputs=[...document.querySelectorAll('.dev-editor-flag-checkbox')];
+ inputs.forEach(input=>input.disabled=true);
+ try{
+  await saveDevQuestionFlag(q,flagType,checked,devExamId,devPart);
+  devSyncEditorFlagControls(q);
+  if($('devStatus'))$('devStatus').innerHTML=`<span class="status-ok">${escapeHtml(DEV_WORK_FLAG_TYPES[flagType]?.label||flagType)}を${checked?'ON':'OFF'}にしました。問題欄と各選択肢欄のチェックは同期しています。</span>`;
+ }catch(error){
+  devReviewLastError=String(error?.message||error);
+  devSyncEditorFlagControls(q);
+  if($('devStatus'))$('devStatus').innerHTML=`<span class="status-warn">フラグを更新できませんでした：${escapeHtml(error?.message||error)}</span>`;
+ }
+}
+
 function devRenderEditor(){
  const q=devCurrentQuestion();
  if(!q){
   ['devEditorBasic','devEditorAdvanced','devQuizPreview','devExplainPreview'].forEach(id=>{if($(id))$(id).innerHTML='<p class="small">問題がありません。</p>'});
   return;
  }
+ const editorFlags=devQuestionWorkFlags(q,devExamId,devPart);
  const choices=(q.choices||[]).map((c,i)=>`<div class="dev-choice-editor">
   <h4>選択肢 ${i+1}</h4>
+  ${devEditorFlagBarHtml(editorFlags,'choice-'+(i+1),true)}
   <div class="dev-field"><label>選択肢本文</label><textarea id="devChoice${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(c))}</textarea>${devLatexToolbarHtml(`devChoice${i}`)}</div>
   <div class="dev-field"><label>選択肢解説</label><textarea id="devNote${i}" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes((q.choiceNotes||[])[i]||''))}</textarea>${devLatexToolbarHtml(`devNote${i}`)}</div>
  </div>`).join('');
  $('devEditorBasic').innerHTML=`<h3>問題・解答・画像の設定</h3>
+ ${devEditorFlagBarHtml(editorFlags,'problem')}
+ <div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み保護中：内容変更・AI再生成・画像切り取り・PR反映は行いません。変更する場合は確認済みフラグをOFFにしてください。修正済みとは別の状態です。</div>
  <div class="dev-field"><label>問題文</label><textarea id="devStem" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.stem||''))}</textarea>${devLatexToolbarHtml('devStem')}</div>
  <div class="dev-field"><label>問題文の注釈（任意）</label><textarea id="devAnnotation" class="latex-input" data-latex-input="true" placeholder="例：表記バグがあるため、正しい問題文は画像を参照してください。">${escapeHtml(normalizeLatexBackslashes(questionAnnotation(q)))}</textarea>${devLatexToolbarHtml('devAnnotation')}</div>
  <div class="latex-backslash-note"><b>日本語環境の入力について：</b>「¥」または「￥」に見えても、LaTeX入力欄では自動的にバックスラッシュ「&#92;」へ変換します。入力補助ボタンから記法を挿入することもできます。</div>
@@ -5144,7 +5336,6 @@ function devRenderEditor(){
   <button class="ghost" type="button" onclick="devRepairCurrentImage()">画像データを検査・修復</button>
   <input id="devImageUpload" type="file" accept="image/*" class="hidden" onchange="devUploadImage(this)">
  </div>
- ${isDevQuestionConfirmed(q,devExamId,devPart)?'<div class="dev-confirmed-protection">確認済み保護中：内容変更・AI再生成・画像切り取り・PR反映は行いません。変更する場合は確認済みフラグをOFFにしてください。修正済みとは別の状態です。</div>':''}
  <div class="dev-editor-actions">
   <div class="row">
    <button class="secondary" onclick="devApplyChanges(true)">この問題に反映</button>
@@ -5155,7 +5346,9 @@ function devRenderEditor(){
    <button class="ghost" onclick="devCopyJson()">JSONコピー</button>
   </div>
  </div>`;
- $('devEditorAdvanced').innerHTML=`<div class="dev-field"><label>要点解説</label><textarea id="devTip" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.tip||''))}</textarea>${devLatexToolbarHtml('devTip')}</div>${choices}`;
+ $('devEditorAdvanced').innerHTML=`${devEditorFlagBarHtml(editorFlags,'explanations')}
+ <div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み保護中：選択肢・解説の変更は反映されません。先に確認済みフラグをOFFにしてください。</div>
+ <div class="dev-field"><label>要点解説</label><textarea id="devTip" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.tip||''))}</textarea>${devLatexToolbarHtml('devTip')}</div>${choices}`;
  devRenderPreview();
  ['devStem','devAnnotation','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
  ['devNegative','devHasFigure','devLegacyJisReview'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
@@ -5167,6 +5360,8 @@ function devRenderEditor(){
  renderDevPrBatchList();
  devRenderKindEditor();
  devClearGenericDevStatus();
+ devSyncEditorFlagControls(q);
+ devRefreshEditorQuestionFlags(false).catch(()=>null);
 }
 function devReadForm(){
  const q=devCurrentQuestion()||{choices:[],choiceNotes:[],correct:[]};
@@ -5943,7 +6138,8 @@ async function devBuildBatchPayload(){
   const current=await devPrepareCurrentBatchItem();
   batch={items:[current]};
  }
- try{await loadDevReviewFlags(true)}catch(error){throw new Error(`確認済み保護を確認できないためPR作成を中止しました：${error?.message||error}`)}
+ const batchScopes=[...new Map(batch.items.map(item=>[`${item.examId}:${item.part}`,{examId:String(item.examId),part:String(item.part)}])).values()];
+ try{await loadDevReviewFlagsForScopes(batchScopes,true)}catch(error){throw new Error(`確認済み保護を確認できないためPR作成を中止しました：${error?.message||error}`)}
  for(const item of batch.items){
   const pack=await getPart(item.examId,item.part);
   const q=pack?.questions?.[Number(item.index)||0];
@@ -6512,7 +6708,7 @@ async function runDevTextCheck(){
  devCheckIssues=[];
  $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 4種類の作業フラグをCloudflareから同期しています。</span>';
  $('devCheckResults').innerHTML='';
- try{await loadDevReviewFlags(true)}catch(e){
+ try{await loadDevReviewFlagsForScopes(devScopeList(records,parts),true)}catch(e){
   devReviewLastError=String(e.message||e);
  }
  for(const ex of records){
@@ -6690,7 +6886,7 @@ async function devCollectBulkAiTargets(){
  const records=selectedBulkAiExamIds();
  const parts=selectedBulkAiParts();
  const scope=$('bulkAiScope')?.value||'flagged';
- try{await loadDevReviewFlags(true)}catch(e){throw new Error(`確認済み保護とAI再生成フラグを同期できません：${e.message||e}`)}
+ try{await loadDevReviewFlagsForScopes(devScopeList(records,parts),true)}catch(e){throw new Error(`確認済み保護とAI再生成フラグを同期できません：${e.message||e}`)}
  const targets=[];
  devBulkAiLastSkippedConfirmed=0;
  for(const ex of records){
