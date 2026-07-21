@@ -1,4 +1,4 @@
-const DEFAULT_EXPLANATION_DEFINITION = `# ME2種 AI解説生成の定義
+const DEFAULT_EXPLANATION_DEFINITION = String.raw`# ME2種 AI解説生成の定義
 
 ## 1. 共通ルール
 - 解説は暗記用として短く、同じ構成で生成する。
@@ -8,18 +8,23 @@ const DEFAULT_EXPLANATION_DEFINITION = `# ME2種 AI解説生成の定義
 - 医療・安全に関係する内容は、一般的なME2種学習範囲として説明する。
 - 1つの選択肢解説は原則2〜4文まで。
 - 文字化け・不要な記号・孤立した数字は入れない。
+- 選択肢本文はchoices側に表示されるため、choiceNotes内で選択肢全文を引用して重複させない。
+- 「この設問について正しくは、〜」のように、設問全体の正答を各選択肢解説で繰り返さない。
+- 「この記述は設問の基礎事項と一致する。」などの抽象的な定型文だけで終わらせない。
 
 ## 2. 正しいものを選ぶ問題
 ### 正答選択肢
-「正答。〜は〜である。」
+- 「正答。理由：〜。」を基本とし、正しい理由を具体的に記載する。
 ### 誤答選択肢
-「誤りポイント：「誤っている語句・考え方」が誤り。正しくは「〜」」
+- 誤っている語句・数値・単位・方向・因果関係を具体的に示す。
+- 正しい語句・数値・単位・方向を提示する。
+- 単に「誤り」「不正解」「内容が異なる」だけで終わらせない。
 
 ## 3. 誤っているものを選ぶ問題
 ### 選ぶべき誤りの選択肢
-「正答。誤りポイント：「誤っている語句・考え方」が誤り。正しくは「〜」。」
+- 「正答。誤りポイント：〜。正しくは〜。」を基本とする。
 ### 誤りではない選択肢
-「この選択肢は誤りではない。」
+- 「この選択肢は誤りではない。」に続けて、正しい理由を具体的に記載する。
 
 ## 4. センサ・トランスデューサ・計測機器
 - 何を測定するかを書く。
@@ -37,40 +42,73 @@ const DEFAULT_EXPLANATION_DEFINITION = `# ME2種 AI解説生成の定義
 - 何に有効か、何に不向きかを書く。
 - 装置や部品は、役割・接続先・使用場面を書く。
 
-
 ## 6. 計算・公式問題
 - 使用した公式をすべて必ず書く。
 - 代入した式を必ず書く。
 - 計算結果には単位を付ける。
 - 誤答選択肢では、公式・代入・計算・単位のどこが違うかを書く。
 例：
-「正答。公式：V=IR。代入：V=2×50=100V。したがって設問条件に合う。」
-「誤りポイント：代入式が誤り。正しくは I=V/R=100/50=2A。」
+- 「正答。公式：\( V=IR \)。代入：\( V=2\times50=100\,\mathrm{V} \)。したがって設問条件に合う。」
+- 「誤りポイント：代入式が誤り。正しくは \( I=\frac{V}{R}=\frac{100}{50}=2\,\mathrm{A} \)。」
 
 ## 7. 要点解説 tip
 以下の形を基本にする。
 「要点：〜。覚える：〜。」
 - 重要語句・数値・分類を含める。
 - 長くしすぎない。
-計算問題の場合は使用公式や重要なポイントを含める。
-例：
-「要点：電圧はオームの法則で求められ、電流と抵抗の積。覚える：V=IR 単位はV（ボルト）。」
+- 計算問題では、使用公式・代入・単位を含める。
+
 ## 8. choiceNotesの統一書式
-各選択肢の解説は、次のどれかの書き出しに統一する。
+各選択肢の解説は、次の書き出しを基本にする。
 - 正答。
 - 誤りポイント：
 - この選択肢は誤りではない。
+- choiceNotesはchoicesと同じ数にする。
+- 図だけで示される、OCR崩れ、記号欠落などで安全に特定できない場合に限り「誤り。要点解説参照。」を使用できる。
 
-## 9. 出力条件
+## 9. サイト内でのLaTeX使用方法
+- このサイトはMathJaxでLaTeXを表示できる。
+- 問題文stem、選択肢choices、問題注釈annotation、要点解説tip、各選択肢解説choiceNotesで使用できる。
+- 文章中の数式は必ず \( ... \) で囲む。
+- 独立した数式は必ず \[ ... \] で囲む。
+- 開発モードの入力欄ではバックスラッシュを1個で入力する。
+- 開発モードでは、円記号の「¥」「￥」が入力された場合もバックスラッシュへ正規化される。
+- JSONファイルを直接編集する場合は、JSONの仕様によりバックスラッシュを2個にする。
+- HTMLタグで数式を表現しない。
+- 数式では必要に応じて単位を \mathrm{} で表し、数値と単位の間は \, を使用する。
+
+### よく使う記法
+- 分数：\( \frac{a}{b} \)
+- 平方根：\( \sqrt{R^2+X^2} \)
+- 下付き：\( V_{\mathrm{rms}} \)、\( PaCO_2 \)
+- 上付き：\( 10^{-3} \)
+- 掛け算：\( 3.0\times10^8 \)
+- 単位：\( 100\,\mathrm{V} \)、\( 2\,\mathrm{A} \)
+- ギリシャ文字：\( \alpha \)、\( \beta \)、\( \Delta \)、\( \Omega \)
+- 比較：\( \leq \)、\( \geq \)、\( \neq \)、\( \approx \)
+- 論理否定：\( \neg A \)
+- AND：\( A\land B \)
+- OR：\( A\lor B \)
+- 含意：\( A\Rightarrow B \)
+- 同値：\( A\Leftrightarrow B \)
+- 和集合・共通部分：\( A\cup B \)、\( A\cap B \)
+
+### JSONへ直接記載する例
+- 画面上で表示させたい内容：電流は \( I=\frac{V}{R} \) で求める。
+- JSON文字列内：「電流は \\( I=\\frac{V}{R} \\) で求める。」
+- AIはJSONを返すため、応答JSONではバックスラッシュをJSONとして正しくエスケープする。
+
+## 9.1 問題画像の利用
+- hasFigureがtrueで問題画像が送信されている場合は、画像内の図・表・グラフ・回路・波形・選択肢記号を必ず確認する。
+- 画像から読み取れない内容を推測で補わない。
+- 問題文と画像の情報が食い違う場合は、画像を優先したと断定せず、要点解説で確認が必要な箇所を明示する。
+- 画像が解答判断に必要な問題では、画像を参照した具体的な理由をchoiceNotesへ反映する。
+
+## 10. 出力条件
 - tipは1つ。
 - choiceNotesは選択肢数と同じ数。
-- JSONのみで返す。
-
-## 10. 数式・分数・論理式の表記
-- 分数、平方根、添字、上付き、論理式はLaTeXで記載する。
-- 文章中の数式は \( ... \)、独立した数式は \[ ... \] で囲む。
-- 例：\( I=\frac{V}{R} \)、\( Z=\sqrt{R^2+X^2} \)、\( \neg A \lor B \)。
-- JSONとして出力する際は、バックスラッシュを正しくエスケープする。`;
+- tipとchoiceNotes以外の問題データを変更しない。
+- JSONのみで返す。`;
 
 function json(data, init = {}) {
   return new Response(JSON.stringify(data), { status: init.status || 200, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...(init.headers || {}) } });
@@ -91,10 +129,26 @@ async function verifyDevSession(context) {
 function cleanQuestion(q) {
   const choices = Array.isArray(q?.choices) ? q.choices.map(x => String(x || '').slice(0, 500)) : [];
   const correct = Array.isArray(q?.correct) ? q.correct.map(Number).filter(n => n >= 1 && n <= choices.length) : [];
-  return { number: q?.number, range: String(q?.range || '').slice(0, 120), stem: String(q?.stem || '').slice(0, 1200), annotation: String(q?.annotation || q?.questionAnnotation || q?.questionNote || '').slice(0, 1000), choices, correct, negative: Boolean(q?.negative), hasFigure: Boolean(q?.hasFigure), image: String(q?.image || '').slice(0, 240), tip: String(q?.tip || '').slice(0, 1000), choiceNotes: Array.isArray(q?.choiceNotes) ? q.choiceNotes.map(x => String(x || '').slice(0, 800)) : [] };
+  return { number: q?.number, range: String(q?.range || '').slice(0, 120), stem: String(q?.stem || '').slice(0, 1200), annotation: String(q?.annotation || q?.questionAnnotation || q?.questionNote || '').slice(0, 1000), choices, correct, negative: Boolean(q?.negative), hasFigure: Boolean(q?.hasFigure), image: String(q?.image || '').slice(0, 500), tip: String(q?.tip || '').slice(0, 1000), choiceNotes: Array.isArray(q?.choiceNotes) ? q.choiceNotes.map(x => String(x || '').slice(0, 800)) : [] };
+}
+function cleanImageInput(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (!/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/i.test(raw)) {
+    throw new Error('AI送信用画像が不正です。PNG・JPEG・WebPのBase64 Data URLを使用してください。');
+  }
+  const comma = raw.indexOf(',');
+  const base64 = raw.slice(comma + 1);
+  const padding = (base64.match(/=+$/) || [''])[0].length;
+  const size = Math.floor(base64.length * 3 / 4) - padding;
+  if (size <= 0) throw new Error('AI送信用画像が空です。');
+  if (size > 15 * 1024 * 1024) throw new Error('AI送信用画像が15MBを超えています。');
+  return raw;
 }
 function cleanDefinition(definition) { const d = String(definition || '').trim(); if (!d) return DEFAULT_EXPLANATION_DEFINITION; return d.slice(0, 8000); }
 function buildPrompt(q, definition) {
+  const promptQuestion = { ...q, imageProvidedToModel: Boolean(q.imageInput) };
+  delete promptQuestion.imageInput;
   return `以下の「解説生成定義」を厳守して、第2種ME技術実力検定試験（ME2種）学習アプリ用の解説を生成してください。
 
 # 解説生成定義
@@ -108,7 +162,7 @@ ${definition}
 }
 
 # 問題データ
-${JSON.stringify(q, null, 2)}`;
+${JSON.stringify(promptQuestion, null, 2)}`;
 }
 function extractJsonText(data) {
   if (typeof data.output_text === 'string') return data.output_text;
@@ -128,11 +182,21 @@ async function callOpenAI(env, q, definition) {
   const apiKey = env.OPENAI_API_KEY || env.ME2_OPENAI_API_KEY || '';
   if (!apiKey) throw new Error('OPENAI_API_KEY が未設定です。Cloudflare Pages の環境変数に設定してください。');
   const model = env.ME2_AI_MODEL || 'gpt-4o-mini';
+  const userContent = [
+    { type: 'input_text', text: buildPrompt(q, definition) }
+  ];
+  if (q.imageInput) {
+    userContent.push({
+      type: 'input_image',
+      image_url: q.imageInput,
+      detail: 'high'
+    });
+  }
   const payload = {
     model,
     input: [
       { role: 'system', content: 'You generate concise, accurate Japanese explanations for ME2 exam questions. Follow the user-provided definition exactly. Return valid JSON only.' },
-      { role: 'user', content: buildPrompt(q, definition) }
+      { role: 'user', content: userContent }
     ],
     text: { format: { type: 'json_schema', name: 'me2_explanation', schema: { type: 'object', additionalProperties: false, properties: { tip: { type: 'string' }, choiceNotes: { type: 'array', items: { type: 'string' } } }, required: ['tip', 'choiceNotes'] }, strict: true } }
   };
@@ -142,13 +206,14 @@ async function callOpenAI(env, q, definition) {
   const text = extractJsonText(data);
   let parsed;
   try { parsed = JSON.parse(text); } catch (_) { throw new Error('AI応答をJSONとして読み取れませんでした。'); }
-  return normalizeAiResult(parsed, q);
+  return { ...normalizeAiResult(parsed, q), imageUsed: Boolean(q.imageInput) };
 }
 async function handlePost(context) {
   const verified = await verifyDevSession(context);
   if (!verified.ok) return json({ error: verified.error }, { status: 401 });
   const body = await bodyJson(context.request);
   const q = cleanQuestion(body.question || {});
+  q.imageInput = q.hasFigure ? cleanImageInput(body.imageInput || '') : '';
   const definition = cleanDefinition(body.definition || DEFAULT_EXPLANATION_DEFINITION);
   if (!q.stem || q.choices.length < 2 || !q.correct.length) return json({ error: '問題文・選択肢・正答が不足しています。' }, { status: 400 });
   const result = await callOpenAI(context.env || {}, q, definition);
@@ -156,4 +221,3 @@ async function handlePost(context) {
 }
 export async function onRequest(context) { try { if (context.request.method.toUpperCase() !== 'POST') return json({ error: 'Method not allowed for /api/ai-explain' }, { status: 405 }); return await handlePost(context); } catch (e) { return json({ error: e && e.message ? e.message : String(e) }, { status: 500 }); } }
 export async function onRequestPost(context) { try { return await handlePost(context); } catch (e) { return json({ error: e && e.message ? e.message : String(e) }, { status: 500 }); } }
-

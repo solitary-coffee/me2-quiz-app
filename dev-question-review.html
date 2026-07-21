@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#2563eb">
 <title>問題確認 | ME2 Quiz App</title>
 <script>
 window.MathJax={
@@ -13,13 +14,16 @@ window.MathJax={
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
 <style>
-:root{
+:root,
+html[data-theme="light"]{
  --bg:#f3f6fb;--card:#fff;--text:#172033;--muted:#64748b;--line:#d8e0ea;
  --primary:#2563eb;--primaryText:#fff;--good:#166534;--warn:#92400e;--danger:#991b1b;
  --correct:#dcfce7;--correctLine:#22c55e;--shadow:0 10px 28px rgba(15,23,42,.08);
 }
-@media(prefers-color-scheme:dark){
- :root{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;--primary:#60a5fa;--primaryText:#082f49;--correct:#052e16;--correctLine:#22c55e;--shadow:none}
+html[data-theme="dark"]{
+ --bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#94a3b8;--line:#334155;
+ --primary:#60a5fa;--primaryText:#082f49;--good:#86efac;--warn:#fde68a;--danger:#fecaca;
+ --correct:#052e16;--correctLine:#22c55e;--shadow:none;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;line-height:1.65}
@@ -37,15 +41,15 @@ h1{font-size:24px;margin:0 0 4px}
 .field label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px}
 .field select,.field input{width:100%;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text)}
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
-.status{padding:10px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);margin-top:10px}
+.status{padding:10px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);margin-top:10px;white-space:pre-wrap}
 .summary{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
 .chip,.flag{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid var(--line)}
 .flag-review{background:#fef3c7;color:#92400e;border-color:#f59e0b}
 .flag-image{background:#dbeafe;color:#1e40af;border-color:#60a5fa}
 .flag-ai{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
-@media(prefers-color-scheme:dark){
- .flag-review{background:#78350f;color:#fde68a}.flag-image{background:#172554;color:#bfdbfe}.flag-ai{background:#3b0764;color:#e9d5ff}
-}
+html[data-theme="dark"] .flag-review{background:#78350f;color:#fde68a}
+html[data-theme="dark"] .flag-image{background:#172554;color:#bfdbfe}
+html[data-theme="dark"] .flag-ai{background:#3b0764;color:#e9d5ff}
 .results{display:grid;gap:18px}
 .question-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
 .question-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
@@ -54,7 +58,7 @@ h1{font-size:24px;margin:0 0 4px}
 .flag input{width:17px;height:17px}
 .stem{font-size:18px;font-weight:800;margin:16px 0 10px}
 .annotation{border-left:5px solid #f59e0b;background:#fffbeb;color:#78350f;padding:10px 12px;border-radius:8px;margin:10px 0}
-@media(prefers-color-scheme:dark){.annotation{background:#451a03;color:#fde68a}}
+html[data-theme="dark"] .annotation{background:#451a03;color:#fde68a}
 .image-box{margin:12px 0}
 .image-box img{display:block;max-width:100%;max-height:720px;object-fit:contain;margin:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
 .image-error{color:var(--danger);font-weight:800}
@@ -94,6 +98,7 @@ h1{font-size:24px;margin:0 0 4px}
       <div class="actions">
         <button onclick="runReview()">抽出・表示</button>
         <button class="ghost" onclick="reloadFlagsAndReview()">フラグを再同期</button>
+        <button class="ghost" id="themeToggle" onclick="toggleTheme()">🌙 ダーク</button>
         <button class="ghost" onclick="window.print()">印刷</button>
         <button class="ghost" onclick="window.close()">閉じる</button>
       </div>
@@ -107,6 +112,35 @@ h1{font-size:24px;margin:0 0 4px}
 </div>
 
 <script>
+const THEME_KEY='me2_theme';
+function getStoredTheme(){
+ try{
+  const saved=localStorage.getItem(THEME_KEY);
+  if(saved==='dark'||saved==='light')return saved;
+ }catch(_){}
+ return window.matchMedia?.('(prefers-color-scheme: dark)').matches?'dark':'light';
+}
+function applyTheme(theme){
+ const value=theme==='dark'?'dark':'light';
+ document.documentElement.setAttribute('data-theme',value);
+ const meta=document.querySelector('meta[name="theme-color"]');
+ if(meta)meta.content=value==='dark'?'#0b1220':'#2563eb';
+ const button=$('themeToggle');
+ if(button){
+  button.textContent=value==='dark'?'☀️ ライト':'🌙 ダーク';
+  button.title=value==='dark'?'ライトモードに切り替え':'ダークモードに切り替え';
+ }
+}
+function toggleTheme(){
+ const current=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';
+ const next=current==='dark'?'light':'dark';
+ try{localStorage.setItem(THEME_KEY,next)}catch(_){}
+ applyTheme(next);
+}
+window.addEventListener('storage',event=>{
+ if(event.key===THEME_KEY&&(event.newValue==='dark'||event.newValue==='light'))applyTheme(event.newValue);
+});
+
 const AUTH_KEY='me2_dev_auth';
 const FLAG_TYPES={
  review:{label:'要確認',className:'review'},
@@ -150,11 +184,54 @@ function normalizeFlags(item){
 function flagsFor(examId,part,q){return normalizeFlags(flagItems[flagKey(examId,part,q)])}
 function anyFlag(flags){return Object.values(flags).some(Boolean)}
 function setStatus(message,kind=''){const el=$('status');el.textContent=message;el.dataset.kind=kind}
+function absoluteSiteUrl(path){
+ const raw=String(path||'').trim();
+ if(!raw)throw new Error('読み込み先パスが空です。');
+ return new URL(raw,document.baseURI).href;
+}
 async function fetchJson(path,options={}){
- const response=await fetch(path,{cache:'no-store',...options});
- const data=await response.json().catch(()=>({}));
- if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
- return data;
+ const url=absoluteSiteUrl(path);
+ let lastError=null;
+ for(let attempt=1;attempt<=2;attempt++){
+  try{
+   const response=await fetch(url,{cache:'no-store',credentials:'same-origin',...options});
+   const text=await response.text();
+   let data={};
+   try{data=text?JSON.parse(text):{}}catch(_){
+    throw new Error(`JSONではない応答です：${url}`);
+   }
+   if(!response.ok)throw new Error(data.error||`HTTP ${response.status}：${url}`);
+   return data;
+  }catch(error){
+   lastError=error;
+   if(attempt<2)await new Promise(resolve=>setTimeout(resolve,500));
+  }
+ }
+ throw lastError||new Error(`JSONを読み込めません：${url}`);
+}
+async function fetchFirstJson(candidates,label){
+ const unique=[...new Set((candidates||[]).filter(Boolean).map(absoluteSiteUrl))];
+ const errors=[];
+ for(const url of unique){
+  try{return await fetchJson(url)}catch(error){errors.push(error?.message||String(error))}
+ }
+ throw new Error(`${label}を読み込めませんでした。\n${errors.join('\n')}`);
+}
+async function loadExamsIndex(){
+ return fetchFirstJson([
+  'Date/Ques/exams_index.json',
+  './Date/Ques/exams_index.json',
+  '/Date/Ques/exams_index.json'
+ ],'試験一覧');
+}
+async function loadPartPack(exam,part){
+ const fallback=`Date/Ques/${exam.id}_${part}.json`;
+ return fetchFirstJson([
+  exam?.parts?.[part],
+  fallback,
+  `./${fallback}`,
+  `/${fallback}`
+ ],`${exam.title||exam.id} ${partName(part)}`);
 }
 async function verifyDeveloper(){
  const auth=getAuth();
@@ -206,26 +283,38 @@ async function runReview(){
   const qTo=Math.max(qFrom,Number($('qTo').value||999));
   const mode=$('flagMode').value;
   const results=[];
+  const loadErrors=[];
+  let loadedParts=0;
+
   for(const ex of selectedExams()){
    for(const part of selectedParts()){
-    const path=ex.parts?.[part];
-    if(!path)continue;
-    const pack=await fetchJson(path);
-    (pack.questions||[]).forEach((q,index)=>{
-     const number=Number(q.number||index+1);
-     if(number<qFrom||number>qTo)return;
-     const flags=flagsFor(String(ex.id),part,q);
-     if(!matchesFlag(flags,mode))return;
-     results.push({examId:String(ex.id),title:ex.title||String(ex.id),part,index,number,q,flags});
-    });
+    try{
+     const pack=await loadPartPack(ex,part);
+     if(!Array.isArray(pack.questions))throw new Error('questions配列がありません。');
+     loadedParts++;
+     (pack.questions||[]).forEach((q,index)=>{
+      const number=Number(q.number||index+1);
+      if(number<qFrom||number>qTo)return;
+      const flags=flagsFor(String(ex.id),part,q);
+      if(!matchesFlag(flags,mode))return;
+      results.push({examId:String(ex.id),title:ex.title||String(ex.id),part,index,number,q,flags});
+     });
+    }catch(error){
+     loadErrors.push(`${ex.title||ex.id} ${partName(part)}：${error?.message||error}`);
+    }
    }
   }
+
   allResults=results;
   render();
-  setStatus(`抽出完了：${results.length}問`);
+  if(loadErrors.length){
+   setStatus(`抽出完了：${results.length}問。${loadedParts}区分を読み込み、${loadErrors.length}区分で失敗しました。\n${loadErrors.join('\n')}`);
+  }else{
+   setStatus(`抽出完了：${results.length}問（${loadedParts}区分を読み込み）`);
+  }
  }catch(error){
   setStatus(`読み込みに失敗しました：${error?.message||error}`);
-  $('results').innerHTML='<div class="card empty">問題を表示できませんでした。</div>';
+  $('results').innerHTML='<div class="card empty">問題を表示できませんでした。表示されたパスとHTTPエラーを確認してください。</div>';
  }
 }
 async function reloadFlagsAndReview(){
@@ -351,17 +440,22 @@ function openEditor(examId,part,index){
  window.open(`./?${params.toString()}`,'_blank','noopener');
 }
 async function init(){
+ applyTheme(getStoredTheme());
  try{
   setStatus('開発者セッションを確認しています。');
   await verifyDeveloper();
-  examsIndex=await fetchJson('Date/Ques/exams_index.json');
+  setStatus('試験一覧を読み込んでいます。');
+  examsIndex=await loadExamsIndex();
+  if(!Array.isArray(examsIndex.exams)||!examsIndex.exams.length){
+   throw new Error('exams_index.jsonに試験情報がありません。');
+  }
   await loadFlags();
   fillExamOptions();
   $('pageSize').addEventListener('change',()=>{currentPage=1;render()});
   await runReview();
  }catch(error){
   setStatus(`問題確認を開始できません：${error?.message||error}`);
-  $('results').innerHTML='<div class="card empty">元の画面で開発者ログインを行ってから、もう一度問題確認を開いてください。</div>';
+  $('results').innerHTML='<div class="card empty">元の画面で開発者ログインを確認してください。試験一覧または問題JSONの読み込みエラーの場合は、上のエラーに表示されたパスを確認してください。</div>';
  }
 }
 init();

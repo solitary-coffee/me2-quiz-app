@@ -1926,6 +1926,12 @@ const EXPLANATION_DEFINITION=String.raw`# ME2種 AI解説生成の定義
 - JSON文字列内：「電流は \\( I=\\frac{V}{R} \\) で求める。」
 - AIはJSONを返すため、応答JSONではバックスラッシュをJSONとして正しくエスケープする。
 
+## 9.1 問題画像の利用
+- hasFigureがtrueで問題画像が送信されている場合は、画像内の図・表・グラフ・回路・波形・選択肢記号を必ず確認する。
+- 画像から読み取れない内容を推測で補わない。
+- 問題文と画像の情報が食い違う場合は、画像を優先したと断定せず、要点解説で確認が必要な箇所を明示する。
+- 画像が解答判断に必要な問題では、画像を参照した具体的な理由をchoiceNotesへ反映する。
+
 ## 10. 出力条件
 - tipは1つ。
 - choiceNotesは選択肢数と同じ数。
@@ -1966,6 +1972,11 @@ function toggleTheme(){
  try{localStorage.setItem(THEME_KEY,next)}catch(e){}
  applyTheme(next);
 }
+window.addEventListener('storage',event=>{
+ if(event.key===THEME_KEY&&(event.newValue==='dark'||event.newValue==='light')){
+  applyTheme(event.newValue);
+ }
+});
 let me={authenticated:false,email:null,name:null};
 let examsIndex={exams:[]};
 let currentExamId=null, partsCache={}, tickHandle=null, currentAnswerPart=null;
@@ -5060,6 +5071,7 @@ function copyExplanationDefinition(){
   navigator.clipboard?.writeText(text).then(()=>$('devStatus').innerHTML='<span class="status-ok">解説生成定義をコピーしました。</span>').catch(()=>{$('devStatus').textContent='コピーできませんでした。'});
 }
 function devAiQuestionPayload(q){
+ const imageRaw=String(q.image||'').trim();
  return {
   number:q.number,
   range:q.range||'',
@@ -5069,11 +5081,84 @@ function devAiQuestionPayload(q){
   correct:q.correct||[],
   negative:!!q.negative,
   hasFigure:!!q.hasFigure,
-  image:q.image||'',
+  image:/^data:/i.test(imageRaw)?'[ブラウザで選択された画像]':imageRaw,
   tip:q.tip||'',
   choiceNotes:q.choiceNotes||[]
  };
 }
+
+const DEV_AI_IMAGE_MAX_BYTES=15*1024*1024;
+const DEV_AI_DIRECT_MIME=new Set(['image/png','image/jpeg','image/webp']);
+
+function devBlobToDataUrl(blob){
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onload=()=>resolve(String(reader.result||''));
+  reader.onerror=()=>reject(reader.error||new Error('画像をBase64へ変換できませんでした。'));
+  reader.readAsDataURL(blob);
+ });
+}
+async function devRasterizeImageForAi(blob){
+ const objectUrl=URL.createObjectURL(blob);
+ try{
+  const img=await new Promise((resolve,reject)=>{
+   const element=new Image();
+   element.onload=()=>resolve(element);
+   element.onerror=()=>reject(new Error('画像をAI送信用に展開できませんでした。'));
+   element.src=objectUrl;
+  });
+  const originalWidth=Math.max(1,img.naturalWidth||img.width||1);
+  const originalHeight=Math.max(1,img.naturalHeight||img.height||1);
+  const maxDimension=2200;
+  const scale=Math.min(1,maxDimension/Math.max(originalWidth,originalHeight));
+  const width=Math.max(1,Math.round(originalWidth*scale));
+  const height=Math.max(1,Math.round(originalHeight*scale));
+  const canvas=document.createElement('canvas');
+  canvas.width=width;
+  canvas.height=height;
+  const context=canvas.getContext('2d',{alpha:false});
+  if(!context)throw new Error('画像変換用Canvasを作成できませんでした。');
+  context.fillStyle='#ffffff';
+  context.fillRect(0,0,width,height);
+  context.drawImage(img,0,0,width,height);
+  const output=await new Promise((resolve,reject)=>{
+   canvas.toBlob(value=>value?resolve(value):reject(new Error('画像をPNGへ変換できませんでした。')),'image/png');
+  });
+  return output;
+ }finally{
+  URL.revokeObjectURL(objectUrl);
+ }
+}
+async function devPrepareAiImageInput(q){
+ if(!q?.hasFigure)return null;
+ const raw=String(q.image||'').trim();
+ if(!raw)throw new Error('図表ありの問題ですが、AIへ送信する画像が設定されていません。');
+
+ let response;
+ try{
+  response=await fetch(raw,{cache:'no-store'});
+ }catch(error){
+  throw new Error(`問題画像を取得できませんでした：${error?.message||error}`);
+ }
+ if(!response.ok)throw new Error(`問題画像を取得できませんでした：HTTP ${response.status} / ${raw}`);
+
+ let blob=await response.blob();
+ if(!blob.size)throw new Error('問題画像のデータが空です。');
+ if(blob.size>DEV_AI_IMAGE_MAX_BYTES){
+  throw new Error(`問題画像がAI送信上限の${devFormatBytes(DEV_AI_IMAGE_MAX_BYTES)}を超えています。画像を縮小してください。`);
+ }
+
+ const mime=String(blob.type||'').toLowerCase();
+ if(!DEV_AI_DIRECT_MIME.has(mime)){
+  blob=await devRasterizeImageForAi(blob);
+ }
+ const dataUrl=await devBlobToDataUrl(blob);
+ if(!/^data:image\/(?:png|jpeg|webp);base64,/i.test(dataUrl)){
+  throw new Error('AIへ送信できる画像形式へ変換できませんでした。');
+ }
+ return dataUrl;
+}
+
 function devAiRetryable(error){
  const status=Number(error?.status||0);
  const message=String(error?.message||error||'');
@@ -5081,12 +5166,20 @@ function devAiRetryable(error){
 }
 async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={}){
  let lastError=null;
+ let imageInput=null;
+ if(q?.hasFigure){
+  imageInput=await devPrepareAiImageInput(q);
+ }
  for(let attempt=1;attempt<=attempts;attempt++){
   try{
    const response=await fetchWithTimeout('/api/ai-explain',{
     method:'POST',
     headers:{'content-type':'application/json',...devHeaders()},
-    body:JSON.stringify({definition,question:devAiQuestionPayload(q)})
+    body:JSON.stringify({
+     definition,
+     question:devAiQuestionPayload(q),
+     imageInput
+    })
    },timeout);
    const data=await response.json().catch(()=>({}));
    if(!response.ok){
@@ -5097,7 +5190,8 @@ async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={
    if(!data.tip||!Array.isArray(data.choiceNotes))throw new Error('AI応答の形式が不正です。');
    return {
     tip:normalizeLatexBackslashes(String(data.tip||'')),
-    choiceNotes:data.choiceNotes.map(x=>normalizeLatexBackslashes(String(x||''))).slice(0,(q.choices||[]).length)
+    choiceNotes:data.choiceNotes.map(x=>normalizeLatexBackslashes(String(x||''))).slice(0,(q.choices||[]).length),
+    imageUsed:Boolean(data.imageUsed)
    };
   }catch(error){
    lastError=error;
@@ -5122,7 +5216,8 @@ async function devRegenerateExplanation(){
   if(isDevQuestionFlagged(q,devExamId,devPart,'aiRegenerate')){
    try{await saveDevQuestionFlag(q,'aiRegenerate',false,devExamId,devPart)}catch(_){}
   }
-  $('devStatus').innerHTML='<span class="status-ok">AIで解説を再生成しました。AI再生成フラグが設定されていた場合は解除を試みました。内容を確認し、「この問題に反映」で一括PRリストへ追加してください。</span>';
+  const imageNote=result.imageUsed?' 問題画像もAIへ送信して解析しました。':'';
+  $('devStatus').innerHTML=`<span class="status-ok">AIで解説を再生成しました。${imageNote} AI再生成フラグが設定されていた場合は解除を試みました。内容を確認し、「この問題に反映」で一括PRリストへ追加してください。</span>`;
  }catch(e){
   $('devStatus').innerHTML=`<span class="status-warn">AI再生成に失敗しました：${escapeHtml(e.message||e)}<br>必要に応じて「ローカル簡易生成」を使ってください。</span>`;
  }
@@ -6514,7 +6609,7 @@ async function devRunBulkAiRegeneration(){
     }
 
     success++;
-    devBulkAiLog(`成功 ${processed+1}/${targets.length}：${label}`);
+    devBulkAiLog(`成功 ${processed+1}/${targets.length}：${label}${result.imageUsed?'（問題画像をAIへ送信）':''}`);
    }catch(error){
     failed++;
     failures.push({label,error:String(error?.message||error)});
