@@ -80,6 +80,22 @@ function withRoot(env, path) {
   return root ? `${root}/${p}` : p;
 }
 
+
+function safeReviewComponent(value, maxLength = 120) {
+  return String(value || '').trim().replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, maxLength);
+}
+function reviewStorageKey(examId, part, questionId) {
+  return `devreview:${safeReviewComponent(examId)}:${String(part || '').toLowerCase()}:${safeReviewComponent(questionId)}`;
+}
+async function questionIsConfirmed(context, examId, part, question) {
+  const kv = context.env?.ME2_PROGRESS;
+  if (!kv || !examId || !part || !question) return false;
+  const number = Number(question.number || 0);
+  const questionId = String(question.id || `${part}${String(number).padStart(2, '0')}`);
+  const item = await kv.get(reviewStorageKey(examId, part, questionId), 'json');
+  return Boolean(item?.flags?.confirmed ?? item?.confirmed);
+}
+
 function base64FromUtf8(text) {
   const bytes = new TextEncoder().encode(String(text || ''));
   let binary = '';
@@ -361,11 +377,12 @@ function normalizeJsonUpdates(jsonUpdates) {
     updates: Array.isArray(group.updates) ? group.updates.map(u => ({
       index: Number(u.index),
       number: u.number,
-      question: u.question,
+      question: u.question && typeof u.question === 'object' ? u.question : null,
+      questionPatch: u.questionPatch && typeof u.questionPatch === 'object' ? u.questionPatch : null,
       label: String(u.label || ''),
       editSummary: String(u.editSummary || '編集'),
       commitMessage: String(u.commitMessage || '')
-    })) : []
+    })).filter(u => u.question || u.questionPatch) : []
   })).filter(g => g.updates.length);
 }
 
@@ -451,8 +468,26 @@ async function putJsonUpdateGroup(context, owner, repo, branch, group, committer
     if (idx < 0 || idx >= pack.questions.length) {
       throw new Error(`${path} の第${update.number || '?'}問を特定できませんでした。`);
     }
-    pack.questions[idx] = update.question;
-    touched.push({ index: idx, number: update.number || pack.questions[idx]?.number, label: update.label, editSummary: update.editSummary });
+
+    const currentQuestion = pack.questions[idx];
+    if (await questionIsConfirmed(context, group.examId, group.part, currentQuestion)) {
+      throw new GitHubApiError(`${path} の第${currentQuestion?.number || update.number || '?'}問は「確認済み」のため変更できません。確認済みフラグをOFFにしてから再実行してください。`, 409);
+    }
+
+    if (update.question) {
+      pack.questions[idx] = update.question;
+    } else if (update.questionPatch) {
+      pack.questions[idx] = { ...pack.questions[idx], ...update.questionPatch };
+    } else {
+      throw new Error(`${path} の第${update.number || '?'}問に更新内容がありません。`);
+    }
+
+    touched.push({
+      index: idx,
+      number: update.number || pack.questions[idx]?.number,
+      label: update.label,
+      editSummary: update.editSummary
+    });
   }
 
   const nextJson = JSON.stringify(pack, null, 2);

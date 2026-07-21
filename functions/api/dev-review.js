@@ -1,4 +1,5 @@
 const REVIEW_PREFIX = 'devreview:';
+const FLAG_TYPES = ['review', 'imageChange', 'aiRegenerate', 'confirmed'];
 
 function json(data, init = {}) {
   return new Response(JSON.stringify(data), {
@@ -49,6 +50,34 @@ function publicKey(examId, part, questionId) {
   return `${String(examId)}:${String(part)}:${String(questionId)}`;
 }
 
+function normalizeFlags(item) {
+  const flags = item?.flags || {};
+  return {
+    review: Boolean(flags.review ?? item?.review ?? item?.flagged),
+    imageChange: Boolean(flags.imageChange ?? item?.imageChange),
+    aiRegenerate: Boolean(flags.aiRegenerate ?? item?.aiRegenerate),
+    confirmed: Boolean(flags.confirmed ?? item?.confirmed)
+  };
+}
+
+function hasAnyFlag(flags) {
+  return FLAG_TYPES.some(type => Boolean(flags?.[type]));
+}
+
+function normalizeStoredItem(item) {
+  if (!item) return null;
+  const flags = normalizeFlags(item);
+  return {
+    ...item,
+    flagged: flags.review,
+    review: flags.review,
+    imageChange: flags.imageChange,
+    aiRegenerate: flags.aiRegenerate,
+    confirmed: flags.confirmed,
+    flags
+  };
+}
+
 async function requireDeveloper(context) {
   const kv = context.env?.ME2_PROGRESS;
   if (!kv) {
@@ -80,8 +109,8 @@ async function listAllReviews(kv) {
   do {
     const page = await kv.list({ prefix: REVIEW_PREFIX, limit: 1000, ...(cursor ? { cursor } : {}) });
     for (const entry of page.keys || []) {
-      const value = await kv.get(entry.name, 'json');
-      if (value?.flagged) items.push(value);
+      const value = normalizeStoredItem(await kv.get(entry.name, 'json'));
+      if (value && hasAnyFlag(value.flags)) items.push(value);
     }
     cursor = page.list_complete ? undefined : page.cursor;
   } while (cursor);
@@ -108,8 +137,8 @@ async function handleGet(context) {
   const questionId = String(url.searchParams.get('questionId') || '').trim();
 
   if (examId && part && questionId) {
-    const item = await kv.get(reviewKey(examId, part, questionId), 'json');
-    return json({ ok: true, item: item || null });
+    const item = normalizeStoredItem(await kv.get(reviewKey(examId, part, questionId), 'json'));
+    return json({ ok: true, item: item && hasAnyFlag(item.flags) ? item : null });
   }
 
   const items = await listAllReviews(kv);
@@ -126,7 +155,6 @@ async function handlePost(context) {
   const examId = String(body.examId || '').trim();
   const part = safePart(body.part);
   const questionId = String(body.questionId || '').trim();
-  const flagged = Boolean(body.flagged);
 
   if (!examId || !part || !questionId) {
     return json({ error: 'examId、part、questionId が必要です。' }, { status: 400 });
@@ -134,28 +162,43 @@ async function handlePost(context) {
 
   const storageKey = reviewKey(examId, part, questionId);
   const key = publicKey(examId, part, questionId);
+  const existing = normalizeStoredItem(await kv.get(storageKey, 'json')) || {};
+  const flags = normalizeFlags(existing);
 
-  if (!flagged) {
-    await kv.delete(storageKey);
-    return json({ ok: true, flagged: false, key });
+  if (body.flags && typeof body.flags === 'object') {
+    for (const type of FLAG_TYPES) {
+      if (Object.prototype.hasOwnProperty.call(body.flags, type)) flags[type] = Boolean(body.flags[type]);
+    }
+  } else {
+    const flagType = String(body.flagType || 'review');
+    if (!FLAG_TYPES.includes(flagType)) {
+      return json({ error: `未対応のフラグです：${flagType}` }, { status: 400 });
+    }
+    flags[flagType] = Boolean(body.flagged);
   }
 
-  const item = {
+  if (!hasAnyFlag(flags)) {
+    await kv.delete(storageKey);
+    return json({ ok: true, key, flags, item: null });
+  }
+
+  const item = normalizeStoredItem({
+    ...existing,
     key,
-    flagged: true,
     examId,
     part,
     questionId,
-    number: Number(body.number || 0),
-    sourceTitle: String(body.sourceTitle || ''),
-    stem: String(body.stem || '').slice(0, 1000),
-    range: String(body.range || '').slice(0, 300),
+    number: Number(body.number || existing.number || 0),
+    sourceTitle: String(body.sourceTitle || existing.sourceTitle || ''),
+    stem: String(body.stem || existing.stem || '').slice(0, 1000),
+    range: String(body.range || existing.range || '').slice(0, 300),
+    flags,
     updatedAt: new Date().toISOString(),
     updatedBy: String(session.id || 'developer')
-  };
+  });
 
   await kv.put(storageKey, JSON.stringify(item));
-  return json({ ok: true, flagged: true, item });
+  return json({ ok: true, flags, item });
 }
 
 async function route(context) {
@@ -171,7 +214,7 @@ export async function onRequest(context) {
     return await route(context);
   } catch (error) {
     return json(
-      { error: `要確認APIでエラーが発生しました: ${error?.message || String(error)}` },
+      { error: `問題作業フラグAPIでエラーが発生しました: ${error?.message || String(error)}` },
       { status: 500 }
     );
   }
@@ -182,7 +225,7 @@ export async function onRequestGet(context) {
     return await handleGet(context);
   } catch (error) {
     return json(
-      { error: `要確認APIでエラーが発生しました: ${error?.message || String(error)}` },
+      { error: `問題作業フラグAPIでエラーが発生しました: ${error?.message || String(error)}` },
       { status: 500 }
     );
   }
@@ -193,7 +236,7 @@ export async function onRequestPost(context) {
     return await handlePost(context);
   } catch (error) {
     return json(
-      { error: `要確認APIでエラーが発生しました: ${error?.message || String(error)}` },
+      { error: `問題作業フラグAPIでエラーが発生しました: ${error?.message || String(error)}` },
       { status: 500 }
     );
   }

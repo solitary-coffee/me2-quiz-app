@@ -32,7 +32,8 @@ button{cursor:pointer;border:0;border-radius:10px;padding:9px 13px;font-weight:8
 button.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
 button:disabled{opacity:.55;cursor:not-allowed}
 .wrap{max-width:1500px;margin:auto;padding:18px}
-.head{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(9px);padding:10px 0}
+.head{position:static;z-index:20;padding:10px 0}
+@media (min-width:1101px) and (min-height:901px){.head{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(9px)}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
 h1,h2,h3{line-height:1.3}
 h1{font-size:24px;margin:0 0 4px}
@@ -47,9 +48,20 @@ h1{font-size:24px;margin:0 0 4px}
 .flag-review{background:#fef3c7;color:#92400e;border-color:#f59e0b}
 .flag-image{background:#dbeafe;color:#1e40af;border-color:#60a5fa}
 .flag-ai{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
+.flag-confirmed{background:#dcfce7;color:#166534;border-color:#22c55e}
 html[data-theme="dark"] .flag-review{background:#78350f;color:#fde68a}
 html[data-theme="dark"] .flag-image{background:#172554;color:#bfdbfe}
 html[data-theme="dark"] .flag-ai{background:#3b0764;color:#e9d5ff}
+html[data-theme="dark"] .flag-confirmed{background:#052e16;color:#bbf7d0}
+
+.review-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.review-title-row h1{margin:0 0 4px}
+.review-settings-collapsed #reviewSettings{display:none}
+.confirmed-card{border-color:#22c55e;box-shadow:0 0 0 2px color-mix(in srgb,#22c55e 20%,transparent)}
+.confirmed-note{margin:10px 0;padding:9px 11px;border-left:5px solid #22c55e;border-radius:8px;background:#f0fdf4;color:#14532d;font-weight:800}
+html[data-theme="dark"] .confirmed-note{background:#052e16;color:#bbf7d0}
+@media(max-width:1000px),(max-height:850px){.head{position:static!important}.wrap{padding-top:8px}}
+
 .results{display:grid;gap:18px}
 .question-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
 .question-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
@@ -84,13 +96,16 @@ html[data-theme="dark"] .annotation{background:#451a03;color:#fde68a}
 <div class="wrap">
   <header class="head">
     <section class="card">
-      <h1>問題確認</h1>
-      <div class="small">確認専用画面です。問題内容は編集せず、作業フラグのON・OFFと従来の編集画面への移動だけを行います。認証・フラグ同期に失敗した場合でも、問題本文は読み取り専用で表示します。</div>
+      <div class="review-title-row">
+       <div><h1>問題確認</h1><div class="small">確認専用画面です。問題内容は編集せず、作業フラグのON・OFFと従来の編集画面への移動だけを行います。確認済みは自動変更から保護され、修正済みとは別に扱います。</div></div>
+       <button class="ghost" id="settingsToggle" type="button" onclick="toggleReviewSettings()">条件を折りたたむ</button>
+      </div>
+      <div id="reviewSettings">
       <div class="controls">
         <div class="field"><label>開始回</label><select id="fromExam"></select></div>
         <div class="field"><label>終了回</label><select id="toExam"></select></div>
         <div class="field"><label>午前・午後</label><select id="partMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
-        <div class="field"><label>抽出条件</label><select id="flagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="none">フラグなし</option></select></div>
+        <div class="field"><label>抽出条件</label><select id="flagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="none">フラグなし</option></select></div>
         <div class="field"><label>開始問題番号</label><input id="qFrom" type="number" min="1" max="999" value="1"></div>
         <div class="field"><label>終了問題番号</label><input id="qTo" type="number" min="1" max="999" value="60"></div>
         <div class="field"><label>1ページの表示数</label><select id="pageSize"><option value="10">10問</option><option value="20" selected>20問</option><option value="50">50問</option><option value="100">100問</option></select></div>
@@ -101,6 +116,7 @@ html[data-theme="dark"] .annotation{background:#451a03;color:#fde68a}
         <button class="ghost" id="themeToggle" onclick="toggleTheme()">🌙 ダーク</button>
         <button class="ghost" onclick="window.print()">印刷</button>
         <button class="ghost" onclick="window.close()">閉じる</button>
+      </div>
       </div>
       <div id="status" class="status">読み込み中です。</div>
       <div id="summary" class="summary"></div>
@@ -149,7 +165,8 @@ let startupWarnings=[];
 const FLAG_TYPES={
  review:{label:'要確認',className:'review'},
  imageChange:{label:'画像変更',className:'image'},
- aiRegenerate:{label:'AI再生成',className:'ai'}
+ aiRegenerate:{label:'AI再生成',className:'ai'},
+ confirmed:{label:'確認済み',className:'confirmed'}
 };
 let examsIndex={exams:[]};
 let flagItems=Object.create(null);
@@ -178,7 +195,7 @@ function setSelectOptions(select,records,selectedValue='',fallback='first'){
 }
 function applyFilterValues(filters={}){
  if(['am','pm','both'].includes(String(filters.part||'')))$('partMode').value=String(filters.part);
- if(['all','flags','review','image','ai','none'].includes(String(filters.flag||'')))$('flagMode').value=String(filters.flag);
+ if(['all','flags','review','image','ai','confirmed','unconfirmed','none'].includes(String(filters.flag||'')))$('flagMode').value=String(filters.flag);
  if(Number(filters.qFrom)>0)$('qFrom').value=String(Number(filters.qFrom));
  if(Number(filters.qTo)>0)$('qTo').value=String(Number(filters.qTo));
 }
@@ -224,7 +241,8 @@ function normalizeFlags(item){
  return{
   review:Boolean(flags.review??item?.review??item?.flagged),
   imageChange:Boolean(flags.imageChange??item?.imageChange),
-  aiRegenerate:Boolean(flags.aiRegenerate??item?.aiRegenerate)
+  aiRegenerate:Boolean(flags.aiRegenerate??item?.aiRegenerate),
+  confirmed:Boolean(flags.confirmed??item?.confirmed)
  };
 }
 function flagsFor(examId,part,q){return normalizeFlags(flagItems[flagKey(examId,part,q)])}
@@ -312,6 +330,19 @@ function fillExamOptions(preferred={}){
   qTo:params.get('qTo')||preferred.qTo
  });
 }
+
+let reviewAutoCollapsed=false;
+function setReviewSettingsCollapsed(collapsed){
+ document.body.classList.toggle('review-settings-collapsed',Boolean(collapsed));
+ const button=$('settingsToggle');
+ if(button)button.textContent=collapsed?'条件を表示':'条件を折りたたむ';
+}
+function toggleReviewSettings(){setReviewSettingsCollapsed(!document.body.classList.contains('review-settings-collapsed'))}
+function autoCollapseReviewSettings(){
+ if(reviewAutoCollapsed)return;
+ if(window.innerWidth<=1000||window.innerHeight<=850){setReviewSettingsCollapsed(true);reviewAutoCollapsed=true;}
+}
+
 function selectedExams(){
  const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
  const a=examNumber($('fromExam').value),b=examNumber($('toExam').value);
@@ -325,6 +356,8 @@ function matchesFlag(flags,mode){
  if(mode==='review')return flags.review;
  if(mode==='image')return flags.imageChange;
  if(mode==='ai')return flags.aiRegenerate;
+ if(mode==='confirmed')return flags.confirmed;
+ if(mode==='unconfirmed')return !flags.confirmed;
  if(mode==='none')return !anyFlag(flags);
  return true;
 }
@@ -372,6 +405,7 @@ async function runReview(){
    message=`抽出完了：${results.length}問。${loadedParts}区分を読み込み、${loadErrors.length}区分で失敗しました。\n${loadErrors.join('\n')}`;
   }
   setStatus(statusWithWarnings(message));
+  autoCollapseReviewSettings();
  }catch(error){
   setStatus(statusWithWarnings(`読み込みに失敗しました：${error?.message||error}`));
   $('results').innerHTML='<div class="card empty">問題を表示できませんでした。表示されたパスとHTTPエラーを確認してください。</div>';
@@ -393,7 +427,7 @@ async function reloadFlagsAndReview(){
  }
 }
 function renderSummary(){
- const counts={review:0,imageChange:0,aiRegenerate:0,any:0};
+ const counts={review:0,imageChange:0,aiRegenerate:0,confirmed:0,any:0};
  allResults.forEach(item=>{
   if(anyFlag(item.flags))counts.any++;
   for(const type of Object.keys(FLAG_TYPES))if(item.flags[type])counts[type]++;
@@ -403,6 +437,7 @@ function renderSummary(){
   `<span class="flag flag-review">要確認 ${counts.review}</span>`,
   `<span class="flag flag-image">画像変更 ${counts.imageChange}</span>`,
   `<span class="flag flag-ai">AI再生成 ${counts.aiRegenerate}</span>`,
+  `<span class="flag flag-confirmed">確認済み ${counts.confirmed}</span>`,
   `<span class="chip">いずれかのフラグ ${counts.any}</span>`
  ].join('');
 }
@@ -432,10 +467,11 @@ function renderCard(item){
    <div class="note"><b>選択肢解説：</b>${note?mathHtml(note):'<span class="small">未設定</span>'}</div>
   </div>`;
  }).join('');
+ const confirmedNote=item.flags.confirmed?'<div class="confirmed-note">確認済み保護中：自動再生成・PR反映・画像変更の対象外です。変更する場合は確認済みをOFFにしてください。修正済みとは別の状態です。</div>':'';
  const flagControls=Object.entries(FLAG_TYPES).map(([type,config])=>
   `<label class="flag flag-${config.className}"><input type="checkbox" ${item.flags[type]?'checked':''} ${flagSyncAvailable?'':'disabled'} onchange="toggleFlag('${escapeHtml(item.examId)}','${item.part}',${item.index},'${type}',this.checked,this)"> ${config.label}</label>`
  ).join('');
- return `<article class="question-card" data-key="${escapeHtml(flagKey(item.examId,item.part,q))}">
+ return `<article class="question-card ${item.flags.confirmed?'confirmed-card':''}" data-key="${escapeHtml(flagKey(item.examId,item.part,q))}">
   <div class="question-head">
    <div>
     <h2>${escapeHtml(item.title)} ${partName(item.part)} 第${item.number}問</h2>
@@ -443,6 +479,7 @@ function renderCard(item){
    </div>
    <div class="flag-controls">${flagControls}</div>
   </div>
+  ${confirmedNote}
   <div class="stem">${mathHtml(q.stem||'')}</div>
   ${annotation?`<aside class="annotation"><b>注釈：</b>${mathHtml(annotation)}</aside>`:''}
   ${image}

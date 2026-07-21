@@ -1268,11 +1268,13 @@ html[data-theme="dark"] .dev-review-cloud-badge{
 .dev-work-flag-review{background:#fef3c7;color:#92400e;border-color:#f59e0b}
 .dev-work-flag-image{background:#dbeafe;color:#1e40af;border-color:#60a5fa}
 .dev-work-flag-ai{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
+.dev-work-flag-confirmed{background:#dcfce7;color:#166534;border-color:#22c55e}
 .dev-work-flag input{width:16px;height:16px}
 .dev-work-badges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
 html[data-theme="dark"] .dev-work-flag-review{background:#78350f;color:#fde68a;border-color:#b45309}
 html[data-theme="dark"] .dev-work-flag-image{background:#172554;color:#bfdbfe;border-color:#2563eb}
 html[data-theme="dark"] .dev-work-flag-ai{background:#3b0764;color:#e9d5ff;border-color:#9333ea}
+html[data-theme="dark"] .dev-work-flag-confirmed{background:#052e16;color:#bbf7d0;border-color:#22c55e}
 
 .dev-bulk-ai-panel{
  border:1px solid var(--line);
@@ -1320,6 +1322,25 @@ html[data-theme="dark"] .dev-question-review-launch{
  background:#111827;
  border-color:#334155;
 }
+
+
+/* 開発モード：画像切り取り */
+.dev-image-crop-modal{
+ position:fixed;inset:0;z-index:10000;background:rgba(2,6,23,.78);
+ display:flex;align-items:center;justify-content:center;padding:18px;
+}
+.dev-image-crop-modal.hidden{display:none}
+.dev-image-crop-dialog{
+ width:min(1180px,96vw);max-height:96vh;overflow:auto;background:var(--card);
+ border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 24px 70px rgba(0,0,0,.35)
+}
+.dev-image-crop-stage{display:flex;justify-content:center;align-items:center;overflow:auto;min-height:220px;background:#111827;border-radius:12px;padding:10px}
+#devImageCropCanvas{max-width:100%;height:auto;touch-action:none;cursor:crosshair;background:#fff}
+.dev-image-crop-fields{display:grid;grid-template-columns:repeat(4,minmax(100px,1fr));gap:10px;margin-top:12px}
+.dev-image-crop-fields input{width:100%}
+.dev-confirmed-protection{border-left:5px solid #22c55e;background:#f0fdf4;color:#14532d;padding:10px 12px;border-radius:10px;margin:10px 0;font-weight:800}
+html[data-theme="dark"] .dev-confirmed-protection{background:#052e16;color:#bbf7d0}
+@media(max-width:720px){.dev-image-crop-fields{grid-template-columns:1fr 1fr}.dev-image-crop-dialog{padding:10px}}
 
 /* LaTeX・数式表示 */
 .math-content{min-width:0;overflow-wrap:anywhere}
@@ -1691,7 +1712,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
       <div class="dev-field"><label>開始回</label><select id="questionReviewFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="questionReviewToExam"></select></div>
       <div class="dev-field"><label>午前・午後</label><select id="questionReviewPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
-      <div class="dev-field"><label>抽出条件</label><select id="questionReviewFlagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="none">フラグなし</option></select></div>
+      <div class="dev-field"><label>抽出条件</label><select id="questionReviewFlagMode"><option value="all">範囲内の全問題</option><option value="flags">いずれかのフラグ付き</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="none">フラグなし</option></select></div>
       <div class="dev-field"><label>開始問題番号</label><input id="questionReviewNumberFrom" type="number" min="1" max="999" value="1"></div>
       <div class="dev-field"><label>終了問題番号</label><input id="questionReviewNumberTo" type="number" min="1" max="999" value="60"></div>
     </div>
@@ -1703,12 +1724,12 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
 
   <section class="dev-check-panel">
     <h3>文面チェック</h3>
-    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」「画像変更」「AI再生成」も同じ一覧へ表示・抽出できます。修正済みにチェックした項目は下へ移動します。</p>
+    <p class="small">問題文・選択肢・正答・画像パス・要点解説・各選択肢解説を一括チェックします。通常演習中にクラウドへ登録した「要確認」「画像変更」「AI再生成」「確認済み」も同じ一覧へ表示・抽出できます。確認済み問題は自動再生成・PR反映・画像変更から保護されます。修正済みにチェックした項目は下へ移動します。</p>
     <div class="dev-check-grid">
       <div class="dev-field"><label>開始回</label><select id="checkFromExam"></select></div>
       <div class="dev-field"><label>終了回</label><select id="checkToExam"></select></div>
       <div class="dev-field"><label>対象</label><select id="checkPartMode"><option value="both">午前・午後</option><option value="am">午前のみ</option><option value="pm">午後のみ</option></select></div>
-      <div class="dev-field"><label>表示対象</label><select id="checkReviewMode"><option value="all">文面指摘＋すべての作業フラグ</option><option value="flags">作業フラグ付きのみ</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="issues">文面指摘のみ</option></select></div>
+      <div class="dev-field"><label>表示対象</label><select id="checkReviewMode"><option value="all">文面指摘＋すべての作業フラグ</option><option value="flags">作業フラグ付きのみ</option><option value="review">要確認のみ</option><option value="image">画像変更のみ</option><option value="ai">AI再生成のみ</option><option value="confirmed">確認済みのみ</option><option value="unconfirmed">未確認のみ</option><option value="issues">文面指摘のみ</option></select></div>
       <div class="dev-field"><label>抽出レベル</label><select id="checkSeverity"><option value="all">すべて</option><option value="high">重要のみ</option><option value="warn">重要・注意</option><option value="mid">重要・注意・確認</option><option value="low">軽微まで</option></select></div>
     </div>
     <div class="row" style="margin-top:10px">
@@ -4343,7 +4364,8 @@ let devReviewLastError='';
 const DEV_WORK_FLAG_TYPES={
  review:{label:'要確認',field:'要確認（クラウド）',severity:'mid',message:'通常演習中に開発者が「要確認」として登録しています。',className:'review'},
  imageChange:{label:'画像変更',field:'画像変更（クラウド）',severity:'warn',message:'問題画像の追加・差し替え・修正が必要として登録されています。',className:'image'},
- aiRegenerate:{label:'AI再生成',field:'AI再生成（クラウド）',severity:'mid',message:'AIによる要点解説・各選択肢解説の再生成が必要として登録されています。',className:'ai'}
+ aiRegenerate:{label:'AI再生成',field:'AI再生成（クラウド）',severity:'mid',message:'AIによる要点解説・各選択肢解説の再生成が必要として登録されています。',className:'ai'},
+ confirmed:{label:'確認済み',field:'確認済み（クラウド）',severity:'low',message:'最終確認済みとして登録されています。自動再生成・PR反映・画像変更の対象外です。',className:'confirmed'}
 };
 
 function normalizeDevWorkFlags(item){
@@ -4351,7 +4373,8 @@ function normalizeDevWorkFlags(item){
  return {
   review:Boolean(flags.review ?? item?.review ?? item?.flagged),
   imageChange:Boolean(flags.imageChange ?? item?.imageChange),
-  aiRegenerate:Boolean(flags.aiRegenerate ?? item?.aiRegenerate)
+  aiRegenerate:Boolean(flags.aiRegenerate ?? item?.aiRegenerate),
+  confirmed:Boolean(flags.confirmed ?? item?.confirmed)
  };
 }
 function devReviewQuestionRef(q,examIdOverride='',partOverride=''){
@@ -4430,6 +4453,22 @@ function isDevQuestionFlagged(q,examId='',part='',flagType='review'){
 function isDevReviewFlagged(q,examId='',part=''){
  return isDevQuestionFlagged(q,examId,part,'review');
 }
+
+function isDevQuestionConfirmed(q,examId='',part=''){
+ return isDevQuestionFlagged(q,examId,part,'confirmed');
+}
+async function devAssertQuestionMutable(q,action='変更',examId=devExamId,part=devPart){
+ try{
+  await loadDevReviewFlags(true);
+ }catch(error){
+  throw new Error(`確認済み保護を確認できないため「${action}」を中止しました。作業フラグを再同期してください。詳細：${error?.message||error}`);
+ }
+ if(isDevQuestionConfirmed(q,examId,part)){
+  throw new Error(`この問題は「確認済み」です。${action}する場合は、先に確認済みフラグをOFFにしてください。修正済みチェックとは別の保護状態です。`);
+ }
+ return true;
+}
+
 function devReviewStatusText(){
  if(devReviewLastError)return '同期失敗';
  if(!devReviewFlagsLoaded)return 'クラウド確認中';
@@ -4879,6 +4918,163 @@ async function devRepairCurrentImage(){
   alert(`画像を修復できません：${error?.message||error}\n元画像を再選択してください。`);
  }
 }
+
+let devCropState=null;
+function devCropModal(){return $('devImageCropModal')}
+function devCloseImageCropper(){
+ const modal=devCropModal();
+ if(modal)modal.classList.add('hidden');
+ devCropState=null;
+}
+function devCropClampRect(rect){
+ const state=devCropState;
+ if(!state)return rect;
+ let x=Math.max(0,Math.min(state.sourceWidth-1,Math.round(Number(rect.x)||0)));
+ let y=Math.max(0,Math.min(state.sourceHeight-1,Math.round(Number(rect.y)||0)));
+ let width=Math.max(1,Math.round(Number(rect.width)||1));
+ let height=Math.max(1,Math.round(Number(rect.height)||1));
+ width=Math.min(width,state.sourceWidth-x);
+ height=Math.min(height,state.sourceHeight-y);
+ return {x,y,width,height};
+}
+function devCropSyncFields(){
+ if(!devCropState)return;
+ const rect=devCropState.rect;
+ [['devCropX','x'],['devCropY','y'],['devCropWidth','width'],['devCropHeight','height']].forEach(([id,key])=>{if($(id))$(id).value=String(rect[key])});
+ if($('devCropInfo'))$('devCropInfo').textContent=`元画像 ${devCropState.sourceWidth}×${devCropState.sourceHeight}px / 切り取り ${rect.width}×${rect.height}px`;
+}
+function devCropDraw(){
+ const state=devCropState;
+ const canvas=$('devImageCropCanvas');
+ if(!state||!canvas)return;
+ const ctx=canvas.getContext('2d');
+ const scale=state.scale;
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.drawImage(state.image,0,0,canvas.width,canvas.height);
+ ctx.fillStyle='rgba(2,6,23,.55)';
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+ const r=state.rect;
+ const dx=r.x*scale,dy=r.y*scale,dw=r.width*scale,dh=r.height*scale;
+ ctx.drawImage(state.image,r.x,r.y,r.width,r.height,dx,dy,dw,dh);
+ ctx.strokeStyle='#38bdf8';ctx.lineWidth=3;ctx.setLineDash([10,6]);ctx.strokeRect(dx+1.5,dy+1.5,Math.max(0,dw-3),Math.max(0,dh-3));ctx.setLineDash([]);
+ devCropSyncFields();
+}
+function devCropCanvasPoint(event){
+ const canvas=$('devImageCropCanvas');
+ const box=canvas.getBoundingClientRect();
+ const canvasX=(event.clientX-box.left)*(canvas.width/box.width);
+ const canvasY=(event.clientY-box.top)*(canvas.height/box.height);
+ return {
+  x:Math.max(0,Math.min(devCropState.sourceWidth,canvasX/devCropState.scale)),
+  y:Math.max(0,Math.min(devCropState.sourceHeight,canvasY/devCropState.scale))
+ };
+}
+function devCropPointerDown(event){
+ if(!devCropState)return;
+ event.preventDefault();
+ const point=devCropCanvasPoint(event);
+ devCropState.dragStart=point;
+ devCropState.dragging=true;
+ event.currentTarget.setPointerCapture?.(event.pointerId);
+ devCropState.rect=devCropClampRect({x:point.x,y:point.y,width:1,height:1});
+ devCropDraw();
+}
+function devCropPointerMove(event){
+ if(!devCropState?.dragging)return;
+ event.preventDefault();
+ const start=devCropState.dragStart;
+ const point=devCropCanvasPoint(event);
+ devCropState.rect=devCropClampRect({
+  x:Math.min(start.x,point.x),y:Math.min(start.y,point.y),
+  width:Math.abs(point.x-start.x),height:Math.abs(point.y-start.y)
+ });
+ devCropDraw();
+}
+function devCropPointerUp(event){
+ if(!devCropState)return;
+ devCropState.dragging=false;
+ try{event.currentTarget.releasePointerCapture?.(event.pointerId)}catch(_){}
+ devCropDraw();
+}
+function devCropFieldsChanged(){
+ if(!devCropState)return;
+ devCropState.rect=devCropClampRect({
+  x:$('devCropX')?.value,y:$('devCropY')?.value,width:$('devCropWidth')?.value,height:$('devCropHeight')?.value
+ });
+ devCropDraw();
+}
+function devResetImageCrop(){
+ if(!devCropState)return;
+ devCropState.rect={x:0,y:0,width:devCropState.sourceWidth,height:devCropState.sourceHeight};
+ devCropDraw();
+}
+async function devOpenImageCropper(){
+ const q=devReadForm();
+ try{
+  await devAssertQuestionMutable(devCurrentQuestion(),'画像を切り取り',devExamId,devPart);
+  const raw=String(q.image||'').trim();
+  if(!raw)throw new Error('切り取る画像が設定されていません。先に画像を追加してください。');
+  const response=await fetch(assetUrl(raw),{cache:'no-store'});
+  if(!response.ok)throw new Error(`画像を取得できません：HTTP ${response.status}`);
+  const blob=await response.blob();
+  if(!blob.size)throw new Error('画像データが空です。');
+  const dataUrl=await devBlobToDataUrl(blob);
+  const image=await new Promise((resolve,reject)=>{
+   const element=new Image();
+   element.onload=()=>resolve(element);
+   element.onerror=()=>reject(new Error('画像を切り取り画面へ展開できませんでした。'));
+   element.src=dataUrl;
+  });
+  const sourceWidth=image.naturalWidth||image.width;
+  const sourceHeight=image.naturalHeight||image.height;
+  if(!sourceWidth||!sourceHeight)throw new Error('画像サイズを取得できません。');
+  const maxWidth=Math.max(320,Math.min(1040,window.innerWidth-90));
+  const maxHeight=Math.max(260,Math.min(680,window.innerHeight-280));
+  const scale=Math.min(1,maxWidth/sourceWidth,maxHeight/sourceHeight);
+  const canvas=$('devImageCropCanvas');
+  canvas.width=Math.max(1,Math.round(sourceWidth*scale));
+  canvas.height=Math.max(1,Math.round(sourceHeight*scale));
+  devCropState={image,sourceWidth,sourceHeight,scale,rect:{x:0,y:0,width:sourceWidth,height:sourceHeight},dragging:false,dragStart:null};
+  devCropModal().classList.remove('hidden');
+  devCropDraw();
+ }catch(error){
+  $('devStatus').innerHTML=`<span class="status-warn">画像切り取りを開始できません：${escapeHtml(error?.message||error)}</span>`;
+ }
+}
+async function devApplyImageCrop(){
+ if(!devCropState)return;
+ try{
+  await devAssertQuestionMutable(devCurrentQuestion(),'画像の切り取り結果を反映',devExamId,devPart);
+  const rect=devCropClampRect(devCropState.rect);
+  if(rect.width<2||rect.height<2)throw new Error('切り取り範囲が小さすぎます。');
+  const canvas=document.createElement('canvas');
+  canvas.width=rect.width;canvas.height=rect.height;
+  const ctx=canvas.getContext('2d',{alpha:false});
+  if(!ctx)throw new Error('切り取り用Canvasを作成できません。');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,rect.width,rect.height);
+  ctx.drawImage(devCropState.image,rect.x,rect.y,rect.width,rect.height,0,0,rect.width,rect.height);
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('切り取り画像を生成できません。')),'image/png'));
+  if(blob.size>DEV_IMAGE_MAX_BYTES)throw new Error(`切り取り後の画像が${devFormatBytes(DEV_IMAGE_MAX_BYTES)}を超えています。範囲を小さくしてください。`);
+  const dataUrl=await devBlobToDataUrl(blob);
+  const info=devDataUrlInfo(dataUrl);
+  if(!info)throw new Error('切り取り画像を検証できませんでした。');
+  const storageKey=devImageStorageKey(devCurrentPrKey());
+  await devStorePendingImage(storageKey,{
+   mime:'image/png',ext:'png',base64:info.base64,sizeBytes:info.sizeBytes,
+   width:rect.width,height:rect.height,originalName:'cropped-question-image.png',updatedAt:new Date().toISOString()
+  });
+  if($('devImage'))$('devImage').value=dataUrl;
+  if($('devHasFigure'))$('devHasFigure').checked=true;
+  if($('devPrImagePath'))$('devPrImagePath').value=devDefaultPrImagePath({...devReadForm(),image:dataUrl});
+  try{await saveDevQuestionFlag(devCurrentQuestion(),'imageChange',true,devExamId,devPart)}catch(_){}
+  devCloseImageCropper();
+  devRenderPreview();devRefreshPrPaths();
+  $('devStatus').innerHTML=`<span class="status-ok">画像を ${rect.width}×${rect.height}px に切り取り、一時保存しました。画像変更フラグをONにしました。「この問題に反映」でPRリストへ保存してください。</span>`;
+ }catch(error){
+  if($('devCropStatus'))$('devCropStatus').textContent=`切り取りに失敗しました：${error?.message||error}`;
+ }
+}
+
 async function devDownloadImage(){
  const q=devReadForm();
  if(!q.image){alert('画像パスが空です。');return;}
@@ -4944,9 +5140,11 @@ function devRenderEditor(){
  <div class="dev-image-tools">
   <button class="ghost" type="button" onclick="devTriggerImageUpload()">画像を追加</button>
   <button class="ghost" type="button" onclick="devDownloadImage()">画像DL</button>
+  <button class="ghost" type="button" onclick="devOpenImageCropper()">画像を切り取る</button>
   <button class="ghost" type="button" onclick="devRepairCurrentImage()">画像データを検査・修復</button>
   <input id="devImageUpload" type="file" accept="image/*" class="hidden" onchange="devUploadImage(this)">
  </div>
+ ${isDevQuestionConfirmed(q,devExamId,devPart)?'<div class="dev-confirmed-protection">確認済み保護中：内容変更・AI再生成・画像切り取り・PR反映は行いません。変更する場合は確認済みフラグをOFFにしてください。修正済みとは別の状態です。</div>':''}
  <div class="dev-editor-actions">
   <div class="row">
    <button class="secondary" onclick="devApplyChanges(true)">この問題に反映</button>
@@ -5012,6 +5210,13 @@ function devRenderPreview(){
 }
 async function devApplyChanges(autoAddToBatch=false){
  const i=Number($('devQuestionSelect').value||0);
+ const original=devPack?.questions?.[i];
+ try{
+  await devAssertQuestionMutable(original,'問題内容を反映',devExamId,devPart);
+ }catch(error){
+  $('devStatus').innerHTML=`<span class="status-warn">${escapeHtml(error.message||error)}</span>`;
+  return;
+ }
  devPack.questions[i]=devReadForm();
  partsCache[`${devExamId}_${devPart}`]=devPack;
  const target=devCurrentTargetLabel();
@@ -5204,6 +5409,12 @@ async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={
 
 async function devRegenerateExplanation(){
  let q=devEnsureChoiceNotes(devReadForm());
+ try{
+  await devAssertQuestionMutable(devCurrentQuestion(),'AI解説を再生成',devExamId,devPart);
+ }catch(error){
+  $('devStatus').innerHTML=`<span class="status-warn">${escapeHtml(error.message||error)}</span>`;
+  return;
+ }
  $('devStatus').innerHTML='<span class="status-warn">AIで解説を再生成中です…</span>';
  try{
   const definition=$('devExplanationDefinition')?.value||getExplanationDefinition();
@@ -5222,7 +5433,13 @@ async function devRegenerateExplanation(){
   $('devStatus').innerHTML=`<span class="status-warn">AI再生成に失敗しました：${escapeHtml(e.message||e)}<br>必要に応じて「ローカル簡易生成」を使ってください。</span>`;
  }
 }
-function devRegenerateExplanationLocal(){
+async function devRegenerateExplanationLocal(){
+ try{
+  await devAssertQuestionMutable(devCurrentQuestion(),'ローカル解説を生成',devExamId,devPart);
+ }catch(error){
+  $('devStatus').innerHTML=`<span class="status-warn">${escapeHtml(error.message||error)}</span>`;
+  return;
+ }
  const q=devReadForm();
  q.choiceNotes=q.choices.map((c,i)=>{
   const n=i+1,isC=q.correct.includes(n),role=devRoleNote(c);
@@ -5562,6 +5779,7 @@ function devRefreshPrPaths(){
 }
 async function devPrepareCurrentBatchItem(){
  const currentIndex=Number($('devQuestionSelect')?.value||0);
+ await devAssertQuestionMutable(devCurrentQuestion(),'一括PRリストへ追加',devExamId,devPart);
  const q=devReadForm();
  const qForCommit=devClone(q);
  const jsonPath=devCurrentJsonPath();
@@ -5724,6 +5942,14 @@ async function devBuildBatchPayload(){
  if(batch.items.length===0){
   const current=await devPrepareCurrentBatchItem();
   batch={items:[current]};
+ }
+ try{await loadDevReviewFlags(true)}catch(error){throw new Error(`確認済み保護を確認できないためPR作成を中止しました：${error?.message||error}`)}
+ for(const item of batch.items){
+  const pack=await getPart(item.examId,item.part);
+  const q=pack?.questions?.[Number(item.index)||0];
+  if(q&&isDevQuestionConfirmed(q,item.examId,item.part)){
+   throw new Error(`${item.label} は「確認済み」のためPRへ送信しません。確認済みフラグをOFFにするか、一括PRリストから削除してください。`);
+  }
  }
  await devEnsureBatchImagesStored(batch);
  saveDevPrBatch(batch);
@@ -6074,10 +6300,12 @@ function filterDevCheckIssues(list,min='all',mode=null){
  devCheckLastFilter=min||'all';
  devCheckLastMode=mode||$('checkReviewMode')?.value||devCheckLastMode||'all';
  let filtered=(list||[]).slice();
- if(devCheckLastMode==='flags')filtered=filtered.filter(x=>x.manualReview||x.imageChange||x.aiRegenerate);
+ if(devCheckLastMode==='flags')filtered=filtered.filter(x=>x.manualReview||x.imageChange||x.aiRegenerate||x.confirmed);
  else if(devCheckLastMode==='review')filtered=filtered.filter(x=>x.manualReview);
  else if(devCheckLastMode==='image')filtered=filtered.filter(x=>x.imageChange);
  else if(devCheckLastMode==='ai')filtered=filtered.filter(x=>x.aiRegenerate);
+ else if(devCheckLastMode==='confirmed')filtered=filtered.filter(x=>x.confirmed);
+ else if(devCheckLastMode==='unconfirmed')filtered=filtered.filter(x=>!x.confirmed);
  else if(devCheckLastMode==='issues')filtered=filtered.filter(x=>Number(x.textIssueCount||0)>0);
  if(min!=='all'&&min!=='low')filtered=filtered.filter(x=>severityRank(x.severity)>=severityRank(min));
  return sortDevIssues(filtered);
@@ -6248,6 +6476,7 @@ function devAttachWorkFlags(item,flags){
  item.manualReview=Boolean(flags.review);
  item.imageChange=Boolean(flags.imageChange);
  item.aiRegenerate=Boolean(flags.aiRegenerate);
+ item.confirmed=Boolean(flags.confirmed);
  item.issues=(item.issues||[]).filter(issue=>!issue.workFlag);
  for(const type of Object.keys(DEV_WORK_FLAG_TYPES)){
   if(flags[type])item.issues.unshift(devWorkFlagIssue(type));
@@ -6259,7 +6488,8 @@ function devWorkFlagBadges(item){
  const flags=item?.workFlags||{
   review:Boolean(item?.manualReview),
   imageChange:Boolean(item?.imageChange),
-  aiRegenerate:Boolean(item?.aiRegenerate)
+  aiRegenerate:Boolean(item?.aiRegenerate),
+  confirmed:Boolean(item?.confirmed)
  };
  const entries=Object.entries(DEV_WORK_FLAG_TYPES).filter(([type])=>flags[type]);
  if(!entries.length)return'';
@@ -6280,7 +6510,7 @@ async function runDevTextCheck(){
  const min=$('checkSeverity')?.value||'all';
  const mode=$('checkReviewMode')?.value||'all';
  devCheckIssues=[];
- $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 3種類の作業フラグをCloudflareから同期しています。</span>';
+ $('devCheckSummary').innerHTML='<span class="status-warn">文面チェック中… 4種類の作業フラグをCloudflareから同期しています。</span>';
  $('devCheckResults').innerHTML='';
  try{await loadDevReviewFlags(true)}catch(e){
   devReviewLastError=String(e.message||e);
@@ -6303,7 +6533,7 @@ async function runDevTextCheck(){
    }catch(e){
     devCheckIssues.push({
      examId:String(ex.id),part,title:ex.title,index:0,number:'-',severity:'high',q:null,
-     textIssueCount:1,manualReview:false,imageChange:false,aiRegenerate:false,workFlags:{review:false,imageChange:false,aiRegenerate:false},
+     textIssueCount:1,manualReview:false,imageChange:false,aiRegenerate:false,confirmed:false,workFlags:{review:false,imageChange:false,aiRegenerate:false,confirmed:false},
      issues:[{severity:'high',field:'読み込み',msg:`${partName(part)}のJSONを読み込めません：${e.message||e}`}]
     });
    }
@@ -6322,9 +6552,10 @@ function renderDevCheckResults(list){
  const manual=devCheckIssues.filter(x=>x.manualReview).length;
  const image=devCheckIssues.filter(x=>x.imageChange).length;
  const ai=devCheckIssues.filter(x=>x.aiRegenerate).length;
+ const confirmed=devCheckIssues.filter(x=>x.confirmed).length;
  const sorted=sortDevIssues(list||[]);
  const syncNote=devReviewLastError?` / 作業フラグ同期エラー：${escapeHtml(devReviewLastError)}`:'';
- $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：対象 ${total}件 / 要確認 ${manual}件 / 画像変更 ${image}件 / AI再生成 ${ai}件 / 修正済み ${fixed}件${syncNote}</span>`;
+ $('devCheckSummary').innerHTML=`<span class="status-ok">チェック完了：対象 ${total}件 / 要確認 ${manual}件 / 画像変更 ${image}件 / AI再生成 ${ai}件 / 確認済み ${confirmed}件 / 修正済み ${fixed}件${syncNote}</span>`;
  const summary=`<div class="check-summary">
    <span class="issue-badge high">重要 ${high}</span>
    <span class="issue-badge warn">注意 ${warn}</span>
@@ -6333,6 +6564,7 @@ function renderDevCheckResults(list){
    <span class="dev-work-flag dev-work-flag-review">要確認 ${manual}</span>
    <span class="dev-work-flag dev-work-flag-image">画像変更 ${image}</span>
    <span class="dev-work-flag dev-work-flag-ai">AI再生成 ${ai}</span>
+   <span class="dev-work-flag dev-work-flag-confirmed">確認済み ${confirmed}</span>
    <span class="issue-fixed-label">修正済み ${fixed}</span>
   </div>`;
  if(!sorted.length){$('devCheckResults').innerHTML=summary+'<p class="small">表示条件に一致する指摘・作業フラグはありません。</p>';return;}
@@ -6341,17 +6573,14 @@ function renderDevCheckResults(list){
   const sevLabel=severityLabel(item.severity);
   const key=devIssueKey(item);
   const checked=isDevIssueFixed(item);
-  const lis=(item.issues||[])
-    .slice()
-    .sort((a,b)=>severityRank(b.severity)-severityRank(a.severity))
-    .map(i=>`<li><b>${escapeHtml(i.field)}</b>：${escapeHtml(i.msg)} <span class="issue-badge ${severityClass(i.severity)}">${severityLabel(i.severity)}</span></li>`).join('');
+  const lis=(item.issues||[]).slice().sort((a,b)=>severityRank(b.severity)-severityRank(a.severity)).map(i=>`<li><b>${escapeHtml(i.field)}</b>：${escapeHtml(i.msg)} <span class="issue-badge ${severityClass(i.severity)}">${severityLabel(i.severity)}</span></li>`).join('');
   const stem=item.q?.stem?`<p class="small"><b>問題文：</b>${escapeHtml(String(item.q.stem).slice(0,140))}${String(item.q.stem).length>140?'…':''}</p>`:'';
+  const protectedNote=item.confirmed?'<div class="dev-confirmed-protection">確認済み保護中：自動再生成・PR反映・画像変更は行いません。修正済みチェックとは独立しています。</div>':'';
   return `<div class="dev-issue-card issue-${sevClass} ${checked?'issue-fixed':''}">
     <h4>${escapeHtml(item.title||item.examId)} ${partName(item.part)} 第${escapeHtml(item.number)}問 <span class="issue-badge ${sevClass}">${sevLabel}</span></h4>
-    ${devWorkFlagBadges(item)}
+    ${devWorkFlagBadges(item)}${protectedNote}
     <div class="dev-issue-meta">範囲：${escapeHtml(item.q?.range||'未設定')} / 最高ステータス：${sevLabel} / 指摘・フラグ数：${item.issues.length}</div>
-    ${devIssueCountsHtml(item)}
-    ${stem}
+    ${devIssueCountsHtml(item)}${stem}
     <ul class="dev-issue-list">${lis}</ul>
     <div class="row" style="margin-top:10px">
       ${item.q?`<button class="secondary" onclick="openDevIssue('${escapeHtml(item.examId)}','${escapeHtml(item.part)}',${Number(item.index)||0})">この問題を開く</button>`:''}
@@ -6416,27 +6645,21 @@ function copyDevCheckSummary(){
 function clearDevCheckResults(){devCheckIssues=[];$('devCheckSummary').textContent='結果をクリアしました。修正済みチェックは保持されます。';$('devCheckResults').innerHTML='';}
 function exportDevCheckCsv(){
  if(!devCheckIssues.length){alert('保存するチェック結果がありません。');return;}
- const rows=[['回','午前午後','問題番号','重要度','要確認','画像変更','AI再生成','修正済み','項目','指摘内容','範囲','問題文']];
+ const rows=[['回','午前午後','問題番号','重要度','要確認','画像変更','AI再生成','確認済み','修正済み','項目','指摘内容','範囲','問題文']];
  devCheckIssues.forEach(item=>{
   item.issues.forEach(i=>rows.push([
-   item.title||item.examId,
-   partName(item.part),
-   item.number,
-   severityLabel(i.severity),
-   item.manualReview?'要確認':'',
-   item.imageChange?'画像変更':'',
-   item.aiRegenerate?'AI再生成':'',
-   isDevIssueFixed(item)?'修正済み':'未修正',
-   i.field,i.msg,item.q?.range||'',item.q?.stem||''
+   item.title||item.examId,partName(item.part),item.number,severityLabel(i.severity),
+   item.manualReview?'要確認':'',item.imageChange?'画像変更':'',item.aiRegenerate?'AI再生成':'',item.confirmed?'確認済み':'',
+   isDevIssueFixed(item)?'修正済み':'未修正',i.field,i.msg,item.q?.range||'',item.q?.stem||''
   ]));
  });
  const csv=rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\n');
  downloadText(`dev_text_check_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');
 }
 
-
 let devBulkAiRunning=false;
 let devBulkAiCancelRequested=false;
+let devBulkAiLastSkippedConfirmed=0;
 
 function selectedBulkAiExamIds(){
  const records=(examsIndex.exams||[]).slice().sort((a,b)=>examNumber(a.id)-examNumber(b.id));
@@ -6467,24 +6690,16 @@ async function devCollectBulkAiTargets(){
  const records=selectedBulkAiExamIds();
  const parts=selectedBulkAiParts();
  const scope=$('bulkAiScope')?.value||'flagged';
- if(scope==='flagged'){
-  try{await loadDevReviewFlags(true)}catch(e){throw new Error(`AI再生成フラグを同期できません：${e.message||e}`)}
- }
+ try{await loadDevReviewFlags(true)}catch(e){throw new Error(`確認済み保護とAI再生成フラグを同期できません：${e.message||e}`)}
  const targets=[];
+ devBulkAiLastSkippedConfirmed=0;
  for(const ex of records){
   for(const part of parts){
    const pack=await getPart(ex.id,part);
    (pack.questions||[]).forEach((q,index)=>{
+    if(isDevQuestionConfirmed(q,String(ex.id),part)){devBulkAiLastSkippedConfirmed++;return;}
     if(scope==='flagged'&&!isDevQuestionFlagged(q,String(ex.id),part,'aiRegenerate'))return;
-    targets.push({
-     examId:String(ex.id),
-     title:ex.title||String(ex.id),
-     part,
-     index,
-     number:q.number||index+1,
-     q,
-     pack
-    });
+    targets.push({examId:String(ex.id),title:ex.title||String(ex.id),part,index,number:q.number||index+1,q,pack});
    });
   }
  }
@@ -6497,8 +6712,8 @@ async function devPreviewBulkAiTargets(showLog=true){
  try{
   const targets=await devCollectBulkAiTargets();
   const scope=$('bulkAiScope')?.value==='all'?'指定範囲の全問題':'AI再生成フラグ付き';
-  if(status)status.innerHTML=`<span class="status-ok">対象：${targets.length}問（${scope}）</span>`;
-  if(showLog)devBulkAiLog(`対象件数：${targets.length}問（${scope}）`,true);
+  if(status)status.innerHTML=`<span class="status-ok">対象：${targets.length}問（${scope}） / 確認済み除外：${devBulkAiLastSkippedConfirmed}問</span>`;
+  if(showLog)devBulkAiLog(`対象件数：${targets.length}問（${scope}） / 確認済み除外：${devBulkAiLastSkippedConfirmed}問`,true);
   return targets;
  }catch(e){
   if(status)status.innerHTML=`<span class="status-warn">対象件数を確認できません：${escapeHtml(e.message||e)}</span>`;
@@ -6563,7 +6778,7 @@ async function devRunBulkAiRegeneration(){
  const continueErrors=Boolean($('bulkAiContinueErrors')?.checked);
  const scopeLabel=$('bulkAiScope')?.value==='all'?'指定範囲の全問題':'AI再生成フラグ付き問題';
  const warning=[
-  `${scopeLabel} ${targets.length}問をAIで再生成します。`,
+  `${scopeLabel} ${targets.length}問をAIで再生成します。確認済み ${devBulkAiLastSkippedConfirmed}問は保護のため除外します。`,
   'OpenAI APIの利用料金が発生し、問題数によっては長時間かかります。',
   addToPr?'成功した問題は一括PRリストへ追加します。':'成功した内容は現在のブラウザ内だけへ反映します。',
   clearFlag?'成功した問題のAI再生成フラグを解除します。':'AI再生成フラグは維持します。',
@@ -6802,5 +7017,29 @@ async function init(){
 }
 init();
 </script>
+
+<div id="devImageCropModal" class="dev-image-crop-modal hidden" role="dialog" aria-modal="true" aria-labelledby="devImageCropTitle">
+ <div class="dev-image-crop-dialog">
+  <div class="row" style="justify-content:space-between;align-items:center">
+   <div><h3 id="devImageCropTitle" style="margin:0">問題画像の切り取り</h3><p class="small" style="margin:4px 0 0">画像上をドラッグして残す範囲を指定します。数値は元画像のピクセルです。</p></div>
+   <button class="ghost" type="button" onclick="devCloseImageCropper()">閉じる</button>
+  </div>
+  <div class="dev-image-crop-stage"><canvas id="devImageCropCanvas" onpointerdown="devCropPointerDown(event)" onpointermove="devCropPointerMove(event)" onpointerup="devCropPointerUp(event)" onpointercancel="devCropPointerUp(event)"></canvas></div>
+  <div class="dev-image-crop-fields">
+   <div class="dev-field"><label>X</label><input id="devCropX" type="number" min="0" oninput="devCropFieldsChanged()"></div>
+   <div class="dev-field"><label>Y</label><input id="devCropY" type="number" min="0" oninput="devCropFieldsChanged()"></div>
+   <div class="dev-field"><label>幅</label><input id="devCropWidth" type="number" min="1" oninput="devCropFieldsChanged()"></div>
+   <div class="dev-field"><label>高さ</label><input id="devCropHeight" type="number" min="1" oninput="devCropFieldsChanged()"></div>
+  </div>
+  <div id="devCropInfo" class="small" style="margin-top:8px"></div>
+  <div id="devCropStatus" class="small" style="margin-top:6px"></div>
+  <div class="row" style="margin-top:12px">
+   <button class="ghost" type="button" onclick="devResetImageCrop()">画像全体に戻す</button>
+   <button class="secondary" type="button" onclick="devApplyImageCrop()">この範囲で切り取る</button>
+   <button class="ghost" type="button" onclick="devCloseImageCropper()">キャンセル</button>
+  </div>
+ </div>
+</div>
+
 </body>
 </html>
