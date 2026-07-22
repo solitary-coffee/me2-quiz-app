@@ -324,8 +324,13 @@
         "誤り。床からの力は下向きではなく、物体を支える垂直抗力を含む。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p6.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q11.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "dialysis",
+        "imaging",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm12",
@@ -383,8 +388,11 @@
         "誤り。10Vは分圧前の電源側電圧で、出力にはそのまま出ない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p7.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q13.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm14",
@@ -413,8 +421,11 @@
         "誤り。250Jは初期エネルギー寄りで、残ったエネルギーを引いていない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p7.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q14.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm15",
@@ -472,8 +483,11 @@
         "正答。2μA×1MΩ=2V。回路の向きから5Vに2V加わり、Voは7V。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p8.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q16.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm17",
@@ -502,8 +516,11 @@
         "誤り。表5はXORに近い出力で、回路と一致しない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p9.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q17.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm18",
@@ -543,7 +560,7 @@
       "choices": [
         "1 Pa",
         "1 Torr",
-        "1 cmH2O",
+        "1 cmH₂O",
         "1 mmHg",
         "1 kgf／cm2"
       ],
@@ -561,7 +578,12 @@
         "正答。1kgf/cm2は約98kPaで、1atm約101kPaに最も近い。"
       ],
       "hasFigure": false,
-      "explanationLevel": "detailed_choice_notes_v2"
+      "explanationLevel": "detailed_choice_notes_v2",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm20",
@@ -735,8 +757,11 @@
         "誤り。yはxより長波長側で、近赤外光。可視光ではない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p11.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q25.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm26",
@@ -794,8 +819,11 @@
         "誤り。マンモグラフィは乳房撮影専用装置。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p12.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q27.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "imaging"
+      ]
     },
     {
       "id": "pm28",
@@ -1491,8 +1519,12 @@
         "誤り。20mΩなら0.50V。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p19.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q51.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm52",
@@ -1579,8 +1611,13 @@
         "誤り。14.7MPaは最高充填圧力などと混同しやすい。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p20.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q54.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "safety",
+        "homecare",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm55",
@@ -1638,8 +1675,12 @@
         "誤り。⑤は患者漏れ電流の測定図ではない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p21.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q56.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm57",
@@ -1755,8 +1796,11 @@
         "誤り。図5は該当する記号ではない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/pm_p23.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_pm_q60.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     }
   ]
 }
