@@ -319,11 +319,11 @@
       "page": 6,
       "stem": "単位について誤っている組合せはどれか。",
       "choices": [
-        "J N・m",
-        "V W ／A",
-        "T V・s",
-        "S A ／V",
-        "Sv J ／kg"
+        "JーーN・m",
+        "VーーW ／A",
+        "TーーV・s",
+        "SーーA ／V",
+        "SvーーJ ／kg"
       ],
       "sourceImage": "Date/img/42/am_p6.jpg",
       "correct": [
@@ -340,7 +340,12 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「T V・s」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am12",
@@ -416,7 +421,7 @@
         "0.5"
       ],
       "sourceImage": "Date/img/42/am_p7.jpg",
-      "image": "Date/img/42/am_p7.jpg",
+      "image": "Date/img/42/42_am_q14.png",
       "correct": [
         5
       ],
@@ -431,7 +436,10 @@
         "正答。「0.5」が設問条件に合う。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am15",
@@ -444,10 +452,10 @@
         "6",
         "8",
         "10",
-        "20 20Ω 20 V 10 V I 20Ω 20Ω R L C I"
+        "20"
       ],
       "sourceImage": "Date/img/42/am_p7.jpg",
-      "image": "Date/img/42/am_p7.jpg",
+      "image": "Date/img/42/42_am_q15.png",
       "correct": [
         3
       ],
@@ -462,7 +470,10 @@
         "誤りポイント：「20 20Ω 20 V 10 V I 20Ω 20Ω R L C I」が誤り。正しくは「8」。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am16",
@@ -478,7 +489,7 @@
         "2.0"
       ],
       "sourceImage": "Date/img/42/am_p8.jpg",
-      "image": "Date/img/42/am_p8.jpg",
+      "image": "Date/img/42/42_am_q16.png",
       "correct": [
         3
       ],
@@ -493,7 +504,10 @@
         "誤りポイント：「2.0」が誤り。正しくは「0.74」。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am17",
@@ -536,10 +550,10 @@
         "- 5.0",
         "0",
         "5.0",
-        "5.5 20 kΩ 2 V S 1 μF 20 kΩ 10 kΩ 50 kΩ 1 V 0.2 V Vo + - A"
+        "5.5"
       ],
       "sourceImage": "Date/img/42/am_p8.jpg",
-      "image": "Date/img/42/am_p8.jpg",
+      "image": "Date/img/42/42_am_q18.png",
       "correct": [
         1
       ],
@@ -554,7 +568,10 @@
         "誤りポイント：「5.5 20 kΩ 2 V S 1 μF 20 kΩ 10 kΩ 50 kΩ 1 V 0.2 V Vo + - A」が誤り。正しくは「- 5.5」。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am19",
@@ -584,8 +601,12 @@
         "誤りポイント：「5D」が誤り。正しくは「4D」。",
         "誤りポイント：「77」が誤り。正しくは「4D」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am20",
@@ -624,11 +645,11 @@
       "page": 9,
       "stem": "Ⅱ誘導に相当する電極の組合せはどれか。",
       "choices": [
-        "A E",
-        "A F",
-        "B D",
-        "C E",
-        "C F A B C D E F"
+        "A ー E",
+        "A ー F",
+        "B ー D",
+        "C ー E",
+        "C ー F"
       ],
       "sourceImage": "Date/img/42/am_p9.jpg",
       "correct": [
@@ -645,7 +666,12 @@
         "誤りポイント：「C F A B C D E F」が誤り。正しくは「A F」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "biometry_monitor",
+        "imaging"
+      ]
     },
     {
       "id": "am22",
@@ -675,8 +701,12 @@
         "正答。「送信周波数帯は医用機器以外でも使用されている」が設問条件に合う。",
         "誤りポイント：「送信機の電池の消耗により,受信機に表示される波形の振幅が減衰する」が誤り。正しくは「送信周波数帯は医用機器以外でも使用されている」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am23",
@@ -706,8 +736,13 @@
         "誤りポイント：「ドプラ法」が誤り。正しくは「熱希釈法」。この選択肢は超音波のドプラシフトから血流速度や方向を測定する方法。",
         "誤りポイント：「動脈圧波形解析法」が誤り。正しくは「熱希釈法」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am24",
@@ -737,8 +772,13 @@
         "正答。誤りポイント：「高域遮断周波数は1 Hz である」が誤り。設問が求める「誤っているもの」に該当する。",
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「高域遮断周波数は1 Hz である」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_medicine",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am25",
@@ -768,7 +808,13 @@
         "正答。「放電できる有効な電極面積が減少する」が設問条件に合う。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "biometry_monitor",
+        "surgery_treatment",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am26",
@@ -798,8 +844,11 @@
         "誤りポイント：「手術のスケジュールを管理する」が誤り。正しくは「医用画像と実際の位置との対応を示す」。",
         "正答。「医用画像と実際の位置との対応を示す」が設問条件に合う。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am27",
@@ -859,7 +908,13 @@
         "誤りポイント：「筋 肉」が誤り。正しくは「骨」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "basic_medicine",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am29",
@@ -954,8 +1009,13 @@
         "誤りポイント：「計測値を2 ～4 bit で量子化する」が誤り。正しくは「8 誘導の心電図を演算処理して標準12 誘導記録を行う」。",
         "誤りポイント：「ディジタルフィルタには雑音除去の作用はない」が誤り。正しくは「8 誘導の心電図を演算処理して標準12 誘導記録を行う」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am32",
@@ -985,8 +1045,11 @@
         "誤りポイント：「内部雑音の上限は10 μVpp である」が誤り。正しくは「標準の低域遮断周波数は0.5 Hz である」。",
         "誤りポイント：「サンプリング周波数100 Hz でAD 変換される」が誤り。正しくは「標準の低域遮断周波数は0.5 Hz である」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "am33",
@@ -1016,8 +1079,12 @@
         "この選択肢は誤りではない。正しい。生体組織の中では血液の導電率が高い。 したがって本問では選ばない。",
         "この選択肢は誤りではない。正しい。生体組織の中では血液の導電率が高い。 したがって本問では選ばない。この選択肢は医療材料にも使われる合成高分子。骨で置換される材料ではない。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "biometry_monitor",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am34",
@@ -1047,7 +1114,12 @@
         "この選択肢は誤りではない。「磁場で曲がる」が誤り。電磁波は通常、磁場で進路を曲げられない。 したがって本問では選ばない。この選択肢はX線をデジタル信号として検出する平面検出器。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "imaging",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am35",
@@ -1107,8 +1179,12 @@
         "誤りポイント：「トランペットカーブ」が誤り。正しくは「スタートアップカーブ」。",
         "正答。「スタートアップカーブ」が設問条件に合う。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "surgery_treatment",
+        "infusion"
+      ]
     },
     {
       "id": "am37",
@@ -1138,8 +1214,12 @@
         "誤りポイント：「磁場で曲がる」が誤り。超音波は機械的波で磁場によって曲げられない。 正しくは「切開の際に組織の炭化が生じない」。",
         "誤りポイント：「磁場で曲がる」が誤り。超音波は機械的波で磁場によって曲げられない。 正しくは「切開の際に組織の炭化が生じない」。この選択肢は高周波電流によるジュール熱で切開・凝固を行う手術装置。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "surgery_treatment",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am38",
@@ -1169,7 +1249,12 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「膜型人工肺」。この選択肢は人工呼吸回路を構成する部品。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "respiratory",
+        "heart_lung"
+      ]
     },
     {
       "id": "am39",
@@ -1199,8 +1284,12 @@
         "正答。「トリガに対するバルーンの応答性が良い」が設問条件に合う。",
         "誤りポイント：「ガスは1 心拍ごとに装置の外部に排気される」が誤り。正しくは「トリガに対するバルーンの応答性が良い」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "heart_lung",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am40",
@@ -1230,8 +1319,13 @@
         "誤りポイント：正しい。パルスオキシメータはHbの吸収特性差を利用する。 正しくは「酸素フラッシュ弁を開放すると呼吸バッグが膨らむ」。この選択肢は光や放射線のエネルギーが物質に取り込まれる現象。 この選択肢は腹腔鏡手術の気腹や一部検査などに用いる医療ガス。",
         "正答。「酸素フラッシュ弁を開放すると呼吸バッグが膨らむ」が設問条件に合う。この選択肢は医療ガスの一種。酸素療法・人工呼吸・麻酔などで用いられる。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "respiratory",
+        "safety",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am41",
@@ -1261,7 +1355,11 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「電極コードを小さく丸めて使用した」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "biometry_monitor"
+      ]
     },
     {
       "id": "am42",
@@ -1271,9 +1369,9 @@
       "stem": "間接法による血圧測定で平均血圧に最も近いのはどれか。",
       "choices": [
         "最高血圧 - 最低血圧",
-        "最高血圧 ＋ 最低血圧 2",
-        "最高血圧 -最低血圧 3 ＋最低血圧",
-        "最高血圧 2",
+        "$\\frac{最高血圧 ＋ 最低血圧}{2}$",
+        "$\\frac{最高血圧 -最低血圧}{3}＋最低血圧$",
+        "$\\frac{最高血圧}{2}$",
         "最低血圧× 1.5"
       ],
       "sourceImage": "Date/img/42/am_p17.jpg",
@@ -1291,7 +1389,11 @@
         "誤りポイント：「最低血圧× 1.5」が誤り。正しくは「最高血圧 -最低血圧 3 ＋最低血圧」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "am43",
@@ -1381,8 +1483,12 @@
         "この選択肢は誤りではない。正しい。心房細動などの同期通電ではR波同期を用いる。 したがって本問では選ばない。",
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「直接通電の際は体外通電時より出力を上げる」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am46",
@@ -1442,8 +1548,11 @@
         "誤りポイント：「レーザ光の射出位置を術者の目の高さとした」が誤り。正しくは「黒くコーティングされた手術器具を使用した」。この選択肢は高エネルギー光を用いて切開・凝固・蒸散などを行う装置。",
         "誤りポイント：「視力矯正用眼鏡を保護眼鏡として使用した」が誤り。正しくは「黒くコーティングされた手術器具を使用した」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am48",
@@ -1459,7 +1568,7 @@
         "E：静脈側エアトラップチャンバ"
       ],
       "sourceImage": "Date/img/42/am_p19.jpg",
-      "image": "Date/img/42/am_p19.jpg",
+      "image": "Date/img/46/46_am_q60.png",
       "correct": [
         5
       ],
@@ -1474,7 +1583,11 @@
         "正答。正しい。生体組織の中では血液の導電率が高い。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "dialysis",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am49",
@@ -1487,7 +1600,7 @@
         "呼気側にフィルタを装着する。",
         "呼吸回路を頻回に交換する。",
         "閉鎖式吸引チューブを使用する。",
-        "点検者はN95 マスクを着用する。 血液ポンプ ダイアライザ 透析液ライン 透析液ライン D ：ダイアライザ出口部 E ：静脈側エアトラップチャンバ B ：動脈側エアトラップチャンバ C ：ダイアライザ入口部 A：動脈側アクセス接続部 血液 A：動脈側ア 脱血 送血 P"
+        "点検者はN95 マスクを着用する。"
       ],
       "sourceImage": "Date/img/42/am_p19.jpg",
       "image": "Date/img/42/am_p19.jpg",
@@ -1504,8 +1617,13 @@
         "この選択肢は誤りではない。正しい。医療ガス配管設備で黒の識別色は吸引。 したがって本問では選ばない。この選択肢は医療ガス設備では陰圧で分泌物や液体などを吸引する系統。",
         "この選択肢は誤りではない。正しい。妊娠中でも禁忌でないワクチンとして扱う。 したがって本問では選ばない。この選択肢は透析膜を介して血液と透析液を接触させる血液透析の主要部品。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "dialysis",
+        "infection",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am50",
@@ -1535,8 +1653,11 @@
         "誤りポイント：「患者とリザーバの落差を大きくするとリザーバの貯血量が減る」が誤り。正しくは「ベントポンプを作動させるとリザーバの貯血量が増える」。",
         "誤りポイント：正しい。医療ガス配管設備で黒の識別色は吸引。 正しくは「ベントポンプを作動させるとリザーバの貯血量が増える」。この選択肢は医療ガス設備では陰圧で分泌物や液体などを吸引する系統。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "heart_lung"
+      ]
     },
     {
       "id": "am51",
@@ -1566,7 +1687,12 @@
         "正答。正しい。接地漏れ電流測定の単一故障状態では電源導線の一線断線を模擬する。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am52",
@@ -1597,7 +1723,11 @@
         "誤りポイント：「300」が誤り。正しくは「150」。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "surgery_treatment",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am53",
@@ -1627,7 +1757,11 @@
         "誤りポイント：「490」が誤り。正しくは「420」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am54",
@@ -1657,7 +1791,12 @@
         "誤りポイント：「チューブガイド」が誤り。正しくは「内蔵バッテリー」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "surgery_treatment",
+        "infusion"
+      ]
     },
     {
       "id": "am55",
@@ -1687,8 +1826,13 @@
         "正答。誤りポイント：「バッテリー内部抵抗の確認」が誤り。設問が求める「誤っているもの」に該当する。",
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「バッテリー内部抵抗の確認」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "respiratory",
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am56",
@@ -1718,8 +1862,11 @@
         "誤りポイント：「100 kHz での最小感知電流は10 mA 程度である」が誤り。正しくは「商用交流での離脱限界電流は10 mA 程度である」。",
         "正答。「商用交流での離脱限界電流は10 mA 程度である」が設問条件に合う。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am57",
@@ -1749,7 +1896,11 @@
         "誤りポイント：「地 絡」が誤り。正しくは「電 撃（ミクロショック）」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "am58",
