@@ -157,13 +157,13 @@
       "part": "pm",
       "number": 6,
       "page": 3,
-      "stem": "アルドステロンの作用はどれか。 ナトリウム カリウム 体液量",
+      "stem": "アルドステロンの作用はどれか。 ",
       "choices": [
-        "再吸収 再吸収 増 加",
-        "再吸収 排 泄 増 加",
-        "再吸収 排 泄 減 少",
-        "排 泄 再吸収 減 少",
-        "排 泄 排 泄 減 少"
+        "ナトリウム:再吸収\nカリウム　:再吸収 \n体液量　　:増 加",
+        "ナトリウム:再吸収\nカリウム　:排 泄\n体液量　　:増 加",
+        "ナトリウム:再吸収\nカリウム　:排 泄\n体液量　　:減 少",
+        "ナトリウム:排 泄\nカリウム　:再吸収 \n体液量　　:減 少",
+        "ナトリウム:排 泄\nカリウム　:排 泄\n体液量　　: 減 少"
       ],
       "correct": [
         2
@@ -178,8 +178,14 @@
         "誤りポイント：血圧調節に関与する。Na⁺再吸収を促し体液量を増やす。 正しくは「再吸収 排 泄 増 加」。この選択肢は光や放射線のエネルギーが物質に取り込まれる現象。",
         "誤りポイント：血圧調節に関与する。Na⁺再吸収を促し体液量を増やす。 正しくは「再吸収 排 泄 増 加」。"
       ],
-      "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": true,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "Date/img/46/46_am_q60.png",
+      "kindCategories": [
+        "circulation",
+        "imaging",
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm07",
@@ -265,9 +271,12 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「20 歳男性ではおよそ500 kcal ／日である」。",
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「20 歳男性ではおよそ500 kcal ／日である」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p4.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm10",
@@ -383,8 +392,11 @@
         "誤りポイント：「b 点からa 点の向きに15 mA 流れる」が誤り。正しくは「a 点からb 点の向きに5 mA 流れる」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/pm_p6.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_pm_q13.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm14",
@@ -442,8 +454,11 @@
         "誤りポイント：「−90」が誤り。正しくは「−45」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/pm_p7.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_pm_q15.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm16",
@@ -472,8 +487,11 @@
         "誤りポイント：「106 v R C 入力 出力 ＋ － 1 MΩ v vo」が誤り。正しくは「v」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/pm_p7.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_pm_q16.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm17",
@@ -675,9 +693,12 @@
         "正答。正しい。赤外線を利用して非接触で温度測定できる。この選択肢は赤外線を検出して対象物の表面温度分布を非接触で可視化する装置。",
         "誤りポイント：「バイメタル温度計」が誤り。正しくは「サーモグラフィー」。この選択肢は金属の熱膨張差を利用して温度を示す温度計。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p10.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm24",
@@ -734,9 +755,14 @@
         "誤りポイント：「体重あたりの放熱量は成人に比べ乳児の方が少ない」が誤り。正しくは「寒冷環境下では温暖環境下よりも皮膚表層の血流が少ない」。",
         "正答。「寒冷環境下では温暖環境下よりも皮膚表層の血流が少ない」が設問条件に合う。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p10.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "basic_medicine",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm26",
@@ -795,8 +821,11 @@
         "正答。正しい。心室の再分極過程はT波に相当する。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/pm_p11.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_pm_q27.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "pm28",
@@ -969,9 +998,12 @@
         "誤りポイント：「サーモパイル」が誤り。正しくは「PZT（チタン酸ジルコン酸鉛）」。この選択肢は赤外線による温度を熱起電力として検出するセンサ。",
         "誤りポイント：「サーミスタボロメータ」が誤り。正しくは「PZT（チタン酸ジルコン酸鉛）」。この選択肢は温度変化を電気抵抗の変化として測定する温度センサ。 この選択肢は入射赤外線による温度上昇を抵抗変化として検出するセンサ。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p13.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "biometry_monitor"
+      ]
     },
     {
       "id": "pm34",
@@ -1028,9 +1060,14 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「生体接触部の電流密度はメス先電極より対極板のほうが高い」。",
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「生体接触部の電流密度はメス先電極より対極板のほうが高い」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p14.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "biometry_monitor",
+        "surgery_treatment",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm36",
@@ -1204,9 +1241,12 @@
         "誤りポイント：「トレッドミル負荷心電図検査」が誤り。正しくは「ホルター心電図検査」。",
         "誤りポイント：「マスター2 階段試験心電図検査」が誤り。正しくは「ホルター心電図検査」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p16.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "pm42",
@@ -1380,9 +1420,14 @@
         "誤りポイント：「心房細動には禁忌である」が誤り。正しくは「ACT（活性化凝固時間）は150 秒程度を目標とする」。",
         "正答。「ACT（活性化凝固時間）は150 秒程度を目標とする」が設問条件に合う。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p18.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "heart_lung",
+        "imaging",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "pm48",
@@ -1439,9 +1484,12 @@
         "誤りポイント：「常に陰圧」が誤り。気道内圧・肺胞内圧は呼吸相で大気圧付近を変動する。 正しくは「人工鼻の目詰まり」。",
         "誤りポイント：「常に陰圧」が誤り。気道内圧・肺胞内圧は呼吸相で大気圧付近を変動する。 正しくは「人工鼻の目詰まり」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p18.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "respiratory"
+      ]
     },
     {
       "id": "pm50",

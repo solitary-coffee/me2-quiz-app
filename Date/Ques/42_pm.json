@@ -111,7 +111,7 @@
         "R - R 間隔の不整"
       ],
       "sourceImage": "Date/img/42/pm_p32.jpg",
-      "image": "Date/img/42/pm_p32.jpg",
+      "image": "Date/img/42/42_pm_q04.png",
       "correct": [
         4
       ],
@@ -126,7 +126,12 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「異常Q 波の出現」。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "imaging"
+      ]
     },
     {
       "id": "pm05",
@@ -382,7 +387,7 @@
         "選択肢5（原本画像を確認）"
       ],
       "sourceImage": "Date/img/42/pm_p35.jpg",
-      "image": "Date/img/42/pm_p35.jpg",
+      "image": "Date/img/42/42_pm_q13.png",
       "correct": [
         4
       ],
@@ -397,7 +402,10 @@
         "誤りポイント：「選択肢5（原本画像を確認）」が誤り。正しくは「選択肢4（原本画像を確認）」。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm14",
@@ -410,10 +418,10 @@
         "0.7",
         "1.0",
         "1.4",
-        "2.0 1） 2） 3） 4） 5） 電圧[V] 時間[s] 10 0 10 電力[W] 時間[s] 100 0 10 電力[W] 時間[s] 70 0 10 電力[W] 時間[s] 50 0 10 電力[W] 時間[s] 100 0 10 電力[W] 時間[s] 100 0 10 1 kΩ 1μF 出力 入力"
+        "2.0"
       ],
       "sourceImage": "Date/img/42/pm_p35.jpg",
-      "image": "Date/img/42/pm_p35.jpg",
+      "image": "Date/img/42/42_pm_q14.png",
       "correct": [
         5
       ],
@@ -428,7 +436,10 @@
         "正答。「2.0 1） 2） 3） 4） 5） 電圧[V] 時間[s] 10 0 10 電力[W] 時間[s] 100 0 10 電力[W] 時間[s] 70 0 10 電力[W] 時間[s] 50 0 10 電力[W] 時間[s] 100 0 10 電力[W] 時間[s] 100 0 10 1 kΩ 1μF 出力 入力」が設問条件に合う。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm15",
@@ -568,7 +579,7 @@
         "\\overline{A}・B・\\overline{C}"
       ],
       "sourceImage": "Date/img/42/pm_p37.jpg",
-      "image": "Date/img/42/pm_p37.jpg",
+      "image": "Date/img/42/42_pm_q19.png",
       "correct": [
         3
       ],
@@ -584,7 +595,11 @@
       ],
       "hasFigure": true,
       "explanationLevel": "phrase_point_with_choice_role_v3",
-      "kindCategories": []
+      "kindCategories": [
+        "dialysis",
+        "imaging",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm20",
@@ -644,8 +659,13 @@
         "誤りポイント：「誘導間の記録遅延のばらつきが少なくなる」が誤り。正しくは「低い周波数の波形が歪む」。",
         "誤りポイント：「高周波ノイズが出やすくなる」が誤り。正しくは「低い周波数の波形が歪む」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "basic_medicine",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm22",
@@ -1091,7 +1111,7 @@
         "ダイアフラムポンプ"
       ],
       "sourceImage": "Date/img/42/pm_p43.jpg",
-      "image": "Date/img/42/pm_p43.jpg",
+      "image": "Date/img/46/46_am_q59.png",
       "correct": [
         5
       ],
@@ -1106,7 +1126,11 @@
         "正答。「ダイアフラムポンプ」が設問条件に合う。この選択肢は膜の往復運動で吸入・吐出を行うポンプ。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "heart_lung",
+        "infusion"
+      ]
     },
     {
       "id": "pm37",
@@ -1256,8 +1280,12 @@
         "誤りポイント：「誘導コードと電源コードを一緒に束ねる」が誤り。正しくは「呼吸性不整脈を診るには少なくとも4 呼吸以上の連続記録を行う」。",
         "正答。「呼吸性不整脈を診るには少なくとも4 呼吸以上の連続記録を行う」が設問条件に合う。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor"
+      ]
     },
     {
       "id": "pm42",
@@ -1287,8 +1315,12 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「光刺激装置」。",
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「光刺激装置」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_medicine",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm43",
@@ -1499,8 +1531,13 @@
         "誤りポイント：「気腹には圧縮空気を用いる」が誤り。正しくは「トロッカーには逆流防止弁が備わっている」。",
         "誤りポイント：「気腹圧は100 mmHg 程度に調節する」が誤り。正しくは「トロッカーには逆流防止弁が備わっている」。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "surgery_treatment",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm50",
@@ -1636,7 +1673,7 @@
         "電圧計の指示値が5 mV のとき漏れ電流は5 μA と読み取る。"
       ],
       "sourceImage": "Date/img/42/pm_p49.jpg",
-      "image": "Date/img/42/pm_p49.jpg",
+      "image": "Date/img/42/42_pm_q54.png",
       "correct": [
         4
       ],
@@ -1651,7 +1688,10 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「商用交流電流I in が入力されたときVout の相対利得は- 20 dB である」。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm55",
@@ -1664,7 +1704,7 @@
         "青",
         "黄",
         "白",
-        "赤 R 2 C 1 R 1 Vout I in 電圧計"
+        "赤"
       ],
       "sourceImage": "Date/img/42/pm_p49.jpg",
       "correct": [
@@ -1681,7 +1721,12 @@
         "誤りポイント：「赤 R 2 C 1 R 1 Vout I in 電圧計」が誤り。正しくは「緑」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm56",
@@ -1806,8 +1851,12 @@
         "誤りポイント：「冷凍手術器」が誤り。正しくは「レーザ治療器」。この選択肢は低温で組織を凍結壊死させる治療装置。",
         "誤りポイント：「ラジオ波焼灼装置」が誤り。正しくは「レーザ治療器」。この選択肢は高周波電流で組織を加熱し焼灼する治療法・装置。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "surgery_treatment",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm60",

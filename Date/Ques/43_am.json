@@ -34,8 +34,11 @@
         "誤りポイント：「悪性新生物」が誤り。悪性新生物は主要死因だが、図中Aは老衰を示す。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/am_p2.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_am_q01.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "am02",
@@ -417,8 +420,11 @@
         "正答。「2500」が設問条件に合う。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/am_p6.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_am_q14.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am15",
@@ -460,7 +466,7 @@
         "- 4",
         "- 1",
         "4",
-        "9 R a b 巻数比 1：5 ＋ － 5 kΩ 1 kΩ 2 V 1 V Vo"
+        "9"
       ],
       "correct": [
         2
@@ -476,8 +482,11 @@
         "誤りポイント：「9 R a b 巻数比 1：5 ＋ － 5 kΩ 1 kΩ 2 V 1 V Vo」が誤り。正しくは「- 4」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/am_p6.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/46/46_am_q60.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am17",
@@ -506,8 +515,12 @@
         "誤りポイント：「C」が誤り。正しくは「B」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/am_p7.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_am_q17.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am18",
@@ -612,7 +625,7 @@
         "周波数が高いほど減衰しにくい。",
         "周波数が高いほど回折しにくい。",
         "生体軟部組織中を伝わる速さは水中とほぼ等しい。",
-        "固有音響インピーダンスが異なる媒質の境界面で反射する。 1 2 1 2 Δ L 4 Δ L 2"
+        "固有音響インピーダンスが異なる媒質の境界面で反射する。 "
       ],
       "correct": [
         2
@@ -628,7 +641,11 @@
         "この選択肢は誤りではない。「磁場で曲がる」が誤り。超音波は機械的波で磁場によって曲げられない。 したがって本問では選ばない。この選択肢は波が境界面で跳ね返る現象。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "am22",
@@ -656,9 +673,13 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「ホール素子は超音波プローブに用いる」。この選択肢はひずみを電気抵抗の変化に変換するトランスデューサ。力・荷重・圧力の測定にも利用される。 この選択肢は動脈内カテーテルと圧トランスデューサで連続的に血圧を測定する方法。",
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「ホール素子は超音波プローブに用いる」。この選択肢は光を電流に変換する受光素子。パルスオキシメータなどで光検出に用いられる。 この選択肢は赤色光・赤外光の吸収差と脈波を利用して動脈血酸素飽和度を推定する装置。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p9.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "biometry_monitor",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am23",
@@ -803,8 +824,13 @@
         "誤りポイント：「150」が誤り。正しくは「100」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/am_p11.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_am_q27.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "imaging"
+      ]
     },
     {
       "id": "am28",
@@ -891,8 +917,11 @@
         "正答。正しい。造影糸はガーゼ遺残のX線確認に用いる。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/am_p12.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_am_q30.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "imaging"
+      ]
     },
     {
       "id": "am31",
@@ -920,9 +949,14 @@
         "正答。正しい。増高単極肢誘導aVR+aVL+aVFは0になる。",
         "誤りポイント：「ゼロ」が誤り。胸部誘導V1とV6の和がゼロになる関係ではない。 正しくは「aVR 誘導とaVL 誘導とaVF 誘導の和はゼロである」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p12.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "imaging"
+      ]
     },
     {
       "id": "am32",
@@ -979,9 +1013,12 @@
         "この選択肢は誤りではない。「磁場で曲がる」が誤り。超音波は機械的波で磁場によって曲げられない。 したがって本問では選ばない。",
         "正答。誤りポイント：「磁場で曲がる」が誤り。超音波は機械的波で磁場によって曲げられない。この選択肢は超音波のドプラシフトから血流速度や方向を測定する方法。 この選択肢は高流速を測定しやすいが距離分解能を持たないドプラ法。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p13.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "am34",
@@ -1125,9 +1162,14 @@
         "誤りポイント：「心電図と同期させる」が誤り。正しくは「膜型肺を用いる」。",
         "正答。正しい。ECMOでは膜型人工肺を用いる。この選択肢は膜を介して血液とガスを交換する人工肺。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p14.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "heart_lung",
+        "biometry_monitor",
+        "imaging"
+      ]
     },
     {
       "id": "am39",
@@ -1568,9 +1610,14 @@
         "誤りポイント：正しい。パルスオキシメータはHbの吸収特性差を利用する。 正しくは「酸素の供給を停止すると亜酸化窒素の供給が停止した」。この選択肢は光や放射線のエネルギーが物質に取り込まれる現象。 この選択肢は腹腔鏡手術の気腹や一部検査などに用いる医療ガス。",
         "誤りポイント：「回路内圧点検時にAPL 弁を開いても回路内圧は変化しなかった」が誤り。正しくは「酸素の供給を停止すると亜酸化窒素の供給が停止した」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p19.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety",
+        "surgery_treatment",
+        "homecare"
+      ]
     },
     {
       "id": "am54",
@@ -1598,9 +1645,14 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「電極ケーブル接続部の接触抵抗値の測定 1 4」。",
         "正答。誤りポイント：「電極ケーブル接続部の接触抵抗値の測定 1 4」が誤り。設問が求める「誤っているもの」に該当する。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p19.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am55",
@@ -1686,9 +1738,13 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「全ての形別分類で，単一故障状態の患者漏れ電流は正常状態の10 倍まで 許容される。 1 10」。",
         "正答。誤りポイント：「全ての形別分類で，単一故障状態の患者漏れ電流は正常状態の10 倍まで 許容される。 1 10」が誤り。設問が求める「誤っているもの」に該当する。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p20.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am58",
@@ -1731,7 +1787,7 @@
         "一般非常電源は商用電源停止から40 秒以内に電力供給を開始できる。",
         "無停電電源は無停電電源装置（UPS）と自家用発電設備から構成される。",
         "特別非常電源は商用電源停止から10 秒以内に電力供給を開始できる。",
-        "無停電電源装置（UPS）は10 分以上継続して電力を供給できる。 1） 2） 3） 4） 5）"
+        "無停電電源装置（UPS）は10 分以上継続して電力を供給できる。"
       ],
       "correct": [
         1
@@ -1747,7 +1803,12 @@
         "この選択肢は誤りではない。正しい内容なので本問では選ばない。正答は「自家用発電設備から供給される電源コンセントの外郭色は茶色である」。この選択肢は商用電源停止時にも瞬断なく電力を供給する装置。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am60",

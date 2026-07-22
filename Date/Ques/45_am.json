@@ -295,8 +295,12 @@
         "誤り。Eは拡張末期付近で、次の収縮が始まる直前。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p5.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/46/46_am_q59.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "circulation",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am11",
@@ -354,8 +358,11 @@
         "誤り。導体表面の電気力線は表面に垂直に出入りする。平行成分は静電平衡では残らない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p6.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q12.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am13",
@@ -384,8 +391,11 @@
         "誤り。10 MΩでは全体が11 MΩとなり、正確な10:1にならない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p6.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q13.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am14",
@@ -443,8 +453,11 @@
         "誤り。電流による電圧降下を小さく見積もりすぎている。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p7.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q15.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am16",
@@ -473,8 +486,11 @@
         "誤り。非反転入力なら無限大に近いが、この回路の信号入力は抵抗を通る。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p8.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q16.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am17",
@@ -531,8 +547,12 @@
         "誤り。126は中央2つの平均より高い。",
         "誤り。133は上位側の値で中央値ではない。"
       ],
-      "hasFigure": false,
-      "explanationLevel": "detailed_choice_notes_v2"
+      "hasFigure": true,
+      "explanationLevel": "detailed_choice_notes_v2",
+      "image": "Date/img/45/45_am_q18.png",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "am19",
@@ -1083,8 +1103,12 @@
         "正答。脱血カニューレ→貯血槽→血液ポンプ→膜型人工肺→動脈フィルタ→送血カニューレの順。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p14.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q37.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "heart_lung",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am38",
@@ -1490,8 +1514,11 @@
         "誤り。4.5Ωでは分流器として抵抗が大きすぎる。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p19.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q51.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am52",
@@ -1694,8 +1721,11 @@
         "関係ある。強化絶縁はクラスII機器の保護手段として用いられる。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p22.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q58.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "am59",
@@ -1724,8 +1754,11 @@
         "正答。ピンが折損している場合、どの端末器にも接続できないのが安全上正しい。"
       ],
       "hasFigure": true,
-      "image": "Date/img/45/am_p22.jpg",
-      "explanationLevel": "detailed_choice_notes_v2"
+      "image": "Date/img/45/45_am_q59.png",
+      "explanationLevel": "detailed_choice_notes_v2",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "am60",

@@ -91,9 +91,12 @@
         "誤りポイント：「末梢神経系」が誤り。脊髄は脳と同じく中枢神経系。 正しくは「大脳の表面は灰白質である」。",
         "誤りポイント：「白質」が誤り。神経細胞体が多いのは灰白質。白質は神経線維が主体。 正しくは「大脳の表面は灰白質である」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p3.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "am04",
@@ -122,8 +125,11 @@
         "誤りポイント：僧帽弁閉鎖後で容積は変わらず圧だけ上昇する時期。矢印位置とは一致しない。 正しくは「拡張末期」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p4.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_pm_q27.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "am05",
@@ -165,7 +171,7 @@
         "胸腔内圧は陰圧である。",
         "吸気時に横隔膜が収縮する。",
         "肺胞でのガス交換は拡散による。",
-        "体温の上昇は呼吸数を増加させる。 左心室内圧［mmHg］ 150 100 50 0 0 1 時間［s］"
+        "体温の上昇は呼吸数を増加させる。"
       ],
       "correct": [
         1
@@ -181,7 +187,12 @@
         "この選択肢は誤りではない。正しい。体温上昇では代謝亢進に伴い呼吸数が増えることがある。 したがって本問では選ばない。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "respiratory",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am07",
@@ -325,9 +336,12 @@
         "誤りポイント：「吸収線量」は設問条件に合わない。正しくは「粘性率」。この選択肢は物質が放射線から吸収したエネルギー量。単位はGy。 この選択肢は光や放射線のエネルギーが物質に取り込まれる現象。",
         "誤りポイント：「表面張力」は設問条件に合わない。正しくは「粘性率」。この選択肢は液体表面が縮もうとする性質を表す物理量。単位はN/m。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p6.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "am12",
@@ -414,9 +428,12 @@
         "誤りポイント：「1000」は設問条件に合わない。正しくは「100」。",
         "誤りポイント：「3000」は設問条件に合わない。正しくは「100」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p7.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am15",
@@ -445,8 +462,12 @@
         "誤りポイント：「30」は設問条件に合わない。正しくは「3」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p7.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_am_q15.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am16",
@@ -459,7 +480,7 @@
         "金属結合",
         "水素結合",
         "分子間結合",
-        "イオン結合 出力 入力 5 kΩ 0.01 μF"
+        "イオン結合"
       ],
       "correct": [
         1
@@ -475,7 +496,11 @@
         "誤りポイント：「イオン結合 出力 入力 5 kΩ 0.01 μF」は設問条件に合わない。正しくは「共有結合」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am17",
@@ -504,8 +529,11 @@
         "正答。「- 2」が設問条件に合う。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p8.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43_pm_q27.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am18",
@@ -518,7 +546,7 @@
         "11100",
         "101010",
         "110011",
-        "111111 + − + − 5 kΩ 500 kΩ Vo Vi"
+        "111111"
       ],
       "correct": [
         3
@@ -534,7 +562,12 @@
         "誤りポイント：「111111 + − + − 5 kΩ 500 kΩ Vo Vi」は設問条件に合わない。正しくは「101010」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am19",
@@ -592,8 +625,12 @@
         "誤りポイント：「20」は設問条件に合わない。正しくは「2」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p9.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_am_q20.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am21",
@@ -606,7 +643,7 @@
         "太陽電池",
         "圧電素子",
         "サーミスタ",
-        "ホール素子 A 0.2 m B"
+        "ホール素子"
       ],
       "correct": [
         5
@@ -622,7 +659,13 @@
         "正答。「ホール素子 A 0.2 m B」が設問条件に合う。この選択肢は磁場・磁束密度をホール電圧に変換して測定するセンサ。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "biometry_monitor",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am22",
@@ -631,11 +674,11 @@
       "page": 10,
       "stem": "空気から角膜に入射する光の屈折率を表すのはどれか。",
       "choices": [
-        "空気中の光速 角膜中の光速",
-        "角膜中の光速 空気中の光速",
-        "角膜中の光強度 角膜中の光速",
-        "空気中の光強度 角膜中の光速",
-        "角膜中の光強度 空気中の光強度"
+        "$\\frac{空気中の光速}{角膜中の光速}$ ",
+        "$\\frac{角膜中の光速}{空気中の光速}$ ",
+        "$\\frac{角膜中の光強度}{角膜中の光速}$",
+        "$\\frac{空気中の光強度}{角膜中の光速}$",
+        "$\\frac{角膜中の光強度}{空気中の光強度}$ "
       ],
       "correct": [
         1
@@ -650,9 +693,12 @@
         "誤りポイント：「空気中の光強度 角膜中の光速」は設問条件に合わない。正しくは「空気中の光速 角膜中の光速」。",
         "誤りポイント：「角膜中の光強度 空気中の光強度」は設問条件に合わない。正しくは「空気中の光速 角膜中の光速」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p10.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "am23",
@@ -767,9 +813,14 @@
         "正答。誤りポイント：「内視鏡装置」の記述が誤り。正しくは基本事項を確認し、ほかの選択肢は誤りではない。この選択肢は体腔内を観察する装置。消化管・気管支・胆道などの観察に用いられる。",
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「内視鏡装置」。この選択肢は近赤外光で脳血流変化を測定する装置。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p11.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "imaging",
+        "basic_medicine",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am27",
@@ -828,8 +879,12 @@
         "誤りポイント：「洞結節の興奮」は設問条件に合わない。正しくは「心房の心筋細胞の脱分極」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p12.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_am_q28.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am29",
@@ -915,9 +970,14 @@
         "誤りポイント：「標準紙送り速さは10 mm ／s である」は設問条件に合わない。正しくは「8 誘導の心電図を演算処理して標準12 誘導記録を行う」。",
         "正答。「8 誘導の心電図を演算処理して標準12 誘導記録を行う」が設問条件に合う。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p13.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "imaging"
+      ]
     },
     {
       "id": "am32",
@@ -1206,9 +1266,13 @@
         "誤りポイント：「心電図」は設問条件に合わない。正しくは「脳 波」。",
         "誤りポイント：「超音波断層像」は設問条件に合わない。正しくは「脳 波」。この選択肢はヒトの可聴域を超える高周波の機械的波。媒質が必要。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p16.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_medicine",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am42",
@@ -1294,9 +1358,13 @@
         "誤りポイント：「感度ダイヤル（SENSITIVITY）は心臓が反応する電圧を設定する」は設問条件に合わない。正しくは「センシングインジケータは自発の心電図を検出すると点灯する」。",
         "誤りポイント：「ペーシングインジケータはバッテリー残量が少なくなると点滅する。 1 2」は設問条件に合わない。正しくは「センシングインジケータは自発の心電図を検出すると点灯する」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p17.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am45",
@@ -1382,9 +1450,13 @@
         "正答。「バルーンの拡張中は心電図のST 変化に注意が必要である」が設問条件に合う。",
         "誤りポイント：「治療後の抗血栓療法は禁忌である」は設問条件に合わない。正しくは「バルーンの拡張中は心電図のST 変化に注意が必要である」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p18.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "imaging"
+      ]
     },
     {
       "id": "am48",
@@ -1412,9 +1484,14 @@
         "誤りポイント：「大動脈弁が閉じたときにバルーンを収縮させる」は設問条件に合わない。正しくは「電気メスを用いる場合は動脈圧トリガを用いる」。",
         "正答。「電気メスを用いる場合は動脈圧トリガを用いる」が設問条件に合う。この選択肢は高周波電流によるジュール熱で切開・凝固を行う手術装置。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p19.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "surgery_treatment",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am49",
@@ -1529,9 +1606,14 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「バッテリーで駆動できる時間の測定」。",
         "正答。誤りポイント：「バッテリーで駆動できる時間の測定」の記述が誤り。正しくは基本事項を確認し、ほかの選択肢は誤りではない。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p20.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "heart_lung",
+        "safety",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am53",
@@ -1661,7 +1743,7 @@
         "① ③",
         "② ①",
         "② ③",
-        "③ ① R2 R1 ① ② ③ C1 R1＝10 kΩ±5％ R2＝1 kΩ±1％ C1＝0.015 μF±5％"
+        "③ ①"
       ],
       "correct": [
         2
@@ -1677,8 +1759,11 @@
         "誤りポイント：「③ ① R2 R1 ① ② ③ C1 R1＝10 kΩ±5％ R2＝1 kΩ±1％ C1＝0.015 μF±5％」は設問条件に合わない。正しくは「① ③」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p22.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_am_q57.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am58",
@@ -1736,8 +1821,11 @@
         "誤りポイント：「DISS コネクタ」は設問条件に合わない。正しくは「ヨーク形」。この選択肢は径の異なるねじで医療ガスの誤接続を防ぐコネクタ方式。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p23.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_am_q59.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "am60",

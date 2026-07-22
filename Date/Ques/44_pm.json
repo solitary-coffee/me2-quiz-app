@@ -120,9 +120,12 @@
         "誤りポイント：「最も高い」が誤り。血圧は一般に睡眠中に低下する。 正しくは「脈圧は収縮期血圧と拡張期血圧の差である」。",
         "誤りポイント：「平均血圧は（収縮期血圧＋拡張期血圧）÷ 2 で表される」は設問条件に合わない。正しくは「脈圧は収縮期血圧と拡張期血圧の差である」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p3.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "pm05",
@@ -280,7 +283,7 @@
         "白血球数 ：7000 ／μL",
         "収縮期血圧 ：120 mmHg",
         "空腹時血糖値 ：80 mg ／dL",
-        "ヘモグロビン値：7.0 g ／dL 3 4"
+        "ヘモグロビン値：7.0 g ／dL "
       ],
       "correct": [
         5
@@ -296,7 +299,12 @@
         "正答。正しい。妊娠末期でHb 7.0 g/dLは著しい貧血で異常値。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "circulation",
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm11",
@@ -324,9 +332,13 @@
         "誤りポイント：「［M ∙L ∙T-1］」は設問条件に合わない。正しくは「［M ∙L-1 ∙T-2］」。",
         "正答。「［M ∙L-1 ∙T-2］」が設問条件に合う。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p6.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm12",
@@ -368,7 +380,7 @@
         "0.5",
         "0.7",
         "0.8",
-        "1.5 8 V 2 V I 4 Ω 8 Ω"
+        "1.5"
       ],
       "correct": [
         2
@@ -384,8 +396,11 @@
         "誤りポイント：「1.5 8 V 2 V I 4 Ω 8 Ω」は設問条件に合わない。正しくは「0.5」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/pm_p6.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_pm_q13.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm14",
@@ -444,8 +459,11 @@
         "誤りポイント：「80」は設問条件に合わない。正しくは「30」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/pm_p8.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_pm_q15.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm16",
@@ -503,8 +521,11 @@
         "正答。「XOR」が設問条件に合う。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/pm_p9.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_pm_q17.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm18",
@@ -517,7 +538,7 @@
         "5",
         "6",
         "7",
-        "12 A 0 0 1 1 入力 出力 B 0 1 0 1 X 0 1 1 0"
+        "12"
       ],
       "correct": [
         3
@@ -532,9 +553,12 @@
         "誤りポイント：「7」は設問条件に合わない。正しくは「6」。",
         "誤りポイント：「12 A 0 0 1 1 入力 出力 B 0 1 0 1 X 0 1 1 0」は設問条件に合わない。正しくは「6」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p9.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm19",
@@ -576,7 +600,7 @@
         "一定の力が作用している間、ダッシュポットの伸びは時間に比例して増 加する。",
         "一定の力が作用している間、ダッシュポットにかかる力とバネにかかる 力は等しい。",
         "力を取り除くと、バネの伸びは時間に比例して減少する。",
-        "力を取り除くと、ダッシュポットは力を取り除いた時点の長さにとどまる。 壁 バネ ダッシュポット 力"
+        "力を取り除くと、ダッシュポットは力を取り除いた時点の長さにとどまる。 "
       ],
       "correct": [
         4
@@ -592,8 +616,12 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「力を取り除くと、バネの伸びは時間に比例して減少する」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/pm_p10.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_pm_q20.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm21",
@@ -911,9 +939,12 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「電極間の電位差を測定する」。",
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「電極間の電位差を測定する」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p13.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "biometry_monitor"
+      ]
     },
     {
       "id": "pm32",
@@ -1144,9 +1175,14 @@
         "誤りポイント：「透析液流量」は設問条件に合わない。正しくは「血液回路内圧」。",
         "正答。「血液回路内圧」が設問条件に合う。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p15.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "dialysis",
+        "basic_medicine",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm40",
@@ -1203,9 +1239,14 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「第Ⅱ誘導」。",
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「第Ⅱ誘導」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p16.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "imaging"
+      ]
     },
     {
       "id": "pm42",
@@ -1333,7 +1374,7 @@
         "ドアを開放する際はクレンメを閉鎖する。",
         "クレンメはポンプよりも下流にセットする。",
         "流量制御型では専用の輸液セットを使用する。",
-        "滴下センサ装着時は輸液で点滴筒を 以上満たす。",
+        "滴下センサ装着時は輸液で点滴筒を$\\frac{2}{3}$以上満たす。",
         "滴数制御型では輸液の成分によって輸液量に違いが生じる。"
       ],
       "correct": [
@@ -1350,7 +1391,12 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「滴下センサ装着時は輸液で点滴筒を 以上満たす」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "biometry_monitor",
+        "infusion"
+      ]
     },
     {
       "id": "pm47",
@@ -1407,9 +1453,12 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「蛇管の屈曲」。",
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「蛇管の屈曲」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p18.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "respiratory"
+      ]
     },
     {
       "id": "pm49",
@@ -1466,9 +1515,13 @@
         "誤りポイント：「患者から貯血槽までの落差を大きくすると貯血量は減少する」は設問条件に合わない。正しくは「貯血量が急速に減少したら送血ポンプ流量を下げる」。",
         "誤りポイント：「ローラポンプ使用時、貯血量は患者の動脈圧によって変動する」は設問条件に合わない。正しくは「貯血量が急速に減少したら送血ポンプ流量を下げる」。この選択肢はチューブをローラでしごいて送液する定量性の高いポンプ。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p18.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "heart_lung",
+        "infusion"
+      ]
     },
     {
       "id": "pm51",
@@ -1498,7 +1551,10 @@
       ],
       "hasFigure": true,
       "image": "Date/img/44/pm_p19.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm52",
@@ -1526,9 +1582,12 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「一回換気量の校正」。この選択肢は医療ガスの一種。酸素療法・人工呼吸・麻酔などで用いられる。",
         "正答。誤りポイント：「一回換気量の校正」の記述が誤り。正しくは基本事項を確認し、ほかの選択肢は誤りではない。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p20.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "respiratory"
+      ]
     },
     {
       "id": "pm53",
@@ -1741,11 +1800,11 @@
       "page": 23,
       "stem": "図記号と説明の組合せで誤っているのはどれか。",
       "choices": [
-        "… 単回使用",
-        "… 緊急停止",
-        "… 等電位化",
-        "… クラスⅡの機器",
-        "… 電気メスにおける高周波非接地形患者回路"
+        "選択肢1（図参照）",
+        "選択肢2（図参照）",
+        "選択肢3（図参照）",
+        "選択肢4（図参照）",
+        "選択肢5（図参照）"
       ],
       "correct": [
         3
@@ -1761,8 +1820,12 @@
         "この選択肢は誤りではない。したがって「誤っているもの」を選ぶ本問では選ばない。正答は「… 等電位化」。この選択肢は高周波電流によるジュール熱で切開・凝固を行う手術装置。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/pm_p23.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44_pm_q60.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety",
+        "surgery_treatment"
+      ]
     }
   ]
 }
