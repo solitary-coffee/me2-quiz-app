@@ -56,6 +56,38 @@ html[data-theme="dark"] .flag-ai{background:#3b0764;color:#e9d5ff}
 html[data-theme="dark"] .flag-fixed{background:#0c4a6e;color:#bae6fd}
 html[data-theme="dark"] .flag-confirmed{background:#052e16;color:#bbf7d0}
 
+/* 問題確認：集計チップによる追加絞り込み */
+button.summary-filter-chip{
+ appearance:none;
+ margin:0;
+ font-family:inherit;
+ line-height:inherit;
+ cursor:pointer;
+ transition:opacity .16s ease,filter .16s ease,transform .16s ease,box-shadow .16s ease;
+}
+button.summary-filter-chip.chip{
+ background:transparent;
+ color:var(--text);
+}
+button.summary-filter-chip:hover{
+ transform:translateY(-1px);
+}
+button.summary-filter-chip.is-selected{
+ box-shadow:0 0 0 2px var(--card),0 0 0 4px currentColor;
+}
+button.summary-filter-chip.is-dimmed{
+ opacity:.38;
+ filter:saturate(.45) brightness(.82);
+}
+button.summary-filter-chip:focus-visible{
+ outline:2px solid var(--primary);
+ outline-offset:2px;
+}
+html[data-theme="dark"] button.summary-filter-chip.is-dimmed{
+ opacity:.42;
+ filter:saturate(.4) brightness(.72);
+}
+
 .review-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .review-title-row h1{margin:0 0 4px}
 .review-settings-collapsed #reviewSettings{display:none}
@@ -175,6 +207,7 @@ let examsIndex={exams:[]};
 let flagItems=Object.create(null);
 let allResults=[];
 let currentPage=1;
+let summaryFlagFilters=new Set();
 
 const $=id=>document.getElementById(id);
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -451,30 +484,68 @@ async function reloadFlagsAndReview(){
   await runReview();
  }
 }
+function matchesSummaryFlagFilters(flags){
+ if(!summaryFlagFilters.size)return true;
+ for(const key of summaryFlagFilters){
+  if(key==='any'&&anyFlag(flags))return true;
+  if(key==='none'&&!anyFlag(flags))return true;
+  if(Object.prototype.hasOwnProperty.call(FLAG_TYPES,key)&&Boolean(flags?.[key]))return true;
+ }
+ return false;
+}
+function getSummaryFilteredResults(){
+ return allResults.filter(item=>matchesSummaryFlagFilters(item.flags||{}));
+}
+function summaryFilterChipHtml(key,label,count,className='chip'){
+ const selected=summaryFlagFilters.has(key);
+ const dimmed=summaryFlagFilters.size>0&&!selected;
+ const classes=[
+  className,
+  'summary-filter-chip',
+  selected?'is-selected':'',
+  dimmed?'is-dimmed':''
+ ].filter(Boolean).join(' ');
+ return `<button type="button" class="${classes}" aria-pressed="${selected?'true':'false'}" onclick="toggleSummaryFlagFilter('${key}')" title="クリックして表示を絞り込み">${label} ${count}</button>`;
+}
+function toggleSummaryFlagFilter(key){
+ const allowed=new Set([...Object.keys(FLAG_TYPES),'any','none']);
+ if(!allowed.has(key))return;
+ if(summaryFlagFilters.has(key))summaryFlagFilters.delete(key);
+ else summaryFlagFilters.add(key);
+ currentPage=1;
+ render();
+}
 function renderSummary(){
- const counts={review:0,imageChange:0,aiRegenerate:0,fixed:0,confirmed:0,any:0};
+ const counts={review:0,imageChange:0,aiRegenerate:0,fixed:0,confirmed:0,any:0,none:0};
  allResults.forEach(item=>{
   if(anyFlag(item.flags))counts.any++;
+  else counts.none++;
   for(const type of Object.keys(FLAG_TYPES))if(item.flags[type])counts[type]++;
  });
+ const displayedCount=getSummaryFilteredResults().length;
  $('summary').innerHTML=[
-  `<span class="chip">抽出 ${allResults.length}問</span>`,
-  `<span class="flag flag-review">要確認 ${counts.review}</span>`,
-  `<span class="flag flag-image">画像変更 ${counts.imageChange}</span>`,
-  `<span class="flag flag-ai">AI再生成 ${counts.aiRegenerate}</span>`,
-  `<span class="flag flag-fixed">修正済み ${counts.fixed}</span>`,
-  `<span class="flag flag-confirmed">確認済み ${counts.confirmed}</span>`,
-  `<span class="chip">いずれかのフラグ ${counts.any}</span>`
+  `<span class="chip">抽出 ${allResults.length}問${summaryFlagFilters.size?` / 表示 ${displayedCount}問`:''}</span>`,
+  summaryFilterChipHtml('review','要確認',counts.review,'flag flag-review'),
+  summaryFilterChipHtml('imageChange','画像変更',counts.imageChange,'flag flag-image'),
+  summaryFilterChipHtml('aiRegenerate','AI再生成',counts.aiRegenerate,'flag flag-ai'),
+  summaryFilterChipHtml('fixed','修正済み',counts.fixed,'flag flag-fixed'),
+  summaryFilterChipHtml('confirmed','確認済み',counts.confirmed,'flag flag-confirmed'),
+  summaryFilterChipHtml('any','いずれかのフラグ',counts.any,'chip'),
+  summaryFilterChipHtml('none','フラグなし',counts.none,'chip')
  ].join('');
 }
 function render(){
  renderSummary();
+ const displayedResults=getSummaryFilteredResults();
  const size=Number($('pageSize').value||20);
- const pages=Math.max(1,Math.ceil(allResults.length/size));
+ const pages=Math.max(1,Math.ceil(displayedResults.length/size));
  currentPage=Math.min(Math.max(1,currentPage),pages);
- const pageItems=allResults.slice((currentPage-1)*size,currentPage*size);
- $('results').innerHTML=pageItems.length?pageItems.map(renderCard).join(''):'<div class="card empty">条件に一致する問題はありません。</div>';
- renderPagination(pages);
+ const pageItems=displayedResults.slice((currentPage-1)*size,currentPage*size);
+ const emptyMessage=summaryFlagFilters.size
+  ?'選択したフラグ条件に一致する問題はありません。チップをもう一度押すと選択を解除できます。'
+  :'条件に一致する問題はありません。';
+ $('results').innerHTML=pageItems.length?pageItems.map(renderCard).join(''):`<div class="card empty">${emptyMessage}</div>`;
+ renderPagination(pages,displayedResults.length);
  if(window.MathJax?.typesetPromise){
   window.MathJax.typesetClear?.([$('results')]);
   window.MathJax.typesetPromise([$('results')]).catch(console.warn);
@@ -517,8 +588,8 @@ function renderCard(item){
   </div>
  </article>`;
 }
-function renderPagination(pages){
- if(allResults.length===0){$('pagination').innerHTML='';return}
+function renderPagination(pages,displayedCount=getSummaryFilteredResults().length){
+ if(displayedCount===0){$('pagination').innerHTML='';return}
  $('pagination').innerHTML=`
   <button class="ghost" ${currentPage<=1?'disabled':''} onclick="changePage(${currentPage-1})">前へ</button>
   <span class="chip">${currentPage} / ${pages}ページ</span>
@@ -555,10 +626,8 @@ async function toggleFlag(examId,part,index,type,checked,input){
   const mode=$('flagMode').value;
   if(!matchesFlag(item.flags,mode)){
    allResults=allResults.filter(x=>x!==item);
-   render();
-  }else{
-   renderSummary();
   }
+  render();
   setStatus(statusWithWarnings(`${item.title} ${partName(part)} 第${item.number}問：${FLAG_TYPES[type].label}を${checked?'ON':'OFF'}にしました。`));
  }catch(error){
   input.checked=!checked;
