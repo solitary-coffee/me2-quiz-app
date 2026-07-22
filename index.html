@@ -7063,6 +7063,7 @@ function exportDevCheckCsv(){
 
 let devBulkAiRunning=false;
 let devBulkAiCancelRequested=false;
+let devBulkAiLastCandidateCount=0;
 let devBulkAiLastSkippedConfirmed=0;
 
 function selectedBulkAiExamIds(){
@@ -7094,16 +7095,44 @@ async function devCollectBulkAiTargets(){
  const records=selectedBulkAiExamIds();
  const parts=selectedBulkAiParts();
  const scope=$('bulkAiScope')?.value||'flagged';
- try{await loadDevReviewFlagsForScopes(devScopeList(records,parts),true)}catch(e){throw new Error(`確認済み保護とAI再生成フラグを同期できません：${e.message||e}`)}
+ try{
+  await loadDevReviewFlagsForScopes(devScopeList(records,parts),true);
+ }catch(e){
+  throw new Error(`確認済み保護とAI再生成フラグを同期できません：${e.message||e}`);
+ }
+
  const targets=[];
+ devBulkAiLastCandidateCount=0;
  devBulkAiLastSkippedConfirmed=0;
+
  for(const ex of records){
   for(const part of parts){
    const pack=await getPart(ex.id,part);
    (pack.questions||[]).forEach((q,index)=>{
-    if(isDevQuestionConfirmed(q,String(ex.id),part)){devBulkAiLastSkippedConfirmed++;return;}
-    if(scope==='flagged'&&!isDevQuestionFlagged(q,String(ex.id),part,'aiRegenerate'))return;
-    targets.push({examId:String(ex.id),title:ex.title||String(ex.id),part,index,number:q.number||index+1,q,pack});
+    const examId=String(ex.id);
+    const isCandidate=scope==='all'
+     ||isDevQuestionFlagged(q,examId,part,'aiRegenerate');
+
+    // 「AI再生成フラグ付きのみ」の場合、フラグのない確認済み問題は
+    // 除外件数へ数えない。候補になった問題だけを確認済み判定する。
+    if(!isCandidate)return;
+
+    devBulkAiLastCandidateCount++;
+
+    if(isDevQuestionConfirmed(q,examId,part)){
+     devBulkAiLastSkippedConfirmed++;
+     return;
+    }
+
+    targets.push({
+     examId,
+     title:ex.title||examId,
+     part,
+     index,
+     number:q.number||index+1,
+     q,
+     pack
+    });
    });
   }
  }
@@ -7116,8 +7145,9 @@ async function devPreviewBulkAiTargets(showLog=true){
  try{
   const targets=await devCollectBulkAiTargets();
   const scope=$('bulkAiScope')?.value==='all'?'指定範囲の全問題':'AI再生成フラグ付き';
-  if(status)status.innerHTML=`<span class="status-ok">対象：${targets.length}問（${scope}） / 確認済み除外：${devBulkAiLastSkippedConfirmed}問</span>`;
-  if(showLog)devBulkAiLog(`対象件数：${targets.length}問（${scope}） / 確認済み除外：${devBulkAiLastSkippedConfirmed}問`,true);
+  const breakdown=`候補：${devBulkAiLastCandidateCount}問 / 確認済み除外：${devBulkAiLastSkippedConfirmed}問 / 実行対象：${targets.length}問`;
+  if(status)status.innerHTML=`<span class="status-ok">${escapeHtml(breakdown)}（${scope}）</span>`;
+  if(showLog)devBulkAiLog(`対象件数：${breakdown}（${scope}）`,true);
   return targets;
  }catch(e){
   if(status)status.innerHTML=`<span class="status-warn">対象件数を確認できません：${escapeHtml(e.message||e)}</span>`;
@@ -7182,7 +7212,7 @@ async function devRunBulkAiRegeneration(){
  const continueErrors=Boolean($('bulkAiContinueErrors')?.checked);
  const scopeLabel=$('bulkAiScope')?.value==='all'?'指定範囲の全問題':'AI再生成フラグ付き問題';
  const warning=[
-  `${scopeLabel} ${targets.length}問をAIで再生成します。確認済み ${devBulkAiLastSkippedConfirmed}問は保護のため除外します。`,
+  `${scopeLabel}の候補は${devBulkAiLastCandidateCount}問です。確認済み ${devBulkAiLastSkippedConfirmed}問を除外し、${targets.length}問をAIで再生成します。`,
   'OpenAI APIの利用料金が発生し、問題数によっては長時間かかります。',
   addToPr?'成功した問題は一括PRリストへ追加します。':'成功した内容は現在のブラウザ内だけへ反映します。',
   clearFlag?'成功した問題のAI再生成フラグを解除します。':'AI再生成フラグは維持します。',
