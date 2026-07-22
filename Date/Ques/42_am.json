@@ -95,7 +95,12 @@
         "正答。誤りポイント：「10 mmol/L」が誤り。HCO₃⁻は通常約24 mmol/Lで、10 mmol/Lは低すぎる。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am04",
