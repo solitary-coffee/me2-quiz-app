@@ -619,11 +619,11 @@
       "page": 10,
       "stem": "電力を表すのはどれか。ただし、力の単位を[N], 距離の単位を[m], 時間の単位を[s] とする。",
       "choices": [
-        "N m",
-        "N⚫m s1",
-        "N⚫m",
-        "N m 2",
-        "N.m²s"
+        "N・m",
+        "N・m・s^{-1}",
+        "N・m^{-1}",
+        "N・m^{-2}",
+        "N・m^{-2}・s"
       ],
       "correct": [
         2
@@ -638,9 +638,13 @@
         "誤りポイント：設問の条件に合いません。正答は「N⚫m s1」。",
         "誤りポイント：設問の条件に合いません。正答は「N⚫m s1」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p10.jpg",
-      "sourceImage": "Date/img/41/am_p10.jpg"
+      "sourceImage": "Date/img/41/am_p10.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am22",
