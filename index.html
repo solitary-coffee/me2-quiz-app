@@ -1254,6 +1254,10 @@ html[data-theme="dark"] .dev-review-cloud-badge{
 
 
 /* 開発者用：5種類の問題作業フラグ */
+/* 保存済みトークンの有無だけでは表示しない。サーバー認証済みのときだけ表示する。 */
+html:not(.dev-session-verified) #devReviewControl{
+ display:none!important;
+}
 .dev-review-control{flex-wrap:wrap}
 .dev-work-flag{
  display:inline-flex;
@@ -4404,6 +4408,9 @@ let devReviewLastError='';
 let devReviewFlagsLoadedAt=0;
 let devReviewQuestionFetchedAt=Object.create(null);
 let devConfirmedBaseline=Object.create(null);
+let devSessionVerified=false;
+let devSessionVerifiedAt=0;
+let devSessionVerifyPending=null;
 
 const DEV_WORK_FLAG_TYPES={
  review:{label:'要確認',field:'要確認（クラウド）',severity:'mid',message:'通常演習中に開発者が「要確認」として登録しています。',className:'review'},
@@ -4439,8 +4446,25 @@ function devReviewQuestionRef(q,examIdOverride='',partOverride=''){
   range:String(q?.range||'')
  };
 }
-function hasDevSession(){
+function hasStoredDevSessionToken(){
  return Boolean(getDevAuth()?.sessionToken);
+}
+function setDevSessionVerified(value){
+ devSessionVerified=Boolean(value);
+ devSessionVerifiedAt=devSessionVerified?Date.now():0;
+ document.documentElement.classList.toggle('dev-session-verified',devSessionVerified);
+ if(!devSessionVerified){
+  const box=$('devReviewControl');
+  if(box){
+   box.classList.add('hidden');
+   box.classList.remove('is-saving');
+   box.innerHTML='';
+  }
+ }
+ return devSessionVerified;
+}
+function hasDevSession(){
+ return Boolean(hasStoredDevSessionToken()&&devSessionVerified);
 }
 async function apiDevReview(method='GET',payload=null,requestOptions={}){
  const opt={method,headers:{...devHeaders(),'cache-control':'no-store'}};
@@ -4646,16 +4670,32 @@ function devFlagCheckboxHtml(flagType,flags,context='quiz'){
 function drawDevReviewControl(q){
  const box=$('devReviewControl');
  if(!box)return;
+
  if(!hasDevSession()){
   box.classList.add('hidden');
+  box.classList.remove('is-saving');
   box.innerHTML='';
+
+  // 保存済みトークンがあっても、Cloudflareで有効性を確認するまでは表示しない。
+  if(hasStoredDevSessionToken()&&!devSessionVerifyPending){
+   const expectedKey=devReviewQuestionRef(q).key;
+   verifyDevMode().then(ok=>{
+    if(!ok)return;
+    const current=getCurrentQuestion();
+    if(current&&devReviewQuestionRef(current).key===expectedKey){
+     drawDevReviewControl(current);
+    }
+   }).catch(()=>null);
+  }
   return;
  }
+
  const ref=devReviewQuestionRef(q);
  const flags=devQuestionWorkFlags(q);
  box.classList.remove('hidden');
  box.classList.remove('is-saving');
  box.innerHTML=`${Object.keys(DEV_WORK_FLAG_TYPES).map(type=>devFlagCheckboxHtml(type,flags)).join('')}<span class="dev-review-sync">${escapeHtml(devReviewStatusText())}</span>`;
+
  if(!devReviewFlagsLoaded&&!devReviewFlagsLoading){
   const expectedKey=ref.key;
   loadDevReviewFlags().then(()=>{
@@ -4714,10 +4754,29 @@ function getDevAuth(){
 }
 function setDevAuth(data){
   localStorage.setItem(DEV_AUTH_KEY,JSON.stringify(data||{}));
+  setDevSessionVerified(false);
 }
 function clearDevAuth(){
   localStorage.removeItem(DEV_AUTH_KEY);
+  setDevSessionVerified(false);
 }
+
+window.addEventListener('storage',event=>{
+ if(event.key!==DEV_AUTH_KEY)return;
+ setDevSessionVerified(false);
+ devReviewFlags=Object.create(null);
+ devReviewFlagsLoaded=false;
+ devReviewFlagsLoadedAt=0;
+ if(event.newValue){
+  verifyDevMode(true).then(ok=>{
+   if(ok){
+    const q=getCurrentQuestion();
+    if(q)drawDevReviewControl(q);
+   }
+  }).catch(()=>null);
+ }
+});
+
 function devLoginStatus(msg,ok=false){
   const el=$('devLoginStatus');
   if(el){el.innerHTML=msg;el.className='login-status '+(ok?'status-ok':'status-warn')}
@@ -4732,14 +4791,38 @@ async function apiDevAuth(payload){
   if(!r.ok)throw new Error(data.error||String(r.status));
   return data;
 }
-async function verifyDevMode(){
-  const a=getDevAuth();
-  if(!a?.sessionToken)return false;
-  try{
-    const r=await fetchWithTimeout('/api/dev-auth',{method:'GET',headers:devHeaders()},5000);
-    const data=await r.json().catch(()=>({}));
-    return Boolean(r.ok&&data.ok);
-  }catch(e){return false}
+async function verifyDevMode(force=false){
+  const auth=getDevAuth();
+  if(!auth?.sessionToken){
+    setDevSessionVerified(false);
+    return false;
+  }
+  if(!force&&devSessionVerified&&Date.now()-devSessionVerifiedAt<120000)return true;
+  if(devSessionVerifyPending)return devSessionVerifyPending;
+
+  devSessionVerifyPending=(async()=>{
+    try{
+      const response=await fetchWithTimeout('/api/dev-auth',{
+        method:'GET',
+        headers:devHeaders(),
+        cache:'no-store'
+      },10000);
+      const data=await response.json().catch(()=>({}));
+      const ok=Boolean(response.ok&&data.ok);
+      setDevSessionVerified(ok);
+      if(!ok&&(response.status===401||response.status===403)){
+        localStorage.removeItem(DEV_AUTH_KEY);
+      }
+      return ok;
+    }catch(error){
+      // 通信失敗時も内部UIは表示しない。トークン自体は再試行のため保持する。
+      setDevSessionVerified(false);
+      return false;
+    }finally{
+      devSessionVerifyPending=null;
+    }
+  })();
+  return devSessionVerifyPending;
 }
 async function openDevModeGate(){
   if(state&&state.timerRunning){pauseTimer();saveState()}
@@ -4759,6 +4842,7 @@ async function loginDevMode(){
   try{
     const data=await apiDevAuth({action:'login',id,password});
     setDevAuth({sessionToken:data.sessionToken,expiresAt:data.expiresAt,id:data.id});
+    setDevSessionVerified(true);
     devReviewFlagsLoaded=false;
     loadDevReviewFlags(true).catch(()=>null);
     devLoginStatus('ログインしました。開発モードを開きます。',true);
@@ -4772,6 +4856,7 @@ async function loginDevMode(){
 async function logoutDevMode(){
   try{await apiDevAuth({action:'logout'});}catch(e){}
   clearDevAuth();
+  setDevSessionVerified(false);
   devReviewFlags=Object.create(null);
   devReviewFlagsLoaded=false;
   devReviewLastError='';
@@ -7448,6 +7533,13 @@ async function init(){
  if(!openedDevEditor)await maybeOpenSharedLink();
  // 進行状況のクラウド確認は画面表示後に実行。ここで止まってもメニュー表示を妨げない。
  apiProgress('GET').catch(()=>null);
+ // 保存済み開発者トークンは、Cloudflareで有効性を確認できた場合だけ内部UIを復元する。
+ verifyDevMode(true).then(ok=>{
+  if(ok){
+   const q=getCurrentQuestion();
+   if(q)drawDevReviewControl(q);
+  }
+ }).catch(()=>null);
 }
 init();
 </script>
