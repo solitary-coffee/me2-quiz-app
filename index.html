@@ -106,7 +106,89 @@ window.MathJax = {
 .answer-card p{color:var(--ink)}
 .answer-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;background:var(--bg);color:var(--muted);font-size:12px;margin:3px 4px 3px 0}
 .answer-chip.correct{background:#f0fdf4;border-color:#86efac;color:#166534}
+.answer-controls{
+ display:grid;
+ gap:10px;
+ align-items:start;
+}
+.answer-primary-filters,
+.answer-field-summary{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ gap:7px;
+}
+.answer-field-summary{
+ padding:10px;
+ border:1px solid var(--line);
+ border-radius:15px;
+ background:var(--bg);
+}
+.answer-field-summary-title{
+ font-size:12px;
+ font-weight:900;
+ color:var(--muted);
+ margin-right:2px;
+}
+button.answer-field-chip{
+ width:auto;
+ min-height:34px;
+ margin:0;
+ cursor:pointer;
+ font-family:inherit;
+ transition:opacity .16s ease,filter .16s ease,transform .16s ease,box-shadow .16s ease;
+}
+button.answer-field-chip:hover{
+ transform:translateY(-1px);
+}
+button.answer-field-chip.active{
+ background:var(--accent);
+ border-color:var(--accent);
+ color:#fff;
+ box-shadow:0 0 0 2px var(--card),0 0 0 4px color-mix(in srgb,var(--accent) 58%,transparent);
+}
+button.answer-field-chip.is-dimmed{
+ opacity:.45;
+ filter:saturate(.55) brightness(.9);
+}
+.answer-summary-chips{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:flex-end;
+ align-items:center;
+ gap:4px;
+ flex:0 0 auto;
+}
+.answer-field-tag{
+ border-color:color-mix(in srgb,var(--accent) 45%,var(--line));
+ color:var(--accent);
+ background:color-mix(in srgb,var(--accent) 8%,var(--bg));
+ font-weight:800;
+}
+.answer-display-count{
+ font-size:12px;
+ color:var(--muted);
+}
 .answer-controls button.active{background:var(--accent);color:#fff}
+@media(max-width:760px){
+ .answer-field-summary{
+  padding:8px;
+  gap:6px;
+ }
+ .answer-field-summary-title{
+  width:100%;
+ }
+ button.answer-field-chip{
+  min-height:36px;
+  padding:6px 9px;
+ }
+ .answer-card summary{
+  flex-direction:column;
+ }
+ .answer-summary-chips{
+  justify-content:flex-start;
+ }
+}
 .random-card{border:1px solid var(--line);border-radius:22px;background:var(--card);margin:16px 0;padding:16px;box-shadow:var(--shadow)}
 .random-head{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
 .random-head h3{margin:0 0 4px;font-size:18px}
@@ -136,7 +218,14 @@ button.mini{min-height:34px;padding:7px 10px;font-size:12px;border-radius:999px}
 .check-grid label:has(input:checked){border-color:var(--accent);background:var(--accent2);color:var(--ink)}
 .random-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .random-actions button{min-height:48px}
-.random-source{font-size:13px;color:var(--muted);margin:4px 0 8px}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}.form-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:800;color:#374151}.field input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #dbeafe;border-color:#60a5fa}.login-status{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;line-height:1.6}.account-card{background:#f0fdf4;border:1px solid #86efac;border-radius:16px;padding:12px;margin:10px 0}.danger-zone{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-top:12px}.status-ok{color:#166534}.status-warn{color:#92400e}.public-intro{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;border-radius:18px;padding:14px;margin:12px 0}.public-intro h3{margin:0 0 8px;font-size:17px}.public-intro ul{margin:8px 0 0;padding-left:1.2em}.public-intro li{margin:4px 0}.contact-card{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:14px;margin:12px 0}.contact-card a{color:#166534;font-weight:800;text-decoration:none}.version-card{background:linear-gradient(135deg,#eef2ff,#f8fafc);border:1px solid #c7d2fe;border-radius:18px;padding:14px;margin:12px 0}.version-current{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.version-label{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.03em}.version-current h3{margin:3px 0 2px;font-size:18px}.version-pill{display:inline-flex;align-items:center;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-weight:900;color:var(--accent)}.version-notes{margin:10px 0 0;padding-left:1.2em}.version-notes li{margin:4px 0}.version-history{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}.version-history summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--accent);font-weight:900;padding:4px 0}.version-history summary::after{content:'▼';font-size:11px;color:var(--muted)}.version-history[open] summary::after{content:'▲'}.version-history-item{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:11px;margin:9px 0}.version-history-item h4{margin:0 0 4px;font-size:15px}.version-history-item ul{margin:6px 0 0;padding-left:1.2em}.version-history-item li{margin:3px 0}.update-card{background:#eef2ff;border:1px solid #c7d2fe;border-radius:18px;padding:14px;margin:12px 0}.update-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.update-card ul{margin:8px 0 0;padding-left:1.2em}.password-hint{font-size:12px;color:var(--muted);line-height:1.55}.password-meter{height:8px;background:var(--bg);border:1px solid var(--line);border-radius:999px;overflow:hidden}.password-meter span{display:block;height:100%;width:0;background:var(--bad);transition:width .18s ease,background-color .18s ease}.password-meter span.mid{background:var(--warn)}.password-meter span.good{background:var(--good)}.disclaimer{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin:12px 0}.site-footer{max-width:1080px;margin:18px auto 0;padding:16px 0;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--line)}.site-footer a{color:#1d4ed8;font-weight:800;text-decoration:none}@media(max-width:760px){.form-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
+.random-source{font-size:13px;color:var(--muted);margin:4px 0 8px}.hidden{display:none!important}.menu-crumb{margin-bottom:10px}.menu-crumb button{min-height:40px;padding:8px 12px;font-size:14px}.save-state{font-size:13px;color:#166534;font-weight:700}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;padding:2px 6px;border-radius:8px}.loginbox{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.loginbox a{color:#1d4ed8;text-decoration:none;font-weight:800}.status-ok{color:#166534}.status-warn{color:#92400e}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}.form-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:13px;font-weight:800;color:#374151}.field input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 12px;font-size:16px;background:#fff;color:var(--ink)}.field input:focus{outline:3px solid #dbeafe;border-color:#60a5fa}.login-status{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);font-size:13px;line-height:1.6}.account-card{background:#f0fdf4;border:1px solid #86efac;border-radius:16px;padding:12px;margin:10px 0}.danger-zone{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin-top:12px}.status-ok{color:#166534}.status-warn{color:#92400e}.public-intro{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;border-radius:18px;padding:14px;margin:12px 0}.public-intro h3{margin:0 0 8px;font-size:17px}.public-intro ul{margin:8px 0 0;padding-left:1.2em}.public-intro li{margin:4px 0}.contact-card{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:14px;margin:12px 0}.contact-card a{color:#166534;font-weight:800;text-decoration:none}.version-card{background:linear-gradient(135deg,#eef2ff,#f8fafc);border:1px solid #c7d2fe;border-radius:18px;padding:14px;margin:12px 0}.version-current{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.version-label{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.03em}.version-current h3{margin:3px 0 2px;font-size:18px}.version-pill{display:inline-flex;align-items:center;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-weight:900;color:var(--accent)}.version-notes{margin:10px 0 0;padding-left:1.2em}.version-notes li{margin:4px 0}.version-history{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}.version-history summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--accent);font-weight:900;padding:4px 0}.version-history summary::after{content:'▼';font-size:11px;color:var(--muted)}.version-history[open] summary::after{content:'▲'}.version-history-item{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:11px;margin:9px 0}.version-history-item h4{margin:0 0 4px;font-size:15px}.version-history-item ul{margin:6px 0 0;padding-left:1.2em}.version-history-item li{margin:3px 0}.update-card{background:#eef2ff;border:1px solid #c7d2fe;border-radius:18px;padding:14px;margin:12px 0}.update-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.update-card ul{margin:8px 0 0;padding-left:1.2em}.password-hint{font-size:12px;color:var(--muted);line-height:1.55}.password-meter{height:8px;background:var(--bg);border:1px solid var(--line);border-radius:999px;overflow:hidden}.password-meter span{display:block;height:100%;width:0;background:var(--bad);transition:width .18s ease,background-color .18s ease}.password-meter span.mid{background:var(--warn)}.password-meter span.good{background:var(--good)}.disclaimer{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:12px;margin:12px 0}.site-footer{max-width:1080px;margin:18px auto 0;padding:16px 0;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--line)}.site-footer a{color:#1d4ed8;font-weight:800;text-decoration:none}@media(max-width:760px){
+header{
+ position:static;
+ top:auto;
+ -webkit-backdrop-filter:none;
+ backdrop-filter:none;
+}
+.form-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start;gap:8px}h1{font-size:16px;width:100%}.top-actions,.row{width:100%}.badge{font-size:12px;padding:6px 8px}main{padding-top:12px}.card{border-radius:18px;padding:14px}.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.stem{font-size:17px;line-height:1.8}button{width:100%;font-size:16px;min-height:54px}.choice{padding:13px 12px}.explain-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:normal}.source-img{max-height:none}.top-actions button{width:auto;min-height:38px;padding:8px 10px;font-size:13px}}
 
 @media(max-width:760px){
  .random-head{flex-direction:column}
@@ -146,6 +235,132 @@ button.mini{min-height:34px;padding:7px 10px;font-size:12px;border-radius:999px}
  .count-line input{grid-column:1/-1}
  .random-actions button{width:100%}
  .range-toolbar button{width:auto;min-height:34px}
+}
+
+
+/* 問題画像：タップ拡大 */
+.source-img{
+ cursor:zoom-in;
+}
+.source-img:focus-visible{
+ outline:3px solid var(--accent);
+ outline-offset:3px;
+}
+body.image-zoom-open{
+ overflow:hidden;
+}
+.image-zoom-modal{
+ position:fixed;
+ inset:0;
+ z-index:12000;
+ display:flex;
+ flex-direction:column;
+ background:rgba(2,6,23,.92);
+ color:#fff;
+ padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
+}
+.image-zoom-modal.hidden{
+ display:none;
+}
+.image-zoom-toolbar{
+ display:flex;
+ flex-wrap:wrap;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
+ width:100%;
+ max-width:1400px;
+ margin:0 auto 8px;
+}
+.image-zoom-toolbar-left,
+.image-zoom-toolbar-right{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ flex-wrap:wrap;
+}
+.image-zoom-toolbar button{
+ width:auto;
+ min-height:42px;
+ padding:8px 12px;
+ background:#111827;
+ color:#fff;
+ border-color:#475569;
+}
+.image-zoom-toolbar button:hover{
+ background:#1e293b;
+}
+.image-zoom-label{
+ font-size:13px;
+ font-weight:800;
+ color:#e2e8f0;
+}
+.image-zoom-stage{
+ flex:1;
+ min-height:0;
+ overflow:auto;
+ display:flex;
+ align-items:flex-start;
+ justify-content:flex-start;
+ overscroll-behavior:contain;
+ -webkit-overflow-scrolling:touch;
+ touch-action:pan-x pan-y pinch-zoom;
+ border:1px solid #334155;
+ border-radius:14px;
+ background:#020617;
+}
+.image-zoom-canvas{
+ min-width:100%;
+ min-height:100%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:14px;
+}
+.image-zoom-image{
+ display:block;
+ max-width:none;
+ max-height:none;
+ height:auto;
+ background:#fff;
+ border-radius:8px;
+ box-shadow:0 16px 50px rgba(0,0,0,.48);
+ user-select:none;
+ -webkit-user-drag:none;
+}
+@media(max-width:760px){
+ .image-zoom-modal{
+  padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom));
+ }
+ .image-zoom-toolbar{
+  margin-bottom:6px;
+ }
+ .image-zoom-toolbar-left{
+  flex:1 1 100%;
+  justify-content:space-between;
+ }
+ .image-zoom-toolbar-right{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+ }
+ .image-zoom-toolbar button{
+  min-height:44px;
+  padding:7px 8px;
+  font-size:14px;
+ }
+ .image-zoom-label{
+  max-width:72vw;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+ }
+ .image-zoom-stage{
+  border-radius:10px;
+ }
+ .image-zoom-canvas{
+  padding:8px;
+ }
 }
 
 /* ライト / ダークモード */
@@ -1254,6 +1469,10 @@ html[data-theme="dark"] .dev-review-cloud-badge{
 
 
 /* 開発者用：5種類の問題作業フラグ */
+/* 保存済みトークンの有無だけでは表示しない。サーバー認証済みのときだけ表示する。 */
+html:not(.dev-session-verified) #devReviewControl{
+ display:none!important;
+}
 .dev-review-control{flex-wrap:wrap}
 .dev-work-flag{
  display:inline-flex;
@@ -2042,6 +2261,7 @@ window.addEventListener('storage',event=>{
 let me={authenticated:false,email:null,name:null};
 let examsIndex={exams:[]};
 let currentExamId=null, partsCache={}, tickHandle=null, currentAnswerPart=null;
+let answerViewBaseFilter='all', answerViewFieldFilter='all';
 // ホワイトボードは永続保存しない。解答中だけ問題ごとにメモリへ保持する。
 let whiteboardSessionBoards=Object.create(null);
 let whiteboardState={
@@ -3405,46 +3625,129 @@ async function renderPartMenu(){
 async function startAttempt(part,mode='all'){resetWhiteboardSession();const pack=await getPart(currentExamId||state.examId,part);const total=pack.questions.length;state={examId:currentExamId||state.examId,part,mode,attemptId:makeAttemptId(),order:[...Array(total).keys()],index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
 async function resumeAttempt(part){let s=loadLocal(stateKey(currentExamId,part));if(!s&&hasCloudLogin())s=await loadCloudState(currentExamId,part);if(!s)return;state=ensureTimingFields(s);if(!state.eliminations)state.eliminations={};state.timerRunning=false;state.sessionStartedAt=null;await getPart(state.examId,part);startTimer();showQuiz();renderQuestion()}
 
+
+function normalizeAnswerBaseFilter(filter){
+ return ['all','figure','negative'].includes(String(filter))?String(filter):'all';
+}
+function normalizeAnswerFieldFilter(field){
+ const value=String(field||'all');
+ return value==='all'||RANDOM_RANGES.some(item=>item.id===value)?value:'all';
+}
+function filterAnswerQuestionsByBase(questions,filter){
+ const normalized=normalizeAnswerBaseFilter(filter);
+ if(normalized==='figure')return (questions||[]).filter(q=>q.hasFigure&&q.image);
+ if(normalized==='negative')return (questions||[]).filter(q=>q.negative);
+ return (questions||[]).slice();
+}
+function answerQuestionFieldId(q){
+ const number=Number(q?.number);
+ // ME2種の通常60問構成では、10問ごとの正式な出題分野を優先する。
+ if(Number.isInteger(number)&&number>=1&&number<=60){
+  if(number<=10)return 'basic_med';
+  if(number<=20)return 'basic_eng';
+  if(number<=30)return 'basic_me';
+  if(number<=40)return 'principle';
+  if(number<=50)return 'operation';
+  return 'maintenance';
+ }
+ // 60問構成外の追加問題では、従来の範囲名判定へフォールバックする。
+ return rangeCategory(q?.range||'');
+}
+function answerFieldCounts(questions){
+ const counts=Object.fromEntries(RANDOM_RANGES.map(item=>[item.id,0]));
+ for(const q of questions||[]){
+  const id=answerQuestionFieldId(q);
+  if(Object.prototype.hasOwnProperty.call(counts,id))counts[id]++;
+ }
+ return counts;
+}
+function filterAnswerQuestionsByField(questions,field){
+ const normalized=normalizeAnswerFieldFilter(field);
+ if(normalized==='all')return (questions||[]).slice();
+ return (questions||[]).filter(q=>answerQuestionFieldId(q)===normalized);
+}
+function answerFieldChipHtml(field,count){
+ const selected=answerViewFieldFilter===field;
+ const dimmed=answerViewFieldFilter!=='all'&&!selected;
+ const label=field==='all'?'全分野':rangeCategoryLabel(field);
+ return `<button type="button" class="answer-chip answer-field-chip ${selected?'active':''} ${dimmed?'is-dimmed':''}" aria-pressed="${selected?'true':'false'}" onclick="setAnswerViewFieldFilter('${field}')">${escapeHtml(label)} ${count}</button>`;
+}
+function answerViewerControlsHtml(baseQuestions,baseFilter){
+ const counts=answerFieldCounts(baseQuestions);
+ const baseButtons=[
+  ['all','全問'],
+  ['figure','図表あり'],
+  ['negative','誤っているもの問題']
+ ].map(([key,label])=>`<button class="${baseFilter===key?'active':'ghost'}" onclick="setAnswerViewBaseFilter('${key}')">${label}</button>`).join('');
+ const fieldButtons=[
+  answerFieldChipHtml('all',baseQuestions.length),
+  ...RANDOM_RANGES.map(item=>answerFieldChipHtml(item.id,counts[item.id]||0))
+ ].join('');
+ return `<div class="answer-primary-filters">${baseButtons}<span class="pill">${answerFilterLabel(baseFilter)}</span></div>
+ <div class="answer-field-summary">
+  <span class="answer-field-summary-title">分野別（現在の抽出内）</span>
+  ${fieldButtons}
+ </div>`;
+}
+function renderCurrentAnswerView(){
+ if(currentAnswerPart==='both')renderAnswerViewBoth(answerViewBaseFilter,answerViewFieldFilter);
+ else renderAnswerView(answerViewBaseFilter,answerViewFieldFilter);
+}
+function setAnswerViewBaseFilter(filter){
+ answerViewBaseFilter=normalizeAnswerBaseFilter(filter);
+ renderCurrentAnswerView();
+}
+function setAnswerViewFieldFilter(field){
+ const normalized=normalizeAnswerFieldFilter(field);
+ answerViewFieldFilter=answerViewFieldFilter===normalized&&normalized!=='all'?'all':normalized;
+ renderCurrentAnswerView();
+}
+
 async function showAnswerView(part,filter='all'){
  if(state&&state.timerRunning){pauseTimer();saveState()}
  currentAnswerPart=part;
+ answerViewBaseFilter=normalizeAnswerBaseFilter(filter);
+ answerViewFieldFilter='all';
  await getPart(currentExamId||state.examId,part);
  hideAll();
  $('answerViewCard').classList.remove('hidden');
- renderAnswerView(filter);
+ renderAnswerView(answerViewBaseFilter,answerViewFieldFilter);
  updateHeader();
 }
 function answerFilterLabel(filter){
  return filter==='figure'?'図表あり':filter==='negative'?'誤っているもの問題':'全問';
 }
-function renderAnswerView(filter='all'){
+function renderAnswerView(filter=answerViewBaseFilter,field=answerViewFieldFilter){
  const examId=currentExamId||state.examId;
  const part=currentAnswerPart||state.part||'am';
  const pack=partsCache[`${examId}_${part}`];
  const rec=getExamRecord(examId);
+ answerViewBaseFilter=normalizeAnswerBaseFilter(filter);
+ answerViewFieldFilter=normalizeAnswerFieldFilter(field);
  if(!pack||!pack.questions){$('answerViewList').innerHTML='<p class="small">問題データを読み込めませんでした。</p>';return;}
+
  $('answerViewTitle').textContent=`${rec?.title||'試験回'} ${partName(part)} 問題・回答閲覧`;
+
+ const baseQuestions=filterAnswerQuestionsByBase(pack.questions,answerViewBaseFilter);
+ const questions=filterAnswerQuestionsByField(baseQuestions,answerViewFieldFilter);
  const controls=$('answerViewControls');
- controls.className='row answer-controls';
- controls.innerHTML=[
-  ['all','全問'],
-  ['figure','図表あり'],
-  ['negative','誤っているもの問題']
- ].map(([k,label])=>`<button class="${filter===k?'active':'ghost'}" onclick="renderAnswerView('${k}')">${label}</button>`).join('')
-  + `<span class="pill">${answerFilterLabel(filter)}</span>`;
- let questions=pack.questions.slice();
- if(filter==='figure') questions=questions.filter(q=>q.hasFigure&&q.image);
- if(filter==='negative') questions=questions.filter(q=>q.negative);
+ controls.className='answer-controls';
+ controls.innerHTML=answerViewerControlsHtml(baseQuestions,answerViewBaseFilter)
+  + `<div class="answer-display-count">表示：${questions.length}問 / ${baseQuestions.length}問中</div>`;
+
  const list=$('answerViewList');
  if(!questions.length){
-  list.innerHTML='<p class="small">該当する問題はありません。</p>';
+  list.innerHTML='<p class="small">選択した条件に一致する問題はありません。</p>';
   return;
  }
  list.innerHTML=questions.map(q=>answerQuestionHtml(q)).join('');
  typesetMath(list);
+ enhanceZoomableImages(list);
 }
 function answerQuestionHtml(q){
  const correct=correctLabel(q);
+ const fieldId=answerQuestionFieldId(q);
+ const fieldLabel=rangeCategoryLabel(fieldId);
  const img=(q.hasFigure&&q.image)?`<details><summary>図・表を表示</summary><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="第${q.number}問の図表" /></details>`:'';
  const annotation=questionAnnotationHtml(q);
  const rows=q.choices.map((c,i)=>{
@@ -3452,8 +3755,14 @@ function answerQuestionHtml(q){
   const note=(q.choiceNotes&&q.choiceNotes[i])?q.choiceNotes[i]:(isC?'正答。設問条件に合う。':'誤りポイント：正答は '+correct+'。');
   return `<tr><th>${n}</th><td class="math-content">${mathTextHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td class="math-content">${mathTextHtml(note)}</td></tr>`;
  }).join('');
- return `<details class="answer-card math-content">
-  <summary><span><b>第${q.number}問</b>　${mathTextHtml(q.stem||'')}</span><span class="answer-chip correct">正答：${escapeHtml(correct)}</span></summary>
+ return `<details class="answer-card math-content" data-answer-field="${escapeHtml(fieldId)}">
+  <summary>
+   <span><b>第${q.number}問</b>　${mathTextHtml(q.stem||'')}</span>
+   <span class="answer-summary-chips">
+    <span class="answer-chip answer-field-tag">分野：${escapeHtml(fieldLabel)}</span>
+    <span class="answer-chip correct">正答：${escapeHtml(correct)}</span>
+   </span>
+  </summary>
   <div class="answer-meta"><span class="answer-chip">範囲：${escapeHtml(q.range||'未設定')}</span>${q.negative?'<span class="answer-chip">形式：誤っているものを選ぶ</span>':'<span class="answer-chip">形式：正しいものを選ぶ</span>'}${q.hasFigure&&q.image?'<span class="answer-chip">図表あり</span>':'<span class="answer-chip">図表なし</span>'}</div>
   <p class="math-content"><b>問題：</b>${mathTextHtml(q.stem||'')}</p>${annotation}
   <p><b>正答：</b>${escapeHtml(correct)}</p>
@@ -4404,6 +4713,9 @@ let devReviewLastError='';
 let devReviewFlagsLoadedAt=0;
 let devReviewQuestionFetchedAt=Object.create(null);
 let devConfirmedBaseline=Object.create(null);
+let devSessionVerified=false;
+let devSessionVerifiedAt=0;
+let devSessionVerifyPending=null;
 
 const DEV_WORK_FLAG_TYPES={
  review:{label:'要確認',field:'要確認（クラウド）',severity:'mid',message:'通常演習中に開発者が「要確認」として登録しています。',className:'review'},
@@ -4439,8 +4751,25 @@ function devReviewQuestionRef(q,examIdOverride='',partOverride=''){
   range:String(q?.range||'')
  };
 }
-function hasDevSession(){
+function hasStoredDevSessionToken(){
  return Boolean(getDevAuth()?.sessionToken);
+}
+function setDevSessionVerified(value){
+ devSessionVerified=Boolean(value);
+ devSessionVerifiedAt=devSessionVerified?Date.now():0;
+ document.documentElement.classList.toggle('dev-session-verified',devSessionVerified);
+ if(!devSessionVerified){
+  const box=$('devReviewControl');
+  if(box){
+   box.classList.add('hidden');
+   box.classList.remove('is-saving');
+   box.innerHTML='';
+  }
+ }
+ return devSessionVerified;
+}
+function hasDevSession(){
+ return Boolean(hasStoredDevSessionToken()&&devSessionVerified);
 }
 async function apiDevReview(method='GET',payload=null,requestOptions={}){
  const opt={method,headers:{...devHeaders(),'cache-control':'no-store'}};
@@ -4646,16 +4975,32 @@ function devFlagCheckboxHtml(flagType,flags,context='quiz'){
 function drawDevReviewControl(q){
  const box=$('devReviewControl');
  if(!box)return;
+
  if(!hasDevSession()){
   box.classList.add('hidden');
+  box.classList.remove('is-saving');
   box.innerHTML='';
+
+  // 保存済みトークンがあっても、Cloudflareで有効性を確認するまでは表示しない。
+  if(hasStoredDevSessionToken()&&!devSessionVerifyPending){
+   const expectedKey=devReviewQuestionRef(q).key;
+   verifyDevMode().then(ok=>{
+    if(!ok)return;
+    const current=getCurrentQuestion();
+    if(current&&devReviewQuestionRef(current).key===expectedKey){
+     drawDevReviewControl(current);
+    }
+   }).catch(()=>null);
+  }
   return;
  }
+
  const ref=devReviewQuestionRef(q);
  const flags=devQuestionWorkFlags(q);
  box.classList.remove('hidden');
  box.classList.remove('is-saving');
  box.innerHTML=`${Object.keys(DEV_WORK_FLAG_TYPES).map(type=>devFlagCheckboxHtml(type,flags)).join('')}<span class="dev-review-sync">${escapeHtml(devReviewStatusText())}</span>`;
+
  if(!devReviewFlagsLoaded&&!devReviewFlagsLoading){
   const expectedKey=ref.key;
   loadDevReviewFlags().then(()=>{
@@ -4714,10 +5059,29 @@ function getDevAuth(){
 }
 function setDevAuth(data){
   localStorage.setItem(DEV_AUTH_KEY,JSON.stringify(data||{}));
+  setDevSessionVerified(false);
 }
 function clearDevAuth(){
   localStorage.removeItem(DEV_AUTH_KEY);
+  setDevSessionVerified(false);
 }
+
+window.addEventListener('storage',event=>{
+ if(event.key!==DEV_AUTH_KEY)return;
+ setDevSessionVerified(false);
+ devReviewFlags=Object.create(null);
+ devReviewFlagsLoaded=false;
+ devReviewFlagsLoadedAt=0;
+ if(event.newValue){
+  verifyDevMode(true).then(ok=>{
+   if(ok){
+    const q=getCurrentQuestion();
+    if(q)drawDevReviewControl(q);
+   }
+  }).catch(()=>null);
+ }
+});
+
 function devLoginStatus(msg,ok=false){
   const el=$('devLoginStatus');
   if(el){el.innerHTML=msg;el.className='login-status '+(ok?'status-ok':'status-warn')}
@@ -4732,14 +5096,38 @@ async function apiDevAuth(payload){
   if(!r.ok)throw new Error(data.error||String(r.status));
   return data;
 }
-async function verifyDevMode(){
-  const a=getDevAuth();
-  if(!a?.sessionToken)return false;
-  try{
-    const r=await fetchWithTimeout('/api/dev-auth',{method:'GET',headers:devHeaders()},5000);
-    const data=await r.json().catch(()=>({}));
-    return Boolean(r.ok&&data.ok);
-  }catch(e){return false}
+async function verifyDevMode(force=false){
+  const auth=getDevAuth();
+  if(!auth?.sessionToken){
+    setDevSessionVerified(false);
+    return false;
+  }
+  if(!force&&devSessionVerified&&Date.now()-devSessionVerifiedAt<120000)return true;
+  if(devSessionVerifyPending)return devSessionVerifyPending;
+
+  devSessionVerifyPending=(async()=>{
+    try{
+      const response=await fetchWithTimeout('/api/dev-auth',{
+        method:'GET',
+        headers:devHeaders(),
+        cache:'no-store'
+      },10000);
+      const data=await response.json().catch(()=>({}));
+      const ok=Boolean(response.ok&&data.ok);
+      setDevSessionVerified(ok);
+      if(!ok&&(response.status===401||response.status===403)){
+        localStorage.removeItem(DEV_AUTH_KEY);
+      }
+      return ok;
+    }catch(error){
+      // 通信失敗時も内部UIは表示しない。トークン自体は再試行のため保持する。
+      setDevSessionVerified(false);
+      return false;
+    }finally{
+      devSessionVerifyPending=null;
+    }
+  })();
+  return devSessionVerifyPending;
 }
 async function openDevModeGate(){
   if(state&&state.timerRunning){pauseTimer();saveState()}
@@ -4759,6 +5147,7 @@ async function loginDevMode(){
   try{
     const data=await apiDevAuth({action:'login',id,password});
     setDevAuth({sessionToken:data.sessionToken,expiresAt:data.expiresAt,id:data.id});
+    setDevSessionVerified(true);
     devReviewFlagsLoaded=false;
     loadDevReviewFlags(true).catch(()=>null);
     devLoginStatus('ログインしました。開発モードを開きます。',true);
@@ -4772,6 +5161,7 @@ async function loginDevMode(){
 async function logoutDevMode(){
   try{await apiDevAuth({action:'logout'});}catch(e){}
   clearDevAuth();
+  setDevSessionVerified(false);
   devReviewFlags=Object.create(null);
   devReviewFlagsLoaded=false;
   devReviewLastError='';
@@ -7328,36 +7718,48 @@ async function showAnswerViewBoth(filter='all'){
  if(state&&state.timerRunning){pauseTimer();saveState()}
  const examId=currentExamId||state.examId;
  currentAnswerPart='both';
+ answerViewBaseFilter=normalizeAnswerBaseFilter(filter);
+ answerViewFieldFilter='all';
  await getPart(examId,'am');
  await getPart(examId,'pm');
  hideAll();
  $('answerViewCard').classList.remove('hidden');
- renderAnswerViewBoth(filter);
+ renderAnswerViewBoth(answerViewBaseFilter,answerViewFieldFilter);
  updateHeader();
 }
-function renderAnswerViewBoth(filter='all'){
+function renderAnswerViewBoth(filter=answerViewBaseFilter,field=answerViewFieldFilter){
  const examId=currentExamId||state.examId;
  const rec=getExamRecord(examId);
+ answerViewBaseFilter=normalizeAnswerBaseFilter(filter);
+ answerViewFieldFilter=normalizeAnswerFieldFilter(field);
  $('answerViewTitle').textContent=`${rec?.title||'試験回'} 午前・午後 問題・回答閲覧`;
+
+ const packs={am:partsCache[`${examId}_am`],pm:partsCache[`${examId}_pm`]};
+ const baseByPart={};
+ const combinedBase=[];
+ for(const part of ['am','pm']){
+  const pack=packs[part];
+  baseByPart[part]=pack?.questions?filterAnswerQuestionsByBase(pack.questions,answerViewBaseFilter):[];
+  combinedBase.push(...baseByPart[part]);
+ }
+
  const controls=$('answerViewControls');
- controls.className='row answer-controls';
- controls.innerHTML=[
-  ['all','全問'],
-  ['figure','図表あり'],
-  ['negative','誤っているもの問題']
- ].map(([k,label])=>`<button class="${filter===k?'active':'ghost'}" onclick="renderAnswerViewBoth('${k}')">${label}</button>`).join('')
-  + `<span class="pill">${answerFilterLabel(filter)}</span>`;
+ controls.className='answer-controls';
+ const combinedDisplayed=filterAnswerQuestionsByField(combinedBase,answerViewFieldFilter);
+ controls.innerHTML=answerViewerControlsHtml(combinedBase,answerViewBaseFilter)
+  + `<div class="answer-display-count">表示：${combinedDisplayed.length}問 / ${combinedBase.length}問中（午前・午後合計）</div>`;
+
  const sections=['am','pm'].map(part=>{
-  const pack=partsCache[`${examId}_${part}`];
+  const pack=packs[part];
   if(!pack||!pack.questions)return `<h3>${partName(part)}</h3><p class="small">問題データを読み込めませんでした。</p>`;
-  let questions=pack.questions.slice();
-  if(filter==='figure') questions=questions.filter(q=>q.hasFigure&&q.image);
-  if(filter==='negative') questions=questions.filter(q=>q.negative);
-  const body=questions.length?questions.map(q=>answerQuestionHtml(q)).join(''):'<p class="small">該当する問題はありません。</p>';
-  return `<h3 style="margin-top:18px">${partName(part)}</h3>${body}`;
+  const questions=filterAnswerQuestionsByField(baseByPart[part],answerViewFieldFilter);
+  const body=questions.length?questions.map(q=>answerQuestionHtml(q)).join(''):'<p class="small">選択した条件に一致する問題はありません。</p>';
+  return `<h3 style="margin-top:18px">${partName(part)} <span class="answer-chip">${questions.length}問</span></h3>${body}`;
  });
- $('answerViewList').innerHTML=sections.join('');
- typesetMath($('answerViewList'));
+ const list=$('answerViewList');
+ list.innerHTML=sections.join('');
+ typesetMath(list);
+ enhanceZoomableImages(list);
 }
 
 function setupCeExamLink(){
@@ -7432,8 +7834,153 @@ async function maybeOpenDevEditorQuery(){
  return opened;
 }
 
+
+let imageZoomScale=1;
+let imageZoomBaseWidth=0;
+let imageZoomBaseHeight=0;
+let imageZoomPreviousFocus=null;
+
+function imageZoomElements(){
+ return {
+  modal:$('imageZoomModal'),
+  stage:$('imageZoomStage'),
+  image:$('imageZoomImage'),
+  label:$('imageZoomLabel'),
+  scale:$('imageZoomScale')
+ };
+}
+function updateImageZoomScale(nextScale,keepCenter=true){
+ const {stage,image,scale}=imageZoomElements();
+ if(!stage||!image||!imageZoomBaseWidth||!imageZoomBaseHeight)return;
+ const oldScrollWidth=Math.max(stage.scrollWidth,1);
+ const oldScrollHeight=Math.max(stage.scrollHeight,1);
+ const centerX=(stage.scrollLeft+stage.clientWidth/2)/oldScrollWidth;
+ const centerY=(stage.scrollTop+stage.clientHeight/2)/oldScrollHeight;
+
+ imageZoomScale=Math.min(5,Math.max(.5,Number(nextScale)||1));
+ image.style.width=`${Math.max(1,imageZoomBaseWidth*imageZoomScale)}px`;
+ image.style.height=`${Math.max(1,imageZoomBaseHeight*imageZoomScale)}px`;
+ if(scale)scale.textContent=`${Math.round(imageZoomScale*100)}%`;
+
+ requestAnimationFrame(()=>{
+  if(!keepCenter)return;
+  stage.scrollLeft=Math.max(0,centerX*stage.scrollWidth-stage.clientWidth/2);
+  stage.scrollTop=Math.max(0,centerY*stage.scrollHeight-stage.clientHeight/2);
+ });
+}
+function fitImageZoom(){
+ const {stage,image}=imageZoomElements();
+ if(!stage||!image||!image.naturalWidth||!image.naturalHeight)return;
+ const availableWidth=Math.max(120,stage.clientWidth-28);
+ const availableHeight=Math.max(120,stage.clientHeight-28);
+ const fit=Math.min(
+  1,
+  availableWidth/image.naturalWidth,
+  availableHeight/image.naturalHeight
+ );
+ imageZoomBaseWidth=Math.max(1,image.naturalWidth*fit);
+ imageZoomBaseHeight=Math.max(1,image.naturalHeight*fit);
+ updateImageZoomScale(1,false);
+ requestAnimationFrame(()=>{
+  stage.scrollLeft=Math.max(0,(stage.scrollWidth-stage.clientWidth)/2);
+  stage.scrollTop=Math.max(0,(stage.scrollHeight-stage.clientHeight)/2);
+ });
+}
+function openImageZoom(src,alt='問題画像'){
+ const {modal,image,label}=imageZoomElements();
+ if(!modal||!image||!src)return;
+ imageZoomPreviousFocus=document.activeElement;
+ imageZoomScale=1;
+ imageZoomBaseWidth=0;
+ imageZoomBaseHeight=0;
+ if(label)label.textContent=alt||'問題画像';
+ image.alt=alt||'問題画像';
+ image.onload=()=>fitImageZoom();
+ image.onerror=()=>{
+  if(label)label.textContent='画像を読み込めませんでした。';
+ };
+ image.src=src;
+ modal.classList.remove('hidden');
+ modal.setAttribute('aria-hidden','false');
+ document.body.classList.add('image-zoom-open');
+ requestAnimationFrame(()=>$('imageZoomClose')?.focus());
+}
+function closeImageZoom(){
+ const {modal,image}=imageZoomElements();
+ if(!modal)return;
+ modal.classList.add('hidden');
+ modal.setAttribute('aria-hidden','true');
+ document.body.classList.remove('image-zoom-open');
+ if(image){
+  image.onload=null;
+  image.onerror=null;
+  image.removeAttribute('src');
+  image.style.width='';
+  image.style.height='';
+ }
+ const previous=imageZoomPreviousFocus;
+ imageZoomPreviousFocus=null;
+ if(previous&&typeof previous.focus==='function')previous.focus();
+}
+function imageZoomIn(){
+ updateImageZoomScale(imageZoomScale+.25);
+}
+function imageZoomOut(){
+ updateImageZoomScale(imageZoomScale-.25);
+}
+function imageZoomActualSize(){
+ const {image}=imageZoomElements();
+ if(!image||!image.naturalWidth||!imageZoomBaseWidth)return;
+ updateImageZoomScale(image.naturalWidth/imageZoomBaseWidth);
+}
+function imageZoomReset(){
+ fitImageZoom();
+}
+function enhanceZoomableImages(root=document){
+ const targets=[];
+ if(root?.matches?.('img.source-img'))targets.push(root);
+ root?.querySelectorAll?.('img.source-img').forEach(img=>targets.push(img));
+ targets.forEach(img=>{
+  if(img.dataset.zoomEnhanced==='1')return;
+  img.dataset.zoomEnhanced='1';
+  img.tabIndex=0;
+  img.setAttribute('role','button');
+  const baseAlt=String(img.alt||'問題画像').trim()||'問題画像';
+  img.setAttribute('aria-label',`${baseAlt}。タップまたはEnterキーで拡大表示`);
+  if(!img.title)img.title='タップして拡大表示';
+ });
+}
+document.addEventListener('click',event=>{
+ const image=event.target.closest?.('img.source-img');
+ if(!image||image.closest('#imageZoomModal'))return;
+ event.preventDefault();
+ openImageZoom(image.currentSrc||image.src,image.alt||'問題画像');
+});
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'&&!$('imageZoomModal')?.classList.contains('hidden')){
+  event.preventDefault();
+  closeImageZoom();
+  return;
+ }
+ const image=event.target.closest?.('img.source-img');
+ if(image&&(event.key==='Enter'||event.key===' ')){
+  event.preventDefault();
+  openImageZoom(image.currentSrc||image.src,image.alt||'問題画像');
+ }
+});
+window.addEventListener('resize',()=>{
+ if(!$('imageZoomModal')?.classList.contains('hidden'))fitImageZoom();
+});
+const imageZoomObserver=new MutationObserver(records=>{
+ records.forEach(record=>record.addedNodes.forEach(node=>{
+  if(node.nodeType===1)enhanceZoomableImages(node);
+ }));
+});
+
 async function init(){
  applyTheme(getStoredTheme());
+ enhanceZoomableImages(document);
+ imageZoomObserver.observe(document.body,{childList:true,subtree:true});
  initWhiteboard();
  setupCeExamLink();
  await loadVersionFromMarkdown().catch(()=>false);
@@ -7448,6 +7995,13 @@ async function init(){
  if(!openedDevEditor)await maybeOpenSharedLink();
  // 進行状況のクラウド確認は画面表示後に実行。ここで止まってもメニュー表示を妨げない。
  apiProgress('GET').catch(()=>null);
+ // 保存済み開発者トークンは、Cloudflareで有効性を確認できた場合だけ内部UIを復元する。
+ verifyDevMode(true).then(ok=>{
+  if(ok){
+   const q=getCurrentQuestion();
+   if(q)drawDevReviewControl(q);
+  }
+ }).catch(()=>null);
 }
 init();
 </script>
@@ -7471,6 +8025,27 @@ init();
    <button class="ghost" type="button" onclick="devResetImageCrop()">画像全体に戻す</button>
    <button class="secondary" type="button" onclick="devApplyImageCrop()">この範囲で切り取る</button>
    <button class="ghost" type="button" onclick="devCloseImageCropper()">キャンセル</button>
+  </div>
+ </div>
+</div>
+
+
+<div id="imageZoomModal" class="image-zoom-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="imageZoomLabel" onclick="if(event.target===this)closeImageZoom()">
+ <div class="image-zoom-toolbar">
+  <div class="image-zoom-toolbar-left">
+   <span id="imageZoomLabel" class="image-zoom-label">問題画像</span>
+   <span id="imageZoomScale" class="image-zoom-label">100%</span>
+  </div>
+  <div class="image-zoom-toolbar-right">
+   <button type="button" onclick="imageZoomOut()" aria-label="縮小">－</button>
+   <button type="button" onclick="imageZoomIn()" aria-label="拡大">＋</button>
+   <button type="button" onclick="imageZoomActualSize()">原寸</button>
+   <button id="imageZoomClose" type="button" onclick="closeImageZoom()">閉じる</button>
+  </div>
+ </div>
+ <div id="imageZoomStage" class="image-zoom-stage">
+  <div class="image-zoom-canvas">
+   <img id="imageZoomImage" class="image-zoom-image" alt="問題画像">
   </div>
  </div>
 </div>
