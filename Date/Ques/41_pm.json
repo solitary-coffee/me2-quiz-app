@@ -63,9 +63,13 @@
         "誤りポイント：設問の条件に合いません。正答は「電極接触インピーダンスの変動の影響を低減するため。」。",
         "誤りポイント：設問の条件に合いません。正答は「電極接触インピーダンスの変動の影響を低減するため。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p27.jpg",
-      "sourceImage": "Date/img/41/pm_p27.jpg"
+      "sourceImage": "Date/img/41/pm_p27.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm03",
@@ -93,9 +97,13 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "正答。この選択肢が「誤っている／該当しない」内容です。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p27.jpg",
-      "sourceImage": "Date/img/41/pm_p27.jpg"
+      "sourceImage": "Date/img/41/pm_p27.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm04",
@@ -123,9 +131,13 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p28.jpg",
-      "sourceImage": "Date/img/41/pm_p28.jpg"
+      "sourceImage": "Date/img/41/pm_p28.jpg",
+      "kindCategories": [
+        "circulation",
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm05",
@@ -183,9 +195,14 @@
         "誤りポイント：設問の条件に合いません。正答は「赤外線」。",
         "正答。この選択肢が設問の条件に合います。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p28.jpg",
-      "sourceImage": "Date/img/41/pm_p28.jpg"
+      "sourceImage": "Date/img/41/pm_p28.jpg",
+      "kindCategories": [
+        "respiratory",
+        "biometry_monitor",
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm07",
@@ -213,9 +230,12 @@
         "誤りポイント：設問の条件に合いません。正答は「波長が異なる複数の光を用いる。」。",
         "誤りポイント：設問の条件に合いません。正答は「波長が異なる複数の光を用いる。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p29.jpg",
-      "sourceImage": "Date/img/41/pm_p29.jpg"
+      "sourceImage": "Date/img/41/pm_p29.jpg",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm08",
@@ -277,9 +297,14 @@
         "誤りポイント：設問の条件に合いません。正答は「生体接触部の電流密度は対極板よりメス先電極のほうが高い。」。",
         "誤りポイント：設問の条件に合いません。正答は「生体接触部の電流密度は対極板よりメス先電極のほうが高い。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p29.jpg",
-      "sourceImage": "Date/img/41/pm_p29.jpg"
+      "sourceImage": "Date/img/41/pm_p29.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "surgery_treatment",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm10",
@@ -307,9 +332,12 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "正答。この選択肢が「誤っている／該当しない」内容です。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p30.jpg",
-      "sourceImage": "Date/img/41/pm_p30.jpg"
+      "sourceImage": "Date/img/41/pm_p30.jpg",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "pm11",
@@ -337,9 +365,13 @@
         "誤りポイント：設問の条件に合いません。正答は「磁歪素子を用いたものは冷却水を必要とする。」。",
         "正答。この選択肢が設問の条件に合います。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p30.jpg",
-      "sourceImage": "Date/img/41/pm_p30.jpg"
+      "sourceImage": "Date/img/41/pm_p30.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm12",
@@ -367,9 +399,12 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p30.jpg",
-      "sourceImage": "Date/img/41/pm_p30.jpg"
+      "sourceImage": "Date/img/41/pm_p30.jpg",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm13",
@@ -562,7 +597,7 @@
         "蓄電池",
         "太陽光発電機",
         "燃料ガス発電機",
-        "燃料電池 問題 201 膨張弁 液体酸素を気化させる装置はどれか。"
+        "燃料電池"
       ],
       "correct": [
         2
@@ -577,9 +612,13 @@
         "誤りポイント：設問の条件に合いません。正答は「蓄電池」。",
         "誤りポイント：設問の条件に合いません。正答は「蓄電池」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p33.jpg",
-      "sourceImage": "Date/img/41/pm_p33.jpg"
+      "sourceImage": "Date/img/41/pm_p33.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm20",
@@ -607,9 +646,13 @@
         "正答。この選択肢が設問の条件に合います。",
         "誤りポイント：設問の条件に合いません。正答は「蒸発器」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p33.jpg",
-      "sourceImage": "Date/img/41/pm_p33.jpg"
+      "sourceImage": "Date/img/41/pm_p33.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm21",
@@ -620,9 +663,9 @@
       "choices": [
         "血液ポンプの手前で採血する。",
         "ACT を 200 秒程度とする。",
-        "ウェットラングになったら直ちに人工入を交換する。",
+        "ウェットラングになったら直ちに人工肺を交換する。",
         "脱血不良の場合はポンプの位置を低くする。",
-        "送血側回路の魚子を外してからポンプを回転きせる。"
+        "送血側回路の鉗子を外してからポンプを回転きせる。"
       ],
       "correct": [
         2
@@ -637,9 +680,14 @@
         "誤りポイント：設問の条件に合いません。正答は「ACT を 200 秒程度とする。」。",
         "誤りポイント：設問の条件に合いません。正答は「ACT を 200 秒程度とする。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p33.jpg",
-      "sourceImage": "Date/img/41/pm_p33.jpg"
+      "sourceImage": "Date/img/41/pm_p33.jpg",
+      "kindCategories": [
+        "heart_lung",
+        "imaging",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm22",
@@ -697,9 +745,13 @@
         "誤りポイント：設問の条件に合いません。正答は「送受信チャネルの確認」。",
         "誤りポイント：設問の条件に合いません。正答は「送受信チャネルの確認」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p34.jpg",
-      "sourceImage": "Date/img/41/pm_p34.jpg"
+      "sourceImage": "Date/img/41/pm_p34.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm24",
@@ -727,9 +779,13 @@
         "誤りポイント：設問の条件に合いません。正答は「カーボン電極」。",
         "誤りポイント：設問の条件に合いません。正答は「カーボン電極」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p34.jpg",
-      "sourceImage": "Date/img/41/pm_p34.jpg"
+      "sourceImage": "Date/img/41/pm_p34.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm25",
@@ -757,9 +813,14 @@
         "誤りポイント：設問の条件に合いません。正答は「ダイアライザ内で血液が凝固した。」。",
         "誤りポイント：設問の条件に合いません。正答は「ダイアライザ内で血液が凝固した。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p34.jpg",
-      "sourceImage": "Date/img/41/pm_p34.jpg"
+      "sourceImage": "Date/img/41/pm_p34.jpg",
+      "kindCategories": [
+        "dialysis",
+        "surgery_treatment",
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm26",
@@ -802,7 +863,7 @@
         "サイドストリーム方式ではサンプリングチューブが必要である。",
         "メインストリーム方式のセンサは呼吸回路の吸気側に入れる。",
         "センサに水滴が付着すると測定誤差の原因となる。",
-        "NO を使用するときは測定値の補正が必要である。"
+        "$N_{2}O$ を使用するときは測定値の補正が必要である。"
       ],
       "correct": [
         3
@@ -817,9 +878,13 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p35.jpg",
-      "sourceImage": "Date/img/41/pm_p35.jpg"
+      "sourceImage": "Date/img/41/pm_p35.jpg",
+      "kindCategories": [
+        "respiratory",
+        "biometry_monitor"
+      ]
     },
     {
       "id": "pm28",
@@ -847,9 +912,13 @@
         "誤りポイント：設問の条件に合いません。正答は「金属ベッドを接地する。」。",
         "誤りポイント：設問の条件に合いません。正答は「金属ベッドを接地する。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p35.jpg",
-      "sourceImage": "Date/img/41/pm_p35.jpg"
+      "sourceImage": "Date/img/41/pm_p35.jpg",
+      "kindCategories": [
+        "safety",
+        "biometry_monitor"
+      ]
     },
     {
       "id": "pm29",
@@ -859,10 +928,10 @@
       "stem": "超音波を用いて心房内血栓の有無を検査する方法で適切なのは どれか。",
       "choices": [
         "IVUS (血管内超音波法)",
-        "TEE (経食道心エコー検査) 人工呼吸器を使用中に気道内圧下限アラームが鳴った。原因として e ਤੀ",
+        "TEE (経食道心エコー検査) ",
         "超音波血流計(トランジットタイム法)",
         "超音波血流計(ドプラ法)",
-        "Mモード超音波檢查"
+        "Mモード超音波検査"
       ],
       "correct": [
         2
@@ -877,16 +946,20 @@
         "誤りポイント：設問の条件に合いません。正答は「TEE (経食道心エコー検査) 人工呼吸器を使用中に気道内圧下限アラームが鳴った。原因として e ਤੀ」。",
         "誤りポイント：設問の条件に合いません。正答は「TEE (経食道心エコー検査) 人工呼吸器を使用中に気道内圧下限アラームが鳴った。原因として e ਤੀ」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p36.jpg",
-      "sourceImage": "Date/img/41/pm_p36.jpg"
+      "sourceImage": "Date/img/41/pm_p36.jpg",
+      "kindCategories": [
+        "respiratory",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm30",
       "part": "pm",
       "number": 30,
       "page": 36,
-      "stem": "考えられるのはどれか。",
+      "stem": "人工呼吸器を使用中に気道内圧下限アラートが鳴った。考えられるのはどれか。",
       "choices": [
         "呼気側回路のフィルタの目詰まり",
         "気道内の分泌物貯留",
@@ -907,9 +980,13 @@
         "誤りポイント：設問の条件に合いません。正答は「気管チューブの外れ」。",
         "誤りポイント：設問の条件に合いません。正答は「気管チューブの外れ」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p36.jpg",
-      "sourceImage": "Date/img/41/pm_p36.jpg"
+      "sourceImage": "Date/img/41/pm_p36.jpg",
+      "kindCategories": [
+        "respiratory",
+        "biometry_monitor"
+      ]
     },
     {
       "id": "pm31",
@@ -937,9 +1014,14 @@
         "正答。この選択肢が設問の条件に合います。",
         "誤りポイント：設問の条件に合いません。正答は「テスト肺を外すとAPL 弁が作動した。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p36.jpg",
-      "sourceImage": "Date/img/41/pm_p36.jpg"
+      "sourceImage": "Date/img/41/pm_p36.jpg",
+      "kindCategories": [
+        "safety",
+        "biometry_monitor",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "pm32",
@@ -1038,11 +1120,11 @@
       "page": 38,
       "stem": "血液透析の透析効率が最も高くなるのはどれか。",
       "choices": [
-        "2) l液流量 透析液流量 血液流量 透析液流量 200mL / min ロローー 200mL/min 200mL/min 400mL / min",
-        "血液流量透析液流量200mL/min 200mL/min血液流量200mL/min透析液流量400mL/min",
-        "4) 血液流量 透析液流量 血液流量 400mL / min 200mL /min 200mL / min 透析液流量 200mL / min",
-        "血液流量透析液流量血液流量400mL/min 200mL/min 200mL/min透析液流量200mL/min",
-        "血液流量200mL/min透析液流量400mL/min"
+        "選択肢1（画像参照）",
+        "選択肢2（画像参照）",
+        "選択肢3（画像参照）",
+        "選択肢4（画像参照）",
+        "選択肢5（画像参照）"
       ],
       "correct": [
         5
@@ -1058,8 +1140,13 @@
         "正答。この選択肢が設問の条件に合います。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/pm_p38.jpg",
-      "sourceImage": "Date/img/41/pm_p38.jpg"
+      "image": "Date/img/41/41_pm_q35.png",
+      "sourceImage": "Date/img/41/pm_p38.jpg",
+      "kindCategories": [
+        "dialysis",
+        "infusion",
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm36",
@@ -1117,9 +1204,12 @@
         "誤りポイント：設問の条件に合いません。正答は「10」。",
         "誤りポイント：設問の条件に合いません。正答は「10」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p39.jpg",
-      "sourceImage": "Date/img/41/pm_p39.jpg"
+      "sourceImage": "Date/img/41/pm_p39.jpg",
+      "kindCategories": [
+        "infusion"
+      ]
     },
     {
       "id": "pm38",
@@ -1207,9 +1297,12 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "正答。この選択肢が「誤っている／該当しない」内容です。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p40.jpg",
-      "sourceImage": "Date/img/41/pm_p40.jpg"
+      "sourceImage": "Date/img/41/pm_p40.jpg",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     },
     {
       "id": "pm41",
@@ -1237,16 +1330,20 @@
         "誤りポイント：設問の条件に合いません。正答は「ミクロショック」。",
         "正答。この選択肢が設問の条件に合います。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p40.jpg",
-      "sourceImage": "Date/img/41/pm_p40.jpg"
+      "sourceImage": "Date/img/41/pm_p40.jpg",
+      "kindCategories": [
+        "safety",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "pm42",
       "part": "pm",
       "number": 42,
       "page": 40,
-      "stem": "電気メスの凝固モードで出力測定をおこなった。負荷抵抗 5002 (無II誘導)で熱電形高周波電流計の指示値が 400mAであった。出力はおよそ 何Wか。",
+      "stem": "電気メスの凝固モードで出力測定をおこなった。負荷抵抗 500Ω (無誘導)で熱電形高周波電流計の指示値が 400mAであった。出力はおよそ 何Wか。",
       "choices": [
         "30",
         "50",
@@ -1267,9 +1364,13 @@
         "誤りポイント：設問の条件に合いません。正答は「80」。",
         "誤りポイント：設問の条件に合いません。正答は「80」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p40.jpg",
-      "sourceImage": "Date/img/41/pm_p40.jpg"
+      "sourceImage": "Date/img/41/pm_p40.jpg",
+      "kindCategories": [
+        "surgery_treatment",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm43",
@@ -1312,7 +1413,7 @@
         "400",
         "500",
         "600",
-        "700 呼吸流量 [L/min 이 2秒"
+        "700"
       ],
       "correct": [
         4
@@ -1328,8 +1429,11 @@
         "誤りポイント：設問の条件に合いません。正答は「600」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/pm_p41.jpg",
-      "sourceImage": "Date/img/41/pm_p41.jpg"
+      "image": "Date/img/41/41_pm_q44.png",
+      "sourceImage": "Date/img/41/pm_p41.jpg",
+      "kindCategories": [
+        "respiratory"
+      ]
     },
     {
       "id": "pm45",
@@ -1357,9 +1461,14 @@
         "誤りポイント：設問の条件に合いません。正答は「PCPS 本体のバッテリー残量の確認」。",
         "誤りポイント：設問の条件に合いません。正答は「PCPS 本体のバッテリー残量の確認」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p41.jpg",
-      "sourceImage": "Date/img/41/pm_p41.jpg"
+      "sourceImage": "Date/img/41/pm_p41.jpg",
+      "kindCategories": [
+        "heart_lung",
+        "safety",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "pm46",
@@ -1462,7 +1571,7 @@
         "マクロショックの防止を目的とする。",
         "医用 3P コンセントはクラスIのME 機器を使用する医用室に設置する。 鉄骨造の建物での接地幹線には鉄骨を利用する。",
         "接地極として建物の地下部分を利用できる。",
-        "接地極の接地抵抗は0.12以下にする。 問題 50 等電位接地について誤っているのはどれか。"
+        "接地極の接地抵抗は0.1Ω以下にする。"
       ],
       "correct": [
         5
@@ -1477,9 +1586,12 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "正答。この選択肢が「誤っている／該当しない」内容です。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p43.jpg",
-      "sourceImage": "Date/img/41/pm_p43.jpg"
+      "sourceImage": "Date/img/41/pm_p43.jpg",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm50",
@@ -1507,9 +1619,13 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p43.jpg",
-      "sourceImage": "Date/img/41/pm_p43.jpg"
+      "sourceImage": "Date/img/41/pm_p43.jpg",
+      "kindCategories": [
+        "safety",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "pm51",
@@ -1597,9 +1713,12 @@
         "誤りポイント：設問の条件に合いません。正答は「接地漏れ電流」。",
         "誤りポイント：設問の条件に合いません。正答は「接地漏れ電流」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p44.jpg",
-      "sourceImage": "Date/img/41/pm_p44.jpg"
+      "sourceImage": "Date/img/41/pm_p44.jpg",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm54",
@@ -1628,8 +1747,11 @@
         "誤りポイント：設問の条件に合いません。正答は「100」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/pm_p44.jpg",
-      "sourceImage": "Date/img/41/pm_p44.jpg"
+      "image": "Date/img/41/41_pm_q59.png",
+      "sourceImage": "Date/img/41/pm_p44.jpg",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm55",
@@ -1640,7 +1762,7 @@
       "choices": [
         "手術室",
         "救急処置室",
-        "選択肢3（原本画像を確認）",
+        "診察室",
         "血液透析室",
         "内視鏡室"
       ],
@@ -1657,9 +1779,13 @@
         "誤りポイント：設問の条件に合いません。正答は「手術室」。",
         "誤りポイント：設問の条件に合いません。正答は「手術室」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p45.jpg",
-      "sourceImage": "Date/img/41/pm_p45.jpg"
+      "sourceImage": "Date/img/41/pm_p45.jpg",
+      "kindCategories": [
+        "safety",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "pm56",
@@ -1717,9 +1843,12 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p45.jpg",
-      "sourceImage": "Date/img/41/pm_p45.jpg"
+      "sourceImage": "Date/img/41/pm_p45.jpg",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm58",
@@ -1747,9 +1876,12 @@
         "正答。この選択肢が設問の条件に合います。",
         "誤りポイント：設問の条件に合いません。正答は「緑」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/pm_p46.jpg",
-      "sourceImage": "Date/img/41/pm_p46.jpg"
+      "sourceImage": "Date/img/41/pm_p46.jpg",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm59",
@@ -1762,7 +1894,7 @@
         "0.45",
         "0.55",
         "0.70",
-        "0.95 信頼度 0.90 信頼度 0.50 内容量 3.5 Lの高圧ガスボンベにおいて液体で充填されている"
+        "0.95 "
       ],
       "correct": [
         5
@@ -1778,8 +1910,12 @@
         "正答。この選択肢が設問の条件に合います。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/pm_p46.jpg",
-      "sourceImage": "Date/img/41/pm_p46.jpg"
+      "image": "Date/img/41/41_pm_q59.png",
+      "sourceImage": "Date/img/41/pm_p46.jpg",
+      "kindCategories": [
+        "safety",
+        "homecare"
+      ]
     },
     {
       "id": "pm60",

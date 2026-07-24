@@ -25,13 +25,13 @@
       ],
       "negative": false,
       "range": "基礎医学：人体の構造と機能",
-      "tip": "正答は「悪性新生物」。基礎医学：人体の構造と機能の基本事項として、設問の条件に最も合うものを選びます。",
+      "tip": "要点：65歳以上の死因は悪性新生物が代表的に最も多い。覚える：高齢者の死因順位は悪性新生物、心疾患、肺炎などを押さえる。",
       "choiceNotes": [
-        "正答。この選択肢が設問の条件に合います。",
-        "誤りポイント：設問の条件に合いません。正答は「悪性新生物」。",
-        "誤りポイント：設問の条件に合いません。正答は「悪性新生物」。",
-        "誤りポイント：設問の条件に合いません。正答は「悪性新生物」。",
-        "誤りポイント：設問の条件に合いません。正答は「悪性新生物」。"
+        "正答。悪性新生物はがんを指し、高齢者の死因として最も多い。",
+        "誤りポイント：「心疾患」が誤り。正しくは「悪性新生物」。",
+        "誤りポイント：「肺炎」が誤り。正しくは「悪性新生物」。",
+        "誤りポイント：「脳血管疾患」が誤り。正しくは「悪性新生物」。",
+        "誤りポイント：「自殺」が誤り。正しくは「悪性新生物」。"
       ],
       "hasFigure": false,
       "image": null,
@@ -55,13 +55,13 @@
       ],
       "negative": true,
       "range": "基礎医学：人体の構造と機能",
-      "tip": "この問題は「誤っているもの／該当しないもの」を選ぶ形式です。正答は「ライゾゾームでタンパク質が合成される。」。",
+      "tip": "要点：細胞小器官の働きを整理する。覚える：ミトコンドリアはATP産生、小胞体は物質合成やカルシウム貯蔵、ライゾゾームは分解を担う。",
       "choiceNotes": [
-        "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
-        "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
-        "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
-        "正答。この選択肢が「誤っている／該当しない」内容です。",
-        "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
+        "この選択肢は誤りではない。細胞膜は細胞質を包み、細胞の内外を隔てる膜である。",
+        "この選択肢は誤りではない。ミトコンドリアはエネルギー産生の場で、ATPを作る。",
+        "この選択肢は誤りではない。小胞体は細胞内での物質の合成や輸送に関わり、筋小胞体はカルシウムを貯蔵する。",
+        "正答。誤りポイント：「タンパク質が合成される」が誤り。ライゾゾームは細胞内消化を行う小器官で、タンパク質合成ではない。",
+        "この選択肢は誤りではない。核には遺伝情報をもつDNAが格納されている。"
       ],
       "hasFigure": false,
       "image": null,
@@ -85,17 +85,20 @@
       ],
       "negative": false,
       "range": "基礎医学：人体の構造と機能",
-      "tip": "正答は「興奮は並走する神経線維に伝わらない。」。基礎医学：人体の構造と機能の基本事項として、設問の条件に最も合うものを選びます。",
+      "tip": "要点：神経興奮は活動電位として軸索を伝わり、線維の太さや髄鞘で伝導速度が変わる。覚える：脱分極は主にNa+流入、安静時膜電位は負。",
       "choiceNotes": [
-        "誤りポイント：設問の条件に合いません。正答は「興奮は並走する神経線維に伝わらない。」。",
-        "正答。この選択肢が設問の条件に合います。",
-        "誤りポイント：設問の条件に合いません。正答は「興奮は並走する神経線維に伝わらない。」。",
-        "誤りポイント：設問の条件に合いません。正答は「興奮は並走する神経線維に伝わらない。」。",
-        "誤りポイント：設問の条件に合いません。正答は「興奮は並走する神経線維に伝わらない。」。"
+        "誤りポイント：「興奮時の膜電位は負である。」が誤り。興奮時は脱分極して膜電位は正方向に近づく。",
+        "正答。興奮は軸索に沿って伝導し、並走する別の神経線維へは通常そのまま伝わらない。",
+        "誤りポイント：「伝導する間に減衰する」が誤り。活動電位は再生しながら伝わるため、通常は減衰しない。",
+        "誤りポイント：「太さによらず一定である」が誤り。伝導速度は神経線維が太いほど速い。",
+        "誤りポイント：「塩素イオンの移動」が誤り。脱分極の主因はナトリウムイオンの流入。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p3.jpg",
-      "sourceImage": "Date/img/41/am_p3.jpg"
+      "sourceImage": "Date/img/41/am_p3.jpg",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "am04",
@@ -124,8 +127,13 @@
         "誤りポイント：設問の条件に合いません。正答は「第2肋骨」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p4.jpg",
-      "sourceImage": "Date/img/41/am_p4.jpg"
+      "image": "Date/img/41/41_am_q04.png",
+      "sourceImage": "Date/img/41/am_p4.jpg",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am05",
@@ -154,8 +162,13 @@
         "誤りポイント：設問の条件に合いません。正答は「ST部分の変化」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p4.jpg",
-      "sourceImage": "Date/img/41/am_p4.jpg"
+      "image": "Date/img/41/41_am_q05.png",
+      "sourceImage": "Date/img/41/am_p4.jpg",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am06",
@@ -164,7 +177,7 @@
       "page": 5,
       "stem": "血液について正しいのはどれか。",
       "choices": [
-        "成人の血液量は体重の約1/13程度である。",
+        "成人の血液量は体重の約$\\frac{1}{5}$程度である。",
         "血漿は全血液容量の90%を占める。",
         "血漿にはアルブミンが含まれている。",
         "血清は血液からすべてのタンパク質を除去したものである。",
@@ -175,17 +188,20 @@
       ],
       "negative": false,
       "range": "基礎医学：人体の構造と機能",
-      "tip": "正答は「血漿にはアルブミンが含まれている。」。基礎医学：人体の構造と機能の基本事項として、設問の条件に最も合うものを選びます。",
+      "tip": "要点：血漿にはアルブミンなどのタンパク質が含まれる。覚える：血漿は血液の液体成分で、血清は凝固因子を除いたもの。",
       "choiceNotes": [
-        "誤りポイント：設問の条件に合いません。正答は「血漿にはアルブミンが含まれている。」。",
-        "誤りポイント：設問の条件に合いません。正答は「血漿にはアルブミンが含まれている。」。",
-        "正答。この選択肢が設問の条件に合います。",
-        "誤りポイント：設問の条件に合いません。正答は「血漿にはアルブミンが含まれている。」。",
-        "誤りポイント：設問の条件に合いません。正答は「血漿にはアルブミンが含まれている。」。"
+        "誤りポイント：「成人の血液量は体重の約1/5程度である」が誤り。正しくは体重の約1/13程度で、成人の血液量は体重の約7〜8%である。",
+        "誤りポイント：「血漿は全血液容量の90%を占める」が誤り。正しくは血液の約55%が血漿で、残りが血球成分である。",
+        "正答。血漿は血液の液体成分で、アルブミンを含む。アルブミンは血漿タンパク質の主要成分で、浸透圧の維持などに関与する。",
+        "誤りポイント：「血清は血液からすべてのタンパク質を除去したものである」が誤り。正しくは血清は凝固後に残る液体で、フィブリノゲンなどの凝固因子が除かれる。",
+        "誤りポイント：「血球成分の約60%は白血球である」が誤り。正しくは血球成分の大部分は赤血球で、白血球はごく少ない。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p5.jpg",
-      "sourceImage": "Date/img/41/am_p5.jpg"
+      "sourceImage": "Date/img/41/am_p5.jpg",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "am07",
@@ -205,17 +221,20 @@
       ],
       "negative": false,
       "range": "基礎医学：人体の構造と機能",
-      "tip": "正答は「視床下部」。基礎医学：人体の構造と機能の基本事項として、設問の条件に最も合うものを選びます。",
+      "tip": "要点：摂食中枢は視床下部にある。覚える：視床下部は食欲や体温、内分泌の調節に関わる。",
       "choiceNotes": [
-        "誤りポイント：設問の条件に合いません。正答は「視床下部」。",
-        "誤りポイント：設問の条件に合いません。正答は「視床下部」。",
-        "誤りポイント：設問の条件に合いません。正答は「視床下部」。",
-        "正答。この選択肢が設問の条件に合います。",
-        "誤りポイント：設問の条件に合いません。正答は「視床下部」。"
+        "誤りポイント：「海馬」が誤り。海馬は記憶や学習に関わる部位で、摂食中枢ではない。正しくは「視床下部」。",
+        "誤りポイント：「視床」が誤り。視床は感覚情報の中継に関わる部位で、摂食中枢ではない。正しくは「視床下部」。",
+        "誤りポイント：「脳梁」が誤り。脳梁は左右大脳半球を連絡する線維束で、摂食中枢ではない。正しくは「視床下部」。",
+        "正答。視床下部は食欲を調節する摂食中枢を含む部位である。",
+        "誤りポイント：「大脳基底核」が誤り。大脳基底核は運動調節に関わる部位で、摂食中枢ではない。正しくは「視床下部」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p5.jpg",
-      "sourceImage": "Date/img/41/am_p5.jpg"
+      "sourceImage": "Date/img/41/am_p5.jpg",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "am08",
@@ -303,9 +322,13 @@
         "誤りポイント：設問の条件に合いません。正答は「呼息中の肺胞内圧」。",
         "正答。この選択肢が設問の条件に合います。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p6.jpg",
-      "sourceImage": "Date/img/41/am_p6.jpg"
+      "sourceImage": "Date/img/41/am_p6.jpg",
+      "kindCategories": [
+        "respiratory",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am11",
@@ -333,9 +356,13 @@
         "誤りポイント：設問の条件に合いません。正答は「ボーマン嚢 → 近位尿細管 → ヘンレループ → 遠位尿細管 → 集合管」。",
         "誤りポイント：設問の条件に合いません。正答は「ボーマン嚢 → 近位尿細管 → ヘンレループ → 遠位尿細管 → 集合管」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p6.jpg",
-      "sourceImage": "Date/img/41/am_p6.jpg"
+      "sourceImage": "Date/img/41/am_p6.jpg",
+      "kindCategories": [
+        "basic_medicine",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am12",
@@ -619,11 +646,11 @@
       "page": 10,
       "stem": "電力を表すのはどれか。ただし、力の単位を[N], 距離の単位を[m], 時間の単位を[s] とする。",
       "choices": [
-        "N m",
-        "N⚫m s1",
-        "N⚫m",
-        "N m 2",
-        "N.m²s"
+        "N・m",
+        "N・m・s^{-1}",
+        "N・m^{-1}",
+        "N・m^{-2}",
+        "N・m・s^{-2}"
       ],
       "correct": [
         2
@@ -638,22 +665,26 @@
         "誤りポイント：設問の条件に合いません。正答は「N⚫m s1」。",
         "誤りポイント：設問の条件に合いません。正答は「N⚫m s1」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p10.jpg",
-      "sourceImage": "Date/img/41/am_p10.jpg"
+      "sourceImage": "Date/img/41/am_p10.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am22",
       "part": "am",
       "number": 22,
       "page": 10,
-      "stem": "空気中を伝搬する光が水面に入射した。光の進路として適切なのはどれか。",
+      "stem": "空気中を伝搬する光が水面に入射した。光の進路として適切なのはどれか。ただし入射角は45°とする。",
       "choices": [
-        "ただし入射角は45°とする。",
-        "選択肢2（原本画像を確認）",
-        "選択肢3（原本画像を確認）",
-        "ー@ 一",
-        "O"
+        "選択肢1（画像を確認）",
+        "選択肢2（画像を確認）",
+        "選択肢3（画像を確認）",
+        "選択肢4（画像を確認）",
+        "選択肢5（画像を確認）"
       ],
       "correct": [
         4
@@ -669,8 +700,12 @@
         "誤りポイント：設問の条件に合いません。正答は「ー@ 一」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p10.jpg",
-      "sourceImage": "Date/img/41/am_p10.jpg"
+      "image": "Date/img/41/41_am_q22.png",
+      "sourceImage": "Date/img/41/am_p10.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am23",
@@ -728,9 +763,13 @@
         "誤りポイント：設問の条件に合いません。正答は「極超短波」。",
         "誤りポイント：設問の条件に合いません。正答は「極超短波」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p11.jpg",
-      "sourceImage": "Date/img/41/am_p11.jpg"
+      "sourceImage": "Date/img/41/am_p11.jpg",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am25",
@@ -788,9 +827,12 @@
         "誤りポイント：設問の条件に合いません。正答は「水素ガス」。",
         "誤りポイント：設問の条件に合いません。正答は「水素ガス」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p12.jpg",
-      "sourceImage": "Date/img/41/am_p12.jpg"
+      "sourceImage": "Date/img/41/am_p12.jpg",
+      "kindCategories": [
+        "biometry_monitor"
+      ]
     },
     {
       "id": "am27",
@@ -818,22 +860,25 @@
         "誤りポイント：設問の条件に合いません。正答は「9kΩの抵抗を電圧計に直列に接続する。」。",
         "誤りポイント：設問の条件に合いません。正答は「9kΩの抵抗を電圧計に直列に接続する。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p12.jpg",
-      "sourceImage": "Date/img/41/am_p12.jpg"
+      "sourceImage": "Date/img/41/am_p12.jpg",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am28",
       "part": "am",
       "number": 28,
       "page": 12,
-      "stem": "どれか。",
+      "stem": "図の回路で2μFのキャパシタに蓄積されている電荷[μC]はどれか。",
       "choices": [
-        "1 1kQ",
+        "1 ",
         "2",
         "10",
         "20",
-        "30図の回路で2Fのキャパシタに蓄積されている電荷 [uC] は1ΚΩ 10 V 1 uF 2 μF"
+        "30"
       ],
       "correct": [
         4
@@ -849,21 +894,24 @@
         "誤りポイント：設問の条件に合いません。正答は「20」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p12.jpg",
-      "sourceImage": "Date/img/41/am_p12.jpg"
+      "image": "Date/img/41/41_am_q28.png",
+      "sourceImage": "Date/img/41/am_p12.jpg",
+      "kindCategories": [
+        "biometry_monitor"
+      ]
     },
     {
       "id": "am29",
       "part": "am",
       "number": 29,
       "page": 13,
-      "stem": "最大値 10V の正弦波交流電圧を誘導リアクタンス 2.0Ωのインダ クタに加えた。交流電圧の瞬時値が - 10V のときにインダクタを流れる交流 電流の瞬時値 [mA]として正しいのはどれか。",
+      "stem": "最大値 10V の正弦波交流電圧を誘導リアクタンス 2.0Ωのインダクタに加えた。交流電圧の瞬時値が - 10V のときにインダクタを流れる交流 電流の瞬時値 [mA]として正しいのはどれか。",
       "choices": [
         "-5.0",
         "-3.5",
         "0.0",
         "3.5",
-        "5.0 起電力 100V,内部抵抗 10Ωの電源に可変抵抗Rを接続し, Rを 調節してR の消費電力を最大にした。このとき、Rの消費電力 [W]はどれか。"
+        "5.0 "
       ],
       "correct": [
         3
@@ -878,9 +926,12 @@
         "誤りポイント：設問の条件に合いません。正答は「0.0」。",
         "誤りポイント：設問の条件に合いません。正答は「0.0」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p13.jpg",
-      "sourceImage": "Date/img/41/am_p13.jpg"
+      "sourceImage": "Date/img/41/am_p13.jpg",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am30",
@@ -905,7 +956,7 @@
         "誤りポイント：最大電力条件の計算が不足している。正しくはR=10Ωとして $P=\\frac{100^{2}}{4×10}$=250W。",
         "誤りポイント：最大電力条件の計算が不足している。正しくはR=10Ωとして、$P=\\frac{100^{2}}{4×10}$=250W。",
         "誤りポイント：最大電力条件の計算が不足している。正しくはR=10Ωとして  $P=\\frac{100^{2}}{4×10}$=250W。",
-        "正答。最大電力条件は負荷抵抗Rが内部抵抗10Ωに等しいとき。公式：P=\\frac{V^{2}}{4r}。代入： $P=\\frac{100^{2}}{4×10}$=250W。",
+        "正答。最大電力条件は負荷抵抗Rが内部抵抗10Ωに等しいとき。公式：P=$\\frac{V^{2}}{4r}$。代入： $P=\\frac{100^{2}}{4×10}$=250W。",
         "誤りポイント：最大電力条件の計算が不足している。正しくはR=10Ωとして $P=\\frac{100^{2}}{4×10}$=250W"
       ],
       "hasFigure": true,
@@ -920,13 +971,13 @@
       "part": "am",
       "number": 31,
       "page": 13,
-      "stem": "図の変圧器で、一次側コイルの巻き数が100回であるとき二次側 コイルの巻き数 [回] はどれか。ただし、変圧器での電力損失は無視できる 実効值1A ものとする。",
+      "stem": "図の変圧器で、一次側コイルの巻き数が100回であるとき二次側 コイルの巻き数 [回] はどれか。ただし、変圧器での電力損失は無視できるものとする。",
       "choices": [
         "20",
         "50",
         "100",
         "200",
-        "500 一次側二次側 10 Ω 実効值 2 V"
+        "500"
       ],
       "correct": [
         5
@@ -942,8 +993,12 @@
         "正答。この選択肢が設問の条件に合います。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p13.jpg",
-      "sourceImage": "Date/img/41/am_p13.jpg"
+      "image": "Date/img/41/41_am_q31.png",
+      "sourceImage": "Date/img/41/am_p13.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am32",
@@ -956,7 +1011,7 @@
         "入力インピーダンスが大きい。",
         "出力インピーダンスが小さい。",
         "脳波計の初段に使用されている。",
-        "バッファとして用いられる。 入力電圧 오 + 出力電圧"
+        "バッファとして用いられる。"
       ],
       "correct": [
         1
@@ -972,21 +1027,25 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p14.jpg",
-      "sourceImage": "Date/img/41/am_p14.jpg"
+      "image": "Date/img/41/41_am_q32.png",
+      "sourceImage": "Date/img/41/am_p14.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am33",
       "part": "am",
       "number": 33,
       "page": 14,
-      "stem": "図の回路においてD」 の LED (発光ダイオード) が発光している とき、同時に発光するのはどれか。",
+      "stem": "図の回路においてD1の LED (発光ダイオード) が発光している とき、同時に発光するのはどれか。",
       "choices": [
         "D2 と D3",
-        "D2 Ds",
+        "D2　と　D5",
         "D3 と D4",
         "D3 と D5",
-        "D4 D5 DI D2 D3 DA e Ds"
+        "D4　と　D5"
       ],
       "correct": [
         5
@@ -1002,8 +1061,13 @@
         "正答。この選択肢が設問の条件に合います。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p14.jpg",
-      "sourceImage": "Date/img/41/am_p14.jpg"
+      "image": "Date/img/41/41_am_q33.png",
+      "sourceImage": "Date/img/41/am_p14.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am34",
@@ -1095,9 +1159,13 @@
         "誤りポイント：設問の条件に合いません。正答は「Internet of Things」。",
         "誤りポイント：設問の条件に合いません。正答は「Internet of Things」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p16.jpg",
-      "sourceImage": "Date/img/41/am_p16.jpg"
+      "sourceImage": "Date/img/41/am_p16.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am37",
@@ -1155,9 +1223,12 @@
         "誤りポイント：設問の条件に合いません。正答は「100 GPa」。",
         "正答。この選択肢が設問の条件に合います。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p16.jpg",
-      "sourceImage": "Date/img/41/am_p16.jpg"
+      "sourceImage": "Date/img/41/am_p16.jpg",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am39",
@@ -1166,8 +1237,8 @@
       "page": 17,
       "stem": "UV-C (波長100~280mm) について正しいのはどれか。",
       "choices": [
-        "選択肢1（原本画像を確認）",
-        "赤外線である。 殺菌作用が強い。",
+        "赤外線である。 ",
+        "殺菌作用が強い。",
         "窓ガラスを通過する。",
         "太陽光に含まれていない。",
         "可視光線よりも波長が長い。"
@@ -1185,22 +1256,26 @@
         "誤りポイント：設問の条件に合いません。正答は「赤外線である。 殺菌作用が強い。」。",
         "誤りポイント：設問の条件に合いません。正答は「赤外線である。 殺菌作用が強い。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p17.jpg",
-      "sourceImage": "Date/img/41/am_p17.jpg"
+      "sourceImage": "Date/img/41/am_p17.jpg",
+      "kindCategories": [
+        "surgery_treatment",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am40",
       "part": "am",
       "number": 40,
       "page": 17,
-      "stem": "なめらかに動くピストンを持つシリンダの内部に気体を閉じ込めた。最初の状態から体積を倍、温度を倍にすると、圧力は何倍になるか。",
+      "stem": "なめらかに動くピストンを持つシリンダの内部に気体を閉じ込めた。最初の状態から体積を$\\frac{4}{3}$倍、温度を$\\frac{3}{2}$倍にすると、圧力は何倍になるか。",
       "choices": [
-        "選択肢1（原本画像を確認）",
-        "8",
+        "2",
+        "\\frac{9}{8}",
         "1",
-        "選択肢4（原本画像を確認）",
-        "選択肢5（原本画像を確認）"
+        "\\frac{8}{9}",
+        "\\frac{1}{2}"
       ],
       "correct": [
         2
@@ -1215,9 +1290,13 @@
         "誤りポイント：設問の条件に合いません。正答は「8」。",
         "誤りポイント：設問の条件に合いません。正答は「8」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p17.jpg",
-      "sourceImage": "Date/img/41/am_p17.jpg"
+      "sourceImage": "Date/img/41/am_p17.jpg",
+      "kindCategories": [
+        "surgery_treatment",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am41",
@@ -1245,9 +1324,13 @@
         "誤りポイント：設問の条件に合いません。正答は「Bq (ベクレル)」。",
         "誤りポイント：設問の条件に合いません。正答は「Bq (ベクレル)」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p17.jpg",
-      "sourceImage": "Date/img/41/am_p17.jpg"
+      "sourceImage": "Date/img/41/am_p17.jpg",
+      "kindCategories": [
+        "surgery_treatment",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am42",
@@ -1275,9 +1358,13 @@
         "誤りポイント：設問の条件に合いません。正答は「血液」。",
         "正答。この選択肢が設問の条件に合います。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p18.jpg",
-      "sourceImage": "Date/img/41/am_p18.jpg"
+      "sourceImage": "Date/img/41/am_p18.jpg",
+      "kindCategories": [
+        "surgery_treatment",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am43",
@@ -1365,9 +1452,14 @@
         "誤りポイント：設問の条件に合いません。正答は「熱電対」。",
         "誤りポイント：設問の条件に合いません。正答は「熱電対」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p19.jpg",
-      "sourceImage": "Date/img/41/am_p19.jpg"
+      "sourceImage": "Date/img/41/am_p19.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "surgery_treatment",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am46",
@@ -1395,9 +1487,14 @@
         "誤りポイント：設問の条件に合いません。正答は「圧電素子」。",
         "誤りポイント：設問の条件に合いません。正答は「圧電素子」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p19.jpg",
-      "sourceImage": "Date/img/41/am_p19.jpg"
+      "sourceImage": "Date/img/41/am_p19.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "imaging",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am47",
@@ -1425,9 +1522,12 @@
         "正答。この選択肢が設問の条件に合います。",
         "誤りポイント：設問の条件に合いません。正答は「セルロース」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p19.jpg",
-      "sourceImage": "Date/img/41/am_p19.jpg"
+      "sourceImage": "Date/img/41/am_p19.jpg",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am48",
@@ -1440,7 +1540,7 @@
         "体内で石灰化する。",
         "抜糸が不要である。",
         "柔軟性に欠ける。",
-        "引張強度が恒久的に維持される。 問題149】 標準 12 誘導心電図計測で右手と左手の電極を逆に装着したときの 現象はどれか。"
+        "引張強度が恒久的に維持される。"
       ],
       "correct": [
         3
@@ -1455,9 +1555,12 @@
         "誤りポイント：設問の条件に合いません。正答は「抜糸が不要である。」。",
         "誤りポイント：設問の条件に合いません。正答は「抜糸が不要である。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p20.jpg",
-      "sourceImage": "Date/img/41/am_p20.jpg"
+      "sourceImage": "Date/img/41/am_p20.jpg",
+      "kindCategories": [
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am49",
@@ -1466,11 +1569,11 @@
       "page": 20,
       "stem": "標準12誘導心電図計測で右手と左手の電極を逆に装着したときの 現象はどれか。",
       "choices": [
-        "第1誘導と第誘導の波形が入れ替わる。",
-        "第罰誘導の波形の極性が反転する。",
-        "aVr 誘導と aVr 誘導の波形が入れ替わる。",
-        "aVe 誘導の波形の極性が反転する。",
-        "単極胸部誘導の Vi 誘導と V 誘導の波形が入れ准わる。"
+        "第Ⅰ誘導と第Ⅱ誘導の波形が入れ替わる。",
+        "第Ⅲ誘導の波形の極性が反転する。",
+        "aVR 誘導と aVL 誘導の波形が入れ替わる。",
+        "aVF 誘導の波形の極性が反転する。",
+        "単極胸部誘導の V1 誘導と V2誘導の波形が入れ准わる。"
       ],
       "correct": [
         3
@@ -1485,9 +1588,14 @@
         "誤りポイント：設問の条件に合いません。正答は「aVr 誘導と aVr 誘導の波形が入れ替わる。」。",
         "誤りポイント：設問の条件に合いません。正答は「aVr 誘導と aVr 誘導の波形が入れ替わる。」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p20.jpg",
-      "sourceImage": "Date/img/41/am_p20.jpg"
+      "sourceImage": "Date/img/41/am_p20.jpg",
+      "kindCategories": [
+        "circulation",
+        "biometry_monitor",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am50",
@@ -1515,9 +1623,14 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p20.jpg",
-      "sourceImage": "Date/img/41/am_p20.jpg"
+      "sourceImage": "Date/img/41/am_p20.jpg",
+      "kindCategories": [
+        "biometry_monitor",
+        "surgery_treatment",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am51",
@@ -1545,9 +1658,13 @@
         "誤りポイント：設問の条件に合いません。正答は「內臓脂肪」。",
         "誤りポイント：設問の条件に合いません。正答は「內臓脂肪」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p21.jpg",
-      "sourceImage": "Date/img/41/am_p21.jpg"
+      "sourceImage": "Date/img/41/am_p21.jpg",
+      "kindCategories": [
+        "safety",
+        "imaging"
+      ]
     },
     {
       "id": "am52",
@@ -1575,9 +1692,13 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p21.jpg",
-      "sourceImage": "Date/img/41/am_p21.jpg"
+      "sourceImage": "Date/img/41/am_p21.jpg",
+      "kindCategories": [
+        "safety",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am53",
@@ -1606,8 +1727,12 @@
         "誤りポイント：設問の条件に合いません。正答は「音響陰影」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/am_p21.jpg",
-      "sourceImage": "Date/img/41/am_p21.jpg"
+      "image": "Date/img/41/41_am_q53.png",
+      "sourceImage": "Date/img/41/am_p21.jpg",
+      "kindCategories": [
+        "safety",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am54",
@@ -1635,9 +1760,14 @@
         "正答。この選択肢が設問の条件に合います。",
         "誤りポイント：設問の条件に合いません。正答は「連続波ドプラ法」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p22.jpg",
-      "sourceImage": "Date/img/41/am_p22.jpg"
+      "sourceImage": "Date/img/41/am_p22.jpg",
+      "kindCategories": [
+        "safety",
+        "imaging",
+        "basic_engineering"
+      ]
     },
     {
       "id": "am55",
@@ -1695,9 +1825,13 @@
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。",
         "誤りポイント：この選択肢は設問が求める「誤っているもの」ではありません。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p22.jpg",
-      "sourceImage": "Date/img/41/am_p22.jpg"
+      "sourceImage": "Date/img/41/am_p22.jpg",
+      "kindCategories": [
+        "safety",
+        "imaging"
+      ]
     },
     {
       "id": "am57",
@@ -1715,7 +1849,7 @@
       "correct": [
         2
       ],
-      "negative": false,
+      "negative": true,
       "range": "医療安全・規格・保守管理",
       "tip": "正答は「PET 装置」。医療安全・規格・保守管理の基本事項として、設問の条件に最も合うものを選びます。",
       "choiceNotes": [
@@ -1725,9 +1859,13 @@
         "誤りポイント：設問の条件に合いません。正答は「PET 装置」。",
         "誤りポイント：設問の条件に合いません。正答は「PET 装置」。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p23.jpg",
-      "sourceImage": "Date/img/41/am_p23.jpg"
+      "sourceImage": "Date/img/41/am_p23.jpg",
+      "kindCategories": [
+        "safety",
+        "imaging"
+      ]
     },
     {
       "id": "am58",
@@ -1766,11 +1904,11 @@
       "page": 23,
       "stem": "腹腔鏡下外科手術で気腹に用いられるガスはどれか。",
       "choices": [
-        "Oy",
-        "HB",
-        "Ns",
+        "O_{2}",
+        "H_{2}",
+        "N_{2}",
         "He",
-        "CO>"
+        "CO_{2}"
       ],
       "correct": [
         5
@@ -1785,9 +1923,12 @@
         "誤りポイント：設問の条件に合いません。正答は「CO>」。",
         "正答。この選択肢が設問の条件に合います。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/41/am_p23.jpg",
-      "sourceImage": "Date/img/41/am_p23.jpg"
+      "sourceImage": "Date/img/41/am_p23.jpg",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "am60",
