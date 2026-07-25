@@ -354,16 +354,29 @@ async function getExistingSha(context, owner, repo, path, branch) {
 
 function normalizeFiles(files) {
   if (!Array.isArray(files)) return [];
-  if (files.length > 20) throw new Error('一度に送信できる画像ファイルは20個までです。');
-  return files.map(f => ({
+  if (files.length > 100) throw new Error('一度に送信できるファイルは100件までです。');
+  const normalized = files.map(f => ({
     path: normalizeRepoPath(f.path),
     encoding: String(f.encoding || 'utf-8'),
     content: f.content,
     contentBase64: f.contentBase64,
     mime: String(f.mime || ''),
     sizeBytes: Number(f.sizeBytes || 0),
+    ownerKey: String(f.ownerKey || f.questionKey || ''),
+    questionKey: String(f.questionKey || ''),
     message: f.message
   }));
+  const owners = new Map();
+  for (const file of normalized) {
+    if (!file.path.startsWith('Date/img/')) continue;
+    const owner = file.ownerKey || file.questionKey;
+    const previous = owners.get(file.path);
+    if (previous && owner && previous !== owner) {
+      throw new GitHubApiError(`異なる問題の画像が同じパスを使用しています：${file.path}`, 400);
+    }
+    if (owner) owners.set(file.path, owner);
+  }
+  return normalized;
 }
 
 function normalizeJsonUpdates(jsonUpdates) {

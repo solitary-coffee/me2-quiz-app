@@ -238,6 +238,24 @@ header{
 }
 
 
+
+/* 問題ヒント */
+.question-hint-box{
+ margin:10px 0 14px;
+ border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));
+ border-radius:15px;
+ padding:12px;
+ background:color-mix(in srgb,var(--accent) 6%,var(--card));
+}
+.question-hint-box h4{
+ margin:0 0 6px;
+ color:var(--accent);
+}
+.question-hint-box p{
+ margin:0;
+ line-height:1.75;
+}
+
 /* 問題画像：タップ拡大 */
 .source-img{
  cursor:zoom-in;
@@ -2030,7 +2048,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
     <div id="bulkAiLog" class="dev-bulk-ai-log">まだ実行していません。</div>
   </section>
 </section>
-<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem math-content" id="stem"></div><div id="questionAnnotation"></div><div id="questionImage"></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><span id="devReviewControl" class="dev-review-control hidden"></span><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
+<section id="quizCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><div class="question-title" id="qMeta"></div><div id="standardWarning" aria-live="polite"></div><div class="progressbar"><div id="bar"></div></div><div class="stem math-content" id="stem"></div><div id="questionAnnotation"></div><div id="questionImage"></div><div id="questionHintPanel" class="question-hint-box hidden"><h4>ヒント</h4><p id="questionHintText" class="math-content"></p></div><div class="quiz-tools"><button class="ghost" id="bookmarkBtn" onclick="toggleBookmarkCurrent()">あとで見返す</button><button class="ghost" type="button" onclick="openWhiteboard()">✏️ 計算用ホワイトボード</button><button class="ghost" id="questionHintBtn" type="button" aria-expanded="false" onclick="toggleQuestionHint()">💡 ヒントを見る</button><span id="devReviewControl" class="dev-review-control hidden"></span><span class="pill">左の ○×△ は消去法メモです</span></div><div id="choices"></div><div id="result" class="result"></div><div class="row" style="margin-top:14px"><button id="prevBtn" class="ghost" onclick="prevQuestion()">前の問題へ</button><button id="nextBtn" class="secondary" onclick="nextQuestion()">進む</button><button class="ghost" onclick="uploadCurrentProgressToDb()">現在の進行をDBへ保存</button><button class="ghost" onclick="showMenu()">メニューへ</button></div></section>
 
 <div id="whiteboardModal" class="whiteboard-modal hidden" role="dialog" aria-modal="true" aria-labelledby="whiteboardTitle" onclick="if(event.target===this)closeWhiteboard()">
   <section class="whiteboard-dialog">
@@ -2056,10 +2074,16 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
         <button class="whiteboard-swatch" type="button" data-color="#7c3aed" aria-label="紫" onclick="setWhiteboardColor('#7c3aed')"></button>
       </div>
       <span class="whiteboard-control">
-        <label for="wbSize">太さ</label>
-        <input id="wbSize" type="range" min="1" max="24" step="1" value="4" aria-label="ペンの太さ">
-        <span class="whiteboard-size-label" id="wbSizeLabel">4px</span>
+        <label for="wbPenSize">ペン太さ</label>
+        <input id="wbPenSize" type="range" min="1" max="24" step="1" value="4" aria-label="ペンの太さ">
+        <span class="whiteboard-size-label" id="wbPenSizeLabel">4px</span>
       </span>
+      <span class="whiteboard-control">
+        <label for="wbEraserSize">消しゴム</label>
+        <input id="wbEraserSize" type="range" min="8" max="80" step="2" value="28" aria-label="消しゴムの大きさ">
+        <span class="whiteboard-size-label" id="wbEraserSizeLabel">28px</span>
+      </span>
+      <label class="whiteboard-control"><input id="wbPalmRejection" type="checkbox" checked> 手のひら誤反応防止</label>
       <button id="wbUndoBtn" class="ghost" type="button" onclick="whiteboardUndo()">↶ 描画を1手戻す</button>
       <button id="wbRedoBtn" class="ghost" type="button" onclick="whiteboardRedo()">↷ 描画を1手進む</button>
       <button class="danger" type="button" onclick="whiteboardClear()">全消去</button>
@@ -2081,7 +2105,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
       <div class="whiteboard-board">
         <div class="whiteboard-canvas-wrap">
           <canvas id="whiteboardCanvas" class="whiteboard-canvas" aria-label="計算用ホワイトボード"></canvas>
-          <p class="whiteboard-help">指・Apple Pencil・マウスで書けます。板書はこの演習中だけ問題ごとに一時保持されます。「前の問題へ」で戻った場合は復元されますが、メニューへ戻る・演習終了・ページ更新時には消去されます。</p>
+          <p class="whiteboard-help">手のひら誤反応防止がONの間は、Apple Pencil・スタイラス・マウスだけで描画し、指や手の接触を無視します。指で書く場合はOFFにしてください。板書はこの演習中だけ問題ごとに一時保持されます。「前の問題へ」で戻った場合は復元されますが、メニューへ戻る・演習終了・ページ更新時には消去されます。</p>
         </div>
       </div>
     </div>
@@ -2214,6 +2238,7 @@ const EXPLANATION_DEFINITION=String.raw`# ME2種 AI解説生成の定義
 - 画像が解答判断に必要な問題では、画像を参照した具体的な理由をchoiceNotesへ反映する。
 
 ## 10. 出力条件
+- hintは1つ。正答番号・正答選択肢・結論を直接書かず、公式・着眼点・途中の考え方だけを示す。
 - tipは1つ。
 - choiceNotesは選択肢数と同じ数。
 - tipとchoiceNotes以外の問題データを変更しない。
@@ -2269,7 +2294,10 @@ let whiteboardState={
   isOpen:false,
   tool:'pen',
   color:'#111827',
-  size:4,
+  penSize:4,
+  eraserSize:28,
+  palmRejection:true,
+  activePointerId:null,
   drawing:false,
   lastPoint:null,
   lastMid:null,
@@ -3810,6 +3838,7 @@ function bookmarkFromQuestion(q){
   range:q.range||'',
   stem:q.stem||'',
   annotation:questionAnnotation(q),
+  hint:String(q.hint||''),
   choices:q.choices||[],
   correct:q.correct||[],
   tip:q.tip||'',
@@ -3903,6 +3932,7 @@ function resetWhiteboardSession(){
  whiteboardState.undoStack=[];
  whiteboardState.redoStack=[];
  whiteboardState.drawing=false;
+ whiteboardState.activePointerId=null;
  whiteboardState.lastPoint=null;
  whiteboardState.lastMid=null;
  whiteboardState.pendingPoints=[];
@@ -3921,7 +3951,8 @@ function whiteboardSetDrawingStyle(ctx){
  if(!ctx)return;
  ctx.lineCap='round';
  ctx.lineJoin='round';
- ctx.lineWidth=Math.max(1,Number(whiteboardState.size)||4);
+ const activeSize=whiteboardState.tool==='eraser'?whiteboardState.eraserSize:whiteboardState.penSize;
+ ctx.lineWidth=Math.max(1,Number(activeSize)||4);
  ctx.globalCompositeOperation=whiteboardState.tool==='eraser'?'destination-out':'source-over';
  ctx.strokeStyle=whiteboardState.color;
  ctx.fillStyle=whiteboardState.color;
@@ -3995,15 +4026,21 @@ function resizeWhiteboardCanvas(keepContent=true){
  if(before)whiteboardDrawImage(before);
 }
 function updateWhiteboardControls(){
- const pen=$('wbPenBtn'),eraser=$('wbEraserBtn'),color=$('wbColor'),size=$('wbSize'),label=$('wbSizeLabel');
+ const pen=$('wbPenBtn'),eraser=$('wbEraserBtn'),color=$('wbColor');
+ const penSize=$('wbPenSize'),eraserSize=$('wbEraserSize');
+ const penLabel=$('wbPenSizeLabel'),eraserLabel=$('wbEraserSizeLabel');
+ const palm=$('wbPalmRejection');
  const undo=$('wbUndoBtn'),redo=$('wbRedoBtn');
  if(pen)pen.classList.toggle('active',whiteboardState.tool==='pen');
  if(eraser)eraser.classList.toggle('active',whiteboardState.tool==='eraser');
  if(pen)pen.classList.toggle('ghost',whiteboardState.tool!=='pen');
  if(eraser)eraser.classList.toggle('ghost',whiteboardState.tool!=='eraser');
  if(color)color.value=whiteboardState.color;
- if(size)size.value=String(whiteboardState.size);
- if(label)label.textContent=`${whiteboardState.size}px`;
+ if(penSize)penSize.value=String(whiteboardState.penSize);
+ if(eraserSize)eraserSize.value=String(whiteboardState.eraserSize);
+ if(penLabel)penLabel.textContent=`${whiteboardState.penSize}px`;
+ if(eraserLabel)eraserLabel.textContent=`${whiteboardState.eraserSize}px`;
+ if(palm)palm.checked=Boolean(whiteboardState.palmRejection);
  if(undo)undo.disabled=whiteboardState.undoStack.length===0;
  if(redo)redo.disabled=whiteboardState.redoStack.length===0;
  document.querySelectorAll('.whiteboard-swatch').forEach(btn=>{
@@ -4022,9 +4059,11 @@ function setWhiteboardColor(color){
 function whiteboardPoint(event){
  const canvas=whiteboardCanvas();
  const rect=canvas.getBoundingClientRect();
- const base=Math.max(1,Number(whiteboardState.size)||4);
+ const base=Math.max(1,Number(whiteboardState.tool==='eraser'?whiteboardState.eraserSize:whiteboardState.penSize)||4);
  const pressure=(event.pointerType==='pen'&&Number(event.pressure)>0)?Number(event.pressure):0.5;
- const width=Math.max(1,Math.min(32,base*(event.pointerType==='pen'?(0.55+pressure*0.9):1)));
+ const width=whiteboardState.tool==='eraser'
+  ?Math.max(8,Math.min(100,base))
+  :Math.max(1,Math.min(32,base*(event.pointerType==='pen'?(0.55+pressure*0.9):1)));
  return {
   x:Math.max(0,Math.min(rect.width,event.clientX-rect.left)),
   y:Math.max(0,Math.min(rect.height,event.clientY-rect.top)),
@@ -4064,9 +4103,13 @@ function scheduleWhiteboardRender(){
 }
 function whiteboardStart(event){
  if(event.pointerType==='mouse'&&event.button!==0)return;
+ if(whiteboardState.palmRejection&&event.pointerType==='touch')return;
+ if(event.pointerType==='touch'&&(Number(event.width)>28||Number(event.height)>28))return;
+ if(whiteboardState.activePointerId!==null&&whiteboardState.activePointerId!==event.pointerId)return;
  const canvas=whiteboardCanvas(),ctx=whiteboardContext();
  if(!canvas||!ctx)return;
  event.preventDefault();
+ whiteboardState.activePointerId=event.pointerId;
  whiteboardPushUndo();
  const point=whiteboardPoint(event);
  whiteboardState.drawing=true;
@@ -4081,17 +4124,21 @@ function whiteboardStart(event){
  try{canvas.setPointerCapture(event.pointerId)}catch(e){}
 }
 function whiteboardMove(event){
- if(!whiteboardState.drawing)return;
+ if(!whiteboardState.drawing||whiteboardState.activePointerId!==event.pointerId)return;
  event.preventDefault();
  const events=typeof event.getCoalescedEvents==='function'?event.getCoalescedEvents():[event];
- for(const ev of events)whiteboardState.pendingPoints.push(whiteboardPoint(ev));
+ for(const ev of events){
+  if(whiteboardState.palmRejection&&ev.pointerType==='touch')continue;
+  whiteboardState.pendingPoints.push(whiteboardPoint(ev));
+ }
  scheduleWhiteboardRender();
 }
 function whiteboardEnd(event){
- if(!whiteboardState.drawing)return;
+ if(!whiteboardState.drawing||whiteboardState.activePointerId!==event?.pointerId)return;
  flushWhiteboardPoints();
  const canvas=whiteboardCanvas();
  whiteboardState.drawing=false;
+ whiteboardState.activePointerId=null;
  whiteboardState.lastPoint=null;
  whiteboardState.lastMid=null;
  whiteboardState.pendingPoints=[];
@@ -4139,16 +4186,25 @@ function whiteboardClear(){
 }
 function initWhiteboard(){
  if(whiteboardState.initialized)return;
- const canvas=whiteboardCanvas(),color=$('wbColor'),size=$('wbSize');
+ const canvas=whiteboardCanvas(),color=$('wbColor');
+ const penSize=$('wbPenSize'),eraserSize=$('wbEraserSize'),palm=$('wbPalmRejection');
  if(!canvas)return;
  canvas.addEventListener('pointerdown',whiteboardStart);
  canvas.addEventListener('pointermove',whiteboardMove);
  canvas.addEventListener('pointerup',whiteboardEnd);
  canvas.addEventListener('pointercancel',whiteboardEnd);
- canvas.addEventListener('pointerleave',event=>{if(event.buttons===0)whiteboardEnd(event)});
+ canvas.addEventListener('pointerleave',event=>{if(event.buttons===0&&whiteboardState.activePointerId===event.pointerId)whiteboardEnd(event)});
  color?.addEventListener('input',event=>setWhiteboardColor(event.target.value));
- size?.addEventListener('input',event=>{
-  whiteboardState.size=Math.max(1,Math.min(24,Number(event.target.value)||4));
+ penSize?.addEventListener('input',event=>{
+  whiteboardState.penSize=Math.max(1,Math.min(24,Number(event.target.value)||4));
+  updateWhiteboardControls();
+ });
+ eraserSize?.addEventListener('input',event=>{
+  whiteboardState.eraserSize=Math.max(8,Math.min(80,Number(event.target.value)||28));
+  updateWhiteboardControls();
+ });
+ palm?.addEventListener('change',event=>{
+  whiteboardState.palmRejection=Boolean(event.target.checked);
   updateWhiteboardControls();
  });
  document.addEventListener('keydown',event=>{
@@ -4233,6 +4289,7 @@ function closeWhiteboard(keepForCurrentQuiz=true){
  if(whiteboardState.drawing)flushWhiteboardPoints();
  if(keepForCurrentQuiz&&whiteboardState.isOpen)whiteboardPersist();
  whiteboardState.drawing=false;
+ whiteboardState.activePointerId=null;
  whiteboardState.lastPoint=null;
  whiteboardState.lastMid=null;
  whiteboardState.pendingPoints=[];
@@ -4272,6 +4329,46 @@ function devToggleLegacyJisFields(){
  if(box)box.classList.toggle('hidden',!on);
  if(panel)panel.classList.toggle('is-disabled',!on);
 }
+
+function questionHint(q){
+ const explicit=String(q?.hint||'').trim();
+ if(explicit)return explicit;
+ const stem=String(q?.stem||'');
+ const range=String(q?.range||'');
+ if(q?.hasFigure&&q?.image){
+  if(/表|特異度|感度|陽性|陰性|人数|検査/.test(stem+range))return '表の行と列が何を表すか整理し、求める指標の「分子」と「分母」に当たる人数を確認しましょう。';
+  if(/回路|波形|グラフ|図/.test(stem+range))return '図の軸・単位・記号・接続関係を先に確認し、問題文で指定された量との対応を整理しましょう。';
+  return '画像内の見出し、単位、記号、矢印に注目し、問題文の条件と対応する箇所を探しましょう。';
+ }
+ if(/特異度/.test(stem))return '「実際に病気がない人」のうち、検査でも陰性になった割合を考えます。';
+ if(/感度/.test(stem))return '「実際に病気がある人」のうち、検査で陽性になった割合を考えます。';
+ if(/抵抗|電圧|電流|オーム/.test(stem+range))return '電圧・電流・抵抗のうち、既知の2量から残り1量を求める基本式を使います。単位もそろえましょう。';
+ if(/電力/.test(stem+range))return '電力を電圧と電流、または抵抗を含む形で表し、与えられた値に合う式を選びましょう。';
+ if(/周波数|周期/.test(stem+range))return '周波数と周期は互いに逆数の関係です。秒・ミリ秒の換算に注意しましょう。';
+ if(/百分率|%|割合|何%/.test(stem))return '求めたい量を分子、基準となる全体を分母にして、最後に100を掛ける形で整理しましょう。';
+ if(q?.negative)return '各選択肢を正しい知識に言い換えて確認し、1つだけ成立しないものを探しましょう。';
+ return '問題文の条件語・単位・対象となる装置や生体機能に注目し、最も直接関係する基本原理を思い出しましょう。';
+}
+function toggleQuestionHint(){
+ const panel=$('questionHintPanel');
+ const button=$('questionHintBtn');
+ if(!panel||!button)return;
+ const willShow=panel.classList.contains('hidden');
+ panel.classList.toggle('hidden',!willShow);
+ button.textContent=willShow?'ヒントを隠す':'💡 ヒントを見る';
+ button.setAttribute('aria-expanded',willShow?'true':'false');
+ if(willShow)scheduleMathTypeset(panel);
+}
+function resetQuestionHintUi(){
+ const panel=$('questionHintPanel');
+ const button=$('questionHintBtn');
+ if(panel)panel.classList.add('hidden');
+ if(button){
+  button.textContent='💡 ヒントを見る';
+  button.setAttribute('aria-expanded','false');
+ }
+}
+
 function renderQuestion(options={}){
  const keepWhiteboard=Boolean(options?.keepWhiteboard);
  if(!keepWhiteboard)closeWhiteboard(true);
@@ -4287,7 +4384,11 @@ function renderQuestion(options={}){
  if(annotationBox)annotationBox.innerHTML=questionAnnotationHtml(q);
  const qImg=$('questionImage');
  qImg.innerHTML=(q.hasFigure&&q.image)?`<details open><summary>図・表を表示（解答前に確認）</summary><p class="image-hint">この問題は図・表を使います。画像を確認して解答してください。</p><img class="source-img" src="${escapeHtml(assetUrl(q.image))}" alt="図表画像" /></details>`:'';
- const choices=$('choices');choices.innerHTML='';
+ const hintText=$('questionHintText');
+ if(hintText)hintText.innerHTML=mathTextHtml(questionHint(q));
+ resetQuestionHintUi();
+
+  const choices=$('choices');choices.innerHTML='';
  q.choices.forEach((c,i)=>{
   const n=i+1;
   const mark=eliminationMark(q,n);
@@ -5618,7 +5719,10 @@ async function devApplyImageCrop(){
   });
   if($('devImage'))$('devImage').value=dataUrl;
   if($('devHasFigure'))$('devHasFigure').checked=true;
-  if($('devPrImagePath'))$('devPrImagePath').value=devDefaultPrImagePath({...devReadForm(),image:dataUrl});
+  if($('devPrImagePath')){
+   $('devPrImagePath').value=devCanonicalPrImagePath({...devReadForm(),image:dataUrl},'png');
+   $('devPrImagePath').dataset.ownerKey=devImageOwnerKey();
+  }
   try{await saveDevQuestionFlag(devCurrentQuestion(),'imageChange',true,devExamId,devPart)}catch(_){}
   devCloseImageCropper();
   devRenderPreview();devRefreshPrPaths();
@@ -5799,6 +5903,7 @@ function devRenderEditor(){
  ${devEditorFlagBarHtml(editorFlags,'problem')}
  <div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み：AI再生成・画像切り取り・画像リセットは保護中です。手動編集とPR作成は可能です。編集開始時から確認済みだった問題を変更するPRには「確認済み問題の変更」と表記します。修正済みとは別の状態です。</div>
  <div class="dev-field"><label>問題文</label><textarea id="devStem" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.stem||''))}</textarea>${devLatexToolbarHtml('devStem')}</div>
+ <div class="dev-field"><label>ヒント（任意・正答を直接書かない）</label><textarea id="devHint" class="latex-input" data-latex-input="true" placeholder="例：使用する公式や、着目すべき単位・図表の行列を示します。">${escapeHtml(normalizeLatexBackslashes(q.hint||''))}</textarea>${devLatexToolbarHtml('devHint')}</div>
  <div class="dev-field"><label>問題文の注釈（任意）</label><textarea id="devAnnotation" class="latex-input" data-latex-input="true" placeholder="例：表記バグがあるため、正しい問題文は画像を参照してください。">${escapeHtml(normalizeLatexBackslashes(questionAnnotation(q)))}</textarea>${devLatexToolbarHtml('devAnnotation')}</div>
  <div class="latex-backslash-note"><b>日本語環境の入力について：</b>「¥」または「￥」に見えても、LaTeX入力欄では自動的にバックスラッシュ「&#92;」へ変換します。入力補助ボタンから記法を挿入することもできます。</div>
  <details class="dev-latex-help">
@@ -5849,12 +5954,16 @@ function devRenderEditor(){
  $('devEditorAdvanced').innerHTML=`<div class="dev-editor-confirmed-note dev-confirmed-protection ${editorFlags.confirmed?'':'hidden'}">確認済み保護中：選択肢・解説の変更は反映されません。先に確認済みフラグをOFFにしてください。</div>
  <div class="dev-field"><label>要点解説</label><textarea id="devTip" class="latex-input" data-latex-input="true">${escapeHtml(normalizeLatexBackslashes(q.tip||''))}</textarea>${devLatexToolbarHtml('devTip')}</div>${choices}`;
  devRenderPreview();
- ['devStem','devAnnotation','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
+ ['devStem','devHint','devAnnotation','devRange','devCorrect','devImage','devTip'].forEach(id=>$(id)?.addEventListener('input',devRenderPreview));
  ['devNegative','devHasFigure','devLegacyJisReview'].forEach(id=>$(id)?.addEventListener('change',devRenderPreview));
  $('devLegacyJis')?.addEventListener('change',()=>{devToggleLegacyJisFields();devRenderPreview();});
  $('devLegacyJisSource')?.addEventListener('input',devRenderPreview);
  (q.choices||[]).forEach((_,i)=>{$(`devChoice${i}`)?.addEventListener('input',devRenderPreview);$(`devNote${i}`)?.addEventListener('input',devRenderPreview)});
  devToggleLegacyJisFields();
+ if($('devPrImagePath')){
+  $('devPrImagePath').value='';
+  $('devPrImagePath').dataset.ownerKey='';
+ }
  devRefreshPrPaths();
  renderDevPrBatchList();
  devRenderKindEditor();
@@ -5871,9 +5980,11 @@ function devReadForm(){
  const kindCategories=kindChecks.length?normalizeKindIds(devSelectedKindCategories()):randomQuestionKindIdsFromJson(q);
  const standardWarning=devStandardWarningFromForm(q);
  const annotation=normalizeLatexBackslashes($('devAnnotation')?.value||'').trim();
+ const hint=normalizeLatexBackslashes($('devHint')?.value||'').trim();
  const out={...q,
   stem:normalizeLatexBackslashes($('devStem')?.value||''),
   annotation,
+  hint,
   range:$('devRange')?.value||'',
   correct:correct.length?correct:q.correct,
   negative:Boolean($('devNegative')?.checked),
@@ -5884,6 +5995,7 @@ function devReadForm(){
  delete out.questionAnnotation;
  delete out.questionNote;
  if(!annotation)delete out.annotation;
+ if(!hint)delete out.hint;
  if(standardWarning)out.standardWarning=standardWarning;
  else delete out.standardWarning;
  return out;
@@ -5898,7 +6010,7 @@ function devRenderPreview(){
   `<img class="source-img" src="${escapeHtml(assetUrl(imageRaw))}" onerror="this.onerror=null;this.hidden=true;if(!this.nextElementSibling||!this.nextElementSibling.classList.contains('status-warn'))this.insertAdjacentHTML('afterend','<p class=&quot;status-warn&quot;>画像を読み込めません。画像パスまたは画像データを確認してください。</p>')">`;
  const quizChoices=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return `<div class="choice-preview math-content ${isC?'correct':''}"><b>${n}.</b> ${mathTextHtml(c)} ${isC?'<span class="issue-badge high">正答</span>':''}</div>`;}).join('');
  const rows=(q.choices||[]).map((c,i)=>{const n=i+1,isC=q.correct.includes(n);return `<tr><th>${n}</th><td class="math-content">${mathTextHtml(c)}</td><td>${isC?'✅ 正答':'×'}</td><td class="math-content">${mathTextHtml((q.choiceNotes||[])[i]||'')}</td></tr>`;}).join('');
- if($('devQuizPreview'))$('devQuizPreview').innerHTML=`<h4>出題プレビュー</h4><div class="question-title">${escapeHtml(devExamId||'')} ${partName(devPart||'am')} / ${escapeHtml(q.range||'未設定')}</div>${standardWarningHtml(q)}<div class="stem math-content">${mathTextHtml(q.stem||'')}</div>${questionAnnotationHtml(q)}${img}<div style="margin-top:10px">${quizChoices}</div>`;
+ if($('devQuizPreview'))$('devQuizPreview').innerHTML=`<h4>出題プレビュー</h4><div class="question-title">${escapeHtml(devExamId||'')} ${partName(devPart||'am')} / ${escapeHtml(q.range||'未設定')}</div>${standardWarningHtml(q)}<div class="stem math-content">${mathTextHtml(q.stem||'')}</div>${questionAnnotationHtml(q)}${img}<div class="question-hint-box"><h4>ヒント</h4><p class="math-content">${mathTextHtml(questionHint(q))}</p></div><div style="margin-top:10px">${quizChoices}</div>`;
  if($('devExplainPreview'))$('devExplainPreview').innerHTML=`<h4>解説プレビュー</h4><p><b>正答：</b>${correctLabel(q)} / <b>範囲：</b>${escapeHtml(q.range||'未設定')}</p>${standardWarningHtml(q)}${questionAnnotationHtml(q)}<p><b>画像パス：</b><span class="code">${escapeHtml(q.image||'-')}</span></p><p class="math-content"><b>要点解説：</b>${mathTextHtml(q.tip||'')}</p><table class="explain-table"><thead><tr><th>番号</th><th>選択肢</th><th>判定</th><th>解説</th></tr></thead><tbody>${rows}</tbody></table>`;
  scheduleMathTypeset(document.querySelector('.dev-preview-section'));
 }
@@ -5976,6 +6088,7 @@ function devAiQuestionPayload(q){
   range:q.range||'',
   stem:q.stem||'',
   annotation:questionAnnotation(q),
+  hint:String(q.hint||''),
   choices:q.choices||[],
   correct:q.correct||[],
   negative:!!q.negative,
@@ -6088,6 +6201,7 @@ async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={
    }
    if(!data.tip||!Array.isArray(data.choiceNotes))throw new Error('AI応答の形式が不正です。');
    return {
+    hint:normalizeLatexBackslashes(String(data.hint||'')),
     tip:normalizeLatexBackslashes(String(data.tip||'')),
     choiceNotes:data.choiceNotes.map(x=>normalizeLatexBackslashes(String(x||''))).slice(0,(q.choices||[]).length),
     imageUsed:Boolean(data.imageUsed)
@@ -6114,6 +6228,7 @@ async function devRegenerateExplanation(){
   const definition=$('devExplanationDefinition')?.value||getExplanationDefinition();
   setExplanationDefinition(definition);
   const result=await devRequestAiExplanation(q,definition,{attempts:2,timeout:60000});
+  q.hint=result.hint||q.hint||'';
   q.tip=result.tip;
   q.choiceNotes=result.choiceNotes;
   q=devEnsureChoiceNotes(q);
@@ -6264,10 +6379,59 @@ function devDataUrlInfo(dataUrl){
  const sizeBytes=Math.floor(base64.length*3/4)-padding;
  return {mime,ext:devImageExtension(mime),base64,sizeBytes};
 }
-function devDefaultPrImagePath(q){
+
+function devImageOwnerKey(examId=devExamId,part=devPart,q=devCurrentQuestion(),index=Number($('devQuestionSelect')?.value||0)){
+ const number=devPad2(q?.number||index+1);
+ const id=String(q?.id||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,48);
+ return `${String(examId)}__${String(part)}__q${number}${id?`__${id}`:''}`;
+}
+function devOriginalImagePathForCurrentQuestion(q=devCurrentQuestion()){
+ const input=$('devImage');
+ const original=String(input?.dataset?.defaultImage??q?.image??'').trim();
+ if(original && !/^data:/i.test(original) && safeAssetPath(original).startsWith('Date/img/')){
+  return safeAssetPath(original);
+ }
+ return '';
+}
+function devCanonicalPrImagePath(q,extOverride=''){
+ const original=devOriginalImagePathForCurrentQuestion(q);
+ if(original)return original;
  const info=devDataUrlInfo(q?.image);
- const ext=info?.ext || 'png';
- return `Date/img/${devExamId}/${devExamId}_${devPart}_q${devPad2(q?.number)}.${ext}`;
+ const ext=String(extOverride||info?.ext||'png').replace(/[^a-z0-9]/gi,'').toLowerCase()||'png';
+ const owner=devImageOwnerKey(devExamId,devPart,q);
+ return `Date/img/${devExamId}/${owner}.${ext}`;
+}
+function devSetCurrentPrImagePath(q=devReadForm(),force=false){
+ const input=$('devPrImagePath');
+ if(!input)return '';
+ const imageInfo=devDataUrlInfo(q?.image);
+ const owner=devImageOwnerKey(devExamId,devPart,q);
+ if(!imageInfo){
+  input.value='';
+  input.dataset.ownerKey=owner;
+  return '';
+ }
+ const canonical=devCanonicalPrImagePath(q,imageInfo.ext);
+ if(force||input.dataset.ownerKey!==owner||!String(input.value||'').trim()){
+  input.value=canonical;
+ }
+ input.dataset.ownerKey=owner;
+ return safeAssetPath(input.value||canonical);
+}
+function devAssertUniqueBatchImagePath(path,currentKey,batch=devPrBatch()){
+ const normalized=safeAssetPath(path);
+ const conflict=(batch.items||[]).find(item=>
+  item?.key!==currentKey &&
+  safeAssetPath(item?.imagePath||item?.imageFile?.path||'')===normalized
+ );
+ if(conflict){
+  throw new Error(`画像送信先が別問題と重複しています：${normalized}\n重複対象：${conflict.label||conflict.key}\n現在の問題専用パスへ戻してから再度反映してください。`);
+ }
+ return normalized;
+}
+
+function devDefaultPrImagePath(q){
+ return devCanonicalPrImagePath(q);
 }
 function devQuestionLabel(examId=devExamId,part=devPart,q={}){
  const rec=getExamRecord(examId);
@@ -6522,10 +6686,9 @@ function devRefreshPrPaths(){
  const q=devReadForm();
  const jsonPath=devCurrentJsonPath();
  const imageInfo=devDataUrlInfo(q.image);
- const imagePath=imageInfo?($('devPrImagePath')?.value || devDefaultPrImagePath(q)):'';
+ const imagePath=imageInfo?devSetCurrentPrImagePath(q,false):'';
  if($('devPrJsonPath'))$('devPrJsonPath').textContent=jsonPath;
  if($('devPrImagePathPreview'))$('devPrImagePathPreview').textContent=imagePath || '画像追加時のみ';
- if($('devPrImagePath') && imageInfo && !$('devPrImagePath').value)$('devPrImagePath').value=imagePath;
  if($('devPrTitle') && !$('devPrTitle').value)$('devPrTitle').value=devBuildPrDefaultTitle();
  const batch=devPrBatch();
  if($('devPrBody') && !$('devPrBody').value && batch.items.length)$('devPrBody').value=devBuildPrDefaultBodyFromItems(batch.items);
@@ -6541,9 +6704,17 @@ async function devPrepareCurrentBatchItem(){
  let imagePath='';
  let imageFile=null;
  if(imageInfo){
-  imagePath=safeAssetPath($('devPrImagePath')?.value || devDefaultPrImagePath(q));
-  if(!imagePath.startsWith('Date/img/'))throw new Error('画像PR先パスは Date/img/ から始めてください。');
   const currentKey=devPrItemKey(devExamId,devPart,currentIndex);
+  const canonical=devCanonicalPrImagePath(q,imageInfo.ext);
+  const entered=safeAssetPath($('devPrImagePath')?.value||'');
+  imagePath=entered&&entered===canonical?entered:canonical;
+  if($('devPrImagePath')){
+   $('devPrImagePath').value=imagePath;
+   $('devPrImagePath').dataset.ownerKey=devImageOwnerKey(devExamId,devPart,q,currentIndex);
+  }
+  if(!imagePath.startsWith('Date/img/'))throw new Error('画像PR先パスは Date/img/ から始めてください。');
+  imagePath=devAssertUniqueBatchImagePath(imagePath,currentKey);
+
   const storageKey=devImageStorageKey(currentKey);
   await devStorePendingImage(storageKey,{
    mime:imageInfo.mime,
@@ -6562,6 +6733,8 @@ async function devPrepareCurrentBatchItem(){
    mime:imageInfo.mime,
    ext:imageInfo.ext,
    sizeBytes:imageInfo.sizeBytes,
+   ownerKey:devImageOwnerKey(devExamId,devPart,q,currentIndex),
+   questionKey:currentKey,
    message:`${devQuestionLabel(devExamId,devPart,q)}：画像追加・差し替え`
   };
  }
@@ -6782,6 +6955,19 @@ async function devBuildBatchPayload(){
    });
   }
  }
+
+ const imageOwners=new Map();
+ for(const item of batch.items){
+  const path=safeAssetPath(item?.imagePath||item?.imageFile?.path||'');
+  if(!path)continue;
+  const owner=String(item?.imageFile?.ownerKey||item?.key||'');
+  const previous=imageOwners.get(path);
+  if(previous&&previous!==owner){
+   throw new Error(`一括PR内で画像パスが重複しています：${path}\n異なる問題の画像が同じ送信先を使用しています。各問題を開き直し、「この問題に反映」を押してください。`);
+  }
+  imageOwners.set(path,owner);
+ }
+
  const title=String($('devPrTitle')?.value||devBuildPrDefaultTitle()).trim();
  const bodyBase=String($('devPrBody')?.value||devBuildPrDefaultBodyFromItems(batch.items)).trim();
  const body=devEnsurePrConfirmationNotation(bodyBase,batch.items);
@@ -7552,7 +7738,7 @@ function devBulkAiEditSummary(existing=''){
 }
 function devUpsertBulkAiBatchItem(batch,target,q){
  const key=devPrItemKey(target.examId,target.part,target.index);
- const patch={tip:String(q.tip||''),choiceNotes:(q.choiceNotes||[]).map(String)};
+ const patch={hint:String(q.hint||''),tip:String(q.tip||''),choiceNotes:(q.choiceNotes||[]).map(String)};
  const idx=batch.items.findIndex(item=>item.key===key);
  if(idx>=0){
   const item=batch.items[idx];
@@ -7631,7 +7817,7 @@ async function devRunBulkAiRegeneration(){
    try{
     const source=devEnsureChoiceNotes(devClone(target.q));
     const result=await devRequestAiExplanation(source,definition,{attempts:3,timeout:90000});
-    const updated=devEnsureChoiceNotes({...source,tip:result.tip,choiceNotes:result.choiceNotes});
+    const updated=devEnsureChoiceNotes({...source,hint:result.hint||source.hint||'',tip:result.tip,choiceNotes:result.choiceNotes});
     target.pack.questions[target.index]=updated;
     partsCache[`${target.examId}_${target.part}`]=target.pack;
     if(String(devExamId)===target.examId&&devPart===target.part&&devPack){

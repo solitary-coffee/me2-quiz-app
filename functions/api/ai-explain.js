@@ -129,7 +129,7 @@ async function verifyDevSession(context) {
 function cleanQuestion(q) {
   const choices = Array.isArray(q?.choices) ? q.choices.map(x => String(x || '').slice(0, 500)) : [];
   const correct = Array.isArray(q?.correct) ? q.correct.map(Number).filter(n => n >= 1 && n <= choices.length) : [];
-  return { number: q?.number, range: String(q?.range || '').slice(0, 120), stem: String(q?.stem || '').slice(0, 1200), annotation: String(q?.annotation || q?.questionAnnotation || q?.questionNote || '').slice(0, 1000), choices, correct, negative: Boolean(q?.negative), hasFigure: Boolean(q?.hasFigure), image: String(q?.image || '').slice(0, 500), tip: String(q?.tip || '').slice(0, 1000), choiceNotes: Array.isArray(q?.choiceNotes) ? q.choiceNotes.map(x => String(x || '').slice(0, 800)) : [] };
+  return { number: q?.number, range: String(q?.range || '').slice(0, 120), stem: String(q?.stem || '').slice(0, 1200), annotation: String(q?.annotation || q?.questionAnnotation || q?.questionNote || '').slice(0, 1000), choices, correct, negative: Boolean(q?.negative), hasFigure: Boolean(q?.hasFigure), image: String(q?.image || '').slice(0, 500), hint: String(q?.hint || '').slice(0, 1000), tip: String(q?.tip || '').slice(0, 1000), choiceNotes: Array.isArray(q?.choiceNotes) ? q.choiceNotes.map(x => String(x || '').slice(0, 800)) : [] };
 }
 function cleanImageInput(value) {
   const raw = String(value || '').trim();
@@ -157,6 +157,7 @@ ${definition}
 # 出力形式
 必ずJSONのみで返してください。
 {
+  "hint": "正答を直接示さず、公式・着眼点・考え方を示すヒント",
   "tip": "要点解説",
   "choiceNotes": ["選択肢1の解説", "選択肢2の解説", "..."]
 }
@@ -176,7 +177,8 @@ function normalizeAiResult(obj, q) {
   while (choiceNotes.length < q.choices.length) choiceNotes.push('');
   if (choiceNotes.length > q.choices.length) choiceNotes = choiceNotes.slice(0, q.choices.length);
   if (!tip || choiceNotes.some(x => !x)) throw new Error('AI応答に空欄があります。もう一度実行してください。');
-  return { tip, choiceNotes };
+  const hint = String(result?.hint || '').trim();
+  return { hint, tip, choiceNotes };
 }
 async function callOpenAI(env, q, definition) {
   const apiKey = env.OPENAI_API_KEY || env.ME2_OPENAI_API_KEY || '';
@@ -198,7 +200,7 @@ async function callOpenAI(env, q, definition) {
       { role: 'system', content: 'You generate concise, accurate Japanese explanations for ME2 exam questions. Follow the user-provided definition exactly. Return valid JSON only.' },
       { role: 'user', content: userContent }
     ],
-    text: { format: { type: 'json_schema', name: 'me2_explanation', schema: { type: 'object', additionalProperties: false, properties: { tip: { type: 'string' }, choiceNotes: { type: 'array', items: { type: 'string' } } }, required: ['tip', 'choiceNotes'] }, strict: true } }
+    text: { format: { type: 'json_schema', name: 'me2_explanation', schema: { type: 'object', additionalProperties: false, properties: { hint: { type: 'string' }, tip: { type: 'string' }, choiceNotes: { type: 'array', items: { type: 'string' } } }, required: ['hint', 'tip', 'choiceNotes'] }, strict: true } }
   };
   const r = await fetch('https://api.openai.com/v1/responses', { method: 'POST', headers: { 'content-type': 'application/json', 'authorization': `Bearer ${apiKey}` }, body: JSON.stringify(payload) });
   const data = await r.json().catch(() => ({}));
