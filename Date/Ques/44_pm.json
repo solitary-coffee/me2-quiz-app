@@ -229,7 +229,7 @@
       "stem": "血液について正しいのはどれか。",
       "hint": "正しいものを探す問題です。血液について正しい内容という条件に対し、リンパ球は白血球の一種で、全白血球数の20〜40%を占める。免疫応答に関与する。 という関係を満たすかで絞り込みましょう。",
       "choices": [
-        "体積の約 は血球成分である。",
+        "体積の約$\\frac{1}{4}$は血球成分である。",
         "血液中の血小板数は約1.5 万〜4 万／μL である。",
         "体重60 kg の成人の循環血液量は約10 L である。",
         "リンパ球数は全白血球数の20 ～40% を占める。",
@@ -249,7 +249,11 @@
         "誤りポイント：「すべてのタンパク質」が誤り。血清は凝固後の血液から得られ、フィブリノゲンなどの凝固因子を含まないが、アルブミンなどは含む。正しくは「リンパ球数は全白血球数の20～40%を占める」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "basic_medicine"
+      ]
     },
     {
       "id": "pm09",
@@ -321,10 +325,10 @@
       "part": "pm",
       "number": 11,
       "page": 6,
-      "stem": "質量をM、長さをL、時間をT で示すと、面積は［L2］、速さは ［L ∙T-1］となる。圧力を表すのはどれか。",
+      "stem": "質量をM、長さをL、時間をT で示すと、面積は［$L^{2}$］、速さは ［$L ∙T^{-1}$］となる。圧力を表すのはどれか。",
       "hint": "流れの問題では、圧力差・流量・抵抗の対応を整理します。単位をそろえ、比例する量と反比例する量を先に分けましょう。",
       "choices": [
-        "［M ∙T-1］",
+        "［$M ∙T-1$］",
         "［M ∙T-2］",
         "［M ∙L ∙T］",
         "［M ∙L ∙T-1］",
@@ -492,7 +496,7 @@
         "40",
         "60",
         "80",
-        "100 50 V R 30 V VC C L"
+        "100"
       ],
       "correct": [
         3
@@ -508,7 +512,12 @@
         "誤りポイント：「100 50 V R 30 V VC C L」は設問条件に合わない。正しくは「60」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm17",
@@ -1456,7 +1465,7 @@
         "血液透析用と同じものを用いる。",
         "体温に近い温度が適する。",
         "落差を利用して注液・排液する。",
-        "注液量と排液量を比較する。 2 3"
+        "注液量と排液量を比較する。 "
       ],
       "correct": [
         2
@@ -1472,7 +1481,11 @@
         "この選択肢は誤りではない。注液量と排液量を比べることで、除水量や透析の状態を確認する。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "dialysis"
+      ]
     },
     {
       "id": "pm48",
@@ -1788,9 +1801,12 @@
         "この選択肢は誤りではない。絶縁のいずれか1つの短絡は、絶縁破壊を想定した単一故障状態の例である。",
         "この選択肢は誤りではない。沿面距離または空間距離のいずれか1つの短絡は、絶縁に関する単一故障状態の例である。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/pm_p21.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm58",
