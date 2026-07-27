@@ -129,7 +129,7 @@
         "この選択肢は誤りではない。EはT波に相当し、心室の再分極を示す。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/43_pm_q27.png",
+      "image": "Date/img/44/44__am__q04__am04.png",
       "explanationLevel": "phrase_point_with_choice_role_v3",
       "kindCategories": [
         "circulation"
@@ -546,7 +546,7 @@
         "正答。EはT波に相当し、心室の再分極過程を表す。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/43_pm_q27.png",
+      "image": "Date/img/44/44__am__q17__am17.png",
       "explanationLevel": "phrase_point_with_choice_role_v3",
       "kindCategories": [
         "medical_electronics"
@@ -875,9 +875,12 @@
         "誤りポイント：「ガンマカメラ」は設問条件に合わない。正しくは「PET／CT」。この選択肢はγ線を検出して核医学画像を得る装置。",
         "誤りポイント：「X 線血管撮影装置（アンギオグラフィ装置）」は設問条件に合わない。正しくは「PET／CT」。この選択肢はX線透視下で造影剤を用いて血管を画像化する装置。 この選択肢は波長の短い電磁波。透過性が高く画像診断に用いられる。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/44/am_p11.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "imaging"
+      ]
     },
     {
       "id": "am28",
@@ -1387,7 +1390,7 @@
         "センシングインジケータは自発の心電図を検出すると点灯する。",
         "出力ダイヤル（OUTPUT）は電気刺激の回数を設定する。",
         "感度ダイヤル（SENSITIVITY）は心臓が反応する電圧を設定する。",
-        "ペーシングインジケータはバッテリー残量が少なくなると点滅する。 1 2"
+        "ペーシングインジケータはバッテリー残量が少なくなると点滅する。 "
       ],
       "correct": [
         2
@@ -1725,8 +1728,11 @@
         "誤りポイント：「3.0」は設問の規格値として不適切。正しくは「2.3」。"
       ],
       "hasFigure": true,
-      "image": "Date/img/44/am_p21.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/44/44__am__q54__am54.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "am55",
@@ -1740,7 +1746,7 @@
         "25 A を流して測定した。",
         "100 V を印加して測定した。",
         "電流を10 秒間流して測定した。",
-        "50 Hz の交流電流を流して測定した。 x ［m］ 患者"
+        "50 Hz の交流電流を流して測定した。"
       ],
       "correct": [
         3
@@ -1756,7 +1762,11 @@
         "この選択肢は誤りではない。50 Hz の交流電流を流して測定するのは、実使用に近い条件で接地線のインピーダンスを確認する方法である。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "am56",

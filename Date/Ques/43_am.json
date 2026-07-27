@@ -53,7 +53,7 @@
         "副交感神経の興奮は血圧を上昇させる。",
         "収縮期血圧は年齢と共に低下する。",
         "血圧は睡眠中がもっとも高い。",
-        "血圧は呼気時に低下する。 1950 1960 1970 1980 1990 2000 2010 2020 0 100 200 300 A 死亡率（10 万人当たりの１年間の死者数）"
+        "血圧は呼気時に低下する。"
       ],
       "correct": [
         1
@@ -69,7 +69,11 @@
         "誤りポイント：「低下」が誤り。一般に血圧は呼吸性変動を示し、単純に呼気時低下とはいえない。 正しくは「座位の収縮期血圧は上腕より下腿の方が高い」。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "am03",
@@ -498,7 +502,7 @@
         "誤りポイント：回路図の抵抗比と入力電圧の関係の読み取りが誤り。正しくは -4 V。"
       ],
       "hasFigure": true,
-      "image": "Date/img/46/46_am_q60.png",
+      "image": "Date/img/43/43__am__q16__am16.png",
       "explanationLevel": "phrase_point_with_choice_role_v3",
       "kindCategories": [
         "medical_electronics"
@@ -551,7 +555,7 @@
         "本物のサイトに偽装したWeb サイトにメール等で誘導し，アカウント 情報やクレジット番号などの個人情報を詐取する。",
         "攻撃対象がよく利用するWeb サイトを改ざんし，アクセスした際に ウイルスを感染させる。",
         "極めて多量のアクセスを集中させて，相手のシステムを正常に稼働でき ない状態に陥らせる。",
-        "ソフトウェアの脆弱性が見つかってから，その対策が行われるまでの 間に，脆弱性を利用して攻撃を行う。 F C B 9 1 5 ＋"
+        "ソフトウェアの脆弱性が見つかってから，その対策が行われるまでの 間に，脆弱性を利用して攻撃を行う。 "
       ],
       "correct": [
         5
@@ -567,7 +571,13 @@
         "正答。ソフトウェアの脆弱性が見つかってから対策されるまでの間、その脆弱性を利用する攻撃である。未修正の弱点を突く点がゼロデイ攻撃の特徴。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "infection",
+        "basic_medicine",
+        "medical_electronics"
+      ]
     },
     {
       "id": "am19",
@@ -901,7 +911,7 @@
         "光増幅作用",
         "光化学作用",
         "光音響作用",
-        "光解離作用 10 mm"
+        "光解離作用 "
       ],
       "correct": [
         2
@@ -917,7 +927,11 @@
         "この選択肢は誤りではない。光解離作用はレーザ光で分子結合を切る作用で、組織破壊に関係する。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "am30",
@@ -965,7 +979,7 @@
         "aVR 誘導は第Ⅰ誘導と第Ⅱ誘導の和である。",
         "aVL 誘導はV1 誘導とV2 誘導の和である。",
         "aVR 誘導とaVL 誘導とaVF 誘導の和はゼロである。",
-        "V1 誘導とV6 誘導の和はゼロである。 造影糸"
+        "V1 誘導とV6 誘導の和はゼロである。"
       ],
       "correct": [
         4
@@ -1386,9 +1400,13 @@
         "この選択肢は誤りではない。防火扉の閉鎖で電波が遮へいされ、受信状態が悪化することがある。建物構造物は無線伝送の障害要因になる。",
         "この選択肢は誤りではない。送信アンテナケーブルのコネクタ外れは送信不良の典型的な原因。アンテナ系の接続不良はまず点検対象となる。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/am_p16.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety",
+        "biometry_monitor"
+      ]
     },
     {
       "id": "am45",
@@ -1647,7 +1665,7 @@
         "補助酸素ボンベの残圧が1 MPa であった。",
         "回路を大気開放したときに酸素濃度計が100% を示した。",
         "酸素の供給を停止すると亜酸化窒素の供給が停止した。",
-        "二酸化炭素吸収装置内に吸収剤が約 程度充填されていた。",
+        "二酸化炭素吸収装置内に吸収剤が約$\\frac{1}{4}$程度充填されていた。",
         "回路内圧点検時にAPL 弁を開いても回路内圧は変化しなかった。"
       ],
       "correct": [
@@ -1684,7 +1702,7 @@
         "本体外観の傷の有無の確認",
         "電極パッドの使用期限の確認",
         "動作状態表示ランプの状態の確認",
-        "電極ケーブル接続部の接触抵抗値の測定 1 4"
+        "電極ケーブル接続部の接触抵抗値の測定 "
       ],
       "correct": [
         5
@@ -1780,7 +1798,7 @@
         "BF 形装着部のF はフローティングを意味する。",
         "BF 形装着部で体表への患者漏れ電流（正常状態）の許容値（交流）は最小 感知電流の に定めている。",
         "CF 形装着部を持つME 機器は直接心臓に適用できる。",
-        "全ての形別分類で，単一故障状態の患者漏れ電流は正常状態の10 倍まで 許容される。 1 10"
+        "全ての形別分類で，単一故障状態の患者漏れ電流は正常状態の10 倍まで 許容される。 "
       ],
       "correct": [
         5
@@ -1831,8 +1849,13 @@
         "この選択肢は誤りではない。心電図や除細動関連の表示として用いられる図記号である。"
       ],
       "hasFigure": true,
-      "image": "Date/img/43/am_p21.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "image": "Date/img/43/43__am__q58__am58.png",
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety",
+        "circulation",
+        "surgery_treatment"
+      ]
     },
     {
       "id": "am59",

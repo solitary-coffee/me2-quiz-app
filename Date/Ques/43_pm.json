@@ -186,7 +186,7 @@
       ],
       "hasFigure": true,
       "explanationLevel": "phrase_point_with_choice_role_v3",
-      "image": "Date/img/46/46_am_q60.png",
+      "image": "Date/img/43/43__pm__q06__pm06.png",
       "kindCategories": [
         "circulation",
         "imaging",
@@ -416,14 +416,14 @@
       "part": "pm",
       "number": 14,
       "page": 6,
-      "stem": "v（t）=100 2 sin（100 πt） ［V］の電圧を100 Ωの抵抗器に加えた。抵抗器 で消費される電力［W］はどれか。",
+      "stem": "$v（t）=100\\sqrt{2}sin（100 πt） $［V］の電圧を100 Ωの抵抗器に加えた。抵抗器 で消費される電力［W］はどれか。",
       "hint": "問題文の値（2s、100Ω）を使います。基本式は V=IR です。求める量に合わせて I=V/R、R=V/I などへ変形し、mAやkΩをA・Ωへ直してから代入します。",
       "choices": [
         "50",
         "100",
         "140",
         "200",
-        "300 R 1 R 2 R 3 R 4 1 kΩ 80 V a b"
+        "300 "
       ],
       "correct": [
         2
@@ -439,7 +439,11 @@
         "誤りポイント：「300 R 1 R 2 R 3 R 4 1 kΩ 80 V a b」が誤り。正しくは「100」。電力計算では不要な部品名や記号は使わず、与えられた電圧の実効値と抵抗値だけを用いる。代入結果は100W。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm15",
@@ -483,11 +487,11 @@
       "stem": "図の回路の出力電圧vo はどれか。ただし，演算増幅器は理想演算 増幅器とする。",
       "hint": "回路図の直列・並列、接地点、測定点を先に追います。電流が同じ枝と電圧が同じ節点を区別しましょう。",
       "choices": [
-        "−106 v",
+        "−10^{6} v",
         "−v",
         "0",
         "v",
-        "106 v R C 入力 出力 ＋ － 1 MΩ v vo"
+        "10^{6} v "
       ],
       "correct": [
         4
@@ -609,8 +613,8 @@
       "choices": [
         "パイプの壁面周辺部を除き，流速は一様である。",
         "流速が遅くなるとレイノルズ数が大きくなる。",
-        "管の流体抵抗はD 2 に反比例する。",
-        "管の流体抵抗はL 2 に比例する。",
+        "管の流体抵抗は$D^{2}$に反比例する。",
+        "管の流体抵抗は$L^{2}$ に比例する。",
         "管の流体抵抗は粘度に比例する。"
       ],
       "correct": [
@@ -627,7 +631,12 @@
         "正答。管の流体抵抗は粘度に比例する。層流のポアズイユの法則で，粘度が大きいほど流れにくくなる。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm21",
@@ -1316,9 +1325,14 @@
         "この選択肢は誤りではない。最高温度の表示を保持する機能は、測定後に値を読み取りやすくするための保持機能である。電子体温計の一般的な機能である。",
         "正答。誤りポイント：「約3分かかる」が誤り。腋窩式電子体温計の予測式は短時間で予測値を表示し、体温と平衡するにはさらに時間がかかる。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p16.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "biometry_monitor",
+        "basic_medicine",
+        "medical_electronics"
+      ]
     },
     {
       "id": "pm43",
@@ -1597,9 +1611,12 @@
         "誤りポイント：「体表面から受ける商用交流による電撃は防止できない」が誤り。正しくは、等電位接地は電位差による電撃の防止に有効である。",
         "誤りポイント：「患者の周囲5ｍ以内で露出している金属部を接地しなければならない」が誤り。正しくは、患者周囲の接触可能な導電部を等電位接地の対象とする。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "image": "Date/img/43/pm_p19.jpg",
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety"
+      ]
     },
     {
       "id": "pm52",

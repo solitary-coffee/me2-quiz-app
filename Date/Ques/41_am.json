@@ -990,7 +990,7 @@
         "この選択肢は誤りではない。自己入力のNANDでAとBはそれぞれ反転されるが、XORにはならない。"
       ],
       "hasFigure": true,
-      "image": "Date/img/41/41_am_q30.jpg",
+      "image": "Date/img/41/41__am__q30__am30.png",
       "sourceImage": "Date/img/41/am_p13.jpg",
       "kindCategories": [
         "biometry_monitor"
@@ -1107,7 +1107,7 @@
       "part": "am",
       "number": 34,
       "page": 15,
-      "stem": "同相利得が0.10倍,差動利得が200倍の差動増幅器がある。 増幅器のCMRR (同相弁別比)は何 dB か。ただし, log102 = 0.30 とする。 この",
+      "stem": "同相利得が0.10倍,差動利得が200倍の差動増幅器がある。 この増幅器のCMRR (同相弁別比)は何 dB か。ただし, \\( log_{10}2\\)=0.30 とする。 ",
       "hint": "問題文の値（0.10倍、200倍）を使います。電力比なら 10log₁₀、電圧・電流・音圧などの振幅比なら 20log₁₀ を使います。何の比をdB化する問題か先に確認しましょう。",
       "choices": [
         "6",
@@ -1130,8 +1130,11 @@
         "正答。公式：CMRR(dB)=20log10(差動利得/同相利得)。代入：20log10(200/0.10)=20log10(2000)=20×3.30=66dB。したがって66dBである。"
       ],
       "hasFigure": false,
-      "image": null,
-      "sourceImage": "Date/img/41/am_p15.jpg"
+      "image": "",
+      "sourceImage": "Date/img/41/am_p15.jpg",
+      "kindCategories": [
+        "biometry_monitor"
+      ]
     },
     {
       "id": "am35",
@@ -1828,14 +1831,14 @@
       "part": "am",
       "number": 55,
       "page": 22,
-      "stem": "造影剤が脳に至るまでに通る経路はどれか。",
+      "stem": "脳の造影MRIを撮影するために、右肘静脈から造影剤を注入した。造影剤が脳に至るまでに通る経路はどれか。",
       "hint": "正しいものを探す問題です。造影剤が脳に至るまでに通る経路はという条件に対し、造影剤は静脈血の流れに沿って心臓と肺を通り、そこから脳へ到達する。 という関係を満たすかで絞り込みましょう。",
       "choices": [
-        "右肘→心臓 肺→心臓→脳",
-        "右肘→ 心臓 肝臓→脑",
-        "右肘→ 右手指先 → 心臓→脳",
-        "右肘→肝臓心臓→ 脳",
-        "右肘→ 心臓→腎臓→"
+        "右肘→心臓→肺→心臓→脳",
+        "右肘→ 心臓→肝臓→脳",
+        "右肘→ 右手指先→ 心臓→脳",
+        "右肘→肝臓→心臓→ 脳",
+        "右肘→ 心臓→腎臓→脳"
       ],
       "correct": [
         1
@@ -1851,8 +1854,13 @@
         "誤りポイント：「心臓→腎臓→」が誤り。腎臓は造影剤の排泄に関係するが、脳へ行く経路ではない。"
       ],
       "hasFigure": false,
-      "image": null,
-      "sourceImage": "Date/img/41/am_p22.jpg"
+      "image": "",
+      "sourceImage": "Date/img/41/am_p22.jpg",
+      "kindCategories": [
+        "safety",
+        "circulation",
+        "basic_medicine"
+      ]
     },
     {
       "id": "am56",

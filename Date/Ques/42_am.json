@@ -460,7 +460,7 @@
       "part": "am",
       "number": 15,
       "page": 7,
-      "stem": "図の回路において,電源を流れる電流I が10 A,L とC を流れる 電流がそれぞれ2 A,8 A であった。抵抗R に流れる電流は何A か。",
+      "stem": "図の回路において,電源を流れる電流I が10A,　LとC を流れる 電流がそれぞれ2A,　8Aであった。抵抗R に流れる電流は何A か。",
       "hint": "問題文の値（10A、2A、8A）を使います。基本式は V=IR です。求める量に合わせて I=V/R、R=V/I などへ変形し、mAやkΩをA・Ωへ直してから代入します。",
       "choices": [
         "0",
@@ -686,9 +686,9 @@
         "誤りポイント：「C E」が誤り。正しくは「A F」。Ⅱ誘導を構成する電極の組合せではない。",
         "誤りポイント：「C F A B C D E F」が誤り。正しくは「A F」。Ⅱ誘導の電極は右腕と左脚である。"
       ],
-      "hasFigure": false,
+      "hasFigure": true,
       "explanationLevel": "phrase_point_with_choice_role_v3",
-      "image": "",
+      "image": "Date/img/42/42__am__q21__am21.png",
       "kindCategories": [
         "biometry_monitor",
         "imaging"
@@ -1616,7 +1616,7 @@
         "E：静脈側エアトラップチャンバ"
       ],
       "sourceImage": "Date/img/42/am_p19.jpg",
-      "image": "Date/img/46/46_am_q60.png",
+      "image": "Date/img/42/42__am__q48__am48.png",
       "correct": [
         5
       ],
@@ -1774,7 +1774,7 @@
         "誤りポイント：「210」が誤り。正しくは「150」。Vpp をそのまま使うと誤りで、まず峰値に直す必要がある。正しくは P=(300/√2)²/300=150W。",
         "誤りポイント：「300」が誤り。正しくは「150」。300Ωは抵抗値であり出力そのものではない。電力は P=Vrms²/R で求め、150Wとなる。"
       ],
-      "hasFigure": true,
+      "hasFigure": false,
       "explanationLevel": "phrase_point_with_choice_role_v3",
       "kindCategories": [
         "surgery_treatment",

@@ -331,11 +331,11 @@
       "stem": "単位の接頭語が示す倍数で誤っているのはどれか。",
       "hint": "誤っているものを探す問題です。まず各選択肢を正しい知識に言い換えます。判断の軸は、誤りポイント：「G 10^6」が誤り。正しくは「G 10^9」で、Gはギガを表す。 という点です。",
       "choices": [
-        "T 1012",
-        "G 106",
-        "k 103",
-        "μ 10-6",
-        "n 10-9"
+        "Tーー10^{12}",
+        "Gーー10^{6}",
+        "kーー10^{3}",
+        "μーー10^{-6}",
+        "nーー10^{-9}"
       ],
       "sourceImage": "Date/img/42/pm_p34.jpg",
       "correct": [
@@ -352,7 +352,12 @@
         "この選択肢は誤りではない。nはナノで10^-9を示す。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": [
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm12",
@@ -366,7 +371,7 @@
         "1.5 f",
         "2 f",
         "2.5 f",
-        "3 f 物体 実像 スクリーン"
+        "3 f "
       ],
       "sourceImage": "Date/img/42/pm_p34.jpg",
       "correct": [
@@ -382,8 +387,12 @@
         "正答。レンズの式 1/f=1/u+1/v、倍率 m=v/u=1.5 を用いると、u=5/2 f、v=5/2 f となる。したがってレンズからスクリーンまでの距離は2.5 fである。",
         "誤りポイント：「3 f 物体 実像 スクリーン」が誤り。正しくは「2.5 f」。"
       ],
-      "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": true,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "Date/img/42/42__pm__q12__pm12.png",
+      "kindCategories": [
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm13",
@@ -425,7 +434,7 @@
       "part": "pm",
       "number": 14,
       "page": 35,
-      "stem": "図の回路に正弦波電圧（実効値2.8 V,角周波数1 × 103 rad ／s）を 入力した。出力電圧（実効値）はおよそ何V か。",
+      "stem": "図の回路に正弦波電圧（実効値2.8 V,角周波数$1 × 10^{3} rad ／s$）を 入力した。出力電圧（実効値）はおよそ何V か。",
       "hint": "問題文の値（2.8V）を使います。基本式は V=IR です。求める量に合わせて I=V/R、R=V/I などへ変形し、mAやkΩをA・Ωへ直してから代入します。",
       "choices": [
         "0.5",
@@ -446,7 +455,7 @@
         "誤りポイント：「0.5」が誤り。正しくは、RC低域通過回路の出力は 2.8V より大きくはならず、この条件ではもっと高い値になる。",
         "誤りポイント：「0.7」が誤り。正しくは、ωRC=1×10^3×(1×10^-3)=1より、出力は入力の約1/√2倍ではなく、もう少し大きい。",
         "誤りポイント：「1.0」が誤り。正しくは、低域通過回路の出力は 2.8×1/√2≈2.0V となる。",
-        "誤りポイント：「1.4」が誤り。正しくは、公式：|Vo|=|Vi|/√(1+(ωRC)^2)。代入：2.8/√(1+1^2)=2.8/√2≈2.0V。",
+        "誤りポイント：「1.4」が誤り。正しくは、公式：$|Vo|=|Vi|/√(1+(ωRC)^2)$。代入：$\\frac{2.8}{\\sqrt{(1+1^{2})}}=2.8/√2≈2.0V$。",
         "正答。公式：|Vo|=|Vi|/√(1+(ωRC)^2)。代入：R=1kΩ、C=1μFよりRC=1×10^-3s、ωRC=1×10^3×1×10^-3=1。したがって|Vo|=2.8/√2≈2.0V。"
       ],
       "hasFigure": true,
@@ -581,7 +590,9 @@
         "誤りポイント：「PWM パルス振幅変調」が誤り。正しくは「PAM パルス振幅変調」。PWMはパルス幅を変える方式で、振幅変調ではない。"
       ],
       "hasFigure": false,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "image": "",
+      "kindCategories": []
     },
     {
       "id": "pm19",
@@ -754,8 +765,11 @@
         "誤りポイント：「サーモグラフィ」が誤り。正しくは「PET装置」。サーモグラフィは赤外線を検出して表面温度分布を可視化する。",
         "誤りポイント：「NIRS」が誤り。正しくは「PET装置」。NIRSは近赤外光を用いて組織内の酸素化状態などを推定する。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "imaging"
+      ]
     },
     {
       "id": "pm24",
@@ -972,8 +986,11 @@
         "誤りポイント：「粉塵が付着しないようにする」が誤り。正しくは「被滅菌物に残留するEOGを減らす」。エアレーションは清浄保持ではなくガス除去のために行う。",
         "誤りポイント：「温度を下げる」が誤り。正しくは「被滅菌物に残留するEOGを減らす」。温度調整ではなく残留ガスの排除が目的。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "infection"
+      ]
     },
     {
       "id": "pm31",
@@ -1035,8 +1052,11 @@
         "この選択肢は誤りではない。トノメトリ法は橈骨動脈などを圧センサで押圧し、動脈圧波形を連続的に測る。",
         "この選択肢は誤りではない。トノメトリ法は1心拍ごとの血圧波形を得られるため、連続監視に使える。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "circulation"
+      ]
     },
     {
       "id": "pm33",
@@ -1067,8 +1087,12 @@
         "この選択肢は誤りではない。暗所でも赤外放射を検出するので、可視光の明るさに左右されにくい。夜間観察にも用いられる。",
         "正答。誤りポイント：「ガラス越し」が誤り。ガラスは赤外線を透過しにくいため、体表温度を正しく測定できない。赤外線サーモグラフは対象が直接見える条件で使う。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "basic_medicine",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm34",
@@ -1147,7 +1171,7 @@
         "ダイアフラムポンプ"
       ],
       "sourceImage": "Date/img/42/pm_p43.jpg",
-      "image": "Date/img/46/46_am_q59.png",
+      "image": "Date/img/42/42__pm__q36__pm36.png",
       "correct": [
         5
       ],
@@ -1548,8 +1572,13 @@
         "誤りポイント：「組織片はハンドピース内に貯留される」が誤り。正しくは吸引した組織片は吸引回路側へ回収される。ハンドピースは破砕・吸引の操作部で、貯留容器ではない。",
         "誤りポイント：「電子線滅菌を用いる」が誤り。正しくは耐熱性や材質に応じた滅菌法を用いる。ハンドピースは部品の材質に適した方法で処理する。"
       ],
-      "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "hasFigure": false,
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "infection",
+        "medical_electronics",
+        "basic_engineering"
+      ]
     },
     {
       "id": "pm49",
@@ -1929,10 +1958,10 @@
         "帯電率",
         "透磁率",
         "誘電率",
-        "抵抗率 = 3 R × A 0.4B"
+        "抵抗率"
       ],
       "sourceImage": "Date/img/42/pm_p51.jpg",
-      "image": "Date/img/42/pm_p51.jpg",
+      "image": "Date/img/42/42__pm__q60__pm60.png",
       "correct": [
         5
       ],
@@ -1947,7 +1976,11 @@
         "正答。Bは土壌の抵抗率を表す。接地極の抵抗は土壌の抵抗率と接地面積に関係し、接地設計で用いる。"
       ],
       "hasFigure": true,
-      "explanationLevel": "phrase_point_with_choice_role_v3"
+      "explanationLevel": "phrase_point_with_choice_role_v3",
+      "kindCategories": [
+        "safety",
+        "medical_electronics"
+      ]
     }
   ]
 }
