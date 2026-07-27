@@ -66,37 +66,46 @@ const DEFAULT_EXPLANATION_DEFINITION = String.raw`# ME2種 AI解説生成の定�
 - choiceNotesはchoicesと同じ数にする。
 - 図だけで示される、OCR崩れ、記号欠落などで安全に特定できない場合に限り「誤り。要点解説参照。」を使用できる。
 
-## 9. サイト内でのLaTeX使用方法
-- このサイトはMathJaxでLaTeXを表示できる。
-- 問題文stem、選択肢choices、問題注釈annotation、要点解説tip、各選択肢解説choiceNotesで使用できる。
-- 文章中の数式は必ず \( ... \) で囲む。
-- 独立した数式は必ず \[ ... \] で囲む。
+## 9. サイト内でのLaTeX使用方法（AI生成時は厳守）
+- このサイトはMathJaxでLaTeXを表示する。
+- AIが生成するhint、tip、choiceNotes内の数式・変数・単位付き数値・化学式・上付き・下付きは、必ずLaTeXとして記述する。
+- 文章中の数式は必ず半角ドル1個の「$ ... $」で囲む。
+- 独立した数式は必ず半角ドル2個の「$$ ... $$」で囲む。
+- AI生成結果では「\( ... \)」と「\[ ... \]」を使わず、必ず「$ ... $」と「$$ ... $$」に統一する。
+- 半角ドルは必ず開始と終了を対にする。閉じ忘れ、片側だけ、全角ドルは不可。
+- LaTeXコマンド、「^」、「_」をドル記号の外へ出してはならない。
+- 上付きは必ず「^{...}」、下付きは必ず「_{...}」とし、指数・添字が1文字でも波括弧を省略しない。
+- 「x^2」「10^-3」「V_rms」「CO_2」のような波括弧なし表記は禁止する。
+- 「x^{2}」「10^{-3}」「V_{\mathrm{rms}}」「CO_{2}」と書き、それぞれ全体を「$ ... $」で囲む。
+- Unicodeの上付き・下付き文字（²、³、⁻、₂、₃など）をAI生成結果で使わない。LaTeXの「^{...}」「_{...}」を使う。
+- 分数は「\frac{分子}{分母}」、平方根は「\sqrt{...}」とし、必ず「$ ... $」の内側に置く。
+- 掛け算は「\times」、単位は「\mathrm{...}」、数値と単位の間は「\,」を使う。
+- ギリシャ文字や比較記号もLaTeXコマンドを使い、必ず「$ ... $」の内側に置く。
+- HTMLタグ、sup、sub、Markdownコード記号による数式表現は禁止する。
 - 開発モードの入力欄ではバックスラッシュを1個で入力する。
-- 開発モードでは、円記号の「¥」「￥」が入力された場合もバックスラッシュへ正規化される。
-- JSONファイルを直接編集する場合は、JSONの仕様によりバックスラッシュを2個にする。
-- HTMLタグで数式を表現しない。
-- 数式では必要に応じて単位を \mathrm{} で表し、数値と単位の間は \, を使用する。
+- JSON応答ではJSON文字列としてバックスラッシュを正しくエスケープする。JSONを解析した後の文字列が「$ I=\frac{V}{R} $」となるように返す。
 
-### よく使う記法
-- 分数：\( \frac{a}{b} \)
-- 平方根：\( \sqrt{R^2+X^2} \)
-- 下付き：\( V_{\mathrm{rms}} \)、\( PaCO_2 \)
-- 上付き：\( 10^{-3} \)
-- 掛け算：\( 3.0\times10^8 \)
-- 単位：\( 100\,\mathrm{V} \)、\( 2\,\mathrm{A} \)
-- ギリシャ文字：\( \alpha \)、\( \beta \)、\( \Delta \)、\( \Omega \)
-- 比較：\( \leq \)、\( \geq \)、\( \neq \)、\( \approx \)
-- 論理否定：\( \neg A \)
-- AND：\( A\land B \)
-- OR：\( A\lor B \)
-- 含意：\( A\Rightarrow B \)
-- 同値：\( A\Leftrightarrow B \)
-- 和集合・共通部分：\( A\cup B \)、\( A\cap B \)
+### 必ず守る正しい例
+- 文中の式：電流は $ I=\frac{V}{R} $ で求める。
+- 代入式：$ I=\frac{10\,\mathrm{V}}{5\,\Omega} $ と代入し、次に割り算する。
+- 上付き：$ x^{2} $、$ 10^{-3} $、$ \mathrm{m}^{2} $
+- 下付き：$ V_{\mathrm{rms}} $、$ PaCO_{2} $、$ SpO_{2} $
+- 複数文字の添字：$ I_{\mathrm{leak}} $、$ V_{\mathrm{out}} $
+- 分数・平方根：$ \frac{a}{b} $、$ \sqrt{R^{2}+X^{2}} $
+- 単位付き数値：$ 100\,\mathrm{V} $、$ 2\,\mathrm{mA} $、$ 37\,^{\circ}\mathrm{C} $
+- 独立式：$$ P=VI=I^{2}R=\frac{V^{2}}{R} $$
 
-### JSONへ直接記載する例
-- 画面上で表示させたい内容：電流は \( I=\frac{V}{R} \) で求める。
-- JSON文字列内：「電流は \\( I=\\frac{V}{R} \\) で求める。」
-- AIはJSONを返すため、応答JSONではバックスラッシュをJSONとして正しくエスケープする。
+### 禁止例
+- V=IR
+- $V=IR
+- V=IR$
+- x^2
+- 10^-3
+- V_rms
+- PaCO_2
+- SpO₂
+- \frac{V}{R}
+- HTMLのsupまたはsub
 
 ## 9.1 問題画像の利用
 - hasFigureがtrueで問題画像が送信されている場合は、画像内の図・表・グラフ・回路・波形・選択肢記号を必ず確認する。
@@ -109,6 +118,21 @@ const DEFAULT_EXPLANATION_DEFINITION = String.raw`# ME2種 AI解説生成の定�
 - choiceNotesは選択肢数と同じ数。
 - tipとchoiceNotes以外の問題データを変更しない。
 - JSONのみで返す。`;
+
+
+const MANDATORY_LATEX_RULES = String.raw`# AI生成結果のLaTeX絶対規則
+この規則は、ユーザー提供の解説生成定義より優先される。
+
+1. hint、tip、choiceNotesの数式・変数・単位付き数値・化学式・上付き・下付きはMathJax用LaTeXにする。
+2. 文中数式は必ず $ ... $、独立数式は必ず $$ ... $$ で囲む。
+3. \( ... \) と \[ ... \] は出力せず、ドル記号へ統一する。
+4. ^ と _ は必ずドル記号内で使い、上付きは ^{...}、下付きは _{...} とする。1文字でも波括弧を省略しない。
+5. x^2、10^-3、V_rms、CO_2、SpO₂、\frac{V}{R} の裸表記は禁止する。
+6. 正しくは $ x^{2} $、$ 10^{-3} $、$ V_{\mathrm{rms}} $、$ CO_{2} $、$ SpO_{2} $、$ \frac{V}{R} $ とする。
+7. Unicode上付き・下付き文字、HTMLのsup/sub、Markdownコード記号を数式表現に使わない。
+8. 単位は \mathrm{...}、数値と単位の間は \, を使い、全体をドル記号で囲む。
+9. JSONとして正しくエスケープし、JSON解析後の文字列に半角ドルとLaTeXバックスラッシュが残るようにする。
+10. 出力前に全フィールドを再確認し、ドルの開閉、波括弧、添字・指数、LaTeXコマンドが裸になっていないことを確認する。`;
 
 function json(data, init = {}) {
   return new Response(JSON.stringify(data), { status: init.status || 200, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...(init.headers || {}) } });
@@ -149,18 +173,27 @@ function cleanDefinition(definition) { const d = String(definition || '').trim()
 function buildPrompt(q, definition) {
   const promptQuestion = { ...q, imageProvidedToModel: Boolean(q.imageInput) };
   delete promptQuestion.imageInput;
-  return `以下の「解説生成定義」を厳守して、第2種ME技術実力検定試験（ME2種）学習アプリ用の解説を生成してください。
+  return `以下の「解説生成定義」と「AI生成結果のLaTeX絶対規則」を厳守して、第2種ME技術実力検定試験（ME2種）学習アプリ用の解説を生成してください。
+両者が競合する場合は、「AI生成結果のLaTeX絶対規則」を優先してください。
 
 # 解説生成定義
 ${definition}
 
+${MANDATORY_LATEX_RULES}
+
 # 出力形式
 必ずJSONのみで返してください。
 {
-  "hint": "正答を直接示さず、計算問題では公式・数値と記号の対応・単位換算・代入式・次の計算、知識問題では作用・部位・方向・増減・因果関係を具体的に示すヒント",
-  "tip": "要点解説",
-  "choiceNotes": ["選択肢1の解説", "選択肢2の解説", "..."]
+  "hint": "正答を直接示さず、数式は必ず $ ... $ で囲み、上付きは ^{...}、下付きは _{...} とした具体的なヒント",
+  "tip": "LaTeX絶対規則に従った要点解説",
+  "choiceNotes": ["LaTeX絶対規則に従った選択肢1の解説", "選択肢2の解説", "..."]
 }
+
+# 出力直前チェック
+- hint、tip、choiceNotes内に裸の数式、裸のLaTeXコマンド、裸の ^ や _ がないか確認する。
+- $ の開始と終了がすべて対応しているか確認する。
+- 上付き・下付きの波括弧を省略していないか確認する。
+- JSONを解析した後も、半角ドル記号とLaTeXのバックスラッシュが残る形で返す。
 
 # 問題データ
 ${JSON.stringify(promptQuestion, null, 2)}`;
@@ -171,15 +204,112 @@ function extractJsonText(data) {
   for (const item of out) for (const c of (item.content || [])) if (typeof c.text === 'string') return c.text;
   return '';
 }
+
+function normalizeGeneratedLatex(value) {
+  return String(value ?? '')
+    .replace(/[\u00A5\uFFE5]/g, '\\')
+    .replace(/\\\[/g, '$$')
+    .replace(/\\\]/g, '$$')
+    .replace(/\\\(/g, '$')
+    .replace(/\\\)/g, '$')
+    .trim();
+}
+function splitDollarMathSegments(value) {
+  const source = String(value ?? '');
+  const segments = [];
+  let buffer = '';
+  let inMath = false;
+  let delimiter = '';
+  for (let i = 0; i < source.length; i++) {
+    if (source[i] === '\\' && source[i + 1] === '$') {
+      buffer += source[i] + source[i + 1];
+      i++;
+      continue;
+    }
+    if (source.startsWith('$$', i)) {
+      segments.push({ math: inMath, text: buffer });
+      buffer = '';
+      if (!inMath) {
+        inMath = true;
+        delimiter = '$$';
+      } else if (delimiter === '$$') {
+        inMath = false;
+        delimiter = '';
+      } else {
+        buffer += '$$';
+      }
+      i++;
+      continue;
+    }
+    if (source[i] === '$') {
+      segments.push({ math: inMath, text: buffer });
+      buffer = '';
+      if (!inMath) {
+        inMath = true;
+        delimiter = '$';
+      } else if (delimiter === '$') {
+        inMath = false;
+        delimiter = '';
+      } else {
+        buffer += '$';
+      }
+      continue;
+    }
+    buffer += source[i];
+  }
+  segments.push({ math: inMath, text: buffer });
+  return { segments, balanced: !inMath };
+}
+function generatedLatexIssues(value) {
+  const normalized = normalizeGeneratedLatex(value);
+  const parsed = splitDollarMathSegments(normalized);
+  const issues = [];
+  if (!parsed.balanced) issues.push('半角ドル記号の開始と終了が対応していません');
+  const unicodeSuperSub = /[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎]/;
+  const bareCommand = /\\(?:frac|dfrac|tfrac|sqrt|sum|prod|int|lim|log|ln|sin|cos|tan|times|cdot|mathrm|mathbf|mathit|text|alpha|beta|gamma|delta|Delta|mu|Omega|theta|lambda|leq|geq|neq|approx|pm|infty|land|lor|neg|Rightarrow|Leftrightarrow)\b/;
+  const bareScript = /(?:\^|_)\s*(?:\{[^{}]*\}|[A-Za-z0-9+\-])/;
+  const bareEquation = /\b(?:[A-Za-z][A-Za-z0-9]*|[A-Z]{1,4})\s*=\s*(?:[A-Za-z0-9\\(])/;
+  for (const segment of parsed.segments) {
+    if (segment.math) {
+      if (/\^(?!\{)/.test(segment.text)) issues.push('上付きは ^{...} の形式にしてください');
+      if (/_(?!\{)/.test(segment.text)) issues.push('下付きは _{...} の形式にしてください');
+      continue;
+    }
+    if (unicodeSuperSub.test(segment.text)) issues.push('Unicode上付き・下付き文字をLaTeXへ変換してください');
+    if (bareCommand.test(segment.text)) issues.push('LaTeXコマンドがドル記号の外にあります');
+    if (bareScript.test(segment.text)) issues.push('上付き・下付きがドル記号の外にあります');
+    if (bareEquation.test(segment.text)) issues.push('数式がドル記号で囲まれていません');
+    if (/<\/?(?:sup|sub)\b/i.test(segment.text)) issues.push('HTMLのsup/subは使用できません');
+  }
+  return [...new Set(issues)];
+}
+function assertGeneratedLatex(fields) {
+  const failures = [];
+  for (const [label, value] of fields) {
+    const issues = generatedLatexIssues(value);
+    if (issues.length) failures.push(`${label}: ${issues.join('、')}`);
+  }
+  if (failures.length) {
+    throw new Error(`AI応答のLaTeX表記が不正です。${failures.join(' / ')}。数式は $ ... $、上付きは ^{...}、下付きは _{...} にして再生成してください。`);
+  }
+}
+
 function normalizeAiResult(obj, q) {
-  const hint = String(obj?.hint || '').trim();
-  const tip = String(obj?.tip || '').trim();
-  let choiceNotes = Array.isArray(obj?.choiceNotes) ? obj.choiceNotes.map(x => String(x || '').trim()) : [];
+  const hint = normalizeGeneratedLatex(obj?.hint || '');
+  const tip = normalizeGeneratedLatex(obj?.tip || '');
+  let choiceNotes = Array.isArray(obj?.choiceNotes)
+    ? obj.choiceNotes.map(x => normalizeGeneratedLatex(x || ''))
+    : [];
   while (choiceNotes.length < q.choices.length) choiceNotes.push('');
   if (choiceNotes.length > q.choices.length) choiceNotes = choiceNotes.slice(0, q.choices.length);
   if (!hint || !tip || choiceNotes.some(x => !x)) {
     throw new Error('AI応答のhint・tip・choiceNotesに空欄があります。もう一度実行してください。');
   }
+  assertGeneratedLatex([
+    ['hint', hint],
+    ['tip', tip],
+    ...choiceNotes.map((value, index) => [`choiceNotes[${index + 1}]`, value])
+  ]);
   return { hint, tip, choiceNotes };
 }
 async function callOpenAI(env, q, definition) {
@@ -202,7 +332,11 @@ async function callOpenAI(env, q, definition) {
       { role: 'system', content: 'You generate concise, accurate Japanese explanations for ME2 exam questions. Follow the user-provided definition exactly. Return valid JSON only.' },
       { role: 'user', content: userContent }
     ],
-    text: { format: { type: 'json_schema', name: 'me2_explanation', schema: { type: 'object', additionalProperties: false, properties: { hint: { type: 'string' }, tip: { type: 'string' }, choiceNotes: { type: 'array', items: { type: 'string' } } }, required: ['hint', 'tip', 'choiceNotes'] }, strict: true } }
+    text: { format: { type: 'json_schema', name: 'me2_explanation', schema: { type: 'object', additionalProperties: false, properties: {
+      hint: { type: 'string', description: '具体的なヒント。すべての数式は $ ... $ または $$ ... $$ で囲み、上付きは ^{...}、下付きは _{...} とする。' },
+      tip: { type: 'string', description: '要点解説。裸の数式・LaTeXコマンド・上付き・下付きは禁止。' },
+      choiceNotes: { type: 'array', items: { type: 'string', description: '選択肢解説。数式はドル記号内、上付き・下付きは波括弧付きLaTeXにする。' } }
+    }, required: ['hint', 'tip', 'choiceNotes'] }, strict: true } }
   };
   const r = await fetch('https://api.openai.com/v1/responses', { method: 'POST', headers: { 'content-type': 'application/json', 'authorization': `Bearer ${apiKey}` }, body: JSON.stringify(payload) });
   const data = await r.json().catch(() => ({}));

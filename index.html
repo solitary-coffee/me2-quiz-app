@@ -2296,37 +2296,46 @@ const EXPLANATION_DEFINITION=String.raw`# ME2種 AI解説生成の定義
 - choiceNotesはchoicesと同じ数にする。
 - 図だけで示される、OCR崩れ、記号欠落などで安全に特定できない場合に限り「誤り。要点解説参照。」を使用できる。
 
-## 9. サイト内でのLaTeX使用方法
-- このサイトはMathJaxでLaTeXを表示できる。
-- 問題文stem、選択肢choices、問題注釈annotation、要点解説tip、各選択肢解説choiceNotesで使用できる。
-- 文章中の数式は必ず \( ... \) で囲む。
-- 独立した数式は必ず \[ ... \] で囲む。
+## 9. サイト内でのLaTeX使用方法（AI生成時は厳守）
+- このサイトはMathJaxでLaTeXを表示する。
+- AIが生成するhint、tip、choiceNotes内の数式・変数・単位付き数値・化学式・上付き・下付きは、必ずLaTeXとして記述する。
+- 文章中の数式は必ず半角ドル1個の「$ ... $」で囲む。
+- 独立した数式は必ず半角ドル2個の「$$ ... $$」で囲む。
+- AI生成結果では「\( ... \)」と「\[ ... \]」を使わず、必ず「$ ... $」と「$$ ... $$」に統一する。
+- 半角ドルは必ず開始と終了を対にする。閉じ忘れ、片側だけ、全角ドルは不可。
+- LaTeXコマンド、「^」、「_」をドル記号の外へ出してはならない。
+- 上付きは必ず「^{...}」、下付きは必ず「_{...}」とし、指数・添字が1文字でも波括弧を省略しない。
+- 「x^2」「10^-3」「V_rms」「CO_2」のような波括弧なし表記は禁止する。
+- 「x^{2}」「10^{-3}」「V_{\mathrm{rms}}」「CO_{2}」と書き、それぞれ全体を「$ ... $」で囲む。
+- Unicodeの上付き・下付き文字（²、³、⁻、₂、₃など）をAI生成結果で使わない。LaTeXの「^{...}」「_{...}」を使う。
+- 分数は「\frac{分子}{分母}」、平方根は「\sqrt{...}」とし、必ず「$ ... $」の内側に置く。
+- 掛け算は「\times」、単位は「\mathrm{...}」、数値と単位の間は「\,」を使う。
+- ギリシャ文字や比較記号もLaTeXコマンドを使い、必ず「$ ... $」の内側に置く。
+- HTMLタグ、sup、sub、Markdownコード記号による数式表現は禁止する。
 - 開発モードの入力欄ではバックスラッシュを1個で入力する。
-- 開発モードでは、円記号の「¥」「￥」が入力された場合もバックスラッシュへ正規化される。
-- JSONファイルを直接編集する場合は、JSONの仕様によりバックスラッシュを2個にする。
-- HTMLタグで数式を表現しない。
-- 数式では必要に応じて単位を \mathrm{} で表し、数値と単位の間は \, を使用する。
+- JSON応答ではJSON文字列としてバックスラッシュを正しくエスケープする。JSONを解析した後の文字列が「$ I=\frac{V}{R} $」となるように返す。
 
-### よく使う記法
-- 分数：\( \frac{a}{b} \)
-- 平方根：\( \sqrt{R^2+X^2} \)
-- 下付き：\( V_{\mathrm{rms}} \)、\( PaCO_2 \)
-- 上付き：\( 10^{-3} \)
-- 掛け算：\( 3.0\times10^8 \)
-- 単位：\( 100\,\mathrm{V} \)、\( 2\,\mathrm{A} \)
-- ギリシャ文字：\( \alpha \)、\( \beta \)、\( \Delta \)、\( \Omega \)
-- 比較：\( \leq \)、\( \geq \)、\( \neq \)、\( \approx \)
-- 論理否定：\( \neg A \)
-- AND：\( A\land B \)
-- OR：\( A\lor B \)
-- 含意：\( A\Rightarrow B \)
-- 同値：\( A\Leftrightarrow B \)
-- 和集合・共通部分：\( A\cup B \)、\( A\cap B \)
+### 必ず守る正しい例
+- 文中の式：電流は $ I=\frac{V}{R} $ で求める。
+- 代入式：$ I=\frac{10\,\mathrm{V}}{5\,\Omega} $ と代入し、次に割り算する。
+- 上付き：$ x^{2} $、$ 10^{-3} $、$ \mathrm{m}^{2} $
+- 下付き：$ V_{\mathrm{rms}} $、$ PaCO_{2} $、$ SpO_{2} $
+- 複数文字の添字：$ I_{\mathrm{leak}} $、$ V_{\mathrm{out}} $
+- 分数・平方根：$ \frac{a}{b} $、$ \sqrt{R^{2}+X^{2}} $
+- 単位付き数値：$ 100\,\mathrm{V} $、$ 2\,\mathrm{mA} $、$ 37\,^{\circ}\mathrm{C} $
+- 独立式：$$ P=VI=I^{2}R=\frac{V^{2}}{R} $$
 
-### JSONへ直接記載する例
-- 画面上で表示させたい内容：電流は \( I=\frac{V}{R} \) で求める。
-- JSON文字列内：「電流は \\( I=\\frac{V}{R} \\) で求める。」
-- AIはJSONを返すため、応答JSONではバックスラッシュをJSONとして正しくエスケープする。
+### 禁止例
+- V=IR
+- $V=IR
+- V=IR$
+- x^2
+- 10^-3
+- V_rms
+- PaCO_2
+- SpO₂
+- \frac{V}{R}
+- HTMLのsupまたはsub
 
 ## 9.1 問題画像の利用
 - hasFigureがtrueで問題画像が送信されている場合は、画像内の図・表・グラフ・回路・波形・選択肢記号を必ず確認する。
@@ -2874,8 +2883,8 @@ function devInsertLatex(targetId,kind){
  const el=$(targetId);
  if(!el)return;
  const templates={
-  inline:{text:'\\(  \\)',caret:3},
-  display:{text:'\\[\n\n\\]',caret:3},
+  inline:{text:'$  $',caret:2},
+  display:{text:'$$\n\n$$',caret:3},
   frac:{text:'\\frac{}{}',caret:6},
   sqrt:{text:'\\sqrt{}',caret:6},
   sub:{text:'_{}',caret:2},
@@ -2900,8 +2909,8 @@ function devInsertLatex(targetId,kind){
 }
 function devLatexToolbarHtml(targetId){
  return `<div class="latex-toolbar" aria-label="LaTeX入力補助">
-  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','inline')">&#92;( &#92;)</button>
-  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','display')">&#92;[ &#92;]</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','inline')">$ … $</button>
+  <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','display')">$$ … $$</button>
   <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','frac')">分数</button>
   <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sqrt')">平方根</button>
   <button class="ghost" type="button" onclick="devInsertLatex('${targetId}','sub')">下付き</button>
@@ -6545,6 +6554,16 @@ function devAiRetryable(error){
  const message=String(error?.message||error||'');
  return error?.name==='TimeoutError'||/timeout|タイムアウト|failed to fetch|network|通信が中断/i.test(message)||status===408||status===409||status===429||status>=500;
 }
+
+function normalizeAiGeneratedLatex(value){
+ return normalizeLatexBackslashes(value)
+  .replace(/\\\[/g,'$$')
+  .replace(/\\\]/g,'$$')
+  .replace(/\\\(/g,'$')
+  .replace(/\\\)/g,'$')
+  .trim();
+}
+
 async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={}){
  let lastError=null;
  let imageInput=null;
@@ -6570,9 +6589,9 @@ async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={
    }
    if(!data.hint||!data.tip||!Array.isArray(data.choiceNotes)||data.choiceNotes.length!==(q.choices||[]).length)throw new Error('AI応答のhint・tip・choiceNotes形式が不正です。');
    return {
-    hint:normalizeLatexBackslashes(String(data.hint||'')),
-    tip:normalizeLatexBackslashes(String(data.tip||'')),
-    choiceNotes:data.choiceNotes.map(x=>normalizeLatexBackslashes(String(x||''))).slice(0,(q.choices||[]).length),
+    hint:normalizeAiGeneratedLatex(data.hint||''),
+    tip:normalizeAiGeneratedLatex(data.tip||''),
+    choiceNotes:data.choiceNotes.map(x=>normalizeAiGeneratedLatex(x||'')).slice(0,(q.choices||[]).length),
     imageUsed:Boolean(data.imageUsed)
    };
   }catch(error){
