@@ -1371,6 +1371,33 @@ html[data-theme="dark"] .whiteboard-bg-layer{
 }
 
 
+
+/* v2.7.22 ホワイトボードの選択・青色ハイライト防止 */
+.whiteboard-board,
+.whiteboard-canvas-wrap,
+.whiteboard-canvas-stage,
+.whiteboard-bg-layer,
+.whiteboard-canvas{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.whiteboard-canvas{
+  outline:none !important;
+  caret-color:transparent;
+}
+.whiteboard-canvas:focus,
+.whiteboard-canvas:focus-visible,
+.whiteboard-canvas:active{
+  outline:none !important;
+  box-shadow:none !important;
+}
+.whiteboard-canvas::selection,
+.whiteboard-canvas-stage::selection{
+  background:transparent;
+}
+
 /* ホワイトボード: 問題確認つき・なめらか描画 */
 .whiteboard-dialog{
   width:min(1180px,100%);
@@ -2209,7 +2236,7 @@ html[data-theme="dark"] .latex-backslash-note{background:#172554;color:#dbeafe;b
   </section>
 </div>
 
-<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div id="finalPartBreakdown"></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><div id="wrongList"></div><section id="resultReviewSection" class="result-review-section"><h3>解答した問題の確認</h3><div id="resultReviewFilters" class="row"></div><div id="resultReviewList"></div></section></section>
+<section id="finishCard" class="card hidden"><div class="menu-crumb"><button class="ghost" onclick="showMenu()">← メニューへ</button></div><h2>終了！</h2><div class="kpi"><div>部門<b id="finalPart">-</b></div><div>正解数<b id="finalScore">-</b></div><div>正答率<b id="finalRate">-</b></div><div>所要時間<b id="finalTime">-</b></div></div><div id="finalPartBreakdown"></div><div class="row" style="margin-top:14px"><button onclick="state.quizType==='random'?startRandomQuiz():startAttempt(state.part,'all')">もう一度</button><button class="warn" id="retryWrongBtn" onclick="retryWrong()">間違いだけ復習</button><button class="ghost" onclick="exportCurrentCSV()">結果CSV保存</button><button class="ghost" onclick="uploadCurrentProgressToDb()">今回の進行をDBへ保存</button><button class="ghost" onclick="showRandomHistory()">ランダム履歴</button></div><section id="resultReviewSection" class="result-review-section"><h3>解答した問題の確認</h3><div id="resultReviewFilters" class="row"></div><div id="resultReviewList"></div></section><div id="historyList" class="hidden"></div></section>
 
 <footer class="site-footer">
  <b>ME2種 過去問演習</b> — 第2種ME技術実力検定試験の学習支援サイト。<br>
@@ -2296,46 +2323,123 @@ const EXPLANATION_DEFINITION=String.raw`# ME2種 AI解説生成の定義
 - choiceNotesはchoicesと同じ数にする。
 - 図だけで示される、OCR崩れ、記号欠落などで安全に特定できない場合に限り「誤り。要点解説参照。」を使用できる。
 
-## 9. サイト内でのLaTeX使用方法（AI生成時は厳守）
-- このサイトはMathJaxでLaTeXを表示する。
-- AIが生成するhint、tip、choiceNotes内の数式・変数・単位付き数値・化学式・上付き・下付きは、必ずLaTeXとして記述する。
-- 文章中の数式は必ず半角ドル1個の「$ ... $」で囲む。
-- 独立した数式は必ず半角ドル2個の「$$ ... $$」で囲む。
-- AI生成結果では「\( ... \)」と「\[ ... \]」を使わず、必ず「$ ... $」と「$$ ... $$」に統一する。
-- 半角ドルは必ず開始と終了を対にする。閉じ忘れ、片側だけ、全角ドルは不可。
-- LaTeXコマンド、「^」、「_」をドル記号の外へ出してはならない。
-- 上付きは必ず「^{...}」、下付きは必ず「_{...}」とし、指数・添字が1文字でも波括弧を省略しない。
-- 「x^2」「10^-3」「V_rms」「CO_2」のような波括弧なし表記は禁止する。
-- 「x^{2}」「10^{-3}」「V_{\mathrm{rms}}」「CO_{2}」と書き、それぞれ全体を「$ ... $」で囲む。
-- Unicodeの上付き・下付き文字（²、³、⁻、₂、₃など）をAI生成結果で使わない。LaTeXの「^{...}」「_{...}」を使う。
-- 分数は「\frac{分子}{分母}」、平方根は「\sqrt{...}」とし、必ず「$ ... $」の内側に置く。
-- 掛け算は「\times」、単位は「\mathrm{...}」、数値と単位の間は「\,」を使う。
-- ギリシャ文字や比較記号もLaTeXコマンドを使い、必ず「$ ... $」の内側に置く。
-- HTMLタグ、sup、sub、Markdownコード記号による数式表現は禁止する。
-- 開発モードの入力欄ではバックスラッシュを1個で入力する。
-- JSON応答ではJSON文字列としてバックスラッシュを正しくエスケープする。JSONを解析した後の文字列が「$ I=\frac{V}{R} $」となるように返す。
+## 9. サイト対応LaTeXの完全指示（AI生成時は厳守）
+- このサイトはMathJax 3のTeX入力を使用する。
+- AIが生成するhint、tip、choiceNotes内の数式・変数・単位付き数値・化学式・上付き・下付き・記号は、必ず以下のサイト対応LaTeXで記述する。
+- 文中数式は半角ドル1個の「$ ... $」、独立数式は半角ドル2個の「$$ ... $$」で囲む。
+- AI生成結果では「\( ... \)」「\[ ... \]」を使わず、ドル記号形式へ統一する。
+- 半角ドルは必ず開始と終了を対にする。
 
-### 必ず守る正しい例
-- 文中の式：電流は $ I=\frac{V}{R} $ で求める。
-- 代入式：$ I=\frac{10\,\mathrm{V}}{5\,\Omega} $ と代入し、次に割り算する。
+### 9.1 四則演算・分数・比
+- 足し算：$ a+b $
+- 引き算：$ a-b $
+- 掛け算：$ a\times b $ または $ a\cdot b $
+- 割り算・商・比率は、原則として必ず分数の $ \frac{a}{b} $ を使う。
+- 「a/b」「(a+b)/(c+d)」「10/5」のようにスラッシュで割り算を表記してはならない。
+- 除算記号そのものを説明する場合だけ $ a\div b $ を使用できる。
+- 比は $ a:b $、百分率は $ 50\,\% $ とする。
+
+### 9.2 平方根・累乗・添字
+- 平方根：$ \sqrt{x} $
+- n乗根：$ \sqrt[n]{x} $
+- 「√x」「√(a+b)」のUnicodeルート記号は禁止する。
 - 上付き：$ x^{2} $、$ 10^{-3} $、$ \mathrm{m}^{2} $
 - 下付き：$ V_{\mathrm{rms}} $、$ PaCO_{2} $、$ SpO_{2} $
-- 複数文字の添字：$ I_{\mathrm{leak}} $、$ V_{\mathrm{out}} $
-- 分数・平方根：$ \frac{a}{b} $、$ \sqrt{R^{2}+X^{2}} $
-- 単位付き数値：$ 100\,\mathrm{V} $、$ 2\,\mathrm{mA} $、$ 37\,^{\circ}\mathrm{C} $
-- 独立式：$$ P=VI=I^{2}R=\frac{V^{2}}{R} $$
+- 上付きは必ず「^{...}」、下付きは必ず「_{...}」とし、1文字でも波括弧を省略しない。
+- Unicode上付き・下付き文字（²、³、⁻、₂、₃など）は使用しない。
 
-### 禁止例
-- V=IR
-- $V=IR
-- V=IR$
-- x^2
-- 10^-3
-- V_rms
-- PaCO_2
-- SpO₂
-- \frac{V}{R}
-- HTMLのsupまたはsub
+### 9.3 括弧・絶対値・場合分け
+- 丸括弧：$ \left(a+b\right) $
+- 角括弧：$ \left[a+b\right] $
+- 波括弧：$ \left\{a+b\right\} $
+- 絶対値：$ \left|x\right| $
+- 場合分け：
+  $$ f(x)=\begin{cases}x & x\geq 0\\-x & x<0\end{cases} $$
+
+### 9.4 等号・不等号・近似・矢印
+- 等しい：$ a=b $
+- 等しくない：$ a\neq b $
+- ほぼ等しい：$ a\approx b $
+- 以下・以上：$ a\leq b $、$ a\geq b $
+- 正負：$ \pm $
+- 比例：$ y\propto x $
+- 矢印：$ A\rightarrow B $、$ A\leftrightarrow B $
+- 含意・同値：$ A\Rightarrow B $、$ A\Leftrightarrow B $
+
+### 9.5 指数・対数・三角関数
+- 指数関数：$ e^{x} $、$ \exp(x) $
+- 常用対数：$ \log_{10}x $
+- 自然対数：$ \ln x $
+- 三角関数：$ \sin\theta $、$ \cos\theta $、$ \tan\theta $
+- 逆三角関数：$ \sin^{-1}x $、$ \cos^{-1}x $、$ \tan^{-1}x $
+
+### 9.6 総和・積・積分・微分・極限
+- 総和：$ \sum_{i=1}^{n}x_{i} $
+- 総積：$ \prod_{i=1}^{n}x_{i} $
+- 積分：$ \int_{a}^{b}f(x)\,dx $
+- 微分：$ \frac{dy}{dx} $、$ \frac{d^{2}y}{dx^{2}} $
+- 偏微分：$ \frac{\partial f}{\partial x} $
+- 極限：$ \lim_{x\to 0}f(x) $
+
+### 9.7 ベクトル・平均・装飾
+- ベクトル：$ \vec{v} $
+- 平均：$ \overline{x} $
+- 推定値・単位ベクトル：$ \hat{x} $
+- 内積：$ \vec{a}\cdot\vec{b} $
+- 大きさ：$ \left|\vec{v}\right| $
+
+### 9.8 集合・論理
+- 属する・属さない：$ x\in A $、$ x\notin A $
+- 部分集合：$ A\subset B $、$ A\subseteq B $
+- 和集合・共通部分：$ A\cup B $、$ A\cap B $
+- 空集合：$ \emptyset $
+- AND・OR・NOT：$ A\land B $、$ A\lor B $、$ \neg A $
+
+### 9.9 ギリシャ文字・定数
+- 小文字：$ \alpha $、$ \beta $、$ \gamma $、$ \delta $、$ \epsilon $、$ \theta $、$ \lambda $、$ \mu $、$ \pi $、$ \rho $、$ \sigma $、$ \tau $、$ \phi $、$ \omega $
+- 大文字：$ \Gamma $、$ \Delta $、$ \Theta $、$ \Lambda $、$ \Pi $、$ \Sigma $、$ \Phi $、$ \Omega $
+- 無限大：$ \infty $
+- Unicodeの「α」「β」「Δ」「μ」「Ω」などを直接使わず、LaTeXコマンドを使う。
+
+### 9.10 単位・温度・科学的記数法
+- 数値と単位の間は $ \, $ を使用する。
+- 単位は $ \mathrm{...} $ を使用する。
+- 電圧・電流・抵抗：$ 100\,\mathrm{V} $、$ 2\,\mathrm{mA} $、$ 50\,\Omega $
+- 周波数：$ 1\,\mathrm{kHz} $
+- 圧力：$ 120\,\mathrm{mmHg} $、$ 10\,\mathrm{kPa} $
+- 体積・流量：$ 500\,\mathrm{mL} $、$ 2\,\mathrm{L/min} $
+- 温度：$ 37\,^{\circ}\mathrm{C} $
+- 面積・体積：$ 1\,\mathrm{m}^{2} $、$ 1\,\mathrm{m}^{3} $
+- 科学的記数法：$ 3.0\times10^{8}\,\mathrm{m/s} $
+- パーセント：$ 95\,\% $
+
+### 9.11 医学・生体・化学で使用する表記
+- 酸素飽和度：$ SpO_{2} $
+- 動脈血酸素分圧：$ PaO_{2} $
+- 動脈血二酸化炭素分圧：$ PaCO_{2} $
+- 水素イオン：$ H^{+} $
+- ナトリウムイオン：$ Na^{+} $
+- カルシウムイオン：$ Ca^{2+} $
+- 二酸化炭素：$ CO_{2} $
+- 水：$ H_{2}O $
+- 重炭酸イオン：$ HCO_{3}^{-} $
+- pHの式：$ \mathrm{pH}=-\log_{10}\left[H^{+}\right] $
+
+### 9.12 行列・連立式・整列
+- 行列：$$ \begin{bmatrix}a&b\\c&d\end{bmatrix} $$
+- 連立式・複数行：$$ \begin{aligned}V&=IR\\P&=VI\end{aligned} $$
+- 改行は「\\」を使用する。
+
+### 9.13 LaTeX出力の禁止事項
+- 数学的な割り算に「/」を使用しない。必ず $ \frac{...}{...} $ を使用する。
+- ルートに「√」を使用しない。必ず $ \sqrt{...} $ を使用する。
+- 数学的な掛け算に「×」を直接使用しない。必ず $ \times $ を使用する。
+- 「÷」「≤」「≥」「≠」「≈」「±」「∞」「→」などのUnicode数学記号を直接使用しない。
+- LaTeXコマンド、「^」、「_」をドル記号の外へ出さない。
+- 「x^2」「10^-3」「V_rms」「CO_2」のように波括弧を省略しない。
+- HTMLのsup・sub、Markdownコード記号を数式表現に使用しない。
+- 数式を通常文章のまま「V=IR」「I=V/R」「√R」のように出力しない。
+- JSON応答ではバックスラッシュを正しくエスケープし、JSON解析後にドル記号とLaTeXコマンドが残るようにする。
 
 ## 9.1 問題画像の利用
 - hasFigureがtrueで問題画像が送信されている場合は、画像内の図・表・グラフ・回路・波形・選択肢記号を必ず確認する。
@@ -4100,7 +4204,9 @@ function questionSourceLabelForState(q,st){
 async function showRandomHistory(){
  if(state&&state.timerRunning){pauseTimer();saveState()}
  hideAll();$('finishCard').classList.remove('hidden');
- $('wrongList').innerHTML='<h3>ランダム演習履歴</h3><p class="small">履歴を読み込み中…</p>';
+ $('resultReviewSection')?.classList.add('hidden');
+ $('historyList')?.classList.remove('hidden');
+ $('historyList').innerHTML='<h3>ランダム演習履歴</h3><p class="small">履歴を読み込み中…</p>';
  let hist=loadLocal(historyKey(RANDOM_EXAM_ID,RANDOM_PART),[]);
  if(hasCloudLogin()){const cloudHist=await loadCloudHistory(RANDOM_EXAM_ID,RANDOM_PART);hist=mergeHistory(hist,cloudHist);}
  hist=mergeHistory(hist);
@@ -4117,7 +4223,7 @@ async function showRandomHistory(){
  $('resultReviewSection')?.classList.add('hidden');
  $('finalPart').textContent='ランダム履歴';
  $('finalScore').textContent='-';$('finalRate').textContent='-';$('finalTime').textContent='-';
- $('wrongList').innerHTML=`<h3>ランダム演習履歴：${hist.length}件</h3><p class="small">各履歴の「この回の間違いだけ解く」から、その回で間違えた問題だけ再演習できます。</p>`+(hist.length?rows:'<p class="small">ランダム演習履歴はまだありません。</p>');
+ $('historyList').innerHTML=`<h3>ランダム演習履歴：${hist.length}件</h3><p class="small">各履歴の「この回の間違いだけ解く」から、その回で間違えた問題だけ再演習できます。</p>`+(hist.length?rows:'<p class="small">ランダム演習履歴はまだありません。</p>');
  updateHeader();
 }
 
@@ -4312,14 +4418,23 @@ function scheduleWhiteboardRender(){
   flushWhiteboardPoints();
  });
 }
+
+function clearWhiteboardBrowserSelection(){
+ try{
+  const selection=window.getSelection?.();
+  if(selection&&selection.rangeCount)selection.removeAllRanges();
+ }catch(_){}
+}
+
 function whiteboardStart(event){
+ if(event?.cancelable)event.preventDefault();
+ clearWhiteboardBrowserSelection();
  if(event.pointerType==='mouse'&&event.button!==0)return;
  if(whiteboardState.palmRejection&&event.pointerType==='touch')return;
  if(event.pointerType==='touch'&&(Number(event.width)>28||Number(event.height)>28))return;
  if(whiteboardState.activePointerId!==null&&whiteboardState.activePointerId!==event.pointerId)return;
  const canvas=whiteboardCanvas(),ctx=whiteboardContext();
  if(!canvas||!ctx)return;
- event.preventDefault();
  whiteboardState.activePointerId=event.pointerId;
  whiteboardPushUndo();
  const point=whiteboardPoint(event);
@@ -4345,6 +4460,8 @@ function whiteboardMove(event){
  scheduleWhiteboardRender();
 }
 function whiteboardEnd(event){
+ if(event?.cancelable)event.preventDefault();
+ clearWhiteboardBrowserSelection();
  if(!whiteboardState.drawing||whiteboardState.activePointerId!==event?.pointerId)return;
  flushWhiteboardPoints();
  const canvas=whiteboardCanvas();
@@ -4401,6 +4518,18 @@ function initWhiteboard(){
  const penSize=$('wbPenSize'),eraserSize=$('wbEraserSize'),palm=$('wbPalmRejection');
  const bgEnabled=$('wbBgEnabled'),bgOpacity=$('wbBgOpacity');
  if(!canvas)return;
+ const stage=canvas.closest('.whiteboard-canvas-stage');
+ const preventWhiteboardSelection=event=>{
+  if(event?.cancelable)event.preventDefault();
+  clearWhiteboardBrowserSelection();
+ };
+ for(const target of [canvas,stage].filter(Boolean)){
+  target.addEventListener('selectstart',preventWhiteboardSelection);
+  target.addEventListener('dragstart',preventWhiteboardSelection);
+  target.addEventListener('contextmenu',preventWhiteboardSelection);
+ }
+ canvas.setAttribute('draggable','false');
+ canvas.setAttribute('tabindex','-1');
  canvas.addEventListener('pointerdown',whiteboardStart);
  canvas.addEventListener('pointermove',whiteboardMove);
  canvas.addEventListener('pointerup',whiteboardEnd);
@@ -4802,12 +4931,18 @@ function showFinish(){
  $('finalScore').textContent=`${state.correct} / ${state.order.length}`;
  $('finalRate').textContent=`${Math.round(state.correct/state.order.length*1000)/10}%`;
  $('finalTime').textContent=fmtTime(elapsed);
+ const wrongCount=resultEntries().filter(item=>!item.answer.correct).length;
+ $('retryWrongBtn').disabled=wrongCount===0;
+ const historyBox=$('historyList');
+ if(historyBox){
+  historyBox.classList.add('hidden');
+  historyBox.innerHTML='';
+ }
+ $('resultReviewSection')?.classList.remove('hidden');
  resultReviewFilter='all';
  renderResultPartBreakdown();
- renderWrongList();
  renderResultReview();
 }
-function renderWrongList(){const pack=currentPack(), wrong=(state.answers||[]).map((a,i)=>({a,q:pack.questions[state.order[i]]})).filter(x=>x.a&&!x.a.correct), box=$('wrongList');$('retryWrongBtn').disabled=wrong.length===0;box.innerHTML=`<h3>間違った問題一覧：${wrong.length}問</h3>`+(wrong.length?wrong.map(({a,q})=>`<div class="wrong-item"><b>${escapeHtml(questionSourceLabel(q))} / 範囲：${escapeHtml(q.range||'未設定')}</b><br>あなた：${a.choice} / 正答：${correctLabel(q)}<br><span class="small math-content">${mathTextHtml(q.tip||'')}</span></div>`).join(''):'<p class="small">全問正解です。すごい。</p>');typesetMath(box)}
 function retryWrong(){const wrongIndexes=state.answers.map((a,i)=>a.correct?null:state.order[i]).filter(x=>x!==null);if(!wrongIndexes.length)return;resetWhiteboardSession();state={...state,mode:'wrong',attemptId:makeAttemptId(),order:wrongIndexes,index:0,correct:0,answers:[],eliminations:{},startedAt:Date.now(),elapsedMs:0,sessionStartedAt:null,timerRunning:false,finished:false};startTimer();saveState();showQuiz();renderQuestion()}
 function historyStatsHtml(hist, pack){
  const base=hist.filter(h=>h && (h.mode||'all')==='all');
@@ -4853,7 +4988,7 @@ async function cleanupDuplicateHistoryDb(part){
  }
  const title=`${getExamRecord(currentExamId)?.title||''} ${partName(part)}`;
  if(!confirm(`${title} のDB上の重複履歴を削除しますか？\n\n同じ履歴が複数保存されている場合、1件だけ残してCloudflare KV側から整理します。`)) return;
- $('wrongList').innerHTML=`<h3>${escapeHtml(title)} 履歴</h3><p class="small">DB上の重複履歴を整理中…</p>`;
+ $('historyList').innerHTML=`<h3>${escapeHtml(title)} 履歴</h3><p class="small">DB上の重複履歴を整理中…</p>`;
  const res=await apiProgress('POST',{type:'historyDedupe',examId:currentExamId,part});
  if(!res||!res.ok){
   alert('DBの重複削除に失敗しました。ログイン状態、KV設定、通信状態を確認してください。');
@@ -4953,7 +5088,9 @@ async function retryRandomHistoryWrong(attemptId){
 
 async function showHistory(part){
  hideAll();$('finishCard').classList.remove('hidden');
- $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴</h3><p class="small">履歴を読み込み中…</p>`;
+ $('resultReviewSection')?.classList.add('hidden');
+ $('historyList')?.classList.remove('hidden');
+ $('historyList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴</h3><p class="small">履歴を読み込み中…</p>`;
  await getSessionPart(currentExamId,part);
  let hist=loadLocal(historyKey(currentExamId,part),[]);
  if(hasCloudLogin()){const cloudHist=await loadCloudHistory(currentExamId,part);hist=mergeHistory(hist,cloudHist);}
@@ -4968,7 +5105,7 @@ async function showHistory(part){
   return `<div class="history-row"><b>${idx+1}. ${new Date(h.completedAt||h.startedAt||Date.now()).toLocaleString()}</b><br>${h.mode==='wrong'||h.mode==='history_wrong'?'間違い復習 / ':''}${h.correct||0}/${total} 正解（${rate}%） / 所要時間 ${fmtTime(h.elapsedMs||0)}<br><span class="small">履歴ID：${escapeHtml(h.attemptId||'legacy')}</span><details><summary>この回の間違いを見る</summary>${wrongHtml}</details><div class="row" style="margin-top:8px"><button class="secondary" ${wrong.length?'':'disabled'} onclick="retryHistoryWrong('${part}','${escapeHtml(h.attemptId||'legacy')}')">この回の間違いだけ解く</button></div></div>`;
  }).join('');
  $('resultReviewSection')?.classList.add('hidden');
- $('wrongList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3><p class="small">各履歴の「この回の間違いだけ解く」から、その回で間違えた問題だけ再演習できます。</p>${stats}<div class="row" style="margin:10px 0 14px"><button class="warn" onclick="cleanupDuplicateHistoryDb('${part}')">DBの重複履歴を削除</button><span class="small">表示上の重複除去だけでなく、Cloudflare KV内の重複データも1件に整理します。</span></div>`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
+ $('historyList').innerHTML=`<h3>${getExamRecord(currentExamId)?.title||''} ${partName(part)} 履歴：${hist.length}件</h3><p class="small">各履歴の「この回の間違いだけ解く」から、その回で間違えた問題だけ再演習できます。</p>${stats}<div class="row" style="margin:10px 0 14px"><button class="warn" onclick="cleanupDuplicateHistoryDb('${part}')">DBの重複履歴を削除</button><span class="small">表示上の重複除去だけでなく、Cloudflare KV内の重複データも1件に整理します。</span></div>`+(hist.length?rows:'<p class="small">履歴はまだありません。</p>');
 }
 
 function parseProgressStorageKey(k){
@@ -6592,7 +6729,8 @@ async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={
     hint:normalizeAiGeneratedLatex(data.hint||''),
     tip:normalizeAiGeneratedLatex(data.tip||''),
     choiceNotes:data.choiceNotes.map(x=>normalizeAiGeneratedLatex(x||'')).slice(0,(q.choices||[]).length),
-    imageUsed:Boolean(data.imageUsed)
+    imageUsed:Boolean(data.imageUsed),
+    latexRepaired:Boolean(data.latexRepaired)
    };
   }catch(error){
    lastError=error;
@@ -6625,7 +6763,8 @@ async function devRegenerateExplanation(){
    try{await saveDevQuestionFlag(q,'aiRegenerate',false,devExamId,devPart)}catch(_){}
   }
   const imageNote=result.imageUsed?' 問題画像もAIへ送信して解析しました。':'';
-  $('devStatus').innerHTML=`<span class="status-ok">AIで解説を再生成しました。${imageNote} AI再生成フラグが設定されていた場合は解除を試みました。内容を確認し、「この問題に反映」で一括PRリストへ追加してください。</span>`;
+  const latexNote=result.latexRepaired?' 初回応答の数式表記を自動でサイト対応LaTeXへ修復しました。':'';
+  $('devStatus').innerHTML=`<span class="status-ok">AIで解説を再生成しました。${imageNote}${latexNote} AI再生成フラグが設定されていた場合は解除を試みました。内容を確認し、「この問題に反映」で一括PRリストへ追加してください。</span>`;
  }catch(e){
   $('devStatus').innerHTML=`<span class="status-warn">AI再生成に失敗しました：${escapeHtml(e.message||e)}<br>必要に応じて「ローカル簡易生成」を使ってください。</span>`;
  }
