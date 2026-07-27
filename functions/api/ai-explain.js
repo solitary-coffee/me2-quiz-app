@@ -172,12 +172,14 @@ function extractJsonText(data) {
   return '';
 }
 function normalizeAiResult(obj, q) {
+  const hint = String(obj?.hint || '').trim();
   const tip = String(obj?.tip || '').trim();
   let choiceNotes = Array.isArray(obj?.choiceNotes) ? obj.choiceNotes.map(x => String(x || '').trim()) : [];
   while (choiceNotes.length < q.choices.length) choiceNotes.push('');
   if (choiceNotes.length > q.choices.length) choiceNotes = choiceNotes.slice(0, q.choices.length);
-  if (!tip || choiceNotes.some(x => !x)) throw new Error('AI応答に空欄があります。もう一度実行してください。');
-  const hint = String(result?.hint || '').trim();
+  if (!hint || !tip || choiceNotes.some(x => !x)) {
+    throw new Error('AI応答のhint・tip・choiceNotesに空欄があります。もう一度実行してください。');
+  }
   return { hint, tip, choiceNotes };
 }
 async function callOpenAI(env, q, definition) {

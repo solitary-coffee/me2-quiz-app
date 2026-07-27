@@ -6564,11 +6564,11 @@ async function devRequestAiExplanation(q,definition,{attempts=2,timeout=60000}={
    },timeout);
    const data=await response.json().catch(()=>({}));
    if(!response.ok){
-    const error=new Error(data.error||`HTTP ${response.status}`);
+    const error=new Error(data.error?`${data.error}（HTTP ${response.status}）`:`HTTP ${response.status}`);
     error.status=response.status;
     throw error;
    }
-   if(!data.tip||!Array.isArray(data.choiceNotes))throw new Error('AI応答の形式が不正です。');
+   if(!data.hint||!data.tip||!Array.isArray(data.choiceNotes)||data.choiceNotes.length!==(q.choices||[]).length)throw new Error('AI応答のhint・tip・choiceNotes形式が不正です。');
    return {
     hint:normalizeLatexBackslashes(String(data.hint||'')),
     tip:normalizeLatexBackslashes(String(data.tip||'')),
