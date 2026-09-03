@@ -6,7 +6,7 @@
     "build": "node -e \"console.log('No build needed. Cloudflare Pages output directory is project root: .');\"",
     "dev": "wrangler pages dev .",
     "deploy": "npm run deploy:pages",
-    "deploy:pages": "wrangler pages deploy . --project-name me2-json-quiz --branch=main",
+    "deploy:pages": "wrangler pages deploy . --project-name=me2-quiz-app --branch=main",
     "deploy:worker": "wrangler deploy --config wrangler.worker.toml",
     "deploy:worker:config": "wrangler deploy --config wrangler.worker.toml"
   },
