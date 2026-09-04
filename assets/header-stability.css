@@ -1,0 +1,21 @@
+/*
+ * Keep the desktop header stable while the elapsed-time text changes
+ * from MM:SS to H:MM:SS.
+ */
+#timerBadge {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+  text-align: center;
+  justify-content: center;
+}
+
+@media (min-width: 761px) {
+  #timerBadge {
+    box-sizing: border-box;
+    width: 96px;
+    min-width: 96px;
+    max-width: 96px;
+    flex: 0 0 96px;
+  }
+}
