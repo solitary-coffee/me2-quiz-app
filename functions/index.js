@@ -1,11 +1,14 @@
-const MOBILE_STYLESHEET = '<link rel="stylesheet" href="/assets/mobile.css?v=20260904" media="all">';
+const RESPONSIVE_STYLESHEETS = [
+  '<link rel="stylesheet" href="/assets/mobile.css?v=20260904" media="all">',
+  '<link rel="stylesheet" href="/assets/header-stability.css?v=20260904" media="all">'
+].join('\n  ');
 
 function withResponsiveStyles(html) {
-  if (html.includes('/assets/mobile.css')) return html;
+  if (html.includes('/assets/mobile.css') && html.includes('/assets/header-stability.css')) return html;
   if (html.includes('</head>')) {
-    return html.replace('</head>', `  ${MOBILE_STYLESHEET}\n</head>`);
+    return html.replace('</head>', `  ${RESPONSIVE_STYLESHEETS}\n</head>`);
   }
-  return `${MOBILE_STYLESHEET}\n${html}`;
+  return `${RESPONSIVE_STYLESHEETS}\n${html}`;
 }
 
 export async function onRequestGet(context) {
