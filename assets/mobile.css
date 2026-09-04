@@ -1,0 +1,605 @@
+/*
+ * ME2 Quiz App - responsive/mobile usability layer
+ * Loaded after the inline styles in index.html so these rules can safely
+ * correct narrow-screen layout without changing quiz logic.
+ */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+  overscroll-behavior-x: none;
+}
+
+main,
+header,
+.header-inner,
+.card,
+.round-card,
+.part-card,
+.random-card,
+.viewer-card,
+.answer-card,
+.result,
+.dev-panel,
+.form-card,
+.random-panel {
+  min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+  font-family: inherit;
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+button,
+summary,
+select,
+input[type="checkbox"],
+input[type="radio"] {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 42%, transparent);
+  outline-offset: 2px;
+}
+
+.code,
+.question-title,
+.stem,
+.small,
+.answer-meta,
+.bookmark-meta,
+.dev-issue-meta,
+.result-review-body,
+.question-hint-box,
+.question-annotation {
+  overflow-wrap: anywhere;
+}
+
+.math-content,
+.choice-math,
+mjx-container {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.math-content mjx-container[display="true"],
+.stem mjx-container[display="true"],
+.answer-card mjx-container[display="true"],
+.result mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.15rem;
+}
+
+.explain-table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.explain-table th,
+.explain-table td {
+  min-width: 88px;
+  overflow-wrap: anywhere;
+}
+
+.source-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.card,
+section[id$="Card"] {
+  scroll-margin-top: 112px;
+}
+
+@media (max-width: 900px) {
+  .random-smart-grid,
+  .viewer-random-style .viewer-smart-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .viewer-random-style .viewer-action-panel {
+    grid-column: 1 / -1;
+  }
+
+  .top-info-grid,
+  .form-grid,
+  .result-answer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  header {
+    position: sticky;
+    top: 0;
+  }
+
+  .header-inner {
+    display: block;
+    padding:
+      max(8px, env(safe-area-inset-top))
+      max(10px, env(safe-area-inset-right))
+      8px
+      max(10px, env(safe-area-inset-left));
+  }
+
+  h1 {
+    font-size: 16px;
+    line-height: 1.3;
+    margin-bottom: 7px;
+  }
+
+  .top-actions {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 1px 0 3px;
+  }
+
+  .top-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .top-actions > * {
+    flex: 0 0 auto;
+  }
+
+  .top-actions .badge,
+  .top-actions .pill {
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .theme-toggle {
+    min-height: 34px;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .save-state {
+    white-space: nowrap;
+    font-size: 11px;
+  }
+
+  main {
+    width: 100%;
+    padding:
+      10px
+      max(10px, env(safe-area-inset-right))
+      calc(62px + env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left));
+  }
+
+  .card,
+  .menu-classic,
+  .menu-clean {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+  }
+
+  .card h2 {
+    font-size: 19px;
+    line-height: 1.4;
+  }
+
+  .card h3 {
+    font-size: 16px;
+  }
+
+  .grid,
+  .form-grid,
+  .top-info-grid,
+  .dev-grid,
+  .result-part-breakdown,
+  .result-answer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .round-card,
+  .part-card,
+  .form-card,
+  .dev-panel,
+  .random-card,
+  .viewer-card,
+  .answer-card {
+    padding: 12px;
+    border-radius: 15px;
+  }
+
+  button {
+    min-height: 46px;
+    border-radius: 13px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  button.mini,
+  button.answer-field-chip,
+  .menu-crumb button {
+    min-height: 40px;
+  }
+
+  .menu-crumb {
+    position: sticky;
+    top: 78px;
+    z-index: 12;
+    margin: -4px -4px 10px;
+    padding: 4px;
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+  }
+
+  .menu-crumb button {
+    width: 100%;
+  }
+
+  .stem {
+    font-size: 17px;
+    line-height: 1.7;
+    margin: 8px 0 14px;
+  }
+
+  .question-title {
+    font-size: 13px;
+  }
+
+  .choice {
+    min-height: 58px;
+    margin: 8px 0;
+    padding: 12px;
+    gap: 10px;
+    border-radius: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .choice .num {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  .result {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .kpi {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .kpi div {
+    padding: 10px;
+    border-radius: 13px;
+  }
+
+  .kpi b {
+    font-size: 18px;
+  }
+
+  .random-head,
+  .viewer-random-style .viewer-head,
+  .version-current {
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .random-mini-badge,
+  .viewer-random-style .viewer-badge,
+  .version-pill {
+    align-self: flex-start;
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .random-smart-grid,
+  .viewer-random-style .viewer-smart-grid {
+    grid-template-columns: 1fr !important;
+    gap: 9px;
+  }
+
+  .viewer-random-style .viewer-action-panel {
+    grid-column: auto;
+  }
+
+  .random-panel {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .range-line {
+    gap: 6px;
+  }
+
+  .range-line select,
+  .count-line input,
+  .viewer-random-style select,
+  .viewer-controls select {
+    min-height: 46px;
+  }
+
+  .segmented span {
+    min-height: 46px;
+  }
+
+  .count-line {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .count-line input {
+    grid-column: 1 / -1;
+  }
+
+  .count-chip {
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 6px;
+  }
+
+  .check-grid {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding: 10px;
+  }
+
+  .check-grid label {
+    min-height: 46px;
+    padding: 10px;
+  }
+
+  .random-actions,
+  .viewer-action-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .random-actions button,
+  .viewer-action-buttons button {
+    width: 100%;
+  }
+
+  .classic-action-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .classic-action-row > button,
+  .classic-action-row > a {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .classic-action-row .pill {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ce-exam-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    text-align: center;
+  }
+
+  .top-status-tools,
+  .viewer-card,
+  .viewer-controls {
+    grid-template-columns: 1fr !important;
+  }
+
+  .top-status-tools button,
+  .viewer-controls button {
+    width: 100%;
+  }
+
+  .answer-card summary {
+    gap: 6px;
+  }
+
+  .answer-primary-filters,
+  .answer-field-summary,
+  .answer-summary-chips {
+    width: 100%;
+  }
+
+  .answer-field-summary-title {
+    flex-basis: 100%;
+  }
+
+  .explain-table {
+    font-size: 13px;
+  }
+
+  .explain-table th,
+  .explain-table td {
+    padding: 8px 6px;
+  }
+
+  .image-zoom-toolbar-right {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dev-check-grid,
+  .dev-image-crop-fields {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dev-definition-box textarea,
+  .dev-field textarea {
+    min-height: 180px;
+  }
+
+  .quiz-tools {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-tools button {
+    width: 100%;
+  }
+
+  .elim-wrap {
+    min-width: 0;
+  }
+
+  .elim-wrap .choice {
+    flex: 1 1 auto;
+  }
+
+  .site-footer {
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding-left: max(8px, env(safe-area-inset-left));
+    padding-right: max(8px, env(safe-area-inset-right));
+  }
+
+  .card,
+  .menu-classic,
+  .menu-clean {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .public-intro,
+  .disclaimer,
+  .mobile-note,
+  .contact-card,
+  .version-card,
+  .top-info-details,
+  .classic-info-details,
+  .range-details {
+    border-radius: 13px;
+  }
+
+  .classic-action-row {
+    grid-template-columns: 1fr;
+  }
+
+  .classic-action-row .pill {
+    grid-column: auto;
+  }
+
+  #partCard > .row,
+  #syncCard .row,
+  .dev-definition-box .row {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  #partCard > .row button,
+  #syncCard .row button,
+  .dev-definition-box .row button {
+    width: 100%;
+  }
+
+  .kpi {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .count-line {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .source-img {
+    border-radius: 10px;
+  }
+
+  .answer-chip {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  button,
+  .round-card,
+  .choice,
+  summary,
+  label {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .round-card:active,
+  .choice:active,
+  button:active {
+    transform: scale(0.99);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
