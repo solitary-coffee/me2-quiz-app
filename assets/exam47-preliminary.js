@@ -102,7 +102,7 @@
   }
 
   function createCard(data) {
-    const card = document.createElement('section');
+    const card = document.createElement('div');
     card.className = 'exam47-preliminary-card';
     card.id = 'exam47PreliminaryCard';
     card.setAttribute('aria-labelledby', 'exam47PreliminaryTitle');
@@ -143,10 +143,39 @@
       </div>
 
       <p class="exam47-footnote">
-        ※ 掲載する回答はAI等による非公式の暫定回答です。採点・合否判断の根拠にはせず、正式な正答および合格結果は必ず試験実施団体が公表する公式情報・合格発表をご確認ください。
+        ※ 掲載する回答はAI等による非公式の暫定回答です。採点・合否判断の根拠にはせず、正式な正答および合格結果は必ず試験実施団体が公表する公式情報・合格発表をご確認ください。正式な問題・正答が発表され次第、当サイトも順次対応予定です。
       </p>`;
 
     return card;
+  }
+
+  function createStandaloneSection(data) {
+    const section = document.createElement('section');
+    section.className = 'exam47-standalone-section';
+    section.id = 'exam47StandaloneSection';
+    section.innerHTML = `
+      <div class="exam47-section-label">第47回専用</div>
+      <div class="exam47-section-title-row">
+        <div>
+          <h2>最新試験・回答速報</h2>
+          <p class="small">第47回は、正式公開前の回答速報として過去問一覧とは別枠で掲載します。</p>
+        </div>
+      </div>`;
+    section.appendChild(createCard(data));
+    return section;
+  }
+
+  function createPastExamHeading() {
+    const heading = document.createElement('div');
+    heading.className = 'exam47-past-exam-heading';
+    heading.id = 'pastExamHeading';
+    heading.innerHTML = `
+      <div>
+        <span class="exam47-past-label">通常の過去問</span>
+        <h2>過去問演習（第46回以前）</h2>
+        <p class="small">第46回以前は、従来どおり演習・問題閲覧・解説を利用できます。</p>
+      </div>`;
+    return heading;
   }
 
   function fallbackData() {
@@ -154,7 +183,7 @@
       status: 'preparing',
       statusLabel: '準備中',
       updatedAt: null,
-      notice: '試験終了後、問題用紙をもとに問題文・選択肢・図表とAIによる暫定回答を掲載する予定です。掲載内容は非公式であり、正式な正答ではありません。最終的な正答および合否は、必ず試験実施団体が公表する公式情報・合格発表を確認してください。',
+      notice: '試験終了後、問題用紙をもとに問題文・選択肢・図表とAIによる暫定回答を掲載する予定です。掲載内容は非公式であり、正式な正答ではありません。最終的な正答および合否は、必ず試験実施団体が公表する公式情報・合格発表を確認してください。正式な問題・正答が発表され次第、当サイトも順次対応予定です。',
       parts: {
         am: { label: '午前', status: 'preparing', answers: Array(60).fill(null), questions: [] },
         pm: { label: '午後', status: 'preparing', answers: Array(60).fill(null), questions: [] }
@@ -163,7 +192,7 @@
   }
 
   async function init() {
-    if (document.getElementById('exam47PreliminaryCard')) return;
+    if (document.getElementById('exam47StandaloneSection')) return;
     const examGrid = document.getElementById('examGrid');
     if (!examGrid) return;
 
@@ -175,7 +204,9 @@
       // The frame still renders in preparing state if data loading fails.
     }
 
-    examGrid.parentNode.insertBefore(createCard(data), examGrid);
+    const parent = examGrid.parentNode;
+    parent.insertBefore(createStandaloneSection(data), examGrid);
+    parent.insertBefore(createPastExamHeading(), examGrid);
   }
 
   if (document.readyState === 'loading') {
