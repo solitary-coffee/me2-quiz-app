@@ -1,0 +1,131 @@
+/* 第47回 回答速報：正式公開前の予告・速報専用枠 */
+.exam47-preliminary-card{
+  margin:16px 0;
+  padding:18px;
+  border:1px solid color-mix(in srgb,var(--accent) 42%,var(--line));
+  border-radius:20px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 8%,var(--card)),var(--card));
+  box-shadow:var(--shadow);
+}
+.exam47-preliminary-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+}
+.exam47-preliminary-head h2{margin:0 0 6px;font-size:22px}
+.exam47-preliminary-head p{margin:0;line-height:1.7}
+.exam47-status-badge{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:34px;
+  padding:6px 10px;
+  border:1px solid #f59e0b;
+  border-radius:999px;
+  background:#fffbeb;
+  color:#92400e;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.exam47-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:12px;
+}
+.exam47-meta span{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 9px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--card);
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+.exam47-lock{
+  margin:14px 0;
+  padding:12px 14px;
+  border:1px solid #fecaca;
+  border-left:5px solid #ef4444;
+  border-radius:14px;
+  background:#fff1f2;
+  color:#881337;
+  line-height:1.7;
+}
+.exam47-lock strong{display:block;margin-bottom:3px}
+.exam47-parts{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+.exam47-part{
+  margin:0;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--card);
+  overflow:hidden;
+}
+.exam47-part summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:13px 14px;
+  cursor:pointer;
+  color:var(--accent);
+  font-weight:900;
+}
+.exam47-part summary::-webkit-details-marker{display:none}
+.exam47-part-status{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+.exam47-answer-grid{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:7px;
+  padding:0 12px 12px;
+}
+.exam47-answer-cell{
+  min-width:0;
+  padding:8px 6px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+  text-align:center;
+}
+.exam47-answer-cell b{display:block;font-size:11px;color:var(--muted);margin-bottom:2px}
+.exam47-answer-cell span{display:block;font-size:17px;font-weight:900;font-variant-numeric:tabular-nums}
+.exam47-answer-cell.is-pending span{color:var(--muted)}
+.exam47-answer-cell.is-published{
+  border-color:color-mix(in srgb,var(--accent) 48%,var(--line));
+  background:color-mix(in srgb,var(--accent) 7%,var(--card));
+}
+.exam47-footnote{
+  margin:12px 0 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+html[data-theme="dark"] .exam47-status-badge{background:#451a03;color:#fde68a;border-color:#b45309}
+html[data-theme="dark"] .exam47-lock{background:#450a0a;color:#fecdd3;border-color:#7f1d1d;border-left-color:#ef4444}
+html[data-theme="dark"] .exam47-meta span,html[data-theme="dark"] .exam47-part{background:#111827;border-color:#334155}
+html[data-theme="dark"] .exam47-answer-cell{background:#0f172a;border-color:#334155}
+@media(max-width:760px){
+  .exam47-preliminary-card{padding:13px;border-radius:16px}
+  .exam47-preliminary-head{display:block}
+  .exam47-preliminary-head h2{font-size:19px}
+  .exam47-status-badge{margin-top:9px;white-space:normal}
+  .exam47-parts{grid-template-columns:1fr}
+  .exam47-answer-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:0 9px 9px}
+}
+@media(max-width:420px){
+  .exam47-answer-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
