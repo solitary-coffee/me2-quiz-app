@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "me2-preliminary-answer-v1",
+  "examId": "47",
+  "title": "第47回 第2種ME技術実力検定試験",
+  "examDate": "2026-09-06",
+  "status": "scheduled",
+  "statusLabel": "回答速報 準備中",
+  "updatedAt": null,
+  "isOfficial": false,
+  "officialContentUnlocked": false,
+  "notice": "試験終了後、AIによる暫定的な回答速報を掲載するための枠です。正式な問題・解答が公開されるまでは、問題演習・問題文・解説は公開しません。",
+  "parts": {
+    "am": {
+      "label": "午前",
+      "status": "pending",
+      "answers": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+    },
+    "pm": {
+      "label": "午後",
+      "status": "pending",
+      "answers": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+    }
+  }
+}
