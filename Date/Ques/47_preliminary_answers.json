@@ -1,24 +1,29 @@
 {
-  "schemaVersion": "me2-preliminary-answer-v1",
+  "schemaVersion": "me2-preliminary-answer-v2",
   "examId": "47",
   "title": "第47回 第2種ME技術実力検定試験",
   "examDate": "2026-09-06",
-  "status": "scheduled",
-  "statusLabel": "回答速報 準備中",
+  "status": "preparing",
+  "statusLabel": "準備中",
   "updatedAt": null,
   "isOfficial": false,
   "officialContentUnlocked": false,
-  "notice": "試験終了後、AIによる暫定的な回答速報を掲載するための枠です。正式な問題・解答が公開されるまでは、問題演習・問題文・解説は公開しません。",
+  "preliminaryProblemViewingEnabled": true,
+  "practiceEnabled": false,
+  "explanationsEnabled": false,
+  "notice": "試験終了後、問題用紙をもとに問題文・選択肢・図表とAIによる暫定回答を掲載する予定です。掲載内容は非公式であり、正式な正答ではありません。最終的な正答および合否は、必ず試験実施団体が公表する公式情報・合格発表を確認してください。",
   "parts": {
     "am": {
       "label": "午前",
-      "status": "pending",
-      "answers": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+      "status": "preparing",
+      "answers": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+      "questions": []
     },
     "pm": {
       "label": "午後",
-      "status": "pending",
-      "answers": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
+      "status": "preparing",
+      "answers": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+      "questions": []
     }
   }
 }
