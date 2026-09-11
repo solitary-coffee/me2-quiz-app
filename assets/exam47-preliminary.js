@@ -10,17 +10,31 @@
     return choice ?? '';
   };
 
-  function answerCell(answer, index) {
-    const published = answer !== null && answer !== undefined && String(answer).trim() !== '';
+  const answerValues = (answer) => {
+    const values = Array.isArray(answer) ? answer : [answer];
+    return values.filter(v => v !== null && v !== undefined && String(v).trim() !== '');
+  };
+
+  const answerText = (answer) => answerValues(answer).map(v => escapeHtml(v)).join('・');
+
+  const questionFlag = (part, number) => {
+    const flags = Array.isArray(part?.flaggedQuestions) ? part.flaggedQuestions : [];
+    return flags.find(flag => Number(flag?.number) === Number(number)) || null;
+  };
+
+  function answerCell(answer, index, part) {
+    const values = answerValues(answer);
+    const published = values.length > 0;
+    const flag = questionFlag(part, index + 1);
     return `
-      <div class="exam47-answer-cell ${published ? 'is-published' : 'is-pending'}">
-        <b>問${index + 1}</b>
-        <span>${published ? escapeHtml(answer) : '—'}</span>
+      <div class="exam47-answer-cell ${published ? 'is-published' : 'is-pending'} ${flag ? 'is-flagged' : ''}">
+        <b>問${index + 1}${flag ? '※' : ''}</b>
+        <span>${published ? answerText(answer) : '—'}</span>
       </div>`;
   }
 
   function publishedCount(part) {
-    return (part?.answers || []).filter(v => v !== null && v !== undefined && String(v).trim() !== '').length;
+    return (part?.answers || []).filter(v => answerValues(v).length > 0).length;
   }
 
   function questionImages(question) {
@@ -31,19 +45,21 @@
     return [...new Set(raw.filter(Boolean))];
   }
 
-  function renderQuestion(question, index, answers) {
+  function renderQuestion(question, index, part) {
+    const answers = Array.isArray(part?.answers) ? part.answers : [];
     const number = Number(question?.number || question?.questionNumber || index + 1);
     const choices = Array.isArray(question?.choices) ? question.choices : [];
     const images = questionImages(question);
     const preliminaryAnswer = question?.preliminaryAnswer ?? answers?.[number - 1];
-    const hasAnswer = preliminaryAnswer !== null && preliminaryAnswer !== undefined && String(preliminaryAnswer).trim() !== '';
+    const hasAnswer = answerValues(preliminaryAnswer).length > 0;
+    const flag = questionFlag(part, number);
 
     return `
-      <article class="exam47-question-card">
+      <article class="exam47-question-card ${flag ? 'is-flagged' : ''}">
         <div class="exam47-question-head">
-          <strong>問${escapeHtml(number)}</strong>
+          <strong>問${escapeHtml(number)}${flag ? '※' : ''}</strong>
           <span class="exam47-question-answer ${hasAnswer ? 'is-published' : ''}">
-            暫定回答：${hasAnswer ? escapeHtml(preliminaryAnswer) : '準備中'}
+            速報回答：${hasAnswer ? answerText(preliminaryAnswer) : '準備中'}
           </span>
         </div>
         <div class="exam47-question-stem">${escapeHtml(question?.stem ?? question?.question ?? '問題文 準備中')}</div>
@@ -72,9 +88,43 @@
       <details class="exam47-question-viewer">
         <summary>問題・選択肢・図表を見る <span>${questions.length}問掲載</span></summary>
         <div class="exam47-question-list">
-          ${questions.map((question, index) => renderQuestion(question, index, part?.answers || [])).join('')}
+          ${questions.map((question, index) => renderQuestion(question, index, part)).join('')}
         </div>
       </details>`;
+  }
+
+  function renderCorrections(part, label) {
+    const corrections = Array.isArray(part?.corrections) ? part.corrections : [];
+    if (!corrections.length) return '';
+
+    return `
+      <div class="exam47-correction-memo">
+        <strong>訂正メモ</strong>
+        <div class="exam47-correction-list">
+          ${corrections.map(item => `
+            <span>${escapeHtml(label)}${escapeHtml(item?.number)}問　訂正：${answerText(item?.from)} → ${answerText(item?.to)}</span>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  function renderFlaggedQuestions(part, label) {
+    const flags = Array.isArray(part?.flaggedQuestions) ? part.flaggedQuestions : [];
+    if (!flags.length) return '';
+
+    return `
+      <div class="exam47-official-review">
+        <strong>※ 不適切問題・公式回答要確認</strong>
+        <p>複数正答または設問上の疑義がある可能性を含むため、最終判定は公式正答を確認してください。速報回答は該当すると判断した番号をすべて表示します。</p>
+        <div class="exam47-official-review-list">
+          ${flags.map(flag => {
+            const number = Number(flag?.number);
+            const fallbackAnswer = part?.answers?.[number - 1];
+            const answers = flag?.answers ?? fallbackAnswer;
+            const note = flag?.note ? `：${escapeHtml(flag.note)}` : '';
+            return `<span>${escapeHtml(label)}${escapeHtml(number)}問※　速報回答：${answerText(answers)}${note}</span>`;
+          }).join('')}
+        </div>
+      </div>`;
   }
 
   function renderPart(key, part) {
@@ -86,7 +136,7 @@
     const status = isPreparing ? '準備中' : `回答 ${count}/${answers.length}問・問題 ${questions.length}問`;
 
     return `
-      <details class="exam47-part" data-part="${escapeHtml(key)}">
+      <details class="exam47-part" data-part="${escapeHtml(key)}" open>
         <summary>
           <span>${escapeHtml(label)} 回答速報</span>
           <span class="exam47-part-status">${escapeHtml(status)}</span>
@@ -94,8 +144,10 @@
         <div class="exam47-answer-section">
           <h3>暫定回答一覧</h3>
           <div class="exam47-answer-grid">
-            ${answers.map(answerCell).join('')}
+            ${answers.map((answer, index) => answerCell(answer, index, part)).join('')}
           </div>
+          ${renderCorrections(part, label)}
+          ${renderFlaggedQuestions(part, label)}
         </div>
         ${renderQuestionViewer(part)}
       </details>`;
@@ -111,6 +163,8 @@
     const statusLabel = isPreparing ? '準備中' : (data?.statusLabel || '回答速報 掲載中');
     const updated = data?.updatedAt ? `速報更新：${escapeHtml(data.updatedAt)}` : '速報更新：未掲載';
     const notice = data?.notice || '第47回の回答速報を掲載するための準備枠です。';
+    const reviewPolicy = data?.reviewPolicy || '';
+    const answerDisplayPolicy = data?.answerDisplayPolicy || '';
 
     card.innerHTML = `
       <div class="exam47-preliminary-head">
@@ -132,9 +186,15 @@
         ${escapeHtml(notice)}
       </div>
 
+      ${(reviewPolicy || answerDisplayPolicy) ? `
+        <div class="exam47-review-policy">
+          ${reviewPolicy ? `<span>${escapeHtml(reviewPolicy)}</span>` : ''}
+          ${answerDisplayPolicy ? `<span>${escapeHtml(answerDisplayPolicy)}</span>` : ''}
+        </div>` : ''}
+
       <div class="exam47-lock">
         <strong>🔒 正式公開まで演習・正誤判定・解説は利用できません</strong>
-        速報掲載後は、問題文・選択肢・問題内の図表/画像・暫定回答のみ閲覧できます。通常の演習機能と解説は、正式な問題・正答が公開された後に開放する想定です。
+        回答速報では正答番号のみを掲載します。通常の演習機能と解説は、正式な問題・正答が公開された後に開放する想定です。
       </div>
 
       <div class="exam47-parts">
@@ -143,7 +203,7 @@
       </div>
 
       <p class="exam47-footnote">
-        ※ 掲載する回答はAI等による非公式の暫定回答です。採点・合否判断の根拠にはせず、正式な正答および合格結果は必ず試験実施団体が公表する公式情報・合格発表をご確認ください。正式な問題・正答が発表され次第、当サイトも順次対応予定です。
+        ※ 掲載する回答はAI等による非公式の暫定回答です。採点・合否判断の根拠にはせず、正式な正答、複数正答・不適切問題の扱いおよび合格結果は必ず試験実施団体が公表する公式情報をご確認ください。正式な問題・正答が発表され次第、当サイトも順次対応予定です。
       </p>`;
 
     return card;
@@ -183,10 +243,10 @@
       status: 'preparing',
       statusLabel: '準備中',
       updatedAt: null,
-      notice: '試験終了後、問題用紙をもとに問題文・選択肢・図表とAIによる暫定回答を掲載する予定です。掲載内容は非公式であり、正式な正答ではありません。最終的な正答および合否は、必ず試験実施団体が公表する公式情報・合格発表を確認してください。正式な問題・正答が発表され次第、当サイトも順次対応予定です。',
+      notice: '試験終了後、問題用紙をもとにAIによる暫定回答を掲載する予定です。掲載内容は非公式であり、正式な正答ではありません。最終的な正答および合否は、必ず試験実施団体が公表する公式情報・合格発表を確認してください。正式な問題・正答が発表され次第、当サイトも順次対応予定です。',
       parts: {
-        am: { label: '午前', status: 'preparing', answers: Array(60).fill(null), questions: [] },
-        pm: { label: '午後', status: 'preparing', answers: Array(60).fill(null), questions: [] }
+        am: { label: '午前', status: 'preparing', answers: Array(60).fill(null), corrections: [], flaggedQuestions: [], questions: [] },
+        pm: { label: '午後', status: 'preparing', answers: Array(60).fill(null), corrections: [], flaggedQuestions: [], questions: [] }
       }
     };
   }
