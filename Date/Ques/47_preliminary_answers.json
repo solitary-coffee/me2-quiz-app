@@ -4,15 +4,14 @@
   "title": "第47回 第2種ME技術実力検定試験",
   "examDate": "2026-09-06",
   "status": "preliminary",
-  "statusLabel": "午前・午後 回答速報（再確認版）",
+  "statusLabel": "午前・午後 回答速報掲載中",
   "updatedAt": "2026-09-11T15:17:00+09:00",
   "isOfficial": false,
   "officialContentUnlocked": false,
   "preliminaryProblemViewingEnabled": true,
   "practiceEnabled": false,
   "explanationsEnabled": false,
-  "answerDisplayPolicy": "速報欄は正答番号のみ表示します。解説・根拠は正式公開まで掲載しません。",
-  "notice": "午前・午後の非公式な暫定回答速報です。9月11日に問題用紙を全問再確認し、初期速報から訂正した問題は各回答速報枠の下に「訂正メモ」として表示します。掲載内容は正式な正答ではありません。最終的な正答・複数正答・不適切問題の扱いおよび合否は、必ず試験実施団体が公表する公式情報をご確認ください。正式な問題・正答が発表され次第、当サイトも順次対応予定です。",
+  "notice": "第47回 第2種ME技術実力検定試験の非公式回答速報です。掲載中の回答は暫定情報であり、正式な正答ではありません。正式な正答、複数正答・不適切問題の取り扱い、合否については、試験実施団体の公式発表をご確認ください。公式の問題・正答が公表され次第、当サイトも内容を更新します。",
   "parts": {
     "am": {
       "label": "午前",
