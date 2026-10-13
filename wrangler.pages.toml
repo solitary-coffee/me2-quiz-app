@@ -4,3 +4,8 @@
 name = "me2-json-quiz"
 compatibility_date = "2026-05-31"
 pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "IP_BLOCK_DB"
+database_name = "dpi-newsletter"
+database_id = "8c0bbd9c-e3ac-4298-baa4-e98439882d3b"
