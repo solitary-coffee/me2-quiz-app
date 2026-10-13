@@ -55,8 +55,9 @@ test('共有D1へ登録したCIDRを403専用画面で遮断する', async () =>
   assert.match(html, /管理画面から登録した理由/u);
   assert.match(html, /test-ray-NRT/u);
   assert.match(html, /me\.dpi-bot\.com/u);
-  assert.match(html, /攻撃確定/u);
-  assert.match(html, /https:\/\/dpi-bot\.com\/site\/supp\//u);
+  assert.doesNotMatch(html, /攻撃確定|攻撃疑い/u);
+  assert.doesNotMatch(html, /https:\/\/dpi-bot\.com\/site\/supp\//u);
+  assert.match(html, /support@dpi-bot\.com/u);
 });
 
 test('旧スキーマとNEWSLETTER_DB別名でも共有D1ルールを読み込む', async () => {
@@ -82,7 +83,7 @@ test('旧スキーマとNEWSLETTER_DB別名でも共有D1ルールを読み込�
   assert.equal(response.status, 403);
   const html = await response.text();
   assert.match(html, /旧スキーマの共有ルール/u);
-  assert.match(html, /攻撃疑い/u);
+  assert.doesNotMatch(html, /攻撃疑い|攻撃確定/u);
 });
 
 test('APIリクエストは403 JSONを返す', async () => {
@@ -95,8 +96,6 @@ test('APIリクエストは403 JSONを返す', async () => {
     status: 403,
     code: 'ip_blocked',
     message: 'APIアクセスを制限しています。',
-    blockLevel: 'suspected',
-    blockLevelLabel: '攻撃疑い',
     rayId: '取得できませんでした'
   });
 });
