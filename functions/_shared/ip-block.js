@@ -85,26 +85,19 @@ export async function blockResponseForRequest(request, env) {
 }
 
 async function loadDatabaseRules(env) {
-  const database = env.IP_BLOCK_DB;
+  const database = env.IP_BLOCK_DB || env.NEWSLETTER_DB;
   if (!database?.prepare) return [];
 
   const cached = databaseRuleCache.get(database);
   if (cached?.expiresAt > Date.now()) return cached.rules;
 
   try {
-    let result;
-    try {
-      result = await database.prepare(
-        `SELECT network, reason, block_level FROM ip_block_rules
-         WHERE enabled = 1 ORDER BY created_at ASC`
-      ).all();
-    } catch (error) {
-      if (!/block_level|no such column/iu.test(String(error?.message || error))) throw error;
-      result = await database.prepare(
-        `SELECT network, reason FROM ip_block_rules
-         WHERE enabled = 1 ORDER BY created_at ASC`
-      ).all();
-    }
+    // SELECT * works before and after the block_level migration. If the column
+    // is absent, normalizeBlockLevel supplies the safe default below.
+    const result = await database.prepare(
+      `SELECT * FROM ip_block_rules
+       WHERE enabled = 1 ORDER BY created_at ASC`
+    ).all();
     const rules = (result?.results || []).flatMap((row) => {
       const parsed = parseNetwork(row?.network);
       if (!parsed) return [];
@@ -120,7 +113,8 @@ async function loadDatabaseRules(env) {
     // D1の一時障害でサイト全体を停止させないため、Secretルールだけで継続します。
     console.error('IP block rules could not be loaded from D1', {
       errorName: error?.name || 'Error',
-      errorCode: error?.code || 'unknown'
+      errorCode: error?.code || 'unknown',
+      errorMessage: cleanText(error?.message, 200) || 'unknown'
     });
     databaseRuleCache.set(database, { expiresAt: Date.now() + DATABASE_CACHE_MS, rules: [] });
     return [];
