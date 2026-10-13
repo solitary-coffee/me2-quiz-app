@@ -60,8 +60,6 @@ export async function blockResponseForRequest(request, env) {
       status: BLOCK_STATUS,
       code: 'ip_blocked',
       message: reason,
-      blockLevel,
-      blockLevelLabel: BLOCK_LEVELS[blockLevel].label,
       rayId
     }), {
       status: BLOCK_STATUS,
@@ -73,7 +71,6 @@ export async function blockResponseForRequest(request, env) {
     hostname: url.hostname,
     clientIp,
     reason,
-    blockLevel,
     rayId,
     occurredAt: new Date().toISOString()
   });
@@ -222,11 +219,10 @@ function expandIpv6(value) {
   return groups.map((group) => Number.parseInt(group, 16));
 }
 
-function renderBlockedPage({ hostname, clientIp, reason, blockLevel, rayId, occurredAt }) {
+function renderBlockedPage({ hostname, clientIp, reason, rayId, occurredAt }) {
   const safeHostname = escapeHtml(hostname);
   const safeClientIp = escapeHtml(clientIp);
   const safeReason = escapeHtml(reason);
-  const safeBlockLevel = escapeHtml(BLOCK_LEVELS[normalizeBlockLevel(blockLevel)].label);
   const safeRayId = escapeHtml(rayId);
   const safeOccurredAt = escapeHtml(occurredAt);
 
@@ -241,7 +237,7 @@ function renderBlockedPage({ hostname, clientIp, reason, blockLevel, rayId, occu
     :root{color-scheme:dark;--panel:#0d1b2d;--line:#20344d;--text:#eef6ff;--muted:#a9bad0;--accent:#54b8ff;--warn:#ffbf69}
     *{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;padding:28px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:radial-gradient(circle at top,#102a47 0,#07111f 50%);color:var(--text)}
     main{width:min(720px,100%);padding:clamp(28px,6vw,52px);background:rgba(13,27,45,.96);border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.38)}
-    .status,.level{display:inline-flex;align-items:center;gap:10px;margin:0 8px 22px 0;padding:8px 13px;border:1px solid rgba(255,191,105,.4);border-radius:999px;color:var(--warn);font-weight:750;letter-spacing:.04em}.level{border-color:rgba(84,184,255,.45);color:var(--accent)}.dot{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 16px currentColor}
+    .status{display:inline-flex;align-items:center;gap:10px;margin:0 0 22px;padding:8px 13px;border:1px solid rgba(255,191,105,.4);border-radius:999px;color:var(--warn);font-weight:750;letter-spacing:.04em}.dot{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 16px currentColor}
     h1{margin:0;font-size:clamp(28px,6vw,46px);line-height:1.2}p{font-size:16px;line-height:1.85;color:var(--muted)}.lead{margin:18px 0 28px;font-size:18px;color:var(--text)}
     .detail{display:grid;grid-template-columns:max-content 1fr;gap:10px 20px;margin:28px 0;padding:20px;border-radius:16px;background:#091625;border:1px solid var(--line);font-size:14px}.detail dt{color:var(--muted)}.detail dd{margin:0;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
     .help{padding-top:22px;border-top:1px solid var(--line)}a{color:var(--accent)}small{display:block;margin-top:28px;color:#7f93ac}
@@ -251,7 +247,6 @@ function renderBlockedPage({ hostname, clientIp, reason, blockLevel, rayId, occu
 <body>
   <main>
     <div class="status"><span class="dot"></span>HTTP 403 Forbidden</div>
-    <div class="level">遮断区分: ${safeBlockLevel}</div>
     <h1>アクセスが制限されています</h1>
     <p class="lead">${safeReason}</p>
     <p>この制限は <strong>${safeHostname}</strong> 配下のページおよびAPIに適用されています。共有回線・VPN・プロキシを利用している場合は、接続先を変更してからもう一度お試しください。</p>
@@ -260,7 +255,7 @@ function renderBlockedPage({ hostname, clientIp, reason, blockLevel, rayId, occu
       <dt>Ray ID</dt><dd>${safeRayId}</dd>
       <dt>判定時刻</dt><dd>${safeOccurredAt}</dd>
     </dl>
-    <p class="help">心当たりがない場合は、上記のRay IDと判定時刻を添えて、<a href="https://dpi-bot.com/site/supp/">お問い合わせフォーム</a>からご連絡ください。メールの場合は <a href="mailto:support@dpi-bot.com">support@dpi-bot.com</a> をご利用いただけます。</p>
+    <p class="help">心当たりがない場合は、上記のRay IDと判定時刻を添えて <strong>support@dpi-bot.com</strong> までご連絡ください。</p>
     <small>DPI-Bot Security Gateway</small>
   </main>
 </body>
