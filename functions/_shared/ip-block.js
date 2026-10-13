@@ -1,6 +1,16 @@
 const BLOCK_STATUS = 403;
 const DATABASE_CACHE_MS = 30_000;
-const DEFAULT_MESSAGE = 'サイトの安全な運用のため、この接続元からのアクセスを制限しています。';
+const BLOCK_LEVELS = Object.freeze({
+  suspected: Object.freeze({
+    label: '攻撃疑い',
+    message: '不審なアクセスが確認されたため、安全確認のため一時的にアクセスを制限しています。'
+  }),
+  confirmed: Object.freeze({
+    label: '攻撃確定',
+    message: '攻撃または不正なアクセスを確認したため、この接続元からのアクセスを遮断しています。'
+  })
+});
+const DEFAULT_BLOCK_LEVEL = 'suspected';
 let databaseRuleCache = new WeakMap();
 
 const HTML_HEADERS = Object.freeze({
@@ -34,7 +44,8 @@ export async function blockResponseForRequest(request, env) {
 
   const url = new URL(request.url);
   const rayId = cleanText(request.headers.get('cf-ray'), 128) || '取得できませんでした';
-  const reason = rule.reason || cleanText(env.IP_BLOCK_MESSAGE, 500) || DEFAULT_MESSAGE;
+  const blockLevel = normalizeBlockLevel(rule.blockLevel);
+  const reason = rule.reason || cleanText(env.IP_BLOCK_MESSAGE, 500) || defaultReasonForLevel(blockLevel);
 
   console.warn('Blocked request', {
     hostname: url.hostname,
@@ -49,6 +60,8 @@ export async function blockResponseForRequest(request, env) {
       status: BLOCK_STATUS,
       code: 'ip_blocked',
       message: reason,
+      blockLevel,
+      blockLevelLabel: BLOCK_LEVELS[blockLevel].label,
       rayId
     }), {
       status: BLOCK_STATUS,
@@ -60,6 +73,7 @@ export async function blockResponseForRequest(request, env) {
     hostname: url.hostname,
     clientIp,
     reason,
+    blockLevel,
     rayId,
     occurredAt: new Date().toISOString()
   });
@@ -78,16 +92,27 @@ async function loadDatabaseRules(env) {
   if (cached?.expiresAt > Date.now()) return cached.rules;
 
   try {
-    const statement = database.prepare(
-      `SELECT network, reason FROM ip_block_rules
-       WHERE enabled = 1 ORDER BY created_at ASC`
-    );
-    if (typeof statement?.all !== 'function') return [];
-    const result = await statement.all();
+    let result;
+    try {
+      result = await database.prepare(
+        `SELECT network, reason, block_level FROM ip_block_rules
+         WHERE enabled = 1 ORDER BY created_at ASC`
+      ).all();
+    } catch (error) {
+      if (!/block_level|no such column/iu.test(String(error?.message || error))) throw error;
+      result = await database.prepare(
+        `SELECT network, reason FROM ip_block_rules
+         WHERE enabled = 1 ORDER BY created_at ASC`
+      ).all();
+    }
     const rules = (result?.results || []).flatMap((row) => {
       const parsed = parseNetwork(row?.network);
       if (!parsed) return [];
-      return [{ ...parsed, reason: cleanText(row?.reason, 500) }];
+      return [{
+        ...parsed,
+        reason: cleanText(row?.reason, 500),
+        blockLevel: normalizeBlockLevel(row?.block_level)
+      }];
     });
     databaseRuleCache.set(database, { expiresAt: Date.now() + DATABASE_CACHE_MS, rules });
     return rules;
@@ -126,7 +151,11 @@ function parseRules(rawRules) {
     const [networkValue, ...reasonParts] = entry.split('|');
     const parsed = parseNetwork(networkValue.trim());
     if (!parsed) return [];
-    return [{ ...parsed, reason: cleanText(reasonParts.join('|'), 500) }];
+    return [{
+      ...parsed,
+      reason: cleanText(reasonParts.join('|'), 500),
+      blockLevel: DEFAULT_BLOCK_LEVEL
+    }];
   });
 }
 
@@ -199,10 +228,11 @@ function expandIpv6(value) {
   return groups.map((group) => Number.parseInt(group, 16));
 }
 
-function renderBlockedPage({ hostname, clientIp, reason, rayId, occurredAt }) {
+function renderBlockedPage({ hostname, clientIp, reason, blockLevel, rayId, occurredAt }) {
   const safeHostname = escapeHtml(hostname);
   const safeClientIp = escapeHtml(clientIp);
   const safeReason = escapeHtml(reason);
+  const safeBlockLevel = escapeHtml(BLOCK_LEVELS[normalizeBlockLevel(blockLevel)].label);
   const safeRayId = escapeHtml(rayId);
   const safeOccurredAt = escapeHtml(occurredAt);
 
@@ -217,7 +247,7 @@ function renderBlockedPage({ hostname, clientIp, reason, rayId, occurredAt }) {
     :root{color-scheme:dark;--panel:#0d1b2d;--line:#20344d;--text:#eef6ff;--muted:#a9bad0;--accent:#54b8ff;--warn:#ffbf69}
     *{box-sizing:border-box}body{min-height:100vh;margin:0;display:grid;place-items:center;padding:28px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:radial-gradient(circle at top,#102a47 0,#07111f 50%);color:var(--text)}
     main{width:min(720px,100%);padding:clamp(28px,6vw,52px);background:rgba(13,27,45,.96);border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 80px rgba(0,0,0,.38)}
-    .status{display:inline-flex;align-items:center;gap:10px;margin:0 0 22px;padding:8px 13px;border:1px solid rgba(255,191,105,.4);border-radius:999px;color:var(--warn);font-weight:750;letter-spacing:.04em}.dot{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 16px currentColor}
+    .status,.level{display:inline-flex;align-items:center;gap:10px;margin:0 8px 22px 0;padding:8px 13px;border:1px solid rgba(255,191,105,.4);border-radius:999px;color:var(--warn);font-weight:750;letter-spacing:.04em}.level{border-color:rgba(84,184,255,.45);color:var(--accent)}.dot{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 16px currentColor}
     h1{margin:0;font-size:clamp(28px,6vw,46px);line-height:1.2}p{font-size:16px;line-height:1.85;color:var(--muted)}.lead{margin:18px 0 28px;font-size:18px;color:var(--text)}
     .detail{display:grid;grid-template-columns:max-content 1fr;gap:10px 20px;margin:28px 0;padding:20px;border-radius:16px;background:#091625;border:1px solid var(--line);font-size:14px}.detail dt{color:var(--muted)}.detail dd{margin:0;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
     .help{padding-top:22px;border-top:1px solid var(--line)}a{color:var(--accent)}small{display:block;margin-top:28px;color:#7f93ac}
@@ -227,6 +257,7 @@ function renderBlockedPage({ hostname, clientIp, reason, rayId, occurredAt }) {
 <body>
   <main>
     <div class="status"><span class="dot"></span>HTTP 403 Forbidden</div>
+    <div class="level">遮断区分: ${safeBlockLevel}</div>
     <h1>アクセスが制限されています</h1>
     <p class="lead">${safeReason}</p>
     <p>この制限は <strong>${safeHostname}</strong> 配下のページおよびAPIに適用されています。共有回線・VPN・プロキシを利用している場合は、接続先を変更してからもう一度お試しください。</p>
@@ -235,11 +266,19 @@ function renderBlockedPage({ hostname, clientIp, reason, rayId, occurredAt }) {
       <dt>Ray ID</dt><dd>${safeRayId}</dd>
       <dt>判定時刻</dt><dd>${safeOccurredAt}</dd>
     </dl>
-    <p class="help">心当たりがない場合は、上記のRay IDと判定時刻を添えて <a href="mailto:support@dpi-bot.com">support@dpi-bot.com</a> までお問い合わせください。</p>
+    <p class="help">心当たりがない場合は、上記のRay IDと判定時刻を添えて、<a href="https://dpi-bot.com/site/supp/">お問い合わせフォーム</a>からご連絡ください。メールの場合は <a href="mailto:support@dpi-bot.com">support@dpi-bot.com</a> をご利用いただけます。</p>
     <small>DPI-Bot Security Gateway</small>
   </main>
 </body>
 </html>`;
+}
+
+function normalizeBlockLevel(value) {
+  return Object.hasOwn(BLOCK_LEVELS, value) ? value : DEFAULT_BLOCK_LEVEL;
+}
+
+function defaultReasonForLevel(value) {
+  return BLOCK_LEVELS[normalizeBlockLevel(value)].message;
 }
 
 function cleanText(value, maxLength) {
@@ -261,5 +300,7 @@ export const __test = Object.freeze({
   normalizeIp,
   parseNetwork,
   parseRules,
+  normalizeBlockLevel,
+  defaultReasonForLevel,
   prefersJson
 });

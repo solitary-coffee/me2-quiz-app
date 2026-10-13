@@ -34,7 +34,13 @@ test('共有D1へ登録したCIDRを403専用画面で遮断する', async () =>
       assert.match(sql, /FROM ip_block_rules/u);
       return {
         async all() {
-          return { results: [{ network: '203.0.113.0/24', reason: '管理画面から登録した理由' }] };
+          return {
+            results: [{
+              network: '203.0.113.0/24',
+              reason: '管理画面から登録した理由',
+              block_level: 'confirmed'
+            }]
+          };
         }
       };
     }
@@ -48,6 +54,8 @@ test('共有D1へ登録したCIDRを403専用画面で遮断する', async () =>
   assert.match(html, /管理画面から登録した理由/u);
   assert.match(html, /test-ray-NRT/u);
   assert.match(html, /me\.dpi-bot\.com/u);
+  assert.match(html, /攻撃確定/u);
+  assert.match(html, /https:\/\/dpi-bot\.com\/site\/supp\//u);
 });
 
 test('APIリクエストは403 JSONを返す', async () => {
@@ -60,6 +68,8 @@ test('APIリクエストは403 JSONを返す', async () => {
     status: 403,
     code: 'ip_blocked',
     message: 'APIアクセスを制限しています。',
+    blockLevel: 'suspected',
+    blockLevelLabel: '攻撃疑い',
     rayId: '取得できませんでした'
   });
 });
