@@ -22,6 +22,11 @@ GITHUB_ROOT = ""
 binding = "ME2_PROGRESS"
 id = "20aa48fc63bb41bc90c0efa5abc3ac37"
 
+[[d1_databases]]
+binding = "IP_BLOCK_DB"
+database_name = "dpi-newsletter"
+database_id = "8c0bbd9c-e3ac-4298-baa4-e98439882d3b"
+
 
 # ------------------------------------------------------------
 # GitHub PR作成機能
@@ -40,4 +45,3 @@ id = "20aa48fc63bb41bc90c0efa5abc3ac37"
 #   GITHUB_COMMITTER_NAME = コミット表示名
 #   GITHUB_COMMITTER_EMAIL = コミット表示メール
 # ------------------------------------------------------------
-
