@@ -9,3 +9,15 @@ Cloudflare Pages本番のEnvironment bindingsで、全サイト共通のWorkers 
 `_routes.json` はすべての静的資産もFunctionsに通すため、課金/レイテンシ増加とPages Functionsリクエスト制限に注意してください。Git連携/WranglerのどちらがBindingを管理しているか必ず確認し、OFF状態で先行デプロイしてからONテストを実施してください。古いPages Preview/branch URLやPWA/ブラウザキャッシュは別のアクセス制限が必要な場合があります。
 
 **注意:** `me.dpi-bot.com` は `me2.dpi-bot.com` と別ホストです。両者が同じPagesプロジェクトを指しているかCloudflare側の情報で確認するまで同一扱いしないでください。
+
+
+## 共通KV Namespaceの確定設定（2026-10-21）
+
+このPRのWrangler設定ファイルへ共通Namespace ID `2dbad207714d49a5b03f9fc4ceb7b293` をBinding名 `DPI_MAINTENANCE_KV` として設定済みです。別のNamespaceを新規に作成しないでください。
+
+- 共通停止キー: `maintenance:global` （初期状態は `{"enabled":false}` を推奨）
+- このサイトだけ停止: `maintenance:site:me2`
+- マージ前に**元のKV Namespace IDを実際のCloudflareアカウントで再確認**し、Wranglerが本番の設定・既存Bindingを上書きしないことを確認してください。
+- マージだけで停止するわけではありません。デプロイ後に各サイトの正常動作を検証してからKVへ `{"enabled":true}` を書き込みます。
+- `me.dpi-bot.com` など未確認の独立デプロイ/旧プレビューURLはこの4つのPRでは停止保証できません。
+
