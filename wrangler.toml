@@ -22,6 +22,11 @@ GITHUB_ROOT = ""
 binding = "ME2_PROGRESS"
 id = "20aa48fc63bb41bc90c0efa5abc3ac37"
 
+# 全サイト共通の公開停止/再開スイッチ。ME2_PROGRESSとは別Namespace。
+[[kv_namespaces]]
+binding = "DPI_MAINTENANCE_KV"
+id = "2dbad207714d49a5b03f9fc4ceb7b293"
+
 [[d1_databases]]
 binding = "IP_BLOCK_DB"
 database_name = "dpi-newsletter"
