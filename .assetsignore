@@ -1,0 +1,10 @@
+node_modules
+.git
+.wrangler
+.github
+tests
+package.json
+package-lock.json
+wrangler*.toml
+functions
+src
